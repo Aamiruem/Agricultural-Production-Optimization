@@ -22,14 +22,14 @@ export function SiteNavbar({ onMenuClick }) {
       <Container fluid className="navbar-inner">
         <Button variant="link" className="text-body p-2 side-menu-trigger" onClick={onMenuClick} aria-label="Open navigation menu"><Menu size={20}/></Button>
         <Navbar.Brand as={Link} to="/" onClick={close} className="d-flex align-items-center gap-2 fw-semibold">
-          <img src={logo} alt="" width="34" height="34" className="brand-mark" />
+          <img src={logo} alt="" width="42" height="42" className="brand-mark" />
           <span className="brand-wordmark" aria-label="AgriSmart — Precision farming for a better tomorrow"><span><b>Agri</b><b>Smart</b></span><small>Precision farming for a better tomorrow</small></span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="main-nav" />
         <Navbar.Collapse id="main-nav">
           <div className="d-flex align-items-center justify-content-end gap-2 ms-auto">
             <Button variant="link" className="text-body p-1" aria-label="Notifications" title="No new notifications"><Bell size={18}/></Button>
-            <select className="language-select" aria-label="Language" defaultValue="en" onChange={e=>document.documentElement.lang=e.target.value}><option value="en">EN</option><option value="hi">हिंदी</option></select>
+            <select className="language-select" aria-label="Language" defaultValue="en" onChange={e=>document.documentElement.lang=e.target.value}><option value="en">EN</option><option value="hi">&#2361;&#2367;&#2306;&#2342;&#2368;</option></select>
             {user ? (
               <>
                 <NavDropdown title={<><UserRound size={16}/> {user.full_name || "Account"}</>} align="end"><NavDropdown.Item as={Link} to="/farms" onClick={close}>My farms</NavDropdown.Item><NavDropdown.Item onClick={logout}>Sign out</NavDropdown.Item></NavDropdown>

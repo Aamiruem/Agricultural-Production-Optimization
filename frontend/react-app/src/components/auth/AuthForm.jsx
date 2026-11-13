@@ -42,7 +42,7 @@ export function AuthForm({ mode }) {
   ];
 
   return (
-    <Card>
+    <Card className="auth-card">
       <Card.Body className="p-4">
         <h1 className="h4">{isRegister ? "Create your account" : "Sign in"}</h1>
         <p className="small text-body-secondary">

@@ -11,8 +11,7 @@ import { SideNav } from "./SideNav";
 
 export function MainLayout() {
   const { pathname } = useLocation();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => localStorage.getItem("agrismart-sidebar-collapsed") === "true");
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   useSessionExpiry();
 
   // Start each new page at the top.
@@ -25,16 +24,11 @@ export function MainLayout() {
       <a href="#main" className="visually-hidden-focusable position-absolute top-0 start-0 m-2 btn btn-sm btn-primary">
         Skip to content
       </a>
-      <SiteNavbar onMenuClick={() => setMobileSidebarOpen((open) => !open)} />
+      <SiteNavbar onMenuClick={() => setSidebarOpen((open) => !open)} sidebarOpen={sidebarOpen} />
       <div className="app-shell">
         <SideNav
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed((collapsed) => {
-            localStorage.setItem("agrismart-sidebar-collapsed", String(!collapsed));
-            return !collapsed;
-          })}
-          mobileOpen={mobileSidebarOpen}
-          onCloseMobile={() => setMobileSidebarOpen(false)}
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
         />
         <div className="app-content">
           <main id="main">

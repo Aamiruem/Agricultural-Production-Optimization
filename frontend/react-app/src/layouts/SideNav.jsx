@@ -38,7 +38,7 @@ export function SideNav({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
         <div className="side-nav-group-label mt-4">{!collapsed && "YOUR FARM"}</div>
         {renderLinks(WORKSPACE)}
       </nav>
-      {!collapsed && <div className="side-nav-help"><span className="help-icon">🌱</span><b>Grow with confidence</b><small>Use local soil tests and expert advice to guide field decisions.</small></div>}
+      {!collapsed && <div className="side-nav-help"><Sprout className="help-icon" size={20}/><b>Grow with confidence</b><small>Use local soil tests and expert advice to guide field decisions.</small></div>}
     </aside>
   </>;
 }
