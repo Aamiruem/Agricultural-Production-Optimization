@@ -666,32 +666,41 @@ li.active .farm-text small { color: inherit; opacity: 0.85; }
   .hero-x { border-radius: 24px; }
 }
 // ------------------------------------------------------------ single-row app bar
-// ≥1500px: menu · logo · tabs · compact search · actions on one line.
-// 1200–1499px: search collapses to an icon. <1200px: tabs wrap to a second row.
+// ≥1600px: menu · logo · tabs · compact search · actions on one line.
+// 1280–1599px: search collapses to an icon (tagline hides below 1440px).
+// <1280px: tabs wrap to a second row under the logo.
 .app-bar { border-bottom: 1px solid var(--md-outline-variant); }
 .app-bar-row { gap: 0.25rem; min-height: 64px; padding: 0.3rem 0.75rem 0.3rem 0.25rem; }
-.brand-link { margin-right: 0.75rem; }
-.app-bar .app-tabs { align-self: stretch; display: flex; align-items: stretch; gap: 0; padding: 0; border: 0; flex: 0 1 auto; min-width: 0; overflow-x: auto; }
-.app-bar .app-tab { display: flex; align-items: center; padding: 0 0.8rem; border-radius: 0; font-size: 0.9rem;
-  &.active::after { left: 0.5rem; right: 0.5rem; }
+.brand-link { margin-right: 0.5rem; }
+.app-bar-row > .icon-btn, .app-bar .nav-actions .icon-btn { flex: none; }
+.app-bar .app-tabs { align-self: stretch; display: flex; align-items: stretch; gap: 0; padding: 0; border: 0; flex: 0 0 auto; min-width: 0; overflow-x: auto; }
+.app-bar .app-tab { display: flex; align-items: center; padding: 0 0.65rem; border-radius: 0; font-size: 0.9rem;
+  &.active::after { left: 0.45rem; right: 0.45rem; }
+  &.mobile-only { display: none; } // Login/Register tabs only on phones (the buttons are hidden there)
 }
-.app-bar-search { flex: 0 1 320px; max-width: 320px; margin-left: auto; }
+.app-bar-search { flex: 0 1 320px; min-width: 240px; max-width: 320px; margin-left: auto; }
 .app-bar-search .g-search { height: 44px; }
 .app-bar .nav-actions { margin-left: 0.25rem; }
 .side-nav { top: 65px; height: calc(100vh - 65px); }
-@media (min-width: 1200px) and (max-width: 1499.98px) {
-  .app-bar .search-toggle { display: inline-grid !important; margin-left: auto; }
+@media (min-width: 1280px) and (max-width: 1599.98px) {
+  .app-bar .search-toggle { display: inline-grid !important; }
+  .app-bar .nav-actions { margin-left: auto; }
   .app-bar-search { display: none; }
   .app-bar-row.search-mode { flex-wrap: wrap; .app-bar-search { display: block; order: 30; flex: 1 1 100%; max-width: none; margin: 0.25rem 0 0.35rem 0.5rem; } }
 }
-@media (max-width: 1199.98px) {
+@media (min-width: 1280px) and (max-width: 1439.98px) {
+  .app-bar .brand-wordmark small { display: none; }
+  .app-bar .app-tab { padding: 0 0.55rem; }
+}
+@media (max-width: 1279.98px) {
   .app-bar-row { flex-wrap: wrap; row-gap: 0; }
   .app-bar .app-tabs { order: 20; flex: 1 1 100%; margin: 0 -0.75rem 0 -0.25rem; padding: 0 0.75rem; border-top: 1px solid var(--md-outline-variant); }
   .app-bar .app-tab { padding: 0.65rem 0.8rem; }
-  .app-bar-search { flex: 1 1 auto; max-width: 560px; }
+  .app-bar-search { flex: 1 1 auto; min-width: 0; max-width: 560px; }
   .side-nav { top: 112px; height: calc(100vh - 112px); }
 }
 @media (max-width: 767.98px) {
+  .app-bar .app-tab.mobile-only { display: flex; }
   .app-bar-row.search-mode .app-bar-search { order: 10; flex: 1 1 100%; max-width: none; margin: 0.25rem 0 0.4rem 0.25rem; }
 }
 
@@ -699,7 +708,7 @@ li.active .farm-text small { color: inherit; opacity: 0.85; }
 .crop-pic.photo, .crop-visual.photo { overflow: hidden; padding: 0; background: var(--md-surface-container); img { width: 100%; height: 100%; object-fit: cover; display: block; } }
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
 .gallery-card { position: relative; display: grid; padding: 0; border: 1px solid var(--md-outline-variant); border-radius: 24px; overflow: hidden; background: var(--md-surface); color: var(--md-on-surface); text-align: left; transition: box-shadow 0.2s, transform 0.2s;
-  img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; transition: transform 0.4s; }
+  img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; display: block; transition: transform 0.4s; }
   &:hover { box-shadow: var(--md-elev-2); img { transform: scale(1.04); } }
   &:focus-visible { outline: 3px solid var(--md-tertiary); }
 }

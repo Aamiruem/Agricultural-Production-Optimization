@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 
 import { MIcon } from "@/components/common/MIcon";
@@ -19,6 +19,13 @@ export default function CropGalleryPage() {
   const [season, setSeason] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(null);
+  // Escape closes the detail dialog.
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === "Escape") setOpen(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
   const list = useMemo(() => ATLAS_CROPS.filter((c) =>
     (!group || c.group === group) && (!season || c.seasons.includes(season))
     && `${c.name} ${c.hi}`.toLowerCase().includes(query.trim().toLowerCase())), [group, season, query]);
