@@ -85,7 +85,7 @@ export default function DashboardPage() {
           <div className="card-head2">
             <div><h2>{lang === "hi" ? "उत्पादन रुझान" : "Production overview"}</h2><p>{stateName} · {view ? `${view.years[0].year}–${view.last.year}` : ""} · all crops</p></div>
             <div className="seg" role="tablist" aria-label="Metric">
-              {["production", "area", "yield"].map((m) => <button key={m} role="tab" aria-selected={metric === m} className={metric === m ? "on" : ""} onClick={() => setMetric(m)}>{m === "production" ? "Production" : m === "area" ? "Area" : "Yield"}</button>)}
+              {["production", "area", "yield"].map((m) => <button key={m} role="tab" aria-selected={metric === m} className={metric === m ? "on" : ""} aria-pressed={metric === m} onClick={() => setMetric(m)}>{m === "production" ? "Production" : m === "area" ? "Area" : "Yield"}</button>)}
             </div>
           </div>
           {view ? (

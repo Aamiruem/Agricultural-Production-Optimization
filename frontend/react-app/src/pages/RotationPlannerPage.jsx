@@ -28,9 +28,9 @@ export default function RotationPlannerPage() {
           <label className="field-label"><span>{hi ? "पिछली फसल" : "Previous crop"}</span>
             <select value={previous} onChange={(e) => setPrevious(e.target.value)}>{ROTATION_PREVIOUS.map((c) => <option key={c} value={c}>{c} · {atlasCrop(c)?.hi}</option>)}</select>
           </label>
-          <label className="field-label"><span>{hi ? "अगला मौसम" : "Next season"}</span>
-            <div className="seg">{ADVISOR_SEASONS.map((s) => <button key={s} type="button" className={season === s ? "on" : ""} onClick={() => setSeason(s)}>{s}</button>)}</div>
-          </label>
+          <div className="field-label" role="group"><span>{hi ? "अगला मौसम" : "Next season"}</span>
+            <div className="seg">{ADVISOR_SEASONS.map((s) => <button key={s} type="button" className={season === s ? "on" : ""} aria-pressed={season === s} onClick={() => setSeason(s)}>{s}</button>)}</div>
+          </div>
           <label className="field-label"><span>{hi ? "मिट्टी" : "Soil"}</span>
             <select value={soil} onChange={(e) => setSoil(e.target.value)}>{ATLAS_SOILS.map((s) => <option key={s.id} value={s.id}>{s.id} · {s.hi}</option>)}</select>
           </label>

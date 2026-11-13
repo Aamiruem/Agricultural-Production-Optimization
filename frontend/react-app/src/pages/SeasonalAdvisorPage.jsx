@@ -51,17 +51,17 @@ export default function SeasonalAdvisorPage() {
         <section className="tool-card">
           <h2>{hi ? "आपकी स्थिति" : "Your conditions"}</h2>
           <StateSelect value={state} onChange={pickState} />
-          <label className="field-label"><span>{hi ? "मौसम" : "Season"}</span>
-            <div className="seg">{ADVISOR_SEASONS.map((s) => <button key={s} type="button" className={season === s ? "on" : ""} onClick={() => setSeason(s)}>{s}</button>)}</div>
-          </label>
+          <div className="field-label" role="group"><span>{hi ? "मौसम" : "Season"}</span>
+            <div className="seg">{ADVISOR_SEASONS.map((s) => <button key={s} type="button" className={season === s ? "on" : ""} aria-pressed={season === s} onClick={() => setSeason(s)}>{s}</button>)}</div>
+          </div>
           <label className="field-label"><span>{hi ? "मिट्टी" : "Soil type"}</span>
             <select value={soil} onChange={(e) => setSoil(e.target.value)}>
               {ATLAS_SOILS.map((s) => <option key={s.id} value={s.id}>{s.id} · {s.hi}{sp?.soils.includes(s.id) ? " ★" : ""}</option>)}
             </select>
           </label>
-          <label className="field-label"><span>{hi ? "पानी की उपलब्धता" : "Water available"}</span>
-            <div className="seg">{WATER_LEVELS.map((w) => <button key={w} type="button" className={water === w ? "on" : ""} onClick={() => setWater(w)}>{w}</button>)}</div>
-          </label>
+          <div className="field-label" role="group"><span>{hi ? "पानी की उपलब्धता" : "Water available"}</span>
+            <div className="seg">{WATER_LEVELS.map((w) => <button key={w} type="button" className={water === w ? "on" : ""} aria-pressed={water === w} onClick={() => setWater(w)}>{w}</button>)}</div>
+          </div>
           <label className="range-label"><span>{hi ? "औसत तापमान" : "Mean temperature"}</span><b>{liveTemp ?? temp} °C{liveTemp !== null && " · live"}</b>
             <input type="range" min="5" max="40" step="0.5" value={liveTemp ?? temp} disabled={liveTemp !== null} onChange={(e) => setTemp(Number(e.target.value))} /></label>
           <label className="range-label"><span>{hi ? "वार्षिक वर्षा" : "Annual rainfall"}</span><b>{rain} mm</b>

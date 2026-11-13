@@ -41,12 +41,12 @@ export default function IrrigationPage() {
           <h2>{lang === "hi" ? "खेत और फसल" : "Field & crop"}</h2>
           <StateSelect value={stateName} onChange={setStateName} />
           <label className="field-label"><span>{t("common.crop")}</span><select value={crop} onChange={(e) => setCrop(e.target.value)}>{Object.keys(KC).map((k) => <option key={k}>{k}</option>)}</select></label>
-          <label className="field-label"><span>Growth stage</span>
-            <div className="seg light">{STAGES.map((s) => <button key={s} type="button" className={stage === s ? "on" : ""} onClick={() => setStage(s)}>{s}</button>)}</div>
-          </label>
-          <label className="field-label"><span>Irrigation method</span>
-            <div className="seg light">{Object.keys(METHODS).map((m) => <button key={m} type="button" className={method === m ? "on" : ""} onClick={() => setMethod(m)}>{m}</button>)}</div>
-          </label>
+          <div className="field-label" role="group"><span>Growth stage</span>
+            <div className="seg light">{STAGES.map((s) => <button key={s} type="button" className={stage === s ? "on" : ""} aria-pressed={stage === s} onClick={() => setStage(s)}>{s}</button>)}</div>
+          </div>
+          <div className="field-label" role="group"><span>Irrigation method</span>
+            <div className="seg light">{Object.keys(METHODS).map((m) => <button key={m} type="button" className={method === m ? "on" : ""} aria-pressed={method === m} onClick={() => setMethod(m)}>{m}</button>)}</div>
+          </div>
           <label className="field-label"><span>{t("common.area")} ({t("common.acres")})</span><input type="number" min="0.1" step="0.1" value={acres} onChange={(e) => setAcres(Math.max(0.1, Number(e.target.value) || 0.1))} /></label>
           <p className="muted small mb-0">Crop coefficient Kc = <b>{(KC[crop] || KC.Vegetables)[STAGES.indexOf(stage)]}</b> (FAO-56) · efficiency {Math.round(METHODS[method] * 100)}%</p>
         </section>
