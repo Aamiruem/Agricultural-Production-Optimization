@@ -1,4 +1,4 @@
-import { Bell, Menu, Moon, Shield, Sun, UserRound } from "lucide-react";
+import { Bell, Menu, Moon, Shield, Sun, UserRound, X } from "lucide-react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -10,7 +10,7 @@ import logo from "@/assets/logo.svg";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuthStore, useSession } from "@/store/authStore";
 
-export function SiteNavbar({ onMenuClick }) {
+export function SiteNavbar({ onMenuClick, sidebarOpen }) {
   const { mode, toggle } = useTheme();
   const { user, isAdmin } = useSession();
   const logout = useAuthStore((s) => s.logout);
@@ -20,7 +20,7 @@ export function SiteNavbar({ onMenuClick }) {
   return (
     <Navbar expand="lg" sticky="top" className="navbar-agri border-bottom" expanded={expanded} onToggle={setExpanded}>
       <Container fluid className="navbar-inner">
-        <Button variant="link" className="text-body p-2 side-menu-trigger" onClick={onMenuClick} aria-label="Open navigation menu"><Menu size={20}/></Button>
+        <Button variant="link" className="text-body p-2 side-menu-trigger" onClick={onMenuClick} aria-label={sidebarOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={sidebarOpen} aria-controls="app-sidebar">{sidebarOpen ? <X size={22}/> : <Menu size={22}/>}</Button>
         <Navbar.Brand as={Link} to="/" onClick={close} className="d-flex align-items-center gap-2 fw-semibold">
           <img src={logo} alt="" width="42" height="42" className="brand-mark" />
           <span className="brand-wordmark" aria-label="AgriSmart — Precision farming for a better tomorrow"><span><b>Agri</b><b>Smart</b></span><small>Precision farming for a better tomorrow</small></span>

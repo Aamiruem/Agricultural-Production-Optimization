@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { Activity, Bot, ChartNoAxesCombined, ChevronLeft, ChevronRight, CloudSun, Droplets, FlaskConical, House, Info, LibraryBig, Mail, Map, ScanLine, Sprout, Tractor, TrendingUp, WalletCards } from "lucide-react";
+import { Activity, Bot, ChartNoAxesCombined, CloudSun, Droplets, FlaskConical, House, Info, LibraryBig, Mail, Map, ScanLine, Sprout, Tractor, TrendingUp, WalletCards } from "lucide-react";
 
 const LINKS = [
   { to: "/dashboard", label: "Overview", icon: House },
@@ -22,23 +22,23 @@ const WORKSPACE = [
   { to: "/contact", label: "Help & feedback", icon: Mail },
 ];
 
-export function SideNav({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
+export function SideNav({ open, onClose }) {
   const renderLinks = (links) => links.map(({ to, label, icon: Icon }) => (
-    <NavLink key={to} to={to} onClick={onCloseMobile} title={collapsed ? label : undefined} className={({ isActive }) => `side-nav-link${isActive ? " active" : ""}`}>
+    <NavLink key={to} to={to} onClick={() => { if (window.matchMedia("(max-width: 991.98px)").matches) onClose(); }} className={({ isActive }) => `side-nav-link${isActive ? " active" : ""}`}>
       <Icon size={18} aria-hidden="true"/><span>{label}</span>
     </NavLink>
   ));
   return <>
-    {mobileOpen && <button className="sidebar-backdrop" aria-label="Close navigation" onClick={onCloseMobile}/>}
-    <aside className={`side-nav${collapsed ? " is-collapsed" : ""}${mobileOpen ? " is-mobile-open" : ""}`} aria-label="Main navigation">
-      <div className="side-nav-heading"><span>{!collapsed && "FARM TOOLS"}</span><button className="side-nav-collapse" onClick={onToggleCollapse} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>{collapsed ? <ChevronRight size={17}/> : <ChevronLeft size={17}/>}</button></div>
+    <button className={`sidebar-backdrop${open ? " is-active" : ""}`} aria-label="Close navigation" onClick={onClose} tabIndex={open ? 0 : -1}/>
+    <aside id="app-sidebar" className={`side-nav${open ? " is-open" : " is-closed"}`} aria-label="Main navigation" aria-hidden={!open} inert={!open}>
+      <div className="side-nav-heading"><span>FARM TOOLS</span></div>
       <nav className="side-nav-groups">
-        <div className="side-nav-group-label">{!collapsed && "WORKSPACE"}</div>
+        <div className="side-nav-group-label">WORKSPACE</div>
         {renderLinks(LINKS)}
-        <div className="side-nav-group-label mt-4">{!collapsed && "YOUR FARM"}</div>
+        <div className="side-nav-group-label mt-4">YOUR FARM</div>
         {renderLinks(WORKSPACE)}
       </nav>
-      {!collapsed && <div className="side-nav-help"><Sprout className="help-icon" size={20}/><b>Grow with confidence</b><small>Use local soil tests and expert advice to guide field decisions.</small></div>}
+      <div className="side-nav-help"><Sprout className="help-icon" size={20}/><b>Grow with confidence</b><small>Use local soil tests and expert advice to guide field decisions.</small></div>
     </aside>
   </>;
 }
