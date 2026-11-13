@@ -71,6 +71,7 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
               <NavLink key={l.to} to={l.to} end onClick={close} className={({ isActive }) => `top-link${isActive && !l.to.includes("#") ? " active" : ""}`}>{t(l.key)}</NavLink>
             ))}
           </nav>
+          {!user && <div className="mobile-auth"><Link to="/login" onClick={close} className="btn btn-outline-success">{t("nav.login")}</Link><Link to="/register" onClick={close} className="btn btn-cta">{t("nav.register")}</Link></div>}
         </Navbar.Collapse>
 
         <div className="nav-actions">
@@ -92,8 +93,8 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
           <label className="lang-switch" title={t("nav.language")}>
             <Languages size={16} aria-hidden="true" />
             <select aria-label={t("nav.language")} value={lang} onChange={(e) => setLang(e.target.value)}>
-              <option value="en">English</option>
-              <option value="hi">हिंदी</option>
+              <option value="en">EN</option>
+              <option value="hi">हिं</option>
             </select>
           </label>
 

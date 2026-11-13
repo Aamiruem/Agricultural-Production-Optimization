@@ -60,8 +60,8 @@ export function CropExplorer({ filters, onChange }) {
                   <h3>{hi ? c.hi : c.en}</h3>
                   <small className="crop-alt">{hi ? c.en : c.hi}</small>
                   <div className="season-tags">{c.seasons.map((s) => <span key={s} style={{ "--c": SEASON_BY_ID[s].color }}>{hi ? SEASON_BY_ID[s].hi : SEASON_BY_ID[s].en}</span>)}</div>
-                  <p className="crop-meta"><Droplets size={13} /> {hi ? WATER[c.water][1] : WATER[c.water][0]} · <Timer size={13} /> {c.duration} {/\d/.test(c.duration) && !/Perennial/.test(c.duration) ? (hi ? "दिन" : "days") : ""}</p>
-                  <p className="crop-meta soils">{c.soils.map((s) => SOIL_TYPES.find((x) => x.id === s)).map((s) => <i key={s.id} title={s.en} style={{ background: s.color }} />)} {c.soils.map((s) => (hi ? SOIL_TYPES.find((x) => x.id === s).hi : SOIL_TYPES.find((x) => x.id === s).en)).join(", ")}</p>
+                  <p className="crop-meta"><span><Droplets size={13} /> {hi ? WATER[c.water][1] : WATER[c.water][0]}</span><span><Timer size={13} /> {c.duration}{/^\d/.test(c.duration) ? (hi ? " दिन" : " days") : ""}</span></p>
+                  <p className="crop-meta soils"><span className="dots">{c.soils.map((s) => <i key={s} style={{ background: SOIL_TYPES.find((x) => x.id === s).color }} />)}</span>{c.soils.map((s) => (hi ? SOIL_TYPES.find((x) => x.id === s).hi : SOIL_TYPES.find((x) => x.id === s).en)).join(", ")}</p>
                   <p className="crop-meta"><MapPin size={13} /> {c.states.slice(0, 4).join(", ")}{c.states.length > 4 ? ` +${c.states.length - 4}` : ""}</p>
                 </div>
               </article>

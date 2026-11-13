@@ -26,9 +26,9 @@ export function createApp() {
     res.status(db === "ok" ? 200 : 503).json({ status: db === "ok" ? "ok" : "degraded", database: db });
   });
 
-  // Mounted at /api and /farm-api: behind a shared load balancer the
+// Mounted at /api and /farm-api: behind a shared load balancer the
   // /farm-api/* prefix routes here without path rewriting.
-  app.use(
+app.use(
     ["/api", "/farm-api"],
     rateLimit({ windowMs: 60_000, limit: env.NODE_ENV === "test" ? 10_000 : 300, standardHeaders: "draft-8", legacyHeaders: false }),
     router,

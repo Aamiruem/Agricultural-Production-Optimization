@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  ArrowRight, BrainCircuit, ChartNoAxesCombined, CloudSun, Droplets, Eye, FlaskConical, Gauge, LayoutDashboard, Leaf,
+  ArrowRight, BrainCircuit, ChartNoAxesCombined, CloudSun, Droplets, Eye, FlaskConical, Gauge, LayoutDashboard, Leaf, MapPinned,
   ScanLine, ShieldCheck, Sprout, Target, TrendingUp, WalletCards,
 } from "lucide-react";
 import { Link } from "react-router";
@@ -76,7 +76,7 @@ export default function HomePage() {
           </motion.div>
           <motion.div className="hero-badges" {...rise(0.2)}>
             <span><ShieldCheck size={15} /> {hi ? "मुफ़्त और सुरक्षित" : "Free & private"}</span>
-            <span>🇮🇳 {hi ? "36 राज्य/UT" : "36 states & UTs"}</span>
+            <span><MapPinned size={15} /> {hi ? "36 राज्य/UT" : "36 states & UTs"}</span>
             <span>अ/A {hi ? "हिंदी + English" : "English + हिंदी"}</span>
           </motion.div>
         </div>
