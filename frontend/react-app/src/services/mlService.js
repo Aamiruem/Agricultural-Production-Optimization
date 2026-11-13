@@ -12,6 +12,18 @@ export async function predictYield(payload) {
   return data;
 }
 
+/** Historical state/crop/season coverage from the bundled India dataset. */
+export async function fetchYieldCoverage() {
+  const { data } = await api.get("/yield/coverage");
+  return data;
+}
+
+/** Yearly weighted yield and production for a selected Indian state. */
+export async function fetchYieldTrend(params) {
+  const { data } = await api.get("/yield/trend", { params });
+  return data;
+}
+
 // Admin-only (RBAC)
 
 export async function reloadModel() {
