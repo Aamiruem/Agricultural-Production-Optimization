@@ -36,3 +36,36 @@ export const fieldSchema = z.object({
   season: z.enum(["kharif", "rabi", "zaid", "perennial"], { error: "Choose a season" }),
 });
 export type FieldFormValues = z.infer<typeof fieldSchema>;
+
+export const loginSchema = z.object({
+  email: z.email("Enter a valid email"),
+  password: z.string().min(1, "Enter your password"),
+});
+
+export const registerSchema = z.object({
+  full_name: z.string().trim().min(2, "Name must be at least 2 characters").max(120),
+  email: z.email("Enter a valid email"),
+  password: z
+    .string()
+    .min(8, "Use at least 8 characters")
+    .max(128)
+    .refine((v) => /[a-z]/i.test(v) && /\d/.test(v), "Mix letters and numbers"),
+});
+export type RegisterFormValues = z.infer<typeof registerSchema>;
+
+export const newFarmSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(80),
+  state: z.string().trim().max(60).optional(),
+  district: z.string().trim().max(60).optional(),
+});
+export type NewFarmValues = z.infer<typeof newFarmSchema>;
+
+const optionalNum = (label: string, max: number) =>
+  z.union([z.nan(), z.number().min(0, `${label} must be ≥ 0`).max(max, `${label} must be ≤ ${max}`)]).optional();
+
+export const newFieldSchema = fieldSchema.extend({
+  N: optionalNum("N", 200),
+  P: optionalNum("P", 200),
+  K: optionalNum("K", 250),
+});
+export type NewFieldValues = z.infer<typeof newFieldSchema>;

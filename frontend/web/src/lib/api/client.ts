@@ -1,17 +1,47 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, type AxiosInstance } from "axios";
 
-/** Axios instance used by client components (browser → FastAPI). */
-export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api",
-  timeout: 10_000,
-  headers: { "Content-Type": "application/json" },
-});
+import { getValidToken, useAuthStore } from "@/store/auth-store";
 
-/** Turn any Axios/FastAPI error into a readable message. */
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+export const FARM_API_URL = process.env.NEXT_PUBLIC_FARM_API_URL ?? "http://localhost:4000/api";
+
+const SERVICE_NAMES = new Map([
+  [API_URL, "the FastAPI backend (port 8000)"],
+  [FARM_API_URL, "the farm service (port 4000)"],
+]);
+
+function withAuth(instance: AxiosInstance): AxiosInstance {
+  instance.interceptors.request.use((config) => {
+    const token = getValidToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
+  instance.interceptors.response.use(undefined, (error: unknown) => {
+    // A rejected token (expired, or the secret rotated): drop the session.
+    if (error instanceof AxiosError && error.response?.status === 401 && error.config?.headers?.Authorization) {
+      useAuthStore.getState().logout();
+    }
+    return Promise.reject(error);
+  });
+  return instance;
+}
+
+/** Python / FastAPI service: ML, auth, history, assistant. */
+export const api = withAuth(
+  axios.create({ baseURL: API_URL, timeout: 15_000, headers: { "Content-Type": "application/json" } }),
+);
+
+/** Node / Express service: farms, fields, activities, photos. */
+export const farmApi = withAuth(
+  axios.create({ baseURL: FARM_API_URL, timeout: 15_000, headers: { "Content-Type": "application/json" } }),
+);
+
+/** Turn any Axios/FastAPI/Express error into a readable message. */
 export function getErrorMessage(error: unknown): string {
   if (error instanceof AxiosError) {
     if (!error.response) {
-      return "Cannot reach the API. Is the FastAPI backend running on port 8000?";
+      const service = SERVICE_NAMES.get(error.config?.baseURL ?? API_URL) ?? "the API";
+      return `Cannot reach the API. Is ${service} running?`;
     }
     const detail = (error.response.data as { detail?: unknown })?.detail;
     if (typeof detail === "string") return detail;

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Docker builds set NEXT_OUTPUT=standalone: a minimal self-contained server.js.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   // Cache Components + Partial Prefetching: static shells, "use cache" (SSG/ISR)
   // and request-time streaming (SSR) in the same app.
   cacheComponents: true,

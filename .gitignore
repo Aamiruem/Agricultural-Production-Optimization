@@ -8,12 +8,34 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
-.env
+.pytest_cache/
 
-# ML artifacts
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+
+# ML artifacts (reproduce with `python -m ml.data.download_dataset && python -m ml.train`)
+ml/datasets/*.csv
 ml/models/*.joblib
 ml/models/*.pkl
+ml/models/*.pt
+ml/models/metrics.json
+ml/mlruns/
+ml/mlflow.db
 .ipynb_checkpoints/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
 
 # OS / editor
 .DS_Store

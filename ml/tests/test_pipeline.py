@@ -3,7 +3,6 @@ import pandas as pd
 import pytest
 
 from ml.config import FEATURES
-from ml.models.torch_mlp import predict_proba, train_mlp
 from ml.preprocessing.features import DatasetError, split_dataset, validate_dataframe
 from ml.train import candidate_models
 
@@ -42,6 +41,10 @@ def test_candidates_learn_separable_data(name):
 
 
 def test_torch_mlp_learns_separable_data():
+    try:
+        from ml.models.torch_mlp import predict_proba, train_mlp
+    except (ImportError, OSError) as exc:  # not installed / native libs blocked
+        pytest.skip(f"PyTorch unavailable: {exc.__class__.__name__}")
     split = split_dataset(synthetic())
     result = train_mlp(split.X_train.to_numpy(np.float32), split.y_train, 2, epochs=60)
     probs = predict_proba(result, split.X_test.to_numpy(np.float32))

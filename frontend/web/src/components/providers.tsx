@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 
 import { ThemeModeProvider, useThemeMode } from "@/context/theme-context";
+import { useAuthStore } from "@/store/auth-store";
 import { useHistoryStore } from "@/store/history-store";
 import { makeStore, persistFields } from "@/store/store";
 
@@ -41,10 +42,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
       }),
   );
 
-  // Client-only persistence: Redux fields + Zustand history.
+  // Client-only persistence: Redux fields + Zustand history and session.
   useEffect(() => persistFields(store), [store]);
   useEffect(() => {
     void useHistoryStore.persist.rehydrate();
+    void useAuthStore.persist.rehydrate();
   }, []);
 
   return (

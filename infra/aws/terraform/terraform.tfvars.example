@@ -1,0 +1,8 @@
+# cp terraform.tfvars.example terraform.tfvars   (terraform.tfvars is git-ignored)
+project           = "agrioptima"
+aws_region        = "ap-south-1"
+site_url          = "https://agri.example.com"
+certificate_arn   = "" # ACM certificate for agri.example.com in the same region
+github_repository = "your-github-user/Agricultural-Production-Optimization"
+mongodb_uri       = "mongodb+srv://USER:PASSWORD@cluster0.example.mongodb.net/agrioptima"
+anthropic_api_key = ""

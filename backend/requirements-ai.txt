@@ -1,0 +1,4 @@
+# Optional: Hugging Face sentence-transformers embeddings for RAG
+# (pulls in PyTorch; without it the assistant uses TF-IDF embeddings).
+-r requirements.txt
+sentence-transformers>=3.3

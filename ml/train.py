@@ -49,6 +49,15 @@ from ml.config import (
 from ml.preprocessing.features import Split, load_dataset, split_dataset
 
 
+# Types skops must be told to trust when MLflow saves each model. XGBoost
+# isn't skops-serialisable, so it is logged with cloudpickle instead (None).
+SKOPS_TRUSTED_TYPES: dict[str, list[str] | None] = {
+    "logistic_regression": [],
+    "random_forest": ["sklearn.tree._tree.Tree"],
+    "xgboost": None,
+}
+
+
 def candidate_models() -> dict[str, Pipeline]:
     """Every candidate is a plain scikit-learn Pipeline so it pickles without custom code."""
     return {
@@ -145,9 +154,14 @@ def main(cv_folds: int = 5, register: bool = True) -> dict:
             print(f"{name:20s} cv_f1={leaderboard[name]['cv_f1_macro_mean']:.4f} "
                   f"test_acc={leaderboard[name]['test_accuracy']:.4f}")
 
-        with mlflow.start_run(run_name="pytorch_mlp", nested=True):
-            leaderboard["pytorch_mlp"] = evaluate_torch(split)
-        print(f"{'pytorch_mlp':20s} test_acc={leaderboard['pytorch_mlp']['test_accuracy']:.4f}")
+        try:
+            import torch  # noqa: F401
+        except (ImportError, OSError) as exc:  # not installed, or native libs blocked by the OS
+            print(f"{'pytorch_mlp':20s} skipped: PyTorch unavailable ({exc.__class__.__name__})")
+        else:
+            with mlflow.start_run(run_name="pytorch_mlp", nested=True):
+                leaderboard["pytorch_mlp"] = evaluate_torch(split)
+            print(f"{'pytorch_mlp':20s} test_acc={leaderboard['pytorch_mlp']['test_accuracy']:.4f}")
 
         # Choose among the scikit-learn-compatible models (they share one serving path).
         best_name = max(
@@ -193,11 +207,15 @@ def main(cv_folds: int = 5, register: bool = True) -> dict:
 
         if register:
             # Log the winning pipeline in its own run's artifacts and register it.
+            # MLflow stores scikit-learn models with skops, which only loads types
+            # we explicitly trust; we trained these models ourselves.
+            fmt = SKOPS_TRUSTED_TYPES.get(best_name)
             with mlflow.start_run(run_id=run_ids[best_name], nested=True):
                 mlflow.sklearn.log_model(
                     best, name="model",
                     input_example=split.X_test.head(3),
                     registered_model_name=REGISTERED_MODEL_NAME,
+                    **({"skops_trusted_types": fmt} if fmt is not None else {"serialization_format": "cloudpickle"}),
                 )
 
         print(f"\nBest: {best_name}. Saved {MODEL_BUNDLE_PATH} and {METRICS_PATH}")
