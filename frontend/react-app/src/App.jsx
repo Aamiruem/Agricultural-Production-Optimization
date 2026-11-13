@@ -1,122 +1,56 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { lazy } from "react";
+import { Route, Routes } from "react-router";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { AdminRoute } from "@/components/common/AdminRoute";
+import { ProtectedRoute } from "@/components/common/ProtectedRoute";
+import { AuthLayout } from "@/layouts/AuthLayout";
+import { MainLayout } from "@/layouts/MainLayout";
 
+// Route-based code splitting: each page is its own chunk, loaded on demand.
+const HomePage = lazy(() => import("@/pages/HomePage"));
+const RecommendPage = lazy(() => import("@/pages/RecommendPage"));
+const FertilizerPage = lazy(() => import("@/pages/FertilizerPage"));
+const CropsPage = lazy(() => import("@/pages/CropsPage"));
+const CropDetailPage = lazy(() => import("@/pages/CropDetailPage"));
+const PlannerPage = lazy(() => import("@/pages/PlannerPage"));
+const FarmsPage = lazy(() => import("@/pages/FarmsPage"));
+const AssistantPage = lazy(() => import("@/pages/AssistantPage"));
+const InsightsPage = lazy(() => import("@/pages/InsightsPage"));
+const AdminPage = lazy(() => import("@/pages/AdminPage"));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const RegisterPage = lazy(() => import("@/pages/RegisterPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+
+export default function App() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="recommend" element={<RecommendPage />} />
+        <Route path="fertilizer" element={<FertilizerPage />} />
+        <Route path="crops" element={<CropsPage />} />
+        <Route path="crops/:name" element={<CropDetailPage />} />
+        <Route path="planner" element={<PlannerPage />} />
+        <Route path="assistant" element={<AssistantPage />} />
+        <Route path="insights" element={<InsightsPage />} />
 
-      <div className="ticks"></div>
+        {/* Signed-in users only */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="farms" element={<FarmsPage />} />
+        </Route>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* RBAC: admins only */}
+        <Route element={<AdminRoute />}>
+          <Route path="admin" element={<AdminPage />} />
+        </Route>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+
+      <Route element={<AuthLayout />}>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+      </Route>
+    </Routes>
+  );
 }
-
-export default App
