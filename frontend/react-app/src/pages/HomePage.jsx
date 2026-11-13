@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <div className="d-grid gap-5">
       <Hero />
-      <section className="home-stats" aria-label="AgriOptima coverage">
+      <section className="home-stats" aria-label="AgriSmart coverage">
         <div><strong>{INDIA_CROPS.length}</strong><span>crops to explore</span></div>
         <div><strong>8</strong><span>crop categories</span></div>
         <div><strong>28</strong><span>states represented</span></div>
@@ -36,7 +36,7 @@ export default function HomePage() {
           ))}
         </Row>
       </section>
-      <section className="home-about-links"><div><h2 className="h5">Designed for local decisions</h2><p className="text-body-secondary mb-0">Explore Indian crop diversity, compare field inputs, and keep recommendations grounded in local soil tests.</p></div><div className="d-flex gap-3"><Link to="/about">About AgriOptima</Link><Link to="/contact">Contact</Link></div></section>
+      <section className="home-about-links"><div><h2 className="h5">Designed for local decisions</h2><p className="text-body-secondary mb-0">Explore Indian crop diversity, compare field inputs, and keep recommendations grounded in local soil tests.</p></div><div className="d-flex gap-3"><Link to="/about">About AgriSmart</Link><Link to="/contact">Contact</Link></div></section>
     </div>
   );
 }

@@ -6,6 +6,12 @@ export async function fetchModelInfo() {
   return data;
 }
 
+/** Predict crop yield with the trained AIML yield regression bundle. */
+export async function predictYield(payload) {
+  const { data } = await api.post("/yield/predict", payload);
+  return data;
+}
+
 // Admin-only (RBAC)
 
 export async function reloadModel() {

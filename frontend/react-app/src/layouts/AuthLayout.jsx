@@ -11,8 +11,8 @@ export function AuthLayout() {
     <main id="main" className="d-flex flex-column justify-content-center py-5">
       <Container style={{ maxWidth: 420 }}>
         <Link to="/" className="d-flex align-items-center justify-content-center gap-2 mb-4 fs-5 fw-semibold text-body">
-          <img src={logo} alt="" width="28" height="28" />
-          AgriOptima
+          <img src={logo} alt="" width="32" height="32" />
+          <span className="brand-wordmark"><span><b>Agri</b><b>Smart</b></span><small>Precision farming for a better tomorrow</small></span>
         </Link>
         <Suspense fallback={<Loader />}>
           <Outlet />

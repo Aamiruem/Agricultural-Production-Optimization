@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import assistant, auth, crops, health, history, ml, realtime
+from app.api.routes import assistant, auth, crops, health, history, ml, realtime, yield_prediction
 from app.core.config import get_settings
 from app.core.logging import RequestLogMiddleware, configure_logging
 from app.db import models  # noqa: F401  (register tables on Base.metadata)
@@ -36,7 +36,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
         expose_headers=["X-Request-ID"],
     )
-    for module in (health, auth, crops, history, ml, assistant, realtime):
+    for module in (health, auth, crops, history, ml, yield_prediction, assistant, realtime):
         app.include_router(module.router, prefix="/api")
     return app
 

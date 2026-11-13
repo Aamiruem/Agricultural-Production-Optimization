@@ -1,27 +1,16 @@
-import { Bell, Moon, Shield, Sun, UserRound } from "lucide-react";
+import { Bell, Menu, Moon, Shield, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { Link, NavLink } from "react-router";
+import { Link } from "react-router";
 
 import logo from "@/assets/logo.svg";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuthStore, useSession } from "@/store/authStore";
 
-const NAV = [
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/recommend", label: "Crop advisor" },
-  { to: "/crops", label: "Crops" },
-  { to: "/yield", label: "Yield" },
-  { to: "/soil", label: "Soil" },
-  { to: "/weather", label: "Weather" },
-];
-const MORE = [ ["/fertilizer","Fertilizer recommendation"],["/irrigation","Irrigation optimization"],["/disease","Disease detection"],["/reports","Reports"],["/planner","Planner"],["/farms","My farms"],["/assistant","Farm assistant"],["/insights","Model insights"],["/about","About us"],["/contact","Contact"] ];
-
-export function SiteNavbar() {
+export function SiteNavbar({ onMenuClick }) {
   const { mode, toggle } = useTheme();
   const { user, isAdmin } = useSession();
   const logout = useAuthStore((s) => s.logout);
@@ -31,28 +20,14 @@ export function SiteNavbar() {
   return (
     <Navbar expand="lg" sticky="top" className="navbar-agri border-bottom" expanded={expanded} onToggle={setExpanded}>
       <Container fluid className="navbar-inner">
+        <Button variant="link" className="text-body p-2 side-menu-trigger" onClick={onMenuClick} aria-label="Open navigation menu"><Menu size={20}/></Button>
         <Navbar.Brand as={Link} to="/" onClick={close} className="d-flex align-items-center gap-2 fw-semibold">
-          <img src={logo} alt="" width="24" height="24" className="text-primary" style={{ color: "var(--bs-primary)" }} />
-          AgriOptima
+          <img src={logo} alt="" width="34" height="34" className="brand-mark" />
+          <span className="brand-wordmark" aria-label="AgriSmart — Precision farming for a better tomorrow"><span><b>Agri</b><b>Smart</b></span><small>Precision farming for a better tomorrow</small></span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="main-nav" />
         <Navbar.Collapse id="main-nav">
-          <Nav as="nav" aria-label="Main" className="me-auto gap-lg-1">
-            {NAV.map((item) => (
-              <Nav.Link key={item.to} as={NavLink} to={item.to} onClick={close} className="px-lg-2">
-                {item.label}
-              </Nav.Link>
-            ))}
-            <NavDropdown title="More" id="more-nav" align="end">
-              {MORE.map(([to,label])=><NavDropdown.Item key={to} as={NavLink} to={to} onClick={close}>{label}</NavDropdown.Item>)}
-            </NavDropdown>
-            {isAdmin && (
-              <Nav.Link as={NavLink} to="/admin" onClick={close} className="px-lg-2 d-flex align-items-center gap-1">
-                <Shield size={14} aria-hidden /> Admin
-              </Nav.Link>
-            )}
-          </Nav>
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center justify-content-end gap-2 ms-auto">
             <Button variant="link" className="text-body p-1" aria-label="Notifications" title="No new notifications"><Bell size={18}/></Button>
             <select className="language-select" aria-label="Language" defaultValue="en" onChange={e=>document.documentElement.lang=e.target.value}><option value="en">EN</option><option value="hi">हिंदी</option></select>
             {user ? (
@@ -62,6 +37,7 @@ export function SiteNavbar() {
             ) : (
               <><Button as={Link} to="/login" variant="outline-primary" size="sm" onClick={close}>Sign in</Button><Button as={Link} to="/register" variant="primary" size="sm" onClick={close}>Join</Button></>
             )}
+            {isAdmin && <NavDropdown title={<><Shield size={15}/> Admin</>} id="admin-menu" align="end"><NavDropdown.Item as={Link} to="/admin">Admin tools</NavDropdown.Item></NavDropdown>}
             <Button
               variant="link"
               className="text-body p-1"
