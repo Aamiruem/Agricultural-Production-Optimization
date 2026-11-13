@@ -12,7 +12,9 @@ and the syllabus itself recommends learning one deeply and understanding the oth
 | CSS3, Flexbox, Grid, responsive | every page; mobile nav row in `site-header.tsx` |
 | Sass | `components/hero.module.scss` |
 | Tailwind CSS | all components; theme tokens in `app/globals.css` |
-| JavaScript (ES6+) | `services/farm-service` (plain JS, ES modules) |
+| Bootstrap (React-Bootstrap) + Sass theme | `frontend/react-app` (`src/styles/main.scss`) |
+| JavaScript (ES6+), JSX | `frontend/react-app` (whole app), `services/farm-service` (plain JS, ES modules) |
+| React Router (routing, protected/admin routes, lazy pages) | `frontend/react-app/src/App.jsx` |
 | TypeScript | the whole web app; API types in `lib/api/types.ts` |
 | React (hooks, components) | all of `src/components` |
 | Next.js: SSR / SSG / ISR / SEO | `app/crops/page.tsx` (SSR), `app/crops/[name]` (SSG + ISR), `metadata`, `sitemap.ts`, `robots.ts` |

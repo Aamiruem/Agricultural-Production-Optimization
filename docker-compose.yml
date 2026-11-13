@@ -1,7 +1,7 @@
 # Full stack on one machine:
 #   cp .env.example .env      # set JWT_SECRET (and ANTHROPIC_API_KEY for the AI assistant)
 #   docker compose up --build
-#   open http://localhost
+#   open http://localhost (Next.js app) or http://localhost:8080 (React app)
 # Train the ML model (writes ml/models/ and logs to MLflow, UI at http://localhost:5000):
 #   docker compose --profile train run --rm trainer
 
@@ -12,7 +12,7 @@ x-api-env: &api-env
   DATABASE_URL: postgresql+psycopg://agri:${POSTGRES_PASSWORD:-agri}@postgres:5432/agrioptima
   AUTO_CREATE_TABLES: "false" # migrations run on start (alembic upgrade head)
   JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env (32+ random characters)}
-  CORS_ORIGINS: http://localhost
+  CORS_ORIGINS: http://localhost,http://localhost:8080
   REDIS_URL: redis://redis:6379/0
   QDRANT_URL: http://qdrant:6333
   ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
@@ -93,7 +93,7 @@ services:
       NODE_ENV: production
       MONGODB_URI: mongodb://mongo:27017/agrioptima?replicaSet=rs0
       JWT_SECRET: ${JWT_SECRET}
-      CORS_ORIGINS: http://localhost
+      CORS_ORIGINS: http://localhost,http://localhost:8080
       AGRI_API_URL: http://api:8000/api
       AWS_REGION: ${AWS_REGION:-ap-south-1}
       S3_BUCKET: ${S3_BUCKET:-}
@@ -112,6 +112,12 @@ services:
         NEXT_PUBLIC_SITE_URL: http://localhost
     environment:
       API_URL: http://api:8000/api # server components call the API inside the network
+    depends_on: [api, farm-service]
+
+  react-web:
+    # React (JSX) + Vite SPA served by its own Nginx: http://localhost:8080
+    build: frontend/react-app
+    ports: ["8080:80"]
     depends_on: [api, farm-service]
 
   nginx:

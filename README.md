@@ -7,7 +7,7 @@ trained ML model, fertilizer planning, farm & field management, an AI assistant
 
 ```mermaid
 flowchart LR
-  B[Browser<br/>Next.js · React · TypeScript] -->|REST · SSE · WebSocket| N[Nginx / AWS ALB]
+  B[Browser<br/>React JSX app · Next.js TS app] -->|REST · SSE · WebSocket| N[Nginx / AWS ALB]
   N -->|/| W[web<br/>Next.js SSR]
   N -->|/api| A[api<br/>Python · FastAPI]
   N -->|/farm-api · /socket.io| F[farm-service<br/>Node · Express]
@@ -26,7 +26,8 @@ flowchart LR
 
 | Folder | What it is | Stack |
 |---|---|---|
-| [frontend/web](frontend/web) | Web app | Next.js 16, React 19, TypeScript, Tailwind, Sass, shadcn/ui, Material UI, Redux Toolkit, Zustand, Context API, TanStack Query, Axios, React Hook Form, Zod, Framer Motion, Socket.IO client, Vitest, Jest, Playwright |
+| [frontend/react-app](frontend/react-app) | Web app in plain **JavaScript (JSX)** | React 19, Vite, React Router, Bootstrap 5 + Sass, Redux Toolkit, Zustand, Context API, TanStack Query, Axios, React Hook Form, Zod, Framer Motion, Socket.IO client, Vitest, Playwright |
+| [frontend/web](frontend/web) | Web app in **TypeScript (Next.js)** | Next.js 16, React 19, TypeScript, Tailwind, Sass, shadcn/ui, Material UI, Redux Toolkit, Zustand, Context API, TanStack Query, Axios, React Hook Form, Zod, Framer Motion, Socket.IO client, Vitest, Jest, Playwright |
 | [backend](backend) | ML / AI API | Python, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL/SQLite, JWT + OAuth2 password flow, RBAC, WebSockets, SSE, Celery + Redis, Anthropic SDK (Claude), LangGraph, Qdrant, pytest |
 | [services/farm-service](services/farm-service) | Farm management API | Node.js, Express 5, MongoDB + Mongoose (aggregations, `$lookup`, transactions), Zod, JWT, Socket.IO, AWS S3 (SDK v3), helmet, rate limiting, pino, node:test + supertest |
 | [ml](ml) | ML pipeline | pandas, scikit-learn, XGBoost, PyTorch, MLflow (tracking + model registry), Optuna, SHAP, matplotlib, pytest |
@@ -50,11 +51,14 @@ cd backend && uvicorn app.main:app --reload
 # 3. Node farm-service (port 4000)
 cd services/farm-service && npm install && npm run dev
 
-# 4. Web app (port 3000)
+# 4a. React app — JavaScript/JSX (port 5173, proxies the APIs)
+cd frontend/react-app && npm install && npm run dev
+
+# 4b. or the Next.js app — TypeScript (port 3000)
 cd frontend/web && npm install && npm run dev
 ```
 
-Open http://localhost:3000 and create an account (the first account becomes **admin**).
+Open http://localhost:5173 (React) or http://localhost:3000 (Next.js) and create an account (the first account becomes **admin**).
 Set `ANTHROPIC_API_KEY` in `backend/.env` to turn on the Claude-powered assistant;
 without it the assistant answers from the knowledge base only. See each folder's
 `.env.example` for all settings.
@@ -67,7 +71,7 @@ without it the assistant answers from the knowledge base only. See each folder's
 ```bash
 cp .env.example .env          # set JWT_SECRET (32+ chars); optionally ANTHROPIC_API_KEY
 docker compose --profile train run --rm trainer   # train the model, logged to MLflow
-docker compose up --build     # http://localhost   ·   MLflow UI: http://localhost:5000
+docker compose up --build     # Next.js: http://localhost · React: http://localhost:8080 · MLflow: http://localhost:5000
 ```
 
 Compose runs PostgreSQL, MongoDB (replica set), Redis, Qdrant, MLflow, the API,
@@ -81,6 +85,7 @@ a Celery worker, the farm-service, the web app and Nginx.
 | ml | `pytest ml/tests` | data validation, every model learns, PyTorch MLP |
 | farm-service | `npm test` | 11 integration tests on real MongoDB: ownership, Zod, aggregations, transactions, Socket.IO, S3 presigning, Python service call |
 | frontend/web | `npm test` · `npm run test:jest` · `npm run test:e2e` | Vitest (components, stores, SSE parser) · Jest (validation, utils) · Playwright (6 browser flows) |
+| frontend/react-app | `npm test` · `npm run test:e2e` | Vitest (19 tests: stores, utils, SSE, form, route guards/RBAC) · Playwright (5 browser flows) |
 
 CI runs all of them on every push, including the backend against real PostgreSQL
 and the full ML training run.
