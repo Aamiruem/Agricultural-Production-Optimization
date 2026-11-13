@@ -8,10 +8,12 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { Loader } from "@/components/common/Loader";
 import { FertilizerResult } from "@/components/fertilizer/FertilizerResult";
-import { fetchFarmSummary, fetchFields } from "@/services/farmService";
+import { MIcon } from "@/components/common/MIcon";
+import { fetchFarmSummary, fetchFields, useFarmStorage } from "@/services/farmService";
 import { formatCropName } from "@/utils/crops";
 import { formatDate } from "@/utils/format";
 
+import { FarmInsights } from "./FarmInsights";
 import { FieldCard } from "./FieldCard";
 import { NewFieldForm } from "./NewFieldForm";
 
@@ -20,20 +22,28 @@ export function FarmDetail({ farmId }) {
   const fields = useQuery({ queryKey: ["farm", farmId, "fields"], queryFn: () => fetchFields(farmId) });
   const [plan, setPlan] = useState(null);
   const s = summary.data;
+  const storage = useFarmStorage();
+  const loc = s?.farm.location ?? {};
 
   if (summary.isLoading) return <Loader label="Loading farm" />;
 
   return (
     <section aria-label="Farm details" className="d-grid gap-3">
-      <header className="d-flex flex-wrap justify-content-between align-items-baseline gap-2">
-        <h2 className="h4 mb-0">{s?.farm.name}</h2>
+      <header className="farm-detail-head">
+        <div>
+          <h2>{s?.farm.name}</h2>
+          <p><MIcon name="location_on" size={16} /> {[loc.village, loc.district, loc.state].filter(Boolean).join(", ") || "No location set"}{loc.point && " · GPS"}</p>
+        </div>
         {s && (
-          <span className="small text-body-secondary">
-            {s.totals.fields} fields · {s.totals.areaHa.toFixed(1)} ha ·{" "}
-            {Object.entries(s.byStatus).map(([k, v]) => `${v} ${k}`).join(" · ") || "no fields yet"}
-          </span>
+          <div className="farm-chips">
+            <span className="chip small">{s.totals.fields} {s.totals.fields === 1 ? "field" : "fields"}</span>
+            <span className="chip small">{s.totals.areaHa.toFixed(1)} ha</span>
+            {Object.entries(s.byStatus).map(([k, v]) => <span key={k} className={`chip small status-${k}`}>{v} {k}</span>)}
+          </div>
         )}
       </header>
+
+      {loc.state && <FarmInsights location={loc} />}
 
       {s?.byCrop.length > 0 && (
         <div className="d-flex flex-wrap gap-2" aria-label="Area by crop">
@@ -54,7 +64,7 @@ export function FarmDetail({ farmId }) {
         {fields.data?.length === 0 && <EmptyState>No fields yet. Add one below.</EmptyState>}
       </div>
 
-      <NewFieldForm farmId={farmId} />
+      <NewFieldForm farmId={farmId} state={loc.state} />
 
       {s?.recentActivities.length > 0 && (
         <section aria-labelledby="activity-title">
@@ -80,7 +90,7 @@ export function FarmDetail({ farmId }) {
           {plan && (
             <>
               <p className="small text-body-secondary">
-                {formatCropName(plan.result.crop)} on {plan.result.area_ha} ha — calculated by the Python ML service.
+                {formatCropName(plan.result.crop)} on {plan.result.area_ha} ha — {storage.mode === "cloud" ? "calculated by the Python ML service." : "calculated on this device."}
               </p>
               <FertilizerResult result={plan.result} compact />
             </>

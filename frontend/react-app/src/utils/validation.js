@@ -48,11 +48,17 @@ export const registerSchema = z.object({
     .refine((v) => /[a-z]/i.test(v) && /\d/.test(v), "Mix letters and numbers"),
 });
 
-export const farmSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(80),
-  district: z.string().trim().max(60).optional(),
-  state: z.string().trim().max(60).optional(),
-});
+export const farmSchema = z
+  .object({
+    name: z.string().trim().min(2, "Name must be at least 2 characters").max(80),
+    state: z.string().trim().max(60).optional(),
+    district: z.string().trim().max(60).optional(),
+    districtOther: z.string().trim().max(60).optional(),
+    village: z.string().trim().max(80).optional(),
+  })
+  .refine((v) => v.district !== "__other" || (v.districtOther?.length ?? 0) >= 2, {
+    message: "Type the district name", path: ["districtOther"],
+  });
 
 const optionalNum = (label, max) =>
   z.union([z.nan(), z.number().min(0, `${label} must be ≥ 0`).max(max, `${label} must be ≤ ${max}`)]).optional();

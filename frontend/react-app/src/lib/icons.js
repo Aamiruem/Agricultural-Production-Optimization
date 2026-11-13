@@ -1,9 +1,9 @@
 // Material Symbols (Rounded) used by the app. The Google Fonts request in index.html
 // is subset to exactly these names, so add a name here before using it in <MIcon>.
 export const ICON_NAMES = [
-  "account_circle", "admin_panel_settings", "agriculture", "arrow_forward", "auto_awesome", "calendar_month", "check_circle",
-  "close", "compost", "dark_mode", "edit_calendar", "flag", "forum", "grass", "help", "history", "home", "info",
-  "insights", "landscape", "light_mode", "location_on", "logout", "mail", "map", "menu", "monitoring", "more_horiz",
+  "account_circle", "add", "admin_panel_settings", "agriculture", "arrow_forward", "auto_awesome", "calendar_month", "check_circle",
+  "close", "cloud_done", "cloud_off", "compost", "dark_mode", "delete", "edit_calendar", "flag", "forum", "grass", "help", "history", "home", "info",
+  "insights", "landscape", "light_mode", "location_on", "logout", "mail", "map", "menu", "monitoring", "my_location", "more_horiz",
   "notifications", "nutrition", "partly_cloudy_day", "pest_control", "potted_plant", "psychology", "rainy", "rocket_launch",
   "savings", "science", "search", "smart_toy", "space_dashboard", "support_agent", "translate", "trending_up",
   "verified_user", "visibility", "water_drop", "wb_sunny",

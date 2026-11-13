@@ -3,12 +3,13 @@ import { Router } from "express";
 import * as farms from "../controllers/farm.controller.js";
 import * as fields from "../controllers/field.controller.js";
 import { requireAuth } from "../middleware/auth.js";
+import { requireDb } from "../middleware/error.js";
 import { validate } from "../middleware/validate.js";
 import * as s from "../validators/schemas.js";
 
 export const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuth, requireDb);
 
 // Farms
 router.get("/farms", farms.listFarms);

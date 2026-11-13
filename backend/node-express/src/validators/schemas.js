@@ -15,6 +15,7 @@ export const createFarm = z.object({
     .object({
       state: z.string().trim().max(60).optional(),
       district: z.string().trim().max(60).optional(),
+      village: z.string().trim().max(80).optional(),
       lat: z.number().min(-90).max(90).optional(),
       lng: z.number().min(-180).max(180).optional(),
     })

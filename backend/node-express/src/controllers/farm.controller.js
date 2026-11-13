@@ -10,8 +10,8 @@ import { HttpError } from "../utils/http-error.js";
 function toFarmDoc({ name, location }) {
   const doc = { name };
   if (location) {
-    const { state, district, lat, lng } = location;
-    doc.location = { state, district };
+    const { state, district, village, lat, lng } = location;
+    doc.location = { state, district, village };
     if (lat !== undefined && lng !== undefined) doc.location.point = { type: "Point", coordinates: [lng, lat] };
   }
   return doc;

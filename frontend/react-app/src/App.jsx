@@ -2,7 +2,6 @@ import { lazy } from "react";
 import { Route, Routes } from "react-router";
 
 import { AdminRoute } from "@/components/common/AdminRoute";
-import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { MainLayout } from "@/layouts/MainLayout";
 
@@ -61,10 +60,8 @@ export default function App() {
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
 
-        {/* Signed-in users only */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="farms" element={<FarmsPage />} />
-        </Route>
+        {/* Works signed out (saved on the device); signed-in users sync to the farm-service. */}
+        <Route path="farms" element={<FarmsPage />} />
 
         {/* RBAC: admins only */}
         <Route element={<AdminRoute />}>

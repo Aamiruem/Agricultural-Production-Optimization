@@ -1,40 +1,53 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Trash2 } from "lucide-react";
-import Button from "react-bootstrap/Button";
-import ListGroup from "react-bootstrap/ListGroup";
+import { useState } from "react";
 
 import { ErrorAlert } from "@/components/common/ErrorAlert";
+import { MIcon } from "@/components/common/MIcon";
+import { STATE_BY_NAME } from "@/data/indiaAgri";
+import { useT } from "@/i18n/useT";
 import { deleteFarm } from "@/services/farmService";
 
 export function FarmList({ farms, selectedId, onSelect }) {
+  const { lang } = useT();
+  const hi = lang === "hi";
   const queryClient = useQueryClient();
+  const [confirm, setConfirm] = useState(null);
   const remove = useMutation({
     mutationFn: deleteFarm,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["farms"] }),
+    onSuccess: () => { setConfirm(null); queryClient.invalidateQueries({ queryKey: ["farms"] }); },
   });
 
-  if (farms.length === 0) return <p className="small text-body-secondary">No farms yet — add your first one.</p>;
+  if (farms.length === 0) return <p className="muted small">{hi ? "अभी कोई खेत नहीं — नीचे पहला खेत जोड़ें।" : "No farms yet — add your first one below."}</p>;
 
   return (
     <>
-      <ListGroup aria-label="Your farms">
-        {farms.map((farm) => (
-          <ListGroup.Item key={farm._id} active={farm._id === selectedId} className="d-flex align-items-center gap-2">
-            <button type="button" className="btn btn-link text-start p-0 flex-grow-1 min-w-0 text-reset"
-                    onClick={() => onSelect(farm._id)} aria-current={farm._id === selectedId}>
-              <div className="fw-medium text-truncate">{farm.name}</div>
-              <div className="small opacity-75">
-                {[farm.location?.district, farm.location?.state].filter(Boolean).join(", ") || "No location"} ·{" "}
-                {farm.fields ?? 0} fields · {(farm.areaHa ?? 0).toFixed(1)} ha
-              </div>
-            </button>
-            <Button variant="link" size="sm" className="text-reset" aria-label={`Delete ${farm.name}`}
-                    disabled={remove.isPending} onClick={() => remove.mutate(farm._id)}>
-              <Trash2 size={16} />
-            </Button>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+      <ul className="farm-list" aria-label="Your farms">
+        {farms.map((farm) => {
+          const st = STATE_BY_NAME[farm.location?.state];
+          const place = [farm.location?.village, farm.location?.district, hi ? st?.hi : farm.location?.state].filter(Boolean).join(", ");
+          const active = farm._id === selectedId;
+          return (
+            <li key={farm._id} className={active ? "active" : ""}>
+              <button type="button" className="farm-item" onClick={() => onSelect(farm._id)} aria-current={active}>
+                <span className="farm-avatar" aria-hidden="true">{farm.name.slice(0, 1).toUpperCase()}</span>
+                <span className="farm-text">
+                  <b>{farm.name}</b>
+                  <small><MIcon name="location_on" size={14} /> {place || (hi ? "स्थान नहीं" : "No location")}</small>
+                  <small>{farm.fields ?? 0} {hi ? "फ़ील्ड" : farm.fields === 1 ? "field" : "fields"} · {(farm.areaHa ?? 0).toFixed(1)} ha</small>
+                </span>
+              </button>
+              {confirm === farm._id ? (
+                <span className="confirm-delete">
+                  <button type="button" className="g-text-btn danger" disabled={remove.isPending} onClick={() => remove.mutate(farm._id)}>{hi ? "हटाएँ" : "Delete"}</button>
+                  <button type="button" className="g-text-btn" onClick={() => setConfirm(null)}>{hi ? "रद्द" : "Cancel"}</button>
+                </span>
+              ) : (
+                <button type="button" className="icon-btn" aria-label={`Delete ${farm.name}`} onClick={() => setConfirm(farm._id)}><MIcon name="delete" size={20} /></button>
+              )}
+            </li>
+          );
+        })}
+      </ul>
       <ErrorAlert error={remove.error} className="mt-2" />
     </>
   );

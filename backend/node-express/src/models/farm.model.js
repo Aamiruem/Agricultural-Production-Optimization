@@ -7,6 +7,7 @@ const farmSchema = new mongoose.Schema(
     location: {
       state: { type: String, trim: true, maxlength: 60 },
       district: { type: String, trim: true, maxlength: 60 },
+      village: { type: String, trim: true, maxlength: 80 }, // village / block / tehsil
       // GeoJSON point enables geospatial queries ($near) later on.
       point: {
         type: { type: String, enum: ["Point"] },
