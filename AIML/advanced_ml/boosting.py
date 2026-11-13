@@ -48,7 +48,7 @@ def main() -> dict:
                                 random_state=RANDOM_STATE, n_jobs=-1),
         "lightgbm": LGBMRegressor(n_estimators=2000, learning_rate=0.03, num_leaves=63, subsample=0.9, subsample_freq=1,
                                   colsample_bytree=0.8, random_state=RANDOM_STATE, verbose=-1),
-        "catboost": CatBoostRegressor(iterations=2000, learning_rate=0.05, depth=8, random_seed=RANDOM_STATE,
+        "catboost": CatBoostRegressor(iterations=800, learning_rate=0.08, depth=6, random_seed=RANDOM_STATE,
                                       cat_features=CATEGORICAL, verbose=0, early_stopping_rounds=100),
     }
     results = {}
