@@ -8,7 +8,7 @@ export const FARM_API_URL = import.meta.env.VITE_FARM_API_URL ?? "/farm-api";
 
 const SERVICE_NAMES = {
   [API_URL]: "the FastAPI backend (port 8000)",
-  [FARM_API_URL]: "the farm service (port 4000)",
+  [FARM_API_URL]: "the Express farm service (port 4100)",
 };
 
 function withAuth(instance) {

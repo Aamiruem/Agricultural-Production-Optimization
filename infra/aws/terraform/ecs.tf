@@ -7,7 +7,7 @@ locals {
   apps = {
     api          = { port = 8000, cpu = 512, memory = 1024, health = "/api/health", public = true }
     worker       = { port = 0, cpu = 512, memory = 2048, health = "", public = false }
-    farm-service = { port = 4000, cpu = 256, memory = 512, health = "/health", public = true }
+    farm-service = { port = 4100, cpu = 256, memory = 512, health = "/health", public = true }
     web          = { port = 3000, cpu = 256, memory = 512, health = "/", public = true }
   }
   public_apps = { for k, v in local.apps : k => v if v.public }

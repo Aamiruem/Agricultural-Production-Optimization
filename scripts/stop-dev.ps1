@@ -10,6 +10,7 @@ $expected = @{
     vite = "frontend\react-app\node_modules\vite\bin\vite.js"
 }
 foreach ($name in @("vite", "express", "api")) {
+    if ($null -eq $stack.$name) { continue }
     $id = [int]$stack.$name
     $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId=$id" -ErrorAction SilentlyContinue
     if (-not $processInfo) { Write-Host "$name (PID $id) is already stopped."; continue }
@@ -17,6 +18,6 @@ foreach ($name in @("vite", "express", "api")) {
         Write-Warning "Leaving PID $id alone because it no longer matches the AgriSmart $name command."
         continue
     }
-    Stop-Process -Id $id -ErrorAction Stop
+    & taskkill.exe /PID $id /T /F | Out-Null
     Write-Host "Stopped $name (PID $id)."
 }

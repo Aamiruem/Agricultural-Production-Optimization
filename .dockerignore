@@ -9,8 +9,8 @@
 **/test-results
 **/playwright-report
 .git
-ml/mlruns
-ml/mlflow.db
-ml/datasets/*.csv
+AIML/mlruns
+AIML/*.db
+AIML/datasets/*.csv
 backend/*.db
 backend/*.db-*

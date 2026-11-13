@@ -3,11 +3,11 @@ import axios, { AxiosError, type AxiosInstance } from "axios";
 import { getValidToken, useAuthStore } from "@/store/auth-store";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
-export const FARM_API_URL = process.env.NEXT_PUBLIC_FARM_API_URL ?? "http://localhost:4000/api";
+export const FARM_API_URL = process.env.NEXT_PUBLIC_FARM_API_URL ?? "http://localhost:4100/api";
 
 const SERVICE_NAMES = new Map([
   [API_URL, "the FastAPI backend (port 8000)"],
-  [FARM_API_URL, "the farm service (port 4000)"],
+  [FARM_API_URL, "the farm service (port 4100)"],
 ]);
 
 function withAuth(instance: AxiosInstance): AxiosInstance {
