@@ -1,0 +1,60 @@
+// Sass: variables, a mixin, nesting and a loop, scoped as a CSS Module.
+
+$field-stripes: 6;
+$radius: 1.25rem;
+
+@mixin layered-gradient($angle) {
+  background:
+    radial-gradient(circle at 85% 15%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 55%),
+    linear-gradient($angle, color-mix(in oklch, var(--primary) 10%, var(--background)), var(--background));
+}
+
+.hero {
+  @include layered-gradient(160deg);
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius;
+  border: 1px solid var(--border);
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 3.5rem);
+
+  .title {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+
+    em {
+      font-style: normal;
+      color: var(--primary);
+    }
+  }
+
+  .lead {
+    margin-top: 1rem;
+    max-width: 52ch;
+    color: var(--muted-foreground);
+    font-size: 1.05rem;
+  }
+}
+
+// Decorative "crop rows" along the bottom edge
+.rows {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3.5rem;
+  display: grid;
+  grid-template-columns: repeat($field-stripes, 1fr);
+  opacity: 0.35;
+  pointer-events: none;
+
+  span {
+    border-top: 2px solid var(--primary);
+
+    @for $i from 1 through $field-stripes {
+      &:nth-child(#{$i}) {
+        transform: translateY(#{($i % 3) * 0.6}rem);
+      }
+    }
+  }
+}
