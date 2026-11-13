@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { IconBadge } from "@/components/common/IconBadge";
+import { MIcon } from "@/components/common/MIcon";
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
 import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -70,7 +71,7 @@ export default function DashboardPage() {
 
   return (
     <div className="dash">
-      <PageHeader page="dashboard" icon="space_dashboard" color={G.blue} actions={<StateSelect value={stateName} onChange={setStateName} className="dash-state" />} />
+      <PageHeader page="dashboard" icon="space_dashboard" color={G.blue} actions={<div className="dash-actions"><Link to="/data-dashboard" className="btn btn-tonal"><MIcon name="upload_file" size={20} /> {lang === "hi" ? "अपना डेटा अपलोड करें" : "Upload your data"}</Link><StateSelect value={stateName} onChange={setStateName} className="dash-state" /></div>} />
 
       <section className="dash-kpis">
         <Kpi icon="landscape" color={G.green} label="Cultivated area" value={view ? `${compact(view.last.area)} ha` : "—"} note={view ? `${view.last.year} records` : "No dataset records"} />

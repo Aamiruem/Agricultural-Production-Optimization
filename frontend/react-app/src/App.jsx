@@ -24,6 +24,7 @@ const IrrigationPage = lazy(() => import("@/pages/IrrigationPage"));
 const DiseaseDetectionPage = lazy(() => import("@/pages/DiseaseDetectionPage"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const StatesPage = lazy(() => import("@/pages/StatesPage"));
+const DataDashboardPage = lazy(() => import("@/pages/DataDashboardPage"));
 const CropGalleryPage = lazy(() => import("@/pages/CropGalleryPage"));
 const SeasonalAdvisorPage = lazy(() => import("@/pages/SeasonalAdvisorPage"));
 const RotationPlannerPage = lazy(() => import("@/pages/RotationPlannerPage"));
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="assistant" element={<AssistantPage />} />
         <Route path="insights" element={<InsightsPage />} />
         <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="data-dashboard" element={<DataDashboardPage />} />
         <Route path="yield" element={<YieldPredictionPage />} />
         <Route path="yield-prediction" element={<YieldPredictionPage />} />
         <Route path="soil" element={<SoilAnalysisPage />} />

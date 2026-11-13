@@ -14,7 +14,7 @@ export const translations = {
     },
     side: {
       overview: "Overview", tools: "AI tools", explore: "Explore India", farm: "Your farm",
-      dashboard: "Dashboard", recommend: "Crop recommendation", yield: "Yield prediction", soil: "Soil analysis",
+      dashboard: "Dashboard", dataDash: "Upload data → dashboard", recommend: "Crop recommendation", yield: "Yield prediction", soil: "Soil analysis",
       weather: "Weather", fertilizer: "Fertilizer recommendation", irrigation: "Irrigation optimization",
       disease: "Disease detection", reports: "Reports", crops: "Crop library", gallery: "Crop gallery", advisor: "Seasonal advisor", rotation: "Rotation planner", states: "State advisor",
       soils: "Soil types", planner: "Field planner", farms: "My farms", assistant: "AI farm assistant",
@@ -93,7 +93,7 @@ export const translations = {
     },
     side: {
       overview: "अवलोकन", tools: "AI टूल्स", explore: "भारत देखें", farm: "आपका खेत",
-      dashboard: "डैशबोर्ड", recommend: "फसल सुझाव", yield: "उपज पूर्वानुमान", soil: "मिट्टी विश्लेषण",
+      dashboard: "डैशबोर्ड", dataDash: "डेटा अपलोड → डैशबोर्ड", recommend: "फसल सुझाव", yield: "उपज पूर्वानुमान", soil: "मिट्टी विश्लेषण",
       weather: "मौसम", fertilizer: "उर्वरक सुझाव", irrigation: "सिंचाई अनुकूलन",
       disease: "रोग पहचान", reports: "रिपोर्ट", crops: "फसल पुस्तकालय", gallery: "फसल चित्र", advisor: "मौसमी सलाहकार", rotation: "फसल चक्र योजना", states: "राज्य सलाहकार",
       soils: "मिट्टी के प्रकार", planner: "खेत योजनाकार", farms: "मेरे खेत", assistant: "AI कृषि सहायक",

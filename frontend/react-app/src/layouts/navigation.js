@@ -5,6 +5,7 @@ import { G } from "@/lib/icons";
 export const NAV_GROUPS = [
   { label: "side.overview", links: [
     { to: "/dashboard", key: "side.dashboard", icon: "space_dashboard", color: G.blue },
+    { to: "/data-dashboard", key: "side.dataDash", icon: "query_stats", color: G.purple },
   ] },
   { label: "side.tools", links: [
     { to: "/crop-recommendation", key: "side.recommend", icon: "potted_plant", color: G.green },
