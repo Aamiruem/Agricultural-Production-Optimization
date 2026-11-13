@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from ml.config import FEATURES
-from ml.preprocessing.features import DatasetError, split_dataset, validate_dataframe
-from ml.train import candidate_models
+from AIML.config import FEATURES
+from AIML.preprocessing.features import DatasetError, split_dataset, validate_dataframe
+from AIML.machine_learning.crop_classifier import candidate_models
 
 
 def synthetic(n_per_class: int = 30) -> pd.DataFrame:
@@ -42,7 +42,7 @@ def test_candidates_learn_separable_data(name):
 
 def test_torch_mlp_learns_separable_data():
     try:
-        from ml.models.torch_mlp import predict_proba, train_mlp
+        from AIML.deep_learning.torch_mlp import predict_proba, train_mlp
     except (ImportError, OSError) as exc:  # not installed / native libs blocked
         pytest.skip(f"PyTorch unavailable: {exc.__class__.__name__}")
     split = split_dataset(synthetic())

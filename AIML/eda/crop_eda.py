@@ -1,6 +1,6 @@
 """Exploratory data analysis: summary statistics, correlations and plots.
 
-    python -m ml.eda      # writes ml/reports/eda_*.{json,png}
+    python -m AIML.eda      # writes ml/reports/eda_*.{json,png}
 """
 import json
 
@@ -10,8 +10,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
-from ml.config import FEATURES, REPORTS_DIR, TARGET  # noqa: E402
-from ml.preprocessing.features import load_dataset  # noqa: E402
+from AIML.config import FEATURES, REPORTS_DIR, TARGET  # noqa: E402
+from AIML.preprocessing.features import load_dataset  # noqa: E402
 
 
 def main() -> dict:

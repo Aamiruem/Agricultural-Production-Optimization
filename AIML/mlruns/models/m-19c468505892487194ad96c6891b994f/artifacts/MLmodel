@@ -1,0 +1,39 @@
+artifact_path: file:///C:/Users/GTI/Downloads/Agricultural-Production-Optimization/ml/mlruns/models/m-19c468505892487194ad96c6891b994f/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.14.6
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.1
+    skops_trusted_types:
+    - sklearn.tree._tree.Tree
+is_signature_from_type_hint: false
+mlflow_version: 3.18.0
+model_id: m-19c468505892487194ad96c6891b994f
+model_size_bytes: 17682428
+model_uuid: m-19c468505892487194ad96c6891b994f
+prompts: null
+run_id: 8c9239989e694a4098d7ad7ac96e5af7
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "long", "name": "N", "required": true}, {"type": "long", "name":
+    "P", "required": true}, {"type": "long", "name": "K", "required": true}, {"type":
+    "double", "name": "temperature", "required": true}, {"type": "double", "name":
+    "humidity", "required": true}, {"type": "double", "name": "ph", "required": true},
+    {"type": "double", "name": "rainfall", "required": true}]'
+  outputs: '[{"type": "long", "required": true}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-11-13 07:37:33.448201'

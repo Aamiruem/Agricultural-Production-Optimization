@@ -1,6 +1,6 @@
 """Explain the trained model's global feature importance.
 
-    python -m ml.explain        # after `python -m ml.train`
+    python -m AIML.explain        # after `python -m AIML.machine_learning.crop_classifier`
 
 Uses SHAP (mean |SHAP value| per feature). If SHAP can't be loaded, falls
 back to scikit-learn permutation importance (drop in macro-F1 when a
@@ -16,8 +16,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 from sklearn.inspection import permutation_importance  # noqa: E402
 
-from ml.config import FEATURES, MODEL_BUNDLE_PATH, RANDOM_STATE, REPORTS_DIR  # noqa: E402
-from ml.preprocessing.features import load_dataset, split_dataset  # noqa: E402
+from AIML.config import FEATURES, MODEL_BUNDLE_PATH, RANDOM_STATE, REPORTS_DIR  # noqa: E402
+from AIML.preprocessing.features import load_dataset, split_dataset  # noqa: E402
 
 
 def shap_importance(pipeline, X) -> dict[str, float]:

@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-from ml.config import DATA_PATH, FEATURES, RANDOM_STATE, TARGET, TEST_SIZE
+from AIML.config import DATA_PATH, FEATURES, RANDOM_STATE, TARGET, TEST_SIZE
 
 # Physically plausible ranges; rows outside them indicate corrupt data.
 VALID_RANGES = {
@@ -43,7 +43,7 @@ def validate_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 def load_dataset(path=DATA_PATH) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(
-            f"{path} not found. Run `python -m ml.data.download_dataset` first."
+            f"{path} not found. Run `python -m AIML.data.download` first."
         )
     df = pd.read_csv(path)
     df[TARGET] = df[TARGET].str.strip().str.lower()

@@ -11,7 +11,7 @@ router = APIRouter(tags=["ml & admin"])
 
 @router.get("/ml/model")
 def get_model():
-    """Model being served + the training leaderboard from `python -m ml.train`."""
+    """Model being served + the training leaderboard from `python -m AIML.machine_learning.crop_classifier`."""
     report = training_report()
     return {
         "serving": model_info(),

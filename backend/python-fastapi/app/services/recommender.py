@@ -1,6 +1,6 @@
 """Crop recommendation.
 
-Serves the model bundle written by `python -m ml.train` (best of Logistic
+Serves the model bundle written by `python -m AIML.machine_learning.crop_classifier` (best of Logistic
 Regression / Random Forest / XGBoost). Until a model exists, falls back to
 similarity against the reference crop profiles so the API always works.
 """

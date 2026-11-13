@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     redis_url: str | None = None
     celery_eager: bool | None = None
 
-    # ML model produced by `python -m ml.train`
+    # ML model produced by `python -m AIML.machine_learning.crop_classifier`
     model_path: Path = REPO_ROOT / "ml" / "models" / "crop_model.joblib"
     metrics_path: Path = REPO_ROOT / "ml" / "models" / "metrics.json"
 

@@ -1,7 +1,7 @@
 """Train and compare crop-recommendation models, tracked with MLflow.
 
-    python -m ml.data.download_dataset   # once
-    python -m ml.train                   # train + compare + save best
+    python -m AIML.data.download   # once
+    python -m AIML.machine_learning.crop_classifier                   # train + compare + save best
     mlflow ui --backend-store-uri sqlite:///ml/mlflow.db   # browse runs
 
 Candidates: Logistic Regression, Random Forest, XGBoost (5-fold CV + test
@@ -34,7 +34,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
-from ml.config import (
+from AIML.config import (
     EXPERIMENT_NAME,
     FEATURES,
     METRICS_PATH,
@@ -46,7 +46,7 @@ from ml.config import (
     REGISTERED_MODEL_NAME,
     TORCH_MODEL_PATH,
 )
-from ml.preprocessing.features import Split, load_dataset, split_dataset
+from AIML.preprocessing.features import Split, load_dataset, split_dataset
 
 
 # Types skops must be told to trust when MLflow saves each model. XGBoost
@@ -112,7 +112,7 @@ def evaluate_torch(split: Split) -> dict:
     """Train the PyTorch MLP; logs per-epoch validation curves to MLflow."""
     import torch
 
-    from ml.models.torch_mlp import predict_proba, train_mlp
+    from AIML.deep_learning.torch_mlp import predict_proba, train_mlp
 
     result = train_mlp(split.X_train.to_numpy(np.float32), split.y_train, len(split.classes))
     for row in result.history:

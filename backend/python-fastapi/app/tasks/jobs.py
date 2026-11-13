@@ -52,7 +52,7 @@ def batch_recommend(job_id: str, rows: list[dict]) -> str:
 def retrain_model() -> dict:
     """Re-run the ML training pipeline, then hot-reload the served model."""
     proc = subprocess.run(
-        [sys.executable, "-m", "ml.train", "--no-register"],
+        [sys.executable, "-m", "AIML.machine_learning.crop_classifier", "--no-register"],
         cwd=REPO_ROOT, capture_output=True, text=True, timeout=850,
     )
     if proc.returncode != 0:

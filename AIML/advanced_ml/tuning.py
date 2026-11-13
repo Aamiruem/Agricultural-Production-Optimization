@@ -1,6 +1,6 @@
 """Hyperparameter tuning for XGBoost with Optuna; every trial is an MLflow run.
 
-    python -m ml.tune --trials 30
+    python -m AIML.tune --trials 30
 """
 import argparse
 import json
@@ -10,8 +10,8 @@ import optuna
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from xgboost import XGBClassifier
 
-from ml.config import EXPERIMENT_NAME, MLFLOW_TRACKING_URI, RANDOM_STATE, REPORTS_DIR
-from ml.preprocessing.features import load_dataset, split_dataset
+from AIML.config import EXPERIMENT_NAME, MLFLOW_TRACKING_URI, RANDOM_STATE, REPORTS_DIR
+from AIML.preprocessing.features import load_dataset, split_dataset
 
 
 def main(trials: int = 30) -> dict:
