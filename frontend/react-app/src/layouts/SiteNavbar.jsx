@@ -7,7 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, NavLink } from "react-router";
 
 import logo from "@/assets/logo.svg";
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/hooks/useTheme";
 import { useAuthStore, useSession } from "@/store/authStore";
 
 const NAV = [

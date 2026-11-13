@@ -4,12 +4,14 @@ import { Outlet, useLocation } from "react-router";
 
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { Loader } from "@/components/common/Loader";
+import { useSessionExpiry } from "@/store/authStore";
 
 import { SiteFooter } from "./SiteFooter";
 import { SiteNavbar } from "./SiteNavbar";
 
 export function MainLayout() {
   const { pathname } = useLocation();
+  useSessionExpiry();
 
   // Start each new page at the top.
   useEffect(() => {
