@@ -9,7 +9,7 @@ const SITEMAP_ROUTES = [
   ["/", "1.0", "weekly"], ["/dashboard", "0.9", "daily"], ["/crop-recommendation", "0.9", "monthly"], ["/yield-prediction", "0.9", "monthly"],
   ["/soil-analysis", "0.8", "monthly"], ["/weather", "0.8", "hourly"], ["/fertilizer", "0.8", "monthly"], ["/irrigation-optimization", "0.8", "monthly"],
   ["/disease-detection", "0.8", "monthly"], ["/reports", "0.7", "monthly"], ["/crops", "0.8", "monthly"], ["/states", "0.8", "monthly"],
-  ["/soil-types", "0.7", "monthly"], ["/assistant", "0.6", "monthly"], ["/planner", "0.5", "monthly"], ["/about", "0.5", "yearly"], ["/contact", "0.5", "yearly"],
+  ["/soil-types", "0.7", "monthly"], ["/crop-gallery", "0.8", "monthly"], ["/seasonal-advisor", "0.8", "monthly"], ["/rotation-planner", "0.7", "monthly"], ["/assistant", "0.6", "monthly"], ["/planner", "0.5", "monthly"], ["/about", "0.5", "yearly"], ["/contact", "0.5", "yearly"],
 ];
 
 /** Injects the Material Symbols URL, subset to the icons the app declares. */

@@ -1,11 +1,11 @@
 // Material Symbols (Rounded) used by the app. The Google Fonts request in index.html
 // is subset to exactly these names, so add a name here before using it in <MIcon>.
 export const ICON_NAMES = [
-  "account_circle", "add", "admin_panel_settings", "agriculture", "arrow_forward", "auto_awesome", "calendar_month", "check_circle",
-  "close", "cloud_done", "cloud_off", "compost", "dark_mode", "delete", "edit_calendar", "flag", "forum", "grass", "help", "history", "home", "info",
+  "account_circle", "add", "admin_panel_settings", "agriculture", "arrow_forward", "auto_awesome", "autorenew", "calendar_month", "check_circle",
+  "close", "cloud_done", "cloud_off", "compost", "dark_mode", "delete", "download", "edit_calendar", "flag", "forum", "grass", "help", "history", "home", "info",
   "insights", "landscape", "light_mode", "location_on", "logout", "mail", "map", "menu", "monitoring", "my_location", "more_horiz",
-  "notifications", "nutrition", "partly_cloudy_day", "pest_control", "potted_plant", "psychology", "rainy", "rocket_launch",
-  "savings", "science", "search", "smart_toy", "space_dashboard", "support_agent", "translate", "trending_up",
+  "notifications", "nutrition", "partly_cloudy_day", "photo_library", "pest_control", "potted_plant", "psychology", "rainy", "rocket_launch",
+  "savings", "science", "search", "smart_toy", "space_dashboard", "support_agent", "tips_and_updates", "translate", "trending_up", "upload_file",
   "verified_user", "visibility", "water_drop", "wb_sunny",
 ];
 

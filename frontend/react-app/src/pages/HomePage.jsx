@@ -11,6 +11,7 @@ import { CATEGORIES, CROPS, SEASONS, STATES, STATE_BY_NAME } from "@/data/indiaA
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useWeather, weatherLabel } from "@/hooks/useWeather";
 import { useT } from "@/i18n/useT";
+import { ATLAS_CROPS } from "@/lib/atlas";
 import { useChartColors } from "@/lib/chartTheme";
 import { G } from "@/lib/icons";
 
@@ -80,10 +81,10 @@ export default function HomePage() {
           </motion.div>
         </div>
         <div className="hero-x-visual" aria-hidden="true">
+          <img className="hero-photo" src="/images/india-agriculture-hero.webp" alt="" width="1600" height="900" fetchpriority="high" />
           <div className="float-card f1"><span>🌾</span><div><b>{hi ? "गेहूँ — 4.6 t/ha" : "Wheat — 4.6 t/ha"}</b><small>{hi ? "AI पूर्वानुमान" : "AI forecast · Punjab"}</small></div></div>
           <div className="float-card f2"><span>💧</span><div><b>−32%</b><small>{hi ? "ड्रिप से पानी बचत" : "water with drip"}</small></div></div>
           <div className="float-card f3"><span>🧪</span><div><b>N · P · K</b><small>{hi ? "मृदा स्वास्थ्य 78/100" : "Soil health 78/100"}</small></div></div>
-          <div className="hero-orb">🌱</div>
         </div>
       </section>
 
@@ -180,9 +181,28 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Seasonal gallery */}
+      <section className="home-section" aria-labelledby="season-gallery">
+        <div className="section-head"><span className="section-kicker">{hi ? "मौसमी फसल गैलरी" : "Seasonal crop gallery"}</span><h2 id="season-gallery">{hi ? "पूरे वर्ष भारतीय खेती" : "Indian farming across the year"}</h2></div>
+        <div className="season-gallery">
+          {[
+            ["kharif-season", hi ? "खरीफ" : "Kharif", hi ? "मानसून फसलें · धान, मक्का, कपास, सोयाबीन" : "Monsoon crops · rice, maize, cotton, soybean", "kharif"],
+            ["rabi-season", hi ? "रबी" : "Rabi", hi ? "सर्दी की फसलें · गेहूँ, सरसों, चना, आलू" : "Winter crops · wheat, mustard, chickpea, potato", "rabi"],
+            ["zaid-horticulture", hi ? "ज़ायद और बागवानी" : "Zaid & horticulture", hi ? "गर्मी की फसलें · तरबूज, खीरा, सब्ज़ियाँ, फल" : "Summer crops · watermelon, cucumber, vegetables, orchards", "zaid"],
+          ].map(([img, title, text, season]) => (
+            <Link key={img} to={`/crops?season=${season}`} className="season-photo">
+              <img src={`/images/${img}.webp`} alt={`${title} season farming`} loading="lazy" width="1600" height="1067" />
+              <span><b>{title}</b><small>{text}</small></span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Supported crops */}
       <section className="home-section">
         <div className="section-head"><h2>{t("home.cropsTitle")}</h2><p>{t("home.cropsLead")}</p></div>
+        <div className="photo-strip" aria-hidden="true">{ATLAS_CROPS.slice(0, 16).map((c) => <img key={c.name} src={c.image} alt="" loading="lazy" width="96" height="96" title={c.name} />)}</div>
+        <div className="text-center mb-4"><Link to="/crop-gallery" className="btn btn-tonal"><MIcon name="photo_library" size={20} /> {hi ? "सभी 45 फसल चित्र देखें" : "Browse all 45 crop photos"}</Link></div>
         <div className="cat-cards">
           {CATEGORIES.map((cat) => (
             <Link key={cat.id} to={`/crops?category=${cat.id}`} className="cat-card" style={{ "--c": cat.color, "--bg": cat.bg }}>

@@ -14,10 +14,13 @@ export const NAV_GROUPS = [
     { to: "/fertilizer", key: "side.fertilizer", icon: "compost", color: G.orange },
     { to: "/irrigation-optimization", key: "side.irrigation", icon: "water_drop", color: G.cyan },
     { to: "/disease-detection", key: "side.disease", icon: "pest_control", color: G.red },
+    { to: "/seasonal-advisor", key: "side.advisor", icon: "tips_and_updates", color: G.yellow },
+    { to: "/rotation-planner", key: "side.rotation", icon: "autorenew", color: G.teal },
     { to: "/reports", key: "side.reports", icon: "monitoring", color: G.purple },
   ] },
   { label: "side.explore", links: [
     { to: "/crops", key: "side.crops", icon: "nutrition", color: G.red },
+    { to: "/crop-gallery", key: "side.gallery", icon: "photo_library", color: G.pink },
     { to: "/states", key: "side.states", icon: "map", color: G.teal },
     { to: "/soil-types", key: "side.soils", icon: "landscape", color: G.brown },
   ] },

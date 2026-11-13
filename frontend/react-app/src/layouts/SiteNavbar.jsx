@@ -46,6 +46,14 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
           <span className="brand-wordmark"><span><b>Agri</b><b>Smart</b></span><small>{t("brand.tagline")}</small></span>
         </Link>
 
+        <nav className="app-tabs" aria-label="Primary">
+          {TOP_LINKS.map((l) => (
+          <NavLink key={l.to} to={l.to} end className={() => `app-tab${tabActive(l.to) ? " active" : ""}`} aria-current={tabActive(l.to) ? "page" : undefined}>{t(l.key)}</NavLink>
+        ))}
+          {!user && <Link to="/login" className="app-tab mobile-only">{t("nav.login")}</Link>}
+          {!user && <Link to="/register" className="app-tab mobile-only">{t("nav.register")}</Link>}
+        </nav>
+
         <div className="app-bar-search"><GlobalSearch autoFocus={searchOpen} onDone={() => setSearchOpen(false)} /></div>
 
         <div className="nav-actions">
@@ -102,13 +110,6 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
         </div>
       </div>
 
-      <nav className="app-tabs" aria-label="Primary">
-        {TOP_LINKS.map((l) => (
-          <NavLink key={l.to} to={l.to} end className={() => `app-tab${tabActive(l.to) ? " active" : ""}`} aria-current={tabActive(l.to) ? "page" : undefined}>{t(l.key)}</NavLink>
-        ))}
-        {!user && <Link to="/login" className="app-tab mobile-only">{t("nav.login")}</Link>}
-        {!user && <Link to="/register" className="app-tab mobile-only">{t("nav.register")}</Link>}
-      </nav>
     </header>
   );
 }

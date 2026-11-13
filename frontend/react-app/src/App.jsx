@@ -24,6 +24,9 @@ const IrrigationPage = lazy(() => import("@/pages/IrrigationPage"));
 const DiseaseDetectionPage = lazy(() => import("@/pages/DiseaseDetectionPage"));
 const ReportsPage = lazy(() => import("@/pages/ReportsPage"));
 const StatesPage = lazy(() => import("@/pages/StatesPage"));
+const CropGalleryPage = lazy(() => import("@/pages/CropGalleryPage"));
+const SeasonalAdvisorPage = lazy(() => import("@/pages/SeasonalAdvisorPage"));
+const RotationPlannerPage = lazy(() => import("@/pages/RotationPlannerPage"));
 const AboutPage = lazy(() => import("@/pages/AboutPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
@@ -57,6 +60,9 @@ export default function App() {
         <Route path="disease-detection" element={<DiseaseDetectionPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="states" element={<StatesPage />} />
+        <Route path="crop-gallery" element={<CropGalleryPage />} />
+        <Route path="seasonal-advisor" element={<SeasonalAdvisorPage />} />
+        <Route path="rotation-planner" element={<RotationPlannerPage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
 

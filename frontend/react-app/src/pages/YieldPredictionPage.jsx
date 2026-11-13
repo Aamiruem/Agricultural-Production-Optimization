@@ -10,7 +10,10 @@ import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
 import { useT } from "@/i18n/useT";
 import { YIELD_DOMAIN, rainfallSensitivity, seasonsFor } from "@/lib/agriModels";
+import { cropImage } from "@/lib/atlas";
 import { useChartColors } from "@/lib/chartTheme";
+import { YieldBatch } from "@/components/yield/YieldBatch";
+import { YieldScenarios } from "@/components/yield/YieldScenarios";
 import { getErrorMessage } from "@/services/apiClient";
 import { predictYield } from "@/services/mlService";
 
@@ -23,6 +26,11 @@ const CROP_EMOJI = {
   "Black pepper": "⚫", Cardamom: "🌿", Coriander: "🌿", Cashewnut: "🌰", Arecanut: "🌴", Sugarcane: "🎋", "Cotton(lint)": "☁️", Jute: "🧵", Mesta: "🧵", Sannhamp: "🧵", Tobacco: "🍂", "Guar seed": "🫘",
 };
 const emojiFor = (crop) => CROP_EMOJI[crop] ?? "🌱";
+/** Crop photo when available (from the crop gallery), else an emoji tile. */
+function CropPic({ crop, xl = false }) {
+  const src = cropImage(crop);
+  return <span className={`crop-pic${xl ? " xl" : ""}${src ? " photo" : ""}`}>{src ? <img src={src} alt="" loading="lazy" width={xl ? 96 : 52} height={xl ? 96 : 52} /> : emojiFor(crop)}</span>;
+}
 const ACRE_TO_HA = 0.404686;
 
 export default function YieldPredictionPage() {
@@ -84,7 +92,7 @@ export default function YieldPredictionPage() {
         <div className="crop-picker" role="listbox" aria-label="Crop">
           {crops.map((x) => (
             <button key={x} type="button" role="option" aria-selected={crop === x} className={crop === x ? "on" : ""} onClick={() => pickCrop(x)}>
-              <span className="crop-pic">{emojiFor(x)}</span><span>{x}</span>
+              <CropPic crop={x} /><span>{x}</span>
             </button>
           ))}
         </div>
@@ -113,7 +121,7 @@ export default function YieldPredictionPage() {
         <section className="tool-card">
           <div className="card-head"><h2>3. {lang === "hi" ? "AI परिणाम" : "AI result"}</h2>{result && <span className="engine-chip">{result.engine === "browser" ? t("common.browserModel") : t("common.serverModel")} · {result.model}</span>}</div>
           {!result ? (
-            <div className="empty-panel"><span className="crop-pic xl">{emojiFor(crop)}</span><b>{crop} · {state} · {season}</b><span>Run the prediction to see yield, production and how it compares with history.</span></div>
+            <div className="empty-panel"><CropPic crop={crop} xl /><b>{crop} · {state} · {season}</b><span>Run the prediction to see yield, production and how it compares with history.</span></div>
           ) : (
             <>
               <div className="result-tiles">
@@ -172,6 +180,8 @@ export default function YieldPredictionPage() {
           ) : <p className="muted">No national series for this crop.</p>}
         </section>
       </div>
+      {season && <YieldScenarios crop={crop} state={state} season={season} year={Number(year)} areaHa={Number(acres) * ACRE_TO_HA} />}
+      <YieldBatch />
       <p className="disclaimer">Predictions use crop, state, season, year, area and rainfall patterns from historical records. They do not know your variety, soil test, irrigation, pests or management, and years after 2020 are extrapolations. Confirm plans with your local KVK.</p>
     </>
   );

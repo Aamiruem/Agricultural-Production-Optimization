@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import { CATEGORIES, CATEGORY_BY_ID, CROPS, SEASONS, SEASON_BY_ID, SOIL_TYPES, STATES } from "@/data/indiaAgri";
 import { useT } from "@/i18n/useT";
+import { cropImage } from "@/lib/atlas";
 
 const WATER = { low: ["Low water", "कम पानी", 1], medium: ["Medium water", "मध्यम पानी", 2], high: ["High water", "अधिक पानी", 3] };
 
@@ -55,7 +56,7 @@ export function CropExplorer({ filters, onChange }) {
           <div className="crop-grid">
             {crops.map((c) => (
               <article key={c.id} className="crop-tile" style={{ "--c": CATEGORY_BY_ID[c.category].color, "--bg": CATEGORY_BY_ID[c.category].bg }}>
-                <div className="crop-visual" aria-hidden="true">{c.emoji}</div>
+                <div className={`crop-visual${cropImage(c.id) ? " photo" : ""}`} aria-hidden="true">{cropImage(c.id) ? <img src={cropImage(c.id)} alt="" loading="lazy" width="64" height="64" /> : c.emoji}</div>
                 <div className="crop-info">
                   <h3>{hi ? c.hi : c.en}</h3>
                   <small className="crop-alt">{hi ? c.en : c.hi}</small>
