@@ -678,13 +678,15 @@ li.active .farm-text small { color: inherit; opacity: 0.85; }
   &.active::after { left: 0.45rem; right: 0.45rem; }
   &.mobile-only { display: none; } // Login/Register tabs only on phones (the buttons are hidden there)
 }
-.app-bar-search { flex: 0 1 320px; min-width: 240px; max-width: 320px; margin-left: auto; }
+.app-bar-search { flex: 0 1 320px; min-width: 240px; max-width: 320px; margin-left: 0.75rem; }
+// Single-row widths: tabs sit on the right, next to search and actions.
+@media (min-width: 1280px) { .app-bar .app-tabs { margin-left: auto; } }
 .app-bar-search .g-search { height: 44px; }
 .app-bar .nav-actions { margin-left: 0.25rem; }
 .side-nav { top: 65px; height: calc(100vh - 65px); }
 @media (min-width: 1280px) and (max-width: 1599.98px) {
   .app-bar .search-toggle { display: inline-grid !important; }
-  .app-bar .nav-actions { margin-left: auto; }
+  .app-bar .nav-actions { margin-left: 0.5rem; }
   .app-bar-search { display: none; }
   .app-bar-row.search-mode { flex-wrap: wrap; .app-bar-search { display: block; order: 30; flex: 1 1 100%; max-width: none; margin: 0.25rem 0 0.35rem 0.5rem; } }
 }
