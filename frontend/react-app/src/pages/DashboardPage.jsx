@@ -3,7 +3,9 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
+import { IconBadge } from "@/components/common/IconBadge";
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StateSelect } from "@/components/common/StateSelect";
 import analytics from "@/data/generated/analytics.json";
@@ -28,13 +30,13 @@ const TASKS_BY_MONTH = [
   ["Sow wheat (optimal window)", "First irrigation in rabi crops", "Manage crop residue with happy seeder"],
   ["Weed control in wheat", "Frost protection for vegetables", "Irrigate rabi crops"],
 ];
-const TASK_COLORS = ["#4ade80", "#38bdf8", "#facc15"];
+const TASK_COLORS = [G.green, G.blue, G.yellow];
 
 export default function DashboardPage() {
   const { t, lang } = useT();
   const [stateName, setStateName] = useState("Madhya Pradesh");
   const [metric, setMetric] = useState("production");
-  const c = useChartColors("dark");
+  const c = useChartColors();
   const state = STATE_BY_NAME[stateName];
   const data = analytics.states[datasetStateName(stateName)];
   const weather = useWeather(state);
@@ -68,19 +70,19 @@ export default function DashboardPage() {
 
   return (
     <div className="dash">
-      <PageHeader page="dashboard" icon={LayoutDashboard} color="#4ade80" actions={<StateSelect value={stateName} onChange={setStateName} className="dash-state" />} />
+      <PageHeader page="dashboard" icon="space_dashboard" color={G.blue} actions={<StateSelect value={stateName} onChange={setStateName} className="dash-state" />} />
 
       <section className="dash-kpis">
-        <Kpi icon={Layers} color="#4ade80" label="Cultivated area" value={view ? `${compact(view.last.area)} ha` : "—"} note={view ? `${view.last.year} records` : "No dataset records"} />
-        <Kpi icon={Wheat} color="#facc15" label="Total production" value={view ? `${compact(view.last.production)} t` : "—"} note={view ? `${change >= 0 ? "▲" : "▼"} ${Math.abs(change).toFixed(1)}% vs ${view.prev?.year}` : "—"} tone={change >= 0 ? "up" : "down"} />
-        <Kpi icon={Sprout} color="#38bdf8" label="Crops recorded" value={data ? data.crops.length : cropsForState(stateName).length} note={`${cropsForState(stateName).length} in crop library`} />
-        <Kpi icon={CloudRain} color="#60a5fa" label="Normal rainfall" value={`${state.rainfall.toLocaleString("en-IN")} mm`} note={state.zone} />
-        <Kpi icon={Gauge} color="#c084fc" label="Leading crop" value={view?.top[0]?.crop ?? state.kharif[0]} note={view?.top[0] ? `${view.top[0].yield} t/ha · ${compact(view.top[0].area)} ha` : "From state profile"} />
+        <Kpi icon="landscape" color={G.green} label="Cultivated area" value={view ? `${compact(view.last.area)} ha` : "—"} note={view ? `${view.last.year} records` : "No dataset records"} />
+        <Kpi icon="grass" color={G.yellow} label="Total production" value={view ? `${compact(view.last.production)} t` : "—"} note={view ? `${change >= 0 ? "▲" : "▼"} ${Math.abs(change).toFixed(1)}% vs ${view.prev?.year}` : "—"} tone={change >= 0 ? "up" : "down"} />
+        <Kpi icon="potted_plant" color={G.blue} label="Crops recorded" value={data ? data.crops.length : cropsForState(stateName).length} note={`${cropsForState(stateName).length} in crop library`} />
+        <Kpi icon="rainy" color={G.cyan} label="Normal rainfall" value={`${state.rainfall.toLocaleString("en-IN")} mm`} note={state.zone} />
+        <Kpi icon="trending_up" color={G.purple} label="Leading crop" value={view?.top[0]?.crop ?? state.kharif[0]} note={view?.top[0] ? `${view.top[0].yield} t/ha · ${compact(view.top[0].area)} ha` : "From state profile"} />
       </section>
 
       <section className="dash-grid">
-        <div className="glass span-8">
-          <div className="glass-head">
+        <div className="g-card span-8">
+          <div className="card-head2">
             <div><h2>{lang === "hi" ? "उत्पादन रुझान" : "Production overview"}</h2><p>{stateName} · {view ? `${view.years[0].year}–${view.last.year}` : ""} · all crops</p></div>
             <div className="seg" role="tablist" aria-label="Metric">
               {["production", "area", "yield"].map((m) => <button key={m} role="tab" aria-selected={metric === m} className={metric === m ? "on" : ""} onClick={() => setMetric(m)}>{m === "production" ? "Production" : m === "area" ? "Area" : "Yield"}</button>)}
@@ -100,8 +102,8 @@ export default function DashboardPage() {
           ) : <NoData state={stateName} />}
         </div>
 
-        <div className="glass span-4 weather-glass">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "आज का मौसम" : "Weather today"}</h2><p>{state.capital}, {stateName}</p></div><span className="live-pill">● {t("common.live")}</span></div>
+        <div className="g-card span-4 weather-glass">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "आज का मौसम" : "Weather today"}</h2><p>{state.capital}, {stateName}</p></div><span className="live-pill">● {t("common.live")}</span></div>
           {weather.isLoading && <p className="muted">{t("common.loading")}</p>}
           {weather.isError && <p className="muted">Live weather unavailable right now.</p>}
           {cur && <>
@@ -113,29 +115,29 @@ export default function DashboardPage() {
             </div>
             <div className="wx-days">{weather.data.forecast.slice(0, 5).map((d) => <div key={d.date}><small>{new Date(d.date).toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", { weekday: "short" })}</small><span>{weatherLabel(d.code).icon}</span><b>{Math.round(d.max)}°</b><small>{Math.round(d.min)}°</small></div>)}</div>
           </>}
-          <Link to="/weather" className="glass-link">Full forecast →</Link>
+          <Link to="/weather" className="card-link">Full forecast →</Link>
         </div>
 
-        <div className="glass span-4">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "फसल वितरण" : "Crop distribution"}</h2><p>By cultivated area, last 3 years</p></div></div>
+        <div className="g-card span-4">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "फसल वितरण" : "Crop distribution"}</h2><p>By cultivated area, last 3 years</p></div></div>
           {view ? <>
             <div className="donut-wrap">
               <ResponsiveContainer width="100%" height={210}>
                 <PieChart>
                   <Pie data={view.pie} dataKey="value" nameKey="name" innerRadius={62} outerRadius={92} paddingAngle={1.5} stroke={c.surface} strokeWidth={2}>
-                    {view.pie.map((p, i) => <Cell key={p.name} fill={p.name === "Other" ? "#5b6b61" : c.series[i]} />)}
+                    {view.pie.map((p, i) => <Cell key={p.name} fill={p.name === "Other" ? c.muted : c.series[i]} />)}
                   </Pie>
                   <Tooltip content={<ChartTooltip format={(v) => `${compact(v)} ha`} />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="donut-center"><b>{compact(view.pie.reduce((s, p) => s + p.value, 0))}</b><small>ha / yr</small></div>
             </div>
-            <ul className="legend-list">{view.pie.map((p, i) => <li key={p.name}><i style={{ background: p.name === "Other" ? "#5b6b61" : c.series[i] }} />{p.name}<b>{((p.value / view.pie.reduce((s, x) => s + x.value, 0)) * 100).toFixed(0)}%</b></li>)}</ul>
+            <ul className="legend-list">{view.pie.map((p, i) => <li key={p.name}><i style={{ background: p.name === "Other" ? c.muted : c.series[i] }} />{p.name}<b>{((p.value / view.pie.reduce((s, x) => s + x.value, 0)) * 100).toFixed(0)}%</b></li>)}</ul>
           </> : <NoData state={stateName} />}
         </div>
 
-        <div className="glass span-4">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "AI उपज पूर्वानुमान" : "AI yield forecast"}</h2><p>{view?.forecast ? `${view.forecast.crop} · ${view.forecast.season} · ${new Date().getFullYear()}` : "Leading crop"}</p></div><BrainCircuit size={20} className="text-glow" /></div>
+        <div className="g-card span-4">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "AI उपज पूर्वानुमान" : "AI yield forecast"}</h2><p>{view?.forecast ? `${view.forecast.crop} · ${view.forecast.season} · ${new Date().getFullYear()}` : "Leading crop"}</p></div><BrainCircuit size={20} className="text-glow" /></div>
           {view?.forecast ? <>
             <div className="forecast-big"><b>{view.forecast.yield_t_ha}</b><span>t/ha predicted</span></div>
             <p className="muted small">Planning band {view.forecast.low_t_ha}–{view.forecast.high_t_ha} t/ha · trend {view.forecast.trend_pct_per_year > 0 ? "+" : ""}{view.forecast.trend_pct_per_year}%/yr</p>
@@ -143,90 +145,90 @@ export default function DashboardPage() {
               <BarChart data={[{ k: "Low (P25)", v: view.forecast.history.p25 }, { k: "Median", v: view.forecast.history.median }, { k: "AI forecast", v: view.forecast.yield_t_ha }, { k: "High (P75)", v: view.forecast.history.p75 }]} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                 <XAxis dataKey="k" stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} />
                 <YAxis stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} />
-                <Tooltip cursor={{ fill: "rgba(255,255,255,.05)" }} content={<ChartTooltip unit=" t/ha" />} />
+                <Tooltip cursor={{ fill: c.grid }} content={<ChartTooltip unit=" t/ha" />} />
                 <Bar dataKey="v" name="Yield" radius={[4, 4, 0, 0]} maxBarSize={34}>
-                  {["#5b6b61", "#7d8f83", c.primary, "#5b6b61"].map((f, i) => <Cell key={i} fill={f} />)}
+                  {[c.muted, c.muted2, c.primary, c.muted].map((f, i) => <Cell key={i} fill={f} />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>}
             <p className="muted tiny">Model R² {metrics.yield.r2_log} (log) · median error {(metrics.yield.median_ape * 100).toFixed(0)}% on 2015–2020 hold-out.</p>
           </> : <NoData state={stateName} />}
-          <Link to="/yield-prediction" className="glass-link">Run a custom prediction →</Link>
+          <Link to="/yield-prediction" className="card-link">Run a custom prediction →</Link>
         </div>
 
-        <div className="glass span-4">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "मौसम-वार क्षेत्र" : "Season share"}</h2><p>Share of cultivated area</p></div></div>
+        <div className="g-card span-4">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "मौसम-वार क्षेत्र" : "Season share"}</h2><p>Share of cultivated area</p></div></div>
           {view ? (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={view.seasons} layout="vertical" margin={{ top: 0, right: 30, left: 10, bottom: 0 }}>
                 <XAxis type="number" hide domain={[0, 100]} />
                 <YAxis type="category" dataKey="name" stroke={c.axis} tickLine={false} axisLine={false} fontSize={12} width={80} />
-                <Tooltip cursor={{ fill: "rgba(255,255,255,.05)" }} content={<ChartTooltip unit="%" />} />
+                <Tooltip cursor={{ fill: c.grid }} content={<ChartTooltip unit="%" />} />
                 <Bar dataKey="value" name="Area share" fill={c.series[0]} radius={[0, 4, 4, 0]} barSize={16} label={{ position: "right", fill: c.text, fontSize: 11, formatter: (v) => `${v}%` }} />
               </BarChart>
             </ResponsiveContainer>
           ) : <NoData state={stateName} />}
         </div>
 
-        <div className="glass span-6">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "शीर्ष फसलें — उपज" : "Top crops by yield"}</h2><p>Average t/ha, last 3 years</p></div><TrendingUp size={20} className="text-glow" /></div>
+        <div className="g-card span-6">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "शीर्ष फसलें — उपज" : "Top crops by yield"}</h2><p>Average t/ha, last 3 years</p></div><TrendingUp size={20} className="text-glow" /></div>
           {view ? (
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={view.top} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid stroke={c.grid} vertical={false} />
                 <XAxis dataKey="crop" stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} interval={0} />
                 <YAxis stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} />
-                <Tooltip cursor={{ fill: "rgba(255,255,255,.05)" }} content={<ChartTooltip unit=" t/ha" />} />
+                <Tooltip cursor={{ fill: c.grid }} content={<ChartTooltip unit=" t/ha" />} />
                 <Bar dataKey="yield" name="Yield" radius={[4, 4, 0, 0]} maxBarSize={38}>{view.top.map((r, i) => <Cell key={r.crop} fill={c.series[i]} />)}</Bar>
               </BarChart>
             </ResponsiveContainer>
           ) : <NoData state={stateName} />}
         </div>
 
-        <div className="glass span-3">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "मिट्टी सारांश" : "Soil summary"}</h2><p>Dominant soil types</p></div><Leaf size={20} className="text-glow" /></div>
+        <div className="g-card span-3">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "मिट्टी सारांश" : "Soil summary"}</h2><p>Dominant soil types</p></div><Leaf size={20} className="text-glow" /></div>
           <ul className="soil-list">{soilNames.map((s) => <li key={s.id}><i style={{ background: s.color }} /><div><b>{lang === "hi" ? s.hi : s.en}</b><small>pH {s.ph} · {s.npk}</small></div></li>)}</ul>
-          <Link to="/soil-analysis" className="glass-link">Analyse your soil →</Link>
+          <Link to="/soil-analysis" className="card-link">Analyse your soil →</Link>
         </div>
 
-        <div className="glass span-3">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "आगामी कार्य" : "Upcoming tasks"}</h2><p>{new Date().toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", { month: "long" })} farm calendar</p></div><CalendarCheck size={20} className="text-glow" /></div>
+        <div className="g-card span-3">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "आगामी कार्य" : "Upcoming tasks"}</h2><p>{new Date().toLocaleDateString(lang === "hi" ? "hi-IN" : "en-IN", { month: "long" })} farm calendar</p></div><CalendarCheck size={20} className="text-glow" /></div>
           <ul className="task-list">{tasks.map((task, i) => <li key={task.text}><i style={{ background: TASK_COLORS[i] }} /><span>{task.text}</span><small>{task.when.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</small></li>)}</ul>
         </div>
 
-        <div className="glass span-12">
-          <div className="glass-head"><div><h2>{lang === "hi" ? "वार्षिक वर्षा" : "Annual rainfall"}</h2><p>{stateName} · mm per year (dataset)</p></div><Thermometer size={20} className="text-glow" /></div>
+        <div className="g-card span-12">
+          <div className="card-head2"><div><h2>{lang === "hi" ? "वार्षिक वर्षा" : "Annual rainfall"}</h2><p>{stateName} · mm per year (dataset)</p></div><Thermometer size={20} className="text-glow" /></div>
           {view ? (
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={view.years} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid stroke={c.grid} vertical={false} />
                 <XAxis dataKey="year" stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} />
                 <YAxis stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} />
-                <Tooltip cursor={{ fill: "rgba(255,255,255,.05)" }} content={<ChartTooltip unit=" mm" />} />
+                <Tooltip cursor={{ fill: c.grid }} content={<ChartTooltip unit=" mm" />} />
                 <Bar dataKey="rain" name="Rainfall" fill={c.series[0]} radius={[4, 4, 0, 0]} maxBarSize={22} />
               </BarChart>
             </ResponsiveContainer>
           ) : <NoData state={stateName} />}
         </div>
 
-        <div className="glass span-12 dash-crops">
-          <div className="glass-head"><div><h2>{lang === "hi" ? `${state.hi} की प्रमुख फसलें` : `Major crops of ${stateName}`}</h2><p>Kharif · Rabi · Horticulture</p></div><MapPinned size={20} className="text-glow" /></div>
+        <div className="g-card span-12 dash-crops">
+          <div className="card-head2"><div><h2>{lang === "hi" ? `${state.hi} की प्रमुख फसलें` : `Major crops of ${stateName}`}</h2><p>Kharif · Rabi · Horticulture</p></div><MapPinned size={20} className="text-glow" /></div>
           <div className="season-cols">
             <div><h3>🌧️ Kharif</h3><p>{state.kharif.join(" · ")}</p></div>
             <div><h3>❄️ Rabi</h3><p>{state.rabi.join(" · ")}</p></div>
             <div><h3>🍎 Horticulture & specialties</h3><p>{state.horticulture.join(" · ")}</p></div>
           </div>
-          <Link to={`/states?state=${encodeURIComponent(stateName)}`} className="glass-link">Open the full state advisor →</Link>
+          <Link to={`/states?state=${encodeURIComponent(stateName)}`} className="card-link">Open the full state advisor →</Link>
         </div>
       </section>
     </div>
   );
 }
 
-function Kpi({ icon: Icon, color, label, value, note, tone }) {
+function Kpi({ icon, color, label, value, note, tone }) {
   return (
-    <div className="glass kpi">
-      <span className="icon-badge" style={{ "--c": color }}><Icon size={19} /></span>
+    <div className="g-card kpi">
+      <IconBadge icon={icon} color={color} />
       <span className="kpi-label">{label}</span>
       <b className="kpi-value">{value}</b>
       <small className={tone ? `kpi-${tone}` : ""}>{note}</small>
@@ -235,5 +237,5 @@ function Kpi({ icon: Icon, color, label, value, note, tone }) {
 }
 
 function NoData({ state }) {
-  return <div className="glass-empty">No historical yield records for {state} in the bundled dataset. Crop and soil guidance below still applies.</div>;
+  return <div className="card-empty">No historical yield records for {state} in the bundled dataset. Crop and soil guidance below still applies.</div>;
 }

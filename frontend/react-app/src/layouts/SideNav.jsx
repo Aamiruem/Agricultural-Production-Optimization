@@ -1,10 +1,11 @@
-import { Headset } from "lucide-react";
 import { Link, NavLink } from "react-router";
 
+import { MIcon } from "@/components/common/MIcon";
 import { useT } from "@/i18n/useT";
 
 import { NAV_GROUPS } from "./navigation";
 
+/** Material 3 navigation drawer: pill active indicator, colourful icons. */
 export function SideNav({ open, onClose }) {
   const { t } = useT();
   const closeOnMobile = () => {
@@ -18,9 +19,9 @@ export function SideNav({ open, onClose }) {
           {NAV_GROUPS.map((group) => (
             <div key={group.label} className="side-nav-group">
               <div className="side-nav-group-label">{t(group.label)}</div>
-              {group.links.map(({ to, key, icon: Icon, color }) => (
+              {group.links.map(({ to, key, icon, color }) => (
                 <NavLink key={to} to={to} onClick={closeOnMobile} className={({ isActive }) => `side-nav-link${isActive ? " active" : ""}`} style={{ "--c": color }}>
-                  <span className="side-icon"><Icon size={17} strokeWidth={2.2} aria-hidden="true" /></span>
+                  <MIcon name={icon} size={22} fill className="side-icon" />
                   <span>{t(key)}</span>
                 </NavLink>
               ))}
@@ -28,10 +29,10 @@ export function SideNav({ open, onClose }) {
           ))}
         </nav>
         <div className="side-nav-help">
-          <Headset size={22} />
+          <MIcon name="support_agent" size={26} fill />
           <b>{t("side.helpTitle")}</b>
           <small>{t("side.helpText")}</small>
-          <Link to="/assistant" className="btn btn-sm btn-cta mt-1" onClick={closeOnMobile}>{t("side.assistant")}</Link>
+          <Link to="/assistant" className="btn btn-tonal btn-sm mt-1" onClick={closeOnMobile}><MIcon name="auto_awesome" size={18} /> {t("side.assistant")}</Link>
         </div>
       </aside>
     </>

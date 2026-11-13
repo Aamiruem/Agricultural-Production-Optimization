@@ -10,7 +10,7 @@ export const translations = {
       home: "Home", about: "About", features: "Features", solutions: "AI Solutions", how: "How It Works", contact: "Contact",
       login: "Login", register: "Register", start: "Get Started", notifications: "Notifications", language: "Language",
       profile: "My profile", myFarms: "My farms", signOut: "Sign out", admin: "Admin tools", theme: "Toggle theme",
-      openMenu: "Open navigation menu", closeMenu: "Close navigation menu", noNotifications: "You're all caught up",
+      more: "More", askAi: "Ask AI", openMenu: "Open navigation menu", closeMenu: "Close navigation menu", noNotifications: "You're all caught up",
     },
     side: {
       overview: "Overview", tools: "AI tools", explore: "Explore India", farm: "Your farm",
@@ -89,7 +89,7 @@ export const translations = {
       home: "होम", about: "हमारे बारे में", features: "विशेषताएँ", solutions: "AI समाधान", how: "कैसे काम करता है", contact: "संपर्क",
       login: "लॉगिन", register: "रजिस्टर", start: "शुरू करें", notifications: "सूचनाएँ", language: "भाषा",
       profile: "मेरी प्रोफ़ाइल", myFarms: "मेरे खेत", signOut: "साइन आउट", admin: "एडमिन", theme: "थीम बदलें",
-      openMenu: "मेनू खोलें", closeMenu: "मेनू बंद करें", noNotifications: "कोई नई सूचना नहीं",
+      more: "और", askAi: "AI से पूछें", openMenu: "मेनू खोलें", closeMenu: "मेनू बंद करें", noNotifications: "कोई नई सूचना नहीं",
     },
     side: {
       overview: "अवलोकन", tools: "AI टूल्स", explore: "भारत देखें", farm: "आपका खेत",

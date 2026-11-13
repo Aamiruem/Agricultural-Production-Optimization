@@ -1,37 +1,37 @@
-import {
-  Activity, Bot, ChartNoAxesCombined, CloudSun, Droplets, FlaskConical, Info, LayoutDashboard, LibraryBig, Mail,
-  Map, MapPinned, Mountain, ScanLine, Sprout, Tractor, TrendingUp, WalletCards,
-} from "lucide-react";
+import { G } from "@/lib/icons";
 
-// Single source of truth for the app's navigation (sidebar, footer, sitemap).
+// Single source of truth for navigation (drawer, footer, search, bottom bar).
+// Icons are Material Symbols names; colours come from Google's palette.
 export const NAV_GROUPS = [
   { label: "side.overview", links: [
-    { to: "/dashboard", key: "side.dashboard", icon: LayoutDashboard, color: "#16a34a" },
+    { to: "/dashboard", key: "side.dashboard", icon: "space_dashboard", color: G.blue },
   ] },
   { label: "side.tools", links: [
-    { to: "/crop-recommendation", key: "side.recommend", icon: Sprout, color: "#22c55e" },
-    { to: "/yield-prediction", key: "side.yield", icon: TrendingUp, color: "#2563eb" },
-    { to: "/soil-analysis", key: "side.soil", icon: FlaskConical, color: "#a16207" },
-    { to: "/weather", key: "side.weather", icon: CloudSun, color: "#0ea5e9" },
-    { to: "/fertilizer", key: "side.fertilizer", icon: WalletCards, color: "#d97706" },
-    { to: "/irrigation-optimization", key: "side.irrigation", icon: Droplets, color: "#0284c7" },
-    { to: "/disease-detection", key: "side.disease", icon: ScanLine, color: "#e11d48" },
-    { to: "/reports", key: "side.reports", icon: ChartNoAxesCombined, color: "#7c3aed" },
+    { to: "/crop-recommendation", key: "side.recommend", icon: "potted_plant", color: G.green },
+    { to: "/yield-prediction", key: "side.yield", icon: "trending_up", color: G.blue },
+    { to: "/soil-analysis", key: "side.soil", icon: "science", color: G.brown },
+    { to: "/weather", key: "side.weather", icon: "partly_cloudy_day", color: G.yellow },
+    { to: "/fertilizer", key: "side.fertilizer", icon: "compost", color: G.orange },
+    { to: "/irrigation-optimization", key: "side.irrigation", icon: "water_drop", color: G.cyan },
+    { to: "/disease-detection", key: "side.disease", icon: "pest_control", color: G.red },
+    { to: "/reports", key: "side.reports", icon: "monitoring", color: G.purple },
   ] },
   { label: "side.explore", links: [
-    { to: "/crops", key: "side.crops", icon: LibraryBig, color: "#ea580c" },
-    { to: "/states", key: "side.states", icon: MapPinned, color: "#0d9488" },
-    { to: "/soil-types", key: "side.soils", icon: Mountain, color: "#92400e" },
+    { to: "/crops", key: "side.crops", icon: "nutrition", color: G.red },
+    { to: "/states", key: "side.states", icon: "map", color: G.teal },
+    { to: "/soil-types", key: "side.soils", icon: "landscape", color: G.brown },
   ] },
   { label: "side.farm", links: [
-    { to: "/planner", key: "side.planner", icon: Map, color: "#65a30d" },
-    { to: "/farms", key: "side.farms", icon: Tractor, color: "#b45309" },
-    { to: "/assistant", key: "side.assistant", icon: Bot, color: "#9333ea" },
-    { to: "/insights", key: "side.insights", icon: Activity, color: "#db2777" },
-    { to: "/about", key: "side.about", icon: Info, color: "#0891b2" },
-    { to: "/contact", key: "side.contact", icon: Mail, color: "#4f46e5" },
+    { to: "/planner", key: "side.planner", icon: "edit_calendar", color: G.green },
+    { to: "/farms", key: "side.farms", icon: "agriculture", color: G.orange },
+    { to: "/assistant", key: "side.assistant", icon: "smart_toy", color: G.purple },
+    { to: "/insights", key: "side.insights", icon: "insights", color: G.pink },
+    { to: "/about", key: "side.about", icon: "info", color: G.blue },
+    { to: "/contact", key: "side.contact", icon: "mail", color: G.red },
   ] },
 ];
+
+export const ALL_LINKS = NAV_GROUPS.flatMap((g) => g.links);
 
 export const TOP_LINKS = [
   { to: "/", key: "nav.home" },
@@ -40,4 +40,12 @@ export const TOP_LINKS = [
   { to: "/#solutions", key: "nav.solutions" },
   { to: "/#how-it-works", key: "nav.how" },
   { to: "/contact", key: "nav.contact" },
+];
+
+/** Mobile bottom navigation (Google app style). `more` opens the drawer. */
+export const BOTTOM_LINKS = [
+  { to: "/", key: "nav.home", icon: "home" },
+  { to: "/dashboard", key: "side.dashboard", icon: "space_dashboard" },
+  { to: "/crops", key: "side.crops", icon: "nutrition" },
+  { to: "/weather", key: "side.weather", icon: "partly_cloudy_day" },
 ];

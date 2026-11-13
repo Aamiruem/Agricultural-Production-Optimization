@@ -1,13 +1,14 @@
-import { Megaphone, X } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router";
+import { Link, NavLink, Outlet, useLocation } from "react-router";
 
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { Loader } from "@/components/common/Loader";
+import { MIcon } from "@/components/common/MIcon";
 import { useT } from "@/i18n/useT";
 import { trackPageView } from "@/lib/analytics";
 import { useSessionExpiry } from "@/store/authStore";
 
+import { BOTTOM_LINKS } from "./navigation";
 import { SideNav } from "./SideNav";
 import { SiteFooter } from "./SiteFooter";
 import { SiteNavbar } from "./SiteNavbar";
@@ -20,18 +21,38 @@ function AnnouncementBar() {
   if (hidden) return null;
   return (
     <div className="announcement-bar" role="region" aria-label="Announcement">
-      <Megaphone size={16} aria-hidden="true" />
+      <MIcon name="auto_awesome" size={18} fill />
       <span>{t("announce.text")}</span>
-      <Link to="/dashboard">{t("announce.cta")} →</Link>
+      <Link to="/dashboard">{t("announce.cta")}</Link>
       <button type="button" aria-label="Dismiss announcement" onClick={() => {
         setHidden(true);
         try { sessionStorage.setItem("agri-announce", "hidden"); } catch { /* storage unavailable */ }
-      }}><X size={15} /></button>
+      }}><MIcon name="close" size={18} /></button>
     </div>
   );
 }
 
+/** Mobile bottom navigation bar (Material 3 navigation bar). */
+function BottomNav({ onMore }) {
+  const { t } = useT();
+  return (
+    <nav className="bottom-nav" aria-label="Quick navigation">
+      {BOTTOM_LINKS.map((l) => (
+        <NavLink key={l.to} to={l.to} end className={({ isActive }) => `bn-item${isActive ? " active" : ""}`}>
+          <span className="bn-pill"><MIcon name={l.icon} size={24} fill /></span>
+          <span className="bn-label">{t(l.key)}</span>
+        </NavLink>
+      ))}
+      <button type="button" className="bn-item" onClick={onMore}>
+        <span className="bn-pill"><MIcon name="more_horiz" size={24} /></span>
+        <span className="bn-label">{t("nav.more")}</span>
+      </button>
+    </nav>
+  );
+}
+
 export function MainLayout() {
+  const { t } = useT();
   const { pathname, hash } = useLocation();
   const isHome = pathname === "/";
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window === "undefined" || window.matchMedia("(min-width: 992px)").matches);
@@ -68,6 +89,12 @@ export function MainLayout() {
           <SiteFooter />
         </div>
       </div>
+      {pathname !== "/assistant" && (
+        <Link to="/assistant" className="fab" aria-label={t("side.assistant")}>
+          <MIcon name="auto_awesome" size={22} fill /><span>{t("nav.askAi")}</span>
+        </Link>
+      )}
+      <BottomNav onMore={() => setSidebarOpen(true)} />
     </>
   );
 }

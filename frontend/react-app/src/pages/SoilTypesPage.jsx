@@ -1,6 +1,7 @@
 import { Mountain } from "lucide-react";
 import { Link } from "react-router";
 
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { CROPS, SOIL_TYPES } from "@/data/indiaAgri";
 import { useT } from "@/i18n/useT";
@@ -10,7 +11,7 @@ export default function SoilTypesPage() {
   const hi = lang === "hi";
   return (
     <>
-      <PageHeader title={hi ? "भारत की मिट्टी के प्रकार" : "Soil types of India"} description={hi ? "ICAR वर्गीकरण के अनुसार आठ प्रमुख मिट्टियाँ — गुण, राज्य, फसलें और प्रबंधन।" : "The eight major soil groups of India (ICAR classification): properties, states, suited crops and management."} icon={Mountain} color="#92400e" />
+      <PageHeader title={hi ? "भारत की मिट्टी के प्रकार" : "Soil types of India"} description={hi ? "ICAR वर्गीकरण के अनुसार आठ प्रमुख मिट्टियाँ — गुण, राज्य, फसलें और प्रबंधन।" : "The eight major soil groups of India (ICAR classification): properties, states, suited crops and management."} icon="landscape" color={G.brown} />
       <div className="soil-grid">
         {SOIL_TYPES.map((s) => (
           <article key={s.id} className="soil-card" style={{ "--c": s.color }}>

@@ -10,11 +10,13 @@ export function chartColors(mode) {
   const dark = mode === "dark";
   return {
     series: SERIES[dark ? "dark" : "light"],
-    grid: dark ? "rgba(255,255,255,.08)" : "rgba(15,40,25,.08)",
-    axis: dark ? "#a8b8ad" : "#5d6f63",
-    text: dark ? "#eef5ef" : "#10261a",
-    surface: dark ? "#14201a" : "#ffffff",
-    primary: dark ? "#4ade80" : "#16a34a",
+    grid: dark ? "rgba(255,255,255,.08)" : "rgba(31,31,31,.08)",
+    axis: dark ? "#c4c7c5" : "#444746",
+    text: dark ? "#e3e3e3" : "#1f1f1f",
+    surface: dark ? "#1e1f20" : "#ffffff",
+    primary: dark ? "#6dd58c" : "#188038",
+    muted: dark ? "#5f6368" : "#bdc1c6",
+    muted2: dark ? "#80868b" : "#9aa0a6",
   };
 }
 

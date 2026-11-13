@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StateSelect } from "@/components/common/StateSelect";
 import { STATE_BY_NAME } from "@/data/indiaAgri";
@@ -31,7 +32,7 @@ export default function WeatherPage() {
 
   return (
     <>
-      <PageHeader page="weather" icon={CloudSun} color="#0ea5e9" actions={<div className="d-flex gap-2 align-items-end flex-wrap">
+      <PageHeader page="weather" icon="partly_cloudy_day" color={G.yellow} actions={<div className="d-flex gap-2 align-items-end flex-wrap">
         <StateSelect value={stateName} onChange={(s) => { setCoords(null); setStateName(s); }} />
         <button className="btn btn-outline-primary btn-sm mb-1" onClick={useMyLocation}>{lang === "hi" ? "मेरा स्थान" : "Use my location"}</button>
       </div>} />

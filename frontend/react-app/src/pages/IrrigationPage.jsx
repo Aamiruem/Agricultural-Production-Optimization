@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StateSelect } from "@/components/common/StateSelect";
 import { STATE_BY_NAME } from "@/data/indiaAgri";
@@ -34,7 +35,7 @@ export default function IrrigationPage() {
 
   return (
     <>
-      <PageHeader page="irrigation" icon={Droplets} color="#0284c7" />
+      <PageHeader page="irrigation" icon="water_drop" color={G.cyan} />
       <div className="yield-layout">
         <section className="tool-card">
           <h2>{lang === "hi" ? "खेत और फसल" : "Field & crop"}</h2>

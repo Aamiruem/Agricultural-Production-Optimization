@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import analytics from "@/data/generated/analytics.json";
 import { useT } from "@/i18n/useT";
@@ -39,7 +40,7 @@ export default function ReportsPage() {
 
   return (
     <div className="report-page">
-      <PageHeader page="reports" icon={ChartNoAxesCombined} color="#7c3aed" actions={<div className="d-flex gap-2 no-print">
+      <PageHeader page="reports" icon="monitoring" color={G.purple} actions={<div className="d-flex gap-2 no-print">
         <button className="btn btn-cta btn-sm" onClick={() => { trackEvent("report_pdf", { state }); window.print(); }}><Printer size={16} /> {t("common.printPdf")}</button>
         <button className="btn btn-outline-success btn-sm" onClick={() => { trackEvent("report_csv", { state }); downloadCsv(`agrismart-${state.toLowerCase().replace(/\s+/g, "-")}.csv`, csvRows); }}><FileDown size={16} /> {t("common.downloadCsv")}</button>
       </div>} />

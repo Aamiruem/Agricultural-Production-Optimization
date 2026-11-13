@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { DISEASE_CROPS, SYMPTOMS, rankDiseases } from "@/data/diseases";
 import { useT } from "@/i18n/useT";
@@ -56,7 +57,7 @@ export default function DiseaseDetectionPage() {
 
   return (
     <>
-      <PageHeader page="disease" icon={ScanLine} color="#e11d48" />
+      <PageHeader page="disease" icon="pest_control" color={G.red} />
       <div className="yield-layout">
         <section className="tool-card">
           <h2>{hi ? "1. फ़ोटो और फसल" : "1. Photo & crop"}</h2>

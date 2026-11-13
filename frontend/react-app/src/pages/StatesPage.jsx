@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router";
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StateSelect } from "@/components/common/StateSelect";
 import analytics from "@/data/generated/analytics.json";
@@ -23,7 +24,7 @@ export default function StatesPage() {
 
   return (
     <>
-      <PageHeader page="states" icon={MapPinned} color="#0d9488" actions={<StateSelect value={name} onChange={(v) => setParams({ state: v })} />} />
+      <PageHeader page="states" icon="map" color={G.teal} actions={<StateSelect value={name} onChange={(v) => setParams({ state: v })} />} />
       <div className="state-chips">{STATES.map((x) => <button key={x.name} className={`chip${x.name === name ? " on" : ""}${x.type === "ut" ? " ut" : ""}`} onClick={() => setParams({ state: x.name })}>{hi ? x.hi : x.name}</button>)}</div>
 
       <section className="state-hero">

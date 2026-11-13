@@ -1,34 +1,33 @@
 import { motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowRight, BrainCircuit, ChartNoAxesCombined, CloudSun, Droplets, Eye, FlaskConical, Gauge, LayoutDashboard, Leaf, MapPinned,
-  ScanLine, ShieldCheck, Sprout, Target, TrendingUp, WalletCards,
-} from "lucide-react";
+import { ArrowRight, MapPinned, ShieldCheck } from "lucide-react";
 import { Link } from "react-router";
 import { Area, AreaChart, Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 import { IconBadge } from "@/components/common/IconBadge";
+import { MIcon } from "@/components/common/MIcon";
 import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
 import { CATEGORIES, CROPS, SEASONS, STATES, STATE_BY_NAME } from "@/data/indiaAgri";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useWeather, weatherLabel } from "@/hooks/useWeather";
 import { useT } from "@/i18n/useT";
-import { chartColors } from "@/lib/chartTheme";
+import { useChartColors } from "@/lib/chartTheme";
+import { G } from "@/lib/icons";
 
 const SOLUTIONS = [
-  { to: "/crop-recommendation", icon: Sprout, color: "#22c55e", key: "side.recommend", en: "Best crop for your N-P-K, pH, temperature, humidity and rainfall.", hi: "आपकी मिट्टी और जलवायु के लिए सर्वोत्तम फसल।" },
-  { to: "/yield-prediction", icon: TrendingUp, color: "#2563eb", key: "side.yield", en: "Predict t/ha and total production with historical ranges.", hi: "ऐतिहासिक सीमा सहित उपज और कुल उत्पादन का अनुमान।" },
-  { to: "/soil-analysis", icon: FlaskConical, color: "#a16207", key: "side.soil", en: "Soil Health Card scoring with radar charts and fixes.", hi: "रडार चार्ट और सुधार सहित मृदा स्वास्थ्य स्कोर।" },
-  { to: "/disease-detection", icon: ScanLine, color: "#e11d48", key: "side.disease", en: "Leaf-photo screening plus a symptom matcher.", hi: "पत्ती की फ़ोटो जाँच और लक्षण मिलान।" },
-  { to: "/fertilizer", icon: WalletCards, color: "#d97706", key: "side.fertilizer", en: "DAP, Urea and MOP doses for your exact nutrient gap.", hi: "पोषक तत्व की कमी के अनुसार DAP, यूरिया, MOP।" },
-  { to: "/irrigation-optimization", icon: Droplets, color: "#0284c7", key: "side.irrigation", en: "FAO-56 water budget from live evapotranspiration.", hi: "लाइव वाष्पोत्सर्जन से FAO-56 जल बजट।" },
+  { to: "/crop-recommendation", icon: "potted_plant", color: G.green, key: "side.recommend", en: "Best crop for your N-P-K, pH, temperature, humidity and rainfall.", hi: "आपकी मिट्टी और जलवायु के लिए सर्वोत्तम फसल।" },
+  { to: "/yield-prediction", icon: "trending_up", color: G.blue, key: "side.yield", en: "Predict t/ha and total production with historical ranges.", hi: "ऐतिहासिक सीमा सहित उपज और कुल उत्पादन का अनुमान।" },
+  { to: "/soil-analysis", icon: "science", color: G.brown, key: "side.soil", en: "Soil Health Card scoring with radar charts and fixes.", hi: "रडार चार्ट और सुधार सहित मृदा स्वास्थ्य स्कोर।" },
+  { to: "/disease-detection", icon: "pest_control", color: G.red, key: "side.disease", en: "Leaf-photo screening plus a symptom matcher.", hi: "पत्ती की फ़ोटो जाँच और लक्षण मिलान।" },
+  { to: "/fertilizer", icon: "compost", color: G.orange, key: "side.fertilizer", en: "DAP, Urea and MOP doses for your exact nutrient gap.", hi: "पोषक तत्व की कमी के अनुसार DAP, यूरिया, MOP।" },
+  { to: "/irrigation-optimization", icon: "water_drop", color: G.cyan, key: "side.irrigation", en: "FAO-56 water budget from live evapotranspiration.", hi: "लाइव वाष्पोत्सर्जन से FAO-56 जल बजट।" },
 ];
 
 const FEATURES = [
-  { to: "/dashboard", icon: LayoutDashboard, color: "#16a34a", key: "side.dashboard" },
-  { to: "/weather", icon: CloudSun, color: "#0ea5e9", key: "side.weather" },
-  { to: "/reports", icon: ChartNoAxesCombined, color: "#7c3aed", key: "side.reports" },
-  { to: "/states", icon: Target, color: "#0d9488", key: "side.states" },
+  { to: "/dashboard", icon: "space_dashboard", color: G.blue, key: "side.dashboard" },
+  { to: "/weather", icon: "partly_cloudy_day", color: G.yellow, key: "side.weather" },
+  { to: "/reports", icon: "monitoring", color: G.purple, key: "side.reports" },
+  { to: "/states", icon: "map", color: G.teal, key: "side.states" },
 ];
 
 const FAQ = [
@@ -55,7 +54,7 @@ export default function HomePage() {
   const reduce = useReducedMotion();
   useDocumentTitle(null, "AgriSmart: AI crop recommendation, yield prediction, soil analysis, live weather, fertilizer and irrigation advice for every Indian state — in English and Hindi.");
   const rise = (delay = 0) => ({ initial: reduce ? false : { opacity: 0, y: 18 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-40px" }, transition: { duration: 0.5, delay } });
-  const c = chartColors("dark");
+  const c = useChartColors();
   const punjab = analytics.states.Punjab.years.map(([year, area, production]) => ({ year, production, area }));
   const pie = analytics.states.Punjab.top.slice(0, 4).map(([name, value]) => ({ name, value }));
   const delhi = STATE_BY_NAME.Delhi;
@@ -67,12 +66,12 @@ export default function HomePage() {
       <section className="hero-x">
         <div className="hero-x-bg" aria-hidden="true" />
         <div className="hero-x-content">
-          <motion.span className="eyebrow" {...rise()}><BrainCircuit size={15} /> {t("home.eyebrow")}</motion.span>
+          <motion.span className="eyebrow" {...rise()}><MIcon name="auto_awesome" size={18} fill /> {t("home.eyebrow")}</motion.span>
           <motion.h1 {...rise(0.05)}>{t("home.title1")} <em>{t("home.title2")}</em> <span>{t("home.title3")}</span></motion.h1>
           <motion.p {...rise(0.1)}>{t("home.lead")}</motion.p>
           <motion.div className="hero-ctas" {...rise(0.15)}>
             <Link to="/register" className="btn btn-cta btn-lg">{t("home.ctaPrimary")} <ArrowRight size={18} /></Link>
-            <Link to="/dashboard" className="btn btn-glass btn-lg">{t("home.ctaSecondary")}</Link>
+            <Link to="/dashboard" className="btn btn-outline btn-lg">{t("home.ctaSecondary")}</Link>
           </motion.div>
           <motion.div className="hero-badges" {...rise(0.2)}>
             <span><ShieldCheck size={15} /> {hi ? "मुफ़्त और सुरक्षित" : "Free & private"}</span>
@@ -107,8 +106,8 @@ export default function HomePage() {
           <Link to="/about" className="text-link">{hi ? "और जानें" : "Learn more"} <ArrowRight size={16} /></Link>
         </motion.div>
         <div className="mv-cards">
-          <motion.div className="mv-card" {...rise(0.05)}><IconBadge icon={Target} color="#16a34a" box={46} size={22} /><h3>{t("home.mission")}</h3><p>{t("home.missionText")}</p></motion.div>
-          <motion.div className="mv-card" {...rise(0.1)}><IconBadge icon={Eye} color="#2563eb" box={46} size={22} /><h3>{t("home.vision")}</h3><p>{t("home.visionText")}</p></motion.div>
+          <motion.div className="mv-card" {...rise(0.05)}><IconBadge icon="flag" color={G.green} box={48} size={24} /><h3>{t("home.mission")}</h3><p>{t("home.missionText")}</p></motion.div>
+          <motion.div className="mv-card" {...rise(0.1)}><IconBadge icon="visibility" color={G.blue} box={48} size={24} /><h3>{t("home.vision")}</h3><p>{t("home.visionText")}</p></motion.div>
         </div>
       </section>
 
@@ -119,7 +118,7 @@ export default function HomePage() {
           {SOLUTIONS.map((s, i) => (
             <motion.div key={s.to} {...rise(i * 0.04)}>
               <Link to={s.to} className="solution-card" style={{ "--c": s.color }}>
-                <IconBadge icon={s.icon} color={s.color} box={52} size={25} />
+                <IconBadge icon={s.icon} color={s.color} box={56} size={28} />
                 <h3>{t(s.key)}</h3><p>{hi ? s.hi : s.en}</p>
                 <span className="text-link">{hi ? "खोलें" : "Open tool"} <ArrowRight size={15} /></span>
               </Link>
@@ -138,9 +137,9 @@ export default function HomePage() {
       <section className="home-section" id="how-it-works">
         <div className="section-head"><span className="section-kicker">{t("nav.how")}</span><h2>{t("home.howTitle")}</h2></div>
         <ol className="steps">
-          {[["how1", Leaf, "#16a34a"], ["how2", BrainCircuit, "#7c3aed"], ["how3", Sprout, "#d97706"], ["how4", Gauge, "#2563eb"]].map(([k, Icon, col], i) => (
+          {[["how1", "edit_calendar", G.green], ["how2", "psychology", G.purple], ["how3", "auto_awesome", G.yellow], ["how4", "rocket_launch", G.blue]].map(([k, icon, col], i) => (
             <motion.li key={k} {...rise(i * 0.06)} style={{ "--c": col }}>
-              <span className="step-num">{i + 1}</span><IconBadge icon={Icon} color={col} box={50} size={24} />
+              <span className="step-num">{i + 1}</span><IconBadge icon={icon} color={col} box={52} size={26} />
               <h3>{t(`home.${k}`)}</h3><p>{t(`home.${k}t`)}</p>
             </motion.li>
           ))}
@@ -149,10 +148,10 @@ export default function HomePage() {
 
       {/* Dashboard preview */}
       <section className="home-section preview" aria-labelledby="preview-title">
-        <div className="section-head light"><h2 id="preview-title">{t("home.previewTitle")}</h2><p>{t("home.previewLead")}</p></div>
+        <div className="section-head"><h2 id="preview-title">{t("home.previewTitle")}</h2><p>{t("home.previewLead")}</p></div>
         <div className="preview-frame">
-          <div className="glass span-8">
-            <div className="glass-head"><div><h3>Punjab · {hi ? "उत्पादन" : "production"} (t)</h3><p>1997–2020</p></div></div>
+          <div className="g-card span-8">
+            <div className="card-head2"><div><h3>Punjab · {hi ? "उत्पादन" : "production"} (t)</h3><p>1997–2020</p></div></div>
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={punjab} margin={{ top: 5, right: 5, left: 5, bottom: 0 }}>
                 <defs><linearGradient id="pv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={c.primary} stopOpacity={0.5} /><stop offset="100%" stopColor={c.primary} stopOpacity={0} /></linearGradient></defs>
@@ -160,8 +159,8 @@ export default function HomePage() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="glass span-4">
-            <div className="glass-head"><div><h3>{hi ? "फसल वितरण" : "Crop distribution"}</h3><p>{hi ? "क्षेत्रफल" : "by area"}</p></div></div>
+          <div className="g-card span-4">
+            <div className="card-head2"><div><h3>{hi ? "फसल वितरण" : "Crop distribution"}</h3><p>{hi ? "क्षेत्रफल" : "by area"}</p></div></div>
             <ResponsiveContainer width="100%" height={150}>
               <PieChart><Pie data={pie} dataKey="value" innerRadius={42} outerRadius={64} paddingAngle={1.5} stroke={c.surface} strokeWidth={2}>{pie.map((p, i) => <Cell key={p.name} fill={c.series[i]} />)}</Pie></PieChart>
             </ResponsiveContainer>
@@ -175,8 +174,8 @@ export default function HomePage() {
       <section className="home-section">
         <div className="section-head"><h2>{t("home.benefitsTitle")}</h2></div>
         <div className="benefit-grid">
-          {[["b1", Droplets, "#0284c7"], ["b2", BrainCircuit, "#7c3aed"], ["b3", WalletCards, "#d97706"], ["b4", ShieldCheck, "#16a34a"]].map(([k, Icon, col], i) => (
-            <motion.div key={k} className="benefit-card" {...rise(i * 0.05)} style={{ "--c": col }}><IconBadge icon={Icon} color={col} box={48} size={23} /><h3>{t(`home.${k}`)}</h3><p>{t(`home.${k}t`)}</p></motion.div>
+          {[["b1", "water_drop", G.cyan], ["b2", "psychology", G.purple], ["b3", "savings", G.yellow], ["b4", "verified_user", G.green]].map(([k, icon, col], i) => (
+            <motion.div key={k} className="benefit-card" {...rise(i * 0.05)} style={{ "--c": col }}><IconBadge icon={icon} color={col} box={52} size={26} /><h3>{t(`home.${k}`)}</h3><p>{t(`home.${k}t`)}</p></motion.div>
           ))}
         </div>
       </section>
@@ -219,7 +218,7 @@ export default function HomePage() {
       <section className="final-cta">
         <h2>{t("home.ctaTitle")}</h2>
         <p>{t("home.ctaText")}</p>
-        <div className="hero-ctas center"><Link to="/register" className="btn btn-light btn-lg">{t("home.ctaPrimary")} <ArrowRight size={18} /></Link><Link to="/contact" className="btn btn-glass btn-lg">{t("nav.contact")}</Link></div>
+        <div className="hero-ctas center"><Link to="/register" className="btn btn-cta btn-lg">{t("home.ctaPrimary")} <ArrowRight size={18} /></Link><Link to="/contact" className="btn btn-outline btn-lg">{t("nav.contact")}</Link></div>
       </section>
     </div>
   );

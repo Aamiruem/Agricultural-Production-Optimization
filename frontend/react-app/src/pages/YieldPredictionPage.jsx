@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
@@ -70,7 +71,7 @@ export default function YieldPredictionPage() {
 
   return (
     <>
-      <PageHeader page="yield" icon={TrendingUp} color="#2563eb" />
+      <PageHeader page="yield" icon="trending_up" color={G.blue} />
       <div className="model-banner">
         <BrainCircuit size={18} />
         <span><b>Server: XGBoost</b> (R² {metrics.server_yield.r2_log.toFixed(2)} log-yield) · <b>Browser fallback</b>: log-linear trend + rainfall model (R² {metrics.yield.r2_log.toFixed(2)}, median error {(metrics.yield.median_ape * 100).toFixed(0)}%) — both validated on unseen 2015–2020 seasons. No model is 100% accurate; use the range, not just the point.</span>

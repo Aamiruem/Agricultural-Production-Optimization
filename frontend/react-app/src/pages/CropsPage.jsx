@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router";
 
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { Loader } from "@/components/common/Loader";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { CropExplorer } from "@/components/crops/CropExplorer";
 import { CropTable } from "@/components/crops/CropTable";
@@ -26,7 +27,7 @@ export default function CropsPage() {
 
   return (
     <>
-      <PageHeader page="crops" icon={LibraryBig} color="#ea580c" />
+      <PageHeader page="crops" icon="nutrition" color={G.red} />
       <CropExplorer filters={filters} onChange={onChange} />
       <h2 className="h4 mt-5">{lang === "hi" ? "ML सुझाव मॉडल द्वारा समर्थित 22 फसलें" : "22 crops supported by the ML recommendation model"}</h2>
       {crops.isLoading && <Loader label="Loading crops" />}

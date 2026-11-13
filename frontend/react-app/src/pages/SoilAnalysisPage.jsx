@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { Bar, BarChart, CartesianGrid, Cell, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
+import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
 import { CROPS, SOIL_TYPES } from "@/data/indiaAgri";
 import { useT } from "@/i18n/useT";
@@ -43,7 +44,7 @@ export default function SoilAnalysisPage() {
 
   return (
     <>
-      <PageHeader page="soil" icon={FlaskConical} color="#a16207" />
+      <PageHeader page="soil" icon="science" color={G.brown} />
       <div className="sample-row"><span className="muted">Try a sample:</span>{SAMPLES.map((s) => <button key={s.label} className="chip" onClick={() => setV(s.v)}>{s.label}</button>)}</div>
       <div className="yield-layout">
         <section className="tool-card">
