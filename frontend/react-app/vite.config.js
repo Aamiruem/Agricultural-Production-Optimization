@@ -2,6 +2,8 @@ import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 
+import { iconFontUrl } from "./src/lib/icons.js";
+
 // Public routes listed in sitemap.xml (SEO).
 const SITEMAP_ROUTES = [
   ["/", "1.0", "weekly"], ["/dashboard", "0.9", "daily"], ["/crop-recommendation", "0.9", "monthly"], ["/yield-prediction", "0.9", "monthly"],
@@ -9,6 +11,11 @@ const SITEMAP_ROUTES = [
   ["/disease-detection", "0.8", "monthly"], ["/reports", "0.7", "monthly"], ["/crops", "0.8", "monthly"], ["/states", "0.8", "monthly"],
   ["/soil-types", "0.7", "monthly"], ["/assistant", "0.6", "monthly"], ["/planner", "0.5", "monthly"], ["/about", "0.5", "yearly"], ["/contact", "0.5", "yearly"],
 ];
+
+/** Injects the Material Symbols URL, subset to the icons the app declares. */
+function iconFont() {
+  return { name: "agrismart-icon-font", transformIndexHtml: (html) => html.replace("%ICON_FONT_URL%", iconFontUrl()) };
+}
 
 /** Emits sitemap.xml and robots.txt for the configured site URL at build time. */
 function seoFiles(siteUrl) {
@@ -45,7 +52,7 @@ export default defineConfig(({ mode }) => {
   const farmTarget = env.FARM_PROXY_TARGET || "http://localhost:4100";
 
   return {
-    plugins: [react(), seoFiles(siteUrl)],
+    plugins: [react(), iconFont(), seoFiles(siteUrl)],
     resolve: {
       alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
     },
