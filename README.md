@@ -1,7 +1,7 @@
 # Agricultural-Production-Optimization
 Indian crop fertilizer growth
 
-**AgriOptima** — a full-stack, AI-powered farm platform: crop recommendations from a
+**AgriSmart** — a full-stack, AI-powered farm platform: crop recommendations from a
 trained ML model, fertilizer planning, farm & field management, an AI assistant
 (Claude + RAG + LangGraph), batch jobs, real-time updates and AWS deployment.
 
@@ -35,47 +35,53 @@ flowchart LR
 | [.github/workflows](.github/workflows) | CI/CD | GitHub Actions: test every service, build images, deploy to AWS |
 | [docs](docs) | Documentation | [architecture](docs/architecture.md) · [AWS deployment](docs/deploy-aws.md) · [syllabus coverage](docs/syllabus-coverage.md) |
 
-## Run locally (no Docker)
+## Run the complete local stack
 
-Needs Python 3.12+, Node 20+, and MongoDB on `localhost:27017` (PostgreSQL optional: SQLite is the default).
+Use Python 3.12+, Node 20+, and MongoDB running on `127.0.0.1:27017`. The repo's
+`AIML` package is loaded by FastAPI; it is not a separate web server. The script
+starts FastAPI, Express, and Vite together, waits for their health endpoints, and
+writes service logs under `.devlogs/`.
 
-```bash
-# 1. ML model (once): download the dataset, train and compare models
-cd backend && python -m venv .venv && .venv\Scripts\activate    # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt -r ../ml/requirements.txt
-cd .. && python -m ml.data.download_dataset && python -m ml.train
-
-# 2. FastAPI (port 8000, docs at http://localhost:8000/docs)
-cd backend && uvicorn app.main:app --reload
-
-# 3. Node farm-service (port 4000)
-cd services/farm-service && npm install && npm run dev
-
-# 4a. React app — JavaScript/JSX (port 5173, proxies the APIs)
-cd frontend/react-app && npm install && npm run dev
-
-# 4b. or the Next.js app — TypeScript (port 3000)
-cd frontend/web && npm install && npm run dev
+```powershell
+.\scripts\dev.ps1
 ```
 
-Open http://localhost:5173 (React) or http://localhost:3000 (Next.js) and create an account (the first account becomes **admin**).
-Set `ANTHROPIC_API_KEY` in `backend/.env` to turn on the Claude-powered assistant;
-without it the assistant answers from the knowledge base only. See each folder's
-`.env.example` for all settings.
+Open the React app at `http://localhost:5175`. FastAPI docs are at
+`http://localhost:8000/docs`; Express health is at `http://localhost:4100/health`.
+FastAPI issues JWTs and Express validates the same local development secret. The
+first account created in an empty local database becomes the admin. Press `Ctrl+C`
+in the PowerShell window to stop the services, or run ` .\scripts\stop-dev.ps1`
+from another PowerShell window.
 
-> Port 4000 already taken? Run the farm-service with `PORT=4100` and set
-> `NEXT_PUBLIC_FARM_API_URL=http://localhost:4100/api` for the web app.
+The launcher checks the Python environment and installed npm packages. If they are
+missing, install them once with:
+
+```powershell
+python -m venv backend/.venv
+backend/.venv/Scripts/python.exe -m pip install -r backend/python-fastapi/requirements.txt
+npm --prefix backend/node-express ci
+npm --prefix frontend/react-app ci
+```
+
+MongoDB is the only required external service for local farm persistence. If
+Docker is installed, `docker compose up --build` starts MongoDB, FastAPI/AIML,
+Express, and React together at `http://localhost:8080`. Set `ANTHROPIC_API_KEY`
+in `backend/python-fastapi/.env` to enable Claude-backed assistant responses;
+without it, the assistant uses the local knowledge base.
 
 ## Run everything with Docker
 
-```bash
-cp .env.example .env          # set JWT_SECRET (32+ chars); optionally ANTHROPIC_API_KEY
-docker compose --profile train run --rm trainer   # train the model, logged to MLflow
-docker compose up --build     # Next.js: http://localhost · React: http://localhost:8080 · MLflow: http://localhost:5000
+Docker Compose runs MongoDB, FastAPI with the AIML models, Express, and the React
+app. The local-only default JWT secret is for development; set `JWT_SECRET` in
+`.env` to a random 32+ character value before exposing services beyond your
+computer.
+
+```powershell
+docker compose up --build
 ```
 
-Compose runs PostgreSQL, MongoDB (replica set), Redis, Qdrant, MLflow, the API,
-a Celery worker, the farm-service, the web app and Nginx.
+Open `http://localhost:8080`. FastAPI docs are at `http://localhost:8000/docs`;
+Express is at `http://localhost:4100/health`. Stop with `docker compose down`.
 
 ## Tests
 

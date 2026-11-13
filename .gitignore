@@ -2,6 +2,7 @@
 node_modules/
 dist/
 *.log
+.devlogs/
 
 # Python
 __pycache__/

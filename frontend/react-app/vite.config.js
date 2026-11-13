@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
   // Dev proxy: the browser talks to one origin (localhost:5173) and Vite forwards
   // requests to the services, so no CORS setup is needed during development.
   const apiTarget = env.API_PROXY_TARGET || "http://localhost:8000";
-  const farmTarget = env.FARM_PROXY_TARGET || "http://localhost:4000";
+  const farmTarget = env.FARM_PROXY_TARGET || "http://localhost:4100";
 
   return {
     plugins: [react()],

@@ -5,7 +5,7 @@ from pathlib import Path
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[4]
 DEV_JWT_SECRET = "dev-only-insecure-secret-change-me"
 
 
@@ -27,15 +27,15 @@ class Settings(BaseSettings):
     jwt_audience: str = "agrioptima"
     access_token_minutes: int = 60
 
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:8080"
 
     # Background jobs: Celery with Redis; without Redis tasks run inline (eager).
     redis_url: str | None = None
     celery_eager: bool | None = None
 
     # ML model produced by `python -m AIML.machine_learning.crop_classifier`
-    model_path: Path = REPO_ROOT / "ml" / "models" / "crop_model.joblib"
-    metrics_path: Path = REPO_ROOT / "ml" / "models" / "metrics.json"
+    model_path: Path = REPO_ROOT / "AIML" / "models" / "crop_model.joblib"
+    metrics_path: Path = REPO_ROOT / "AIML" / "models" / "metrics.json"
 
     # AI assistant
     assistant_llm: str = "auto"  # auto | on | off

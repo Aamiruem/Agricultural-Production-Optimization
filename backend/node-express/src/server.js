@@ -7,13 +7,28 @@ import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
 import { closeRealtime, initRealtime } from "./services/realtime.js";
 
-await connectDb(env.MONGODB_URI);
-
 const server = createServer(createApp());
 initRealtime(server);
-server.listen(env.PORT, () => logger.info(`farm-service listening on :${env.PORT}`));
+let shuttingDown = false;
+server.listen(env.PORT, () => {
+  logger.info(`farm-service listening on :${env.PORT}`);
+  void connectWithRetry();
+});
+
+async function connectWithRetry() {
+  while (!shuttingDown) {
+    try {
+      await connectDb(env.MONGODB_URI);
+      return;
+    } catch (error) {
+      logger.warn({ error: error.name }, "MongoDB unavailable; retrying in 3 seconds");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    }
+  }
+}
 
 async function shutdown(signal) {
+  shuttingDown = true;
   logger.info({ signal }, "shutting down");
   await closeRealtime();
   server.close(async () => {
