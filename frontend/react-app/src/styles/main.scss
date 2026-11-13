@@ -674,7 +674,9 @@ li.active .farm-text small { color: inherit; opacity: 0.85; }
 .brand-link { margin-right: 0.5rem; }
 .app-bar-row > .icon-btn, .app-bar .nav-actions .icon-btn { flex: none; }
 .app-bar .app-tabs { align-self: stretch; display: flex; align-items: stretch; gap: 0; padding: 0; border: 0; flex: 0 0 auto; min-width: 0; overflow-x: auto; }
-.app-bar .app-tab { display: flex; align-items: center; padding: 0 0.65rem; border-radius: 0; font-size: 0.9rem;
+.app-bar .app-tab { display: flex; align-items: center; padding: 0 0.65rem; border-radius: 0; font-size: 1rem; font-weight: 500; color: var(--md-on-surface);
+  &:hover { color: var(--md-on-surface); }
+  &.active { color: var(--md-primary); font-weight: 700; }
   &.active::after { left: 0.45rem; right: 0.45rem; }
   &.mobile-only { display: none; } // Login/Register tabs only on phones (the buttons are hidden there)
 }
