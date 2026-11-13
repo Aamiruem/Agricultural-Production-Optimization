@@ -30,7 +30,7 @@ cd frontend/react-app
 npm install
 npm run dev
 ```
-UI runs at http://localhost:5173 and proxies `/api` to the backend.
+UI runs at http://localhost:5173 (the backend allows CORS from this origin).
 
 ### ML
 Place your dataset at `ml/datasets/crop_data.csv`, then:
