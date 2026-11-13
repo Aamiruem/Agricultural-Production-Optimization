@@ -131,7 +131,7 @@ def main(only: list[str] | None = None) -> dict:
     report = {"best_model": best, "leaderboard": leaderboard, "trained_at": bundle["trained_at"],
               "rows": len(df), "split": f"train < {int(test['Crop_Year'].min())} <= test"}
     YIELD_METRICS_PATH.write_text(json.dumps(report, indent=2))
-    print(f"\nBest: {best} → {YIELD_MODEL_PATH}")
+    print(f"\nBest: {best} -> {YIELD_MODEL_PATH}")
     return report
 
 
