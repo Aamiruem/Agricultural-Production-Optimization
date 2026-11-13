@@ -8,6 +8,8 @@ import { BrowserRouter } from "react-router";
 
 import App from "./App.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { LanguageProvider } from "./i18n/LanguageContext.jsx";
+import { initAnalytics } from "./lib/analytics";
 import { makeStore } from "./store";
 
 const queryClient = new QueryClient({
@@ -17,8 +19,8 @@ const queryClient = new QueryClient({
 });
 const store = makeStore();
 
-// Analytics is opt-in: set VITE_GA_MEASUREMENT_ID in the Vercel project settings.
-const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
+// Google Search Console verification and Google Analytics are configured with
+// VITE_GOOGLE_SITE_VERIFICATION and VITE_GA_MEASUREMENT_ID (Vercel project env vars).
 const searchVerification = import.meta.env.VITE_GOOGLE_SITE_VERIFICATION;
 if (searchVerification) {
   const verificationMeta = document.createElement("meta");
@@ -26,25 +28,18 @@ if (searchVerification) {
   verificationMeta.content = searchVerification;
   document.head.appendChild(verificationMeta);
 }
-if (measurementId && typeof window !== "undefined") {
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag() { window.dataLayer.push(arguments); };
-  window.gtag("js", new Date());
-  window.gtag("config", measurementId, { anonymize_ip: true });
-  const analyticsScript = document.createElement("script");
-  analyticsScript.async = true;
-  analyticsScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
-  document.head.appendChild(analyticsScript);
-}
+initAnalytics();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ReduxProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <LanguageProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </LanguageProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </ReduxProvider>
