@@ -1,0 +1,11 @@
+{
+  "name": "AgriSmart — Agricultural Production Optimization",
+  "short_name": "AgriSmart",
+  "description": "AI crop recommendation, yield prediction, soil, weather, fertilizer and irrigation tools for Indian farmers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f8f3",
+  "theme_color": "#15803d",
+  "lang": "en-IN",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

@@ -13,7 +13,7 @@ from functools import lru_cache
 import joblib
 import pandas as pd
 
-from AIML.config import FEATURES, MODEL_BUNDLE_PATH, YIELD_MODEL_PATH
+from AIML.config import FEATURES, MODEL_BUNDLE_PATH, YIELD_DATA_PATH, YIELD_MODEL_PATH
 from AIML.preprocessing.yield_features import CATEGORICAL, NUMERIC
 
 # Crop nutrient targets (kg/ha) used by the fertilizer tool.
@@ -35,6 +35,24 @@ def recommend_crop(N: float, P: float, K: float, temperature: float, humidity: f
     return {"model": b["name"], "top": [{"crop": c, "probability": round(float(p), 3)} for c, p in top]}
 
 
+@lru_cache(maxsize=1)
+def _typical_areas() -> dict[str, dict]:
+    """Median cultivated area (ha) per crop|state|season, crop and overall, from the training data.
+
+    The yield model was trained on state-level aggregates, so its ``log_area`` feature
+    describes the size of the *regional* crop, not one farm. Feeding a farm area (a few
+    hectares) pushes the model far outside its training range and collapses predictions.
+    """
+    df = pd.read_csv(YIELD_DATA_PATH)
+    for col in ("Crop", "Season", "State"):
+        df[col] = df[col].astype(str).str.strip()
+    df = df[df["Area"] > 0]
+    group = df.groupby(["Crop", "State", "Season"])["Area"].median()
+    return {"group": {"|".join(k): float(v) for k, v in group.items()},
+            "crop": df.groupby("Crop")["Area"].median().astype(float).to_dict(),
+            "all": float(df["Area"].median())}
+
+
 def predict_yield(crop: str, season: str, state: str, year: int, area_ha: float,
                   annual_rainfall: float | None = None) -> dict:
     """Expected yield (t/ha) and production (t) from the trained yield model."""
@@ -42,8 +60,10 @@ def predict_yield(crop: str, season: str, state: str, year: int, area_ha: float,
 
     b = _bundle(str(YIELD_MODEL_PATH))
     rain = annual_rainfall or b["defaults"]["rainfall_by_state"].get(state, 1200.0)
+    areas = _typical_areas()
+    regional_area = areas["group"].get(f"{crop}|{state}|{season}") or areas["crop"].get(crop) or areas["all"]
     row = pd.DataFrame([{
-        "Crop": crop, "Season": season, "State": state, "Crop_Year": year, "log_area": float(np.log1p(area_ha)),
+        "Crop": crop, "Season": season, "State": state, "Crop_Year": year, "log_area": float(np.log1p(regional_area)),
         "Annual_Rainfall": rain, "fertilizer_kg_ha": b["defaults"]["fertilizer_kg_ha"],
         "pesticide_kg_ha": b["defaults"]["pesticide_kg_ha"]}])[CATEGORICAL + NUMERIC]
     y = max(float(b["model"].predict(row)[0]), 0.0)
