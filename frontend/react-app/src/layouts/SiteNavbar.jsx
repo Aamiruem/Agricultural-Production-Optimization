@@ -1,9 +1,10 @@
-import { LogOut, Moon, Shield, Sun } from "lucide-react";
+import { Bell, ChevronDown, LogOut, Moon, Shield, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import { Link, NavLink } from "react-router";
 
 import logo from "@/assets/logo.svg";
@@ -11,14 +12,14 @@ import { useTheme } from "@/hooks/useTheme";
 import { useAuthStore, useSession } from "@/store/authStore";
 
 const NAV = [
+  { to: "/dashboard", label: "Dashboard" },
   { to: "/recommend", label: "Crop advisor" },
-  { to: "/fertilizer", label: "Fertilizer" },
   { to: "/crops", label: "Crops" },
-  { to: "/planner", label: "Planner" },
-  { to: "/farms", label: "Farms" },
-  { to: "/assistant", label: "Assistant" },
-  { to: "/insights", label: "Insights" },
+  { to: "/yield", label: "Yield" },
+  { to: "/soil", label: "Soil" },
+  { to: "/weather", label: "Weather" },
 ];
+const MORE = [ ["/fertilizer","Fertilizer recommendation"],["/irrigation","Irrigation optimization"],["/disease","Disease detection"],["/reports","Reports"],["/planner","Planner"],["/farms","My farms"],["/assistant","Farm assistant"],["/insights","Model insights"],["/about","About us"],["/contact","Contact"] ];
 
 export function SiteNavbar() {
   const { mode, toggle } = useTheme();
@@ -29,7 +30,7 @@ export function SiteNavbar() {
 
   return (
     <Navbar expand="lg" sticky="top" className="navbar-agri border-bottom" expanded={expanded} onToggle={setExpanded}>
-      <Container>
+          <Container fluid className="navbar-inner">
         <Navbar.Brand as={Link} to="/" onClick={close} className="d-flex align-items-center gap-2 fw-semibold">
           <img src={logo} alt="" width="24" height="24" className="text-primary" style={{ color: "var(--bs-primary)" }} />
           AgriOptima
@@ -42,6 +43,9 @@ export function SiteNavbar() {
                 {item.label}
               </Nav.Link>
             ))}
+            <NavDropdown title="More" id="more-nav" align="end">
+              {MORE.map(([to,label])=><NavDropdown.Item key={to} as={NavLink} to={to} onClick={close}>{label}</NavDropdown.Item>)}
+            </NavDropdown>
             {isAdmin && (
               <Nav.Link as={NavLink} to="/admin" onClick={close} className="px-lg-2 d-flex align-items-center gap-1">
                 <Shield size={14} aria-hidden /> Admin
@@ -49,19 +53,17 @@ export function SiteNavbar() {
             )}
           </Nav>
           <div className="d-flex align-items-center gap-2">
+            <Button variant="link" className="text-body p-1" aria-label="Notifications" title="No new notifications"><Bell size={18}/></Button>
+            <select className="language-select" aria-label="Language" defaultValue="en" onChange={e=>document.documentElement.lang=e.target.value}><option value="en">EN</option><option value="hi">हिंदी</option></select>
             {user ? (
               <>
-                <span className="small text-body-secondary text-truncate" style={{ maxWidth: "10rem" }} title={user.email}>
-                  {user.full_name}
-                </span>
+                <NavDropdown title={<><UserRound size={16}/> {user.full_name || "Account"}</>} align="end"><NavDropdown.Item as={Link} to="/farms" onClick={close}>My farms</NavDropdown.Item><NavDropdown.Item onClick={logout}>Sign out</NavDropdown.Item></NavDropdown>
                 <Button variant="link" className="text-body p-1" onClick={logout} aria-label="Sign out">
                   <LogOut size={18} />
                 </Button>
               </>
             ) : (
-              <Button as={Link} to="/login" variant="outline-primary" size="sm" onClick={close}>
-                Sign in
-              </Button>
+              <><Button as={Link} to="/login" variant="outline-primary" size="sm" onClick={close}>Sign in</Button><Button as={Link} to="/register" variant="primary" size="sm" onClick={close}>Join</Button></>
             )}
             <Button
               variant="link"

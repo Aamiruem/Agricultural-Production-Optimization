@@ -16,6 +16,9 @@ const PlannerPage = lazy(() => import("@/pages/PlannerPage"));
 const FarmsPage = lazy(() => import("@/pages/FarmsPage"));
 const AssistantPage = lazy(() => import("@/pages/AssistantPage"));
 const InsightsPage = lazy(() => import("@/pages/InsightsPage"));
+const IndiaToolsPage = lazy(() => import("@/pages/IndiaToolsPage"));
+const AboutPage = lazy(() => import("@/pages/AboutPage"));
+const ContactPage = lazy(() => import("@/pages/ContactPage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/RegisterPage"));
@@ -27,12 +30,26 @@ export default function App() {
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="recommend" element={<RecommendPage />} />
+        <Route path="crop-recommendation" element={<RecommendPage />} />
         <Route path="fertilizer" element={<FertilizerPage />} />
         <Route path="crops" element={<CropsPage />} />
         <Route path="crops/:name" element={<CropDetailPage />} />
         <Route path="planner" element={<PlannerPage />} />
         <Route path="assistant" element={<AssistantPage />} />
         <Route path="insights" element={<InsightsPage />} />
+        <Route path="dashboard" element={<IndiaToolsPage page="dashboard" />} />
+        <Route path="yield" element={<IndiaToolsPage page="yield" />} />
+        <Route path="yield-prediction" element={<IndiaToolsPage page="yield" />} />
+        <Route path="soil" element={<IndiaToolsPage page="soil" />} />
+        <Route path="soil-analysis" element={<IndiaToolsPage page="soil" />} />
+        <Route path="weather" element={<IndiaToolsPage page="weather" />} />
+        <Route path="irrigation" element={<IndiaToolsPage page="irrigation" />} />
+        <Route path="irrigation-optimization" element={<IndiaToolsPage page="irrigation" />} />
+        <Route path="disease" element={<IndiaToolsPage page="disease" />} />
+        <Route path="disease-detection" element={<IndiaToolsPage page="disease" />} />
+        <Route path="reports" element={<IndiaToolsPage page="reports" />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="contact" element={<ContactPage />} />
 
         {/* Signed-in users only */}
         <Route element={<ProtectedRoute />}>

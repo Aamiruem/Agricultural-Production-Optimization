@@ -1,5 +1,4 @@
 import { Suspense, useEffect } from "react";
-import Container from "react-bootstrap/Container";
 import { Outlet, useLocation } from "react-router";
 
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
@@ -25,13 +24,13 @@ export function MainLayout() {
       </a>
       <SiteNavbar />
       <main id="main">
-        <Container className="py-4 py-md-5">
+        <div className="page-shell py-4 py-md-5">
           <ErrorBoundary key={pathname}>
             <Suspense fallback={<Loader label="Loading page" />}>
               <Outlet />
             </Suspense>
           </ErrorBoundary>
-        </Container>
+        </div>
       </main>
       <SiteFooter />
     </>

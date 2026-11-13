@@ -17,6 +17,26 @@ const queryClient = new QueryClient({
 });
 const store = makeStore();
 
+// Analytics is opt-in: set VITE_GA_MEASUREMENT_ID in the Vercel project settings.
+const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID;
+const searchVerification = import.meta.env.VITE_GOOGLE_SITE_VERIFICATION;
+if (searchVerification) {
+  const verificationMeta = document.createElement("meta");
+  verificationMeta.name = "google-site-verification";
+  verificationMeta.content = searchVerification;
+  document.head.appendChild(verificationMeta);
+}
+if (measurementId && typeof window !== "undefined") {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() { window.dataLayer.push(arguments); };
+  window.gtag("js", new Date());
+  window.gtag("config", measurementId, { anonymize_ip: true });
+  const analyticsScript = document.createElement("script");
+  analyticsScript.async = true;
+  analyticsScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+  document.head.appendChild(analyticsScript);
+}
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ReduxProvider store={store}>
