@@ -41,6 +41,8 @@ body {
 
 h1, h2, h3, h4, .navbar-brand { font-family: "Manrope", "DM Sans", sans-serif; }
 .page-shell { width: min(100%, 1720px); margin-inline: auto; padding-inline: clamp(1rem, 3vw, 3.5rem); }
+.home-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) 2fr; align-items:center; gap:1rem; padding:1.2rem 1.5rem; border:1px solid var(--bs-border-color); border-radius:1rem; background:var(--bs-body-bg); }
+.home-stats div:not(.home-stat-note) { display:grid; gap:.15rem; }.home-stats strong { font:800 1.6rem Manrope,sans-serif; color:#218454; }.home-stats span,.home-stat-note { color:var(--bs-secondary-color); font-size:.82rem; }.home-stat-note { padding-left:1rem; border-left:1px solid var(--bs-border-color); }.home-about-links { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding:1.3rem; border-radius:1rem; background:var(--agri-hero-from); }
 .navbar-inner { padding-inline: clamp(1rem, 3vw, 3.5rem); }
 .navbar-agri { z-index: 1030; }
 .language-select { border: 1px solid var(--bs-border-color); border-radius: .55rem; padding: .35rem .45rem; background: var(--bs-body-bg); color: var(--bs-body-color); font-size: .82rem; }
@@ -80,6 +82,7 @@ h1, h2, h3, h4, .navbar-brand { font-family: "Manrope", "DM Sans", sans-serif; }
 .report-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.8rem; margin:1.2rem 0; }.report-grid span { display:grid; gap:.35rem; padding:.8rem; background:var(--agri-surface); border-radius:.7rem; color:var(--bs-secondary-color); font-size:.8rem; }.report-grid b { color:var(--bs-emphasis-color); font-size:.95rem; }.report-actions { justify-content:flex-start; margin-top:1rem; }
 .about-hero { padding:clamp(1.5rem,5vw,4rem); background:radial-gradient(circle at 88% 20%,rgba(42,137,78,.13),transparent 34%),var(--bs-body-bg); }.about-hero svg,.about-grid svg,.contact-aside svg { color:#218454; }.about-hero h2 { max-width:24ch; margin:1rem 0; font-size:clamp(1.5rem,3vw,2.4rem); }.about-hero p { max-width:70ch; line-height:1.7; }.about-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin-top:1rem; }.about-grid h3 { margin-top:1rem; font-size:1rem; }.about-grid p,.contact-aside p { color:var(--bs-secondary-color); font-size:.9rem; line-height:1.65; margin-bottom:0; }
 @media(max-width:950px){.metric-grid,.crop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.navbar-collapse{padding:1rem 0}.tool-columns{grid-template-columns:1fr}}
+@media(max-width:700px){.home-stats{grid-template-columns:repeat(3,minmax(0,1fr));padding:1rem}.home-stat-note{grid-column:1/-1;padding:.8rem 0 0;border-left:0;border-top:1px solid var(--bs-border-color)}}
 @media(max-width:560px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}.metric-card{min-height:130px;padding:.85rem}.crop-grid{grid-template-columns:1fr 1fr;gap:.55rem}.crop-tile{padding:.75rem;min-height:180px}.explorer-controls{grid-template-columns:1fr}.report-grid{grid-template-columns:repeat(2,1fr)}.weather-facts{flex-wrap:wrap}.page-shell{padding-inline:.85rem}}
 @media print{.navbar-agri,footer,.tools-toolbar,.report-actions,.disclaimer{display:none!important}body{background:#fff}.page-shell{max-width:none!important;padding:0}.tool-card{box-shadow:none;break-inside:avoid}}
 

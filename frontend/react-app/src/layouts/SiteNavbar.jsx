@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, LogOut, Moon, Shield, Sun, UserRound } from "lucide-react";
+import { Bell, Moon, Shield, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -30,7 +30,7 @@ export function SiteNavbar() {
 
   return (
     <Navbar expand="lg" sticky="top" className="navbar-agri border-bottom" expanded={expanded} onToggle={setExpanded}>
-          <Container fluid className="navbar-inner">
+      <Container fluid className="navbar-inner">
         <Navbar.Brand as={Link} to="/" onClick={close} className="d-flex align-items-center gap-2 fw-semibold">
           <img src={logo} alt="" width="24" height="24" className="text-primary" style={{ color: "var(--bs-primary)" }} />
           AgriOptima
@@ -58,9 +58,6 @@ export function SiteNavbar() {
             {user ? (
               <>
                 <NavDropdown title={<><UserRound size={16}/> {user.full_name || "Account"}</>} align="end"><NavDropdown.Item as={Link} to="/farms" onClick={close}>My farms</NavDropdown.Item><NavDropdown.Item onClick={logout}>Sign out</NavDropdown.Item></NavDropdown>
-                <Button variant="link" className="text-body p-1" onClick={logout} aria-label="Sign out">
-                  <LogOut size={18} />
-                </Button>
               </>
             ) : (
               <><Button as={Link} to="/login" variant="outline-primary" size="sm" onClick={close}>Sign in</Button><Button as={Link} to="/register" variant="primary" size="sm" onClick={close}>Join</Button></>

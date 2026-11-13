@@ -6,7 +6,8 @@ import { Loader } from "@/components/common/Loader";
 import { PageHeader } from "@/components/common/PageHeader";
 import { CropTable } from "@/components/crops/CropTable";
 import { fetchCrops } from "@/services/cropService";
-import { CropExplorer, INDIA_CROPS } from "@/pages/IndiaToolsPage";
+import { INDIA_CROPS } from "@/data/indiaCrops";
+import { CropExplorer } from "@/components/crops/CropExplorer";
 
 export default function CropsPage() {
   const [category,setCategory]=useState("All crops"); const [query,setQuery]=useState("");
