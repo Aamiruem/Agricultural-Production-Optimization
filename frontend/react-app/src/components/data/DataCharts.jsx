@@ -92,9 +92,9 @@ export function GroupedBars({ data, series }) {
   return (
     <>
       <ResponsiveContainer width="100%" height={260}>
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} barGap={2}>
+        <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} barGap={1} barCategoryGap="22%">
           <CartesianGrid stroke={c.grid} vertical={false} />
-          <XAxis dataKey="key" stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} interval={0} tickFormatter={(v) => String(v).slice(0, 10)} />
+          <XAxis dataKey="key" stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} interval={0} angle={-35} textAnchor="end" height={56} tickFormatter={(v) => (String(v).length > 12 ? `${String(v).slice(0, 11)}…` : v)} />
           <YAxis stroke={c.axis} tickLine={false} axisLine={false} fontSize={11} />
           <Tooltip cursor={{ fill: c.grid }} content={<ChartTooltip format={formatValue} />} />
           {series.map((s, i) => <Bar key={s.key} dataKey={s.key} name={s.label} fill={c.series[i]} radius={[4, 4, 0, 0]} maxBarSize={18} />)}

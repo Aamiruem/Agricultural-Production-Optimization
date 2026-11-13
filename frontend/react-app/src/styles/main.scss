@@ -821,7 +821,7 @@ li.active .farm-text small { color: inherit; opacity: 0.85; }
 }
 .preview-table { max-height: 420px; overflow: auto; td { white-space: nowrap; } }
 @media (max-width: 991.98px) { .sample-grid, .how-grid { grid-template-columns: 1fr 1fr; } .insight-list { grid-template-columns: 1fr; } }
-@media (max-width: 575.98px) { .sample-grid, .how-grid { grid-template-columns: 1fr; } .dash-actions { width: 100%; .btn, .field-label { flex: 1 1 100%; } } }
+@media (max-width: 575.98px) { .data-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; .g-card { padding: 0.9rem; } .kpi-value { font-size: 1.2rem; } } .data-filters .field-label { max-width: none; } .sample-grid, .how-grid { grid-template-columns: 1fr; } .dash-actions { width: 100%; .btn, .field-label { flex: 1 1 100%; } } }
 
 @media print {
   .app-bar, .announcement-bar, .side-nav, .sidebar-backdrop, .site-footer, .no-print, .tools-toolbar, .bottom-nav, .fab { display: none !important; }

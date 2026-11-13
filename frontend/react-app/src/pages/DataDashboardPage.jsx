@@ -165,7 +165,7 @@ function Dashboard({ table, source, overrides, setRole, onReset, hi }) {
     if (R.nitrogen && R.phosphorus && R.potassium && R.crop) {
       const by = (m) => Object.fromEntries(groupBy(rows, R.crop, m, R, { mode: "mean" }).data.map((d) => [d.key, d.value]));
       const [n, p, k] = [by(R.nitrogen), by(R.phosphorus), by(R.potassium)];
-      npk = Object.keys(n).map((key) => ({ key, N: n[key], P: p[key], K: k[key] })).sort((a, b) => b.N + b.P + b.K - (a.N + a.P + a.K)).slice(0, 10);
+      npk = Object.keys(n).map((key) => ({ key, N: n[key], P: p[key], K: k[key] })).sort((a, b) => b.N + b.P + b.K - (a.N + a.P + a.K)).slice(0, 8);
     }
     const secondCat = !R.crop && !R.state ? ds.categories.find((c) => profiles.find((p) => p.name === c)?.distinct <= 60) : null;
     return {
@@ -183,6 +183,7 @@ function Dashboard({ table, source, overrides, setRole, onReset, hi }) {
   const insights = useMemo(() => generateInsights(ds, rows, profiles, metric), [ds, rows, profiles, metric]);
   const kpis = useMemo(() => buildKpis(ds, rows), [ds, rows]);
   const dup = useMemo(() => countDuplicates(table.rows, table.columns), [table]);
+  const types = useMemo(() => Object.fromEntries(profiles.map((p) => [p.name, p.type])), [profiles]);
   const roleOf = (col) => Object.entries(ds.roles).find(([, c]) => c === col)?.[0] ?? "";
   const metricName = metric ? `${metric} (${modeLabel(view.ts?.mode ?? "mean")})` : "";
 
@@ -335,7 +336,7 @@ function Dashboard({ table, source, overrides, setRole, onReset, hi }) {
           <div className="table-responsive preview-table">
             <table className="table table-sm data-table">
               <thead><tr>{table.columns.slice(0, 8).map((c) => <th key={c}>{c}</th>)}</tr></thead>
-              <tbody>{rows.slice(0, 12).map((r, i) => <tr key={i}>{table.columns.slice(0, 8).map((c) => <td key={c}>{r[c] instanceof Date ? r[c].toISOString().slice(0, 10) : typeof r[c] === "number" ? formatValue(r[c]) : r[c] ?? "—"}</td>)}</tr>)}</tbody>
+              <tbody>{rows.slice(0, 12).map((r, i) => <tr key={i}>{table.columns.slice(0, 8).map((c) => <td key={c}>{r[c] instanceof Date ? r[c].toISOString().slice(0, 10) : typeof r[c] === "number" ? (types[c] === "year" ? r[c] : formatValue(r[c])) : r[c] ?? "—"}</td>)}</tr>)}</tbody>
             </table>
           </div>
           {table.columns.length > 8 && <p className="muted tiny mb-0">Showing 8 of {table.columns.length} columns · export CSV for everything.</p>}
