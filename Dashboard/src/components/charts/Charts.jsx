@@ -248,7 +248,7 @@ export function BarList({ items, format = (v) => fmtNumber(v), max, slot = 0, hi
             <div className="flex min-w-0 items-center gap-2">
               <div className="h-5 min-w-0 flex-1">
                 <div
-                  className="h-full rounded-r-[4px] transition-[width] duration-500"
+                  className="h-full rounded-r-sm transition-[width] duration-500"
                   style={{ width: `${pct}%`, background: c.series[slot], opacity: hover && !active ? 0.55 : 1, minWidth: it.value > 0 ? 2 : 0 }}
                 />
               </div>
@@ -279,7 +279,8 @@ export function DivergingBars({ items, format, posLabel = "Raises", negLabel = "
       <Legend items={[{ label: posLabel, color: c["diverge-pos"] }, { label: negLabel, color: c["diverge-neg"] }]} />
       <ul className="flex flex-col gap-2">
         {items.map((it) => {
-          const pct = (Math.abs(it.value) / extent) * 50;
+          // Longest bar takes 36% of the track per side, leaving room for its value label.
+          const pct = (Math.abs(it.value) / extent) * 36;
           const pos = it.value >= 0;
           return (
             <li
@@ -295,7 +296,7 @@ export function DivergingBars({ items, format, posLabel = "Raises", negLabel = "
               <div className="relative h-6">
                 <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: c["ink-3"] }} aria-hidden />
                 <div
-                  className={cx("absolute top-1/2 h-4 -translate-y-1/2", pos ? "rounded-r-[4px]" : "rounded-l-[4px]")}
+                  className={cx("absolute top-1/2 h-4 -translate-y-1/2", pos ? "rounded-r-sm" : "rounded-l-sm")}
                   style={{
                     background: pos ? c["diverge-pos"] : c["diverge-neg"],
                     left: pos ? "50%" : `${50 - pct}%`,
@@ -329,7 +330,7 @@ export function SegmentedBar({ parts }) {
   if (!total) return <div className="h-3 rounded-full bg-surface-2" />;
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex h-3 gap-[2px] overflow-hidden rounded-full">
+      <div className="flex h-3 gap-0.5 overflow-hidden rounded-full">
         {parts.filter((p) => p.value > 0).map((p) => (
           <div key={p.label} title={`${p.label}: ${fmtNumber(p.value)}`} style={{ width: `${(p.value / total) * 100}%`, background: p.color }} />
         ))}

@@ -2,7 +2,7 @@ import { Component, lazy, Suspense } from "react";
 import { Link, Route, Routes, useLocation } from "react-router";
 
 import { Shell } from "@/components/layout/Shell.jsx";
-import { Button, EmptyState, ErrorState, Skeleton } from "@/components/ui/primitives.jsx";
+import { Button, EmptyState, ErrorState, Skeleton } from "@/ components/ui/primitives.jsx";
 
 const OverviewPage = lazy(() => import("@/pages/OverviewPage.jsx"));
 const StudioPage = lazy(() => import("@/pages/StudioPage.jsx"));
@@ -73,7 +73,7 @@ export default function App() {
         <Route path="models" element={<Page><ModelsPage /></Page>} />
         <Route path="farms" element={<Page><FarmsPage /></Page>} />
         <Route path="assistant" element={<Page><AssistantPage /></Page>} />
-        <Route path="mcp" element={<Page><McpPage /></Page>} />
+        <Route path="mcp-tools" element={<Page><McpPage /></Page>} />
         <Route path="system" element={<Page><SystemPage /></Page>} />
         <Route path="login" element={<Page><LoginPage /></Page>} />
         <Route path="*" element={<NotFound />} />

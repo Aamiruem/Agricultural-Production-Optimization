@@ -5,7 +5,8 @@ export const NAV = [
   { to: "/farms", label: "Farms", icon: "agriculture", section: "Operations" },
   { to: "/assistant", label: "Assistant", icon: "smart_toy", section: "Operations" },
   { to: "/models", label: "Models", icon: "model_training", section: "Platform" },
-  { to: "/mcp", label: "MCP tools", icon: "hub", section: "Platform" },
+  // Not "/mcp": that path is the MCP endpoint itself, proxied to the MCP server.
+  { to: "/mcp-tools", label: "MCP tools", icon: "hub", section: "Platform" },
   { to: "/system", label: "System health", icon: "monitoring", section: "Platform" },
 ];
 

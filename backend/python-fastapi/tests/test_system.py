@@ -127,3 +127,18 @@ def test_load_shedding_rejects_past_the_concurrency_cap():
     assert shed_status == 503 and shed_headers[b"retry-after"] == b"1"
     assert statuses == [200, 200, 200]
     assert registry.rejected == 1 and registry.in_flight == 0 and registry.peak_in_flight == 3
+
+
+def test_warmup_runs_every_step_and_records_failures(monkeypatch):
+    from app.services import warmup
+
+    monkeypatch.setattr(warmup, "_state", {"status": "pending", "steps": {}, "seconds": None})
+    monkeypatch.setattr(warmup, "STEPS", {"ok": lambda: True, "absent": lambda: False, "boom": lambda: 1 / 0})
+    warmup._run()
+    state = warmup.warmup_state()
+    assert state["status"] == "done"
+    assert state["steps"] == {"ok": "ready", "absent": "skipped", "boom": "failed: ZeroDivisionError"}
+
+
+def test_status_reports_warmup(client):
+    assert client.get("/api/system/status").json()["warmup"]["status"] in {"pending", "running", "done"}

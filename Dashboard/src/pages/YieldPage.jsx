@@ -94,12 +94,12 @@ export default function YieldPage() {
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard title="Yield per hectare" subtitle={`${activeCrop} · ${state} · ${season}`} icon="show_chart" table={table}>
-          {trend.isLoading ? <Skeleton className="h-[260px]" /> : trend.error ? <ErrorState error={trend.error} onRetry={trend.refetch} /> : points.length ? (
+          {trend.isLoading ? <Skeleton className="h-65" /> : trend.error ? <ErrorState error={trend.error} onRetry={trend.refetch} /> : points.length ? (
             <TrendChart data={points} xKey="year" area series={[{ key: "yield_t_ha", label: "Yield (t/ha)" }]} yFormat={(v) => Number(v).toFixed(1)} />
           ) : <p className="py-16 text-center text-sm text-ink-2">No records for this selection.</p>}
         </ChartCard>
         <ChartCard title="Total production" subtitle="Tonnes harvested per crop year" icon="bar_chart" table={table}>
-          {trend.isLoading ? <Skeleton className="h-[260px]" /> : trend.error ? <ErrorState error={trend.error} compact /> : points.length ? (
+          {trend.isLoading ? <Skeleton className="h-65" /> : trend.error ? <ErrorState error={trend.error} compact /> : points.length ? (
             <ColumnChart data={points} xKey="year" height={260} series={[{ key: "production_t", label: "Production (t)" }]} />
           ) : <p className="py-16 text-center text-sm text-ink-2">No records for this selection.</p>}
         </ChartCard>

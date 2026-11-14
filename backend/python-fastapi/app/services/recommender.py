@@ -36,6 +36,12 @@ def _load_bundle(path: Path):
     import joblib  # lazy: only needed when a trained model exists
 
     obj = joblib.load(path)
+    try:  # one thread per prediction: concurrency comes from workers/replicas (see AIML.models)
+        from AIML.models import prepare_for_serving
+
+        prepare_for_serving(obj["model"] if isinstance(obj, dict) else obj)
+    except ImportError:  # AIML package not on the path; serve the model unchanged
+        pass
     if isinstance(obj, dict) and "model" in obj:
         return obj
     # Legacy: a bare estimator saved by an older train.py

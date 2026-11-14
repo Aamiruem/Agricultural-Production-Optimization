@@ -25,6 +25,7 @@ from app.core.cache import all_stats
 from app.core.config import get_settings
 from app.core.resilience import INSTANCE_ID, metrics
 from app.services.recommender import model_info
+from app.services.warmup import warmup_state
 
 router = APIRouter(tags=["system"])
 
@@ -66,17 +67,24 @@ def _yield_model() -> dict:
         return {"loaded": False, "error": type(exc).__name__}
 
 
-@router.get("/system/status")
-async def system_status(db: DbSession):
-    s = get_settings()
+def _local_checks(db) -> tuple[str, dict, dict]:
+    """Blocking work (DB round-trip, model loading on a cold worker, SDK imports) — run in the threadpool."""
     try:
-        await run_in_threadpool(db.execute, text("SELECT 1"))  # sync driver: keep it off the event loop
+        db.execute(text("SELECT 1"))
         database = "ok"
     except Exception:
         database = "unavailable"
+    return database, {"crop": model_info(), "yield": _yield_model()}, _assistant()
 
+
+@router.get("/system/status")
+async def system_status(db: DbSession):
+    s = get_settings()
+    # Never block the event loop: a cold worker would stall every request it serves.
+    local = run_in_threadpool(_local_checks, db)
     async with httpx.AsyncClient(timeout=s.service_probe_timeout_s) as client:
-        farm, mcp = await asyncio.gather(
+        (database, models, assistant), farm, mcp = await asyncio.gather(
+            local,
             _probe(client, "farm-service", f"{s.farm_service_url.rstrip('/')}/health"),
             _probe(client, "mcp", f"{s.mcp_url.rstrip('/')}/health"),
         )
@@ -92,8 +100,9 @@ async def system_status(db: DbSession):
         "environment": s.environment,
         "runtime": {"python": platform.python_version(), "platform": platform.system()},
         "services": services,
-        "models": {"crop": model_info(), "yield": _yield_model()},
-        "assistant": _assistant(),
+        "models": models,
+        "assistant": assistant,
+        "warmup": warmup_state(),
         "caches": all_stats(),
         "load": {**metrics.snapshot(), "max_concurrency": s.max_concurrency},
         "queue": {"broker": "redis" if s.redis_url else "in-process (eager)"},

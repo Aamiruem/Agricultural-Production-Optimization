@@ -13,6 +13,7 @@ os.environ.update({
     "MODEL_PATH": str(_tmp / "no-model.joblib"),
     "METRICS_PATH": str(_tmp / "no-metrics.json"),
     "CELERY_EAGER": "true",
+    "WARMUP": "false",  # tests swap model paths; no background loader racing them
 })
 
 import pytest  # noqa: E402

@@ -69,7 +69,7 @@ describe("console", () => {
     expect(screen.getAllByText("Down").length).toBeGreaterThan(0); // the MCP probe
   });
 
-  it.each(["/studio", "/yield", "/models", "/farms", "/assistant", "/mcp", "/system", "/login", "/nope"])(
+  it.each(["/studio", "/yield", "/models", "/farms", "/assistant", "/mcp-tools", "/system", "/login", "/nope"])(
     "%s renders without crashing when services are down",
     async (path) => {
       renderAt(path);

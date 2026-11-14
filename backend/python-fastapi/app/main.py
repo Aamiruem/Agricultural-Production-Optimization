@@ -19,13 +19,17 @@ from app.core.logging import RequestLogMiddleware, configure_logging  # noqa: E4
 from app.core.resilience import LoadShedMiddleware  # noqa: E402
 from app.db import models  # noqa: E402,F401  (register tables on Base.metadata)
 from app.db.session import Base, engine  # noqa: E402
+from app.services.warmup import start_warmup  # noqa: E402
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     configure_logging()
-    if get_settings().auto_create_tables:
+    settings = get_settings()
+    if settings.auto_create_tables:
         Base.metadata.create_all(engine)  # dev convenience; production runs Alembic migrations
+    if settings.warmup:
+        start_warmup()  # load models / SHAP in the background; health checks answer immediately
     yield
 
 

@@ -38,7 +38,8 @@ export function ServiceMap({ status, isLoading, error, refetch }) {
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-ink">{meta.label}</p>
               <p className="truncate text-xs text-ink-3">
-                {isLoading ? "Checking…" : s.status === "down" ? `Unreachable (${s.error ?? "no response"})` : `${fmtMs(s.latency_ms)} · ${s.details?.instance ?? s.instance ?? ""}`}
+                {isLoading ? "Checking…" : s.status === "down" ? `Unreachable (${s.error ?? "no response"})`
+                  : [fmtMs(s.latency_ms), s.details?.instance ?? s.instance].filter(Boolean).join(" · ")}
               </p>
             </div>
             {isLoading ? <Skeleton className="h-6 w-20" /> : <StatusPill status={s.status} />}
@@ -83,7 +84,7 @@ function ProductionTrend() {
         <Select label="Crop" value={activeCrop ?? ""} onChange={setCrop} options={crops.length ? crops : [crop]} />
       </div>
       {trend.isLoading || coverage.isLoading ? (
-        <Skeleton className="h-[260px] w-full" />
+        <Skeleton className="h-65 w-full" />
       ) : trend.error ? (
         <ErrorState error={trend.error} onRetry={trend.refetch} />
       ) : points.length ? (
@@ -129,7 +130,7 @@ function WeatherPanel() {
         actions={<Select label="Location" value={loc} onChange={setLoc} options={LOCATIONS.map((l) => ({ value: l.id, label: l.label }))} />}
         table={table}
       >
-        {q.isLoading ? <Skeleton className="h-[240px] w-full" /> : q.error ? <ErrorState error={q.error} onRetry={q.refetch} /> : (
+        {q.isLoading ? <Skeleton className="h-60 w-full" /> : q.error ? <ErrorState error={q.error} onRetry={q.refetch} /> : (
           <TrendChart data={days} xKey="day" height={240} yFormat={(v) => `${Math.round(v)}°`}
             series={[{ key: "tmin", label: "Minimum", slot: 0 }, { key: "tmax", label: "Maximum", slot: 1 }]} />
         )}
@@ -141,7 +142,7 @@ function WeatherPanel() {
         legend={[{ label: "Rainfall", color: c.series[0] }, { label: "ET₀ demand", color: c.series[1] }]}
         table={table}
       >
-        {q.isLoading ? <Skeleton className="h-[200px] w-full" /> : q.error ? <ErrorState error={q.error} compact /> : (
+        {q.isLoading ? <Skeleton className="h-50 w-full" /> : q.error ? <ErrorState error={q.error} compact /> : (
           <>
             <ColumnChart data={days} xKey="day" height={200} yFormat={(v) => Number(v).toFixed(1)}
               series={[{ key: "rain", label: "Rainfall (mm)", slot: 0 }, { key: "et0", label: "ET₀ (mm)", slot: 1 }]} />

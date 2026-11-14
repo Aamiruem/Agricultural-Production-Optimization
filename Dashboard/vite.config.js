@@ -26,8 +26,9 @@ export default defineConfig(({ mode }) => {
         "/api": { target: api, changeOrigin: true, ws: true }, // REST, SSE and the live-recommend WebSocket
         "/farm-api/health": { target: farm, changeOrigin: true, rewrite: () => "/health" },
         "/farm-api": { target: farm, changeOrigin: true },
-        "/mcp/health": { target: mcp, changeOrigin: true, rewrite: () => "/health" },
-        "/mcp": { target: mcp, changeOrigin: true },
+        // Exact matches (regex keys): a plain "/mcp" prefix would also capture the /mcp-tools page.
+        "^/mcp/health$": { target: mcp, changeOrigin: true, rewrite: () => "/health" },
+        "^/mcp$": { target: mcp, changeOrigin: true },
       },
     },
     preview: { port: 4180 },

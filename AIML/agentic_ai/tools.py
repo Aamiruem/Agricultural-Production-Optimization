@@ -23,7 +23,11 @@ NPK_TARGETS = {"rice": (80, 48, 40), "wheat": (120, 60, 40), "maize": (78, 48, 2
 
 @lru_cache(maxsize=2)
 def _bundle(path: str):
-    return joblib.load(path)
+    from AIML.models import prepare_for_serving
+
+    bundle = joblib.load(path)
+    prepare_for_serving(bundle["model"])
+    return bundle
 
 
 def recommend_crop(N: float, P: float, K: float, temperature: float, humidity: float, ph: float, rainfall: float) -> dict:

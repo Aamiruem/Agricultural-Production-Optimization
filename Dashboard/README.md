@@ -15,7 +15,7 @@ Material colour tokens (light + dark).
 | Farms | Farms, crop area and recent activity (sign-in required) | Express `/farm-api/farms` |
 | Assistant | Streaming agronomy assistant with tool calls and sources | `/api/assistant/chat` (SSE) |
 | Models | Crop & yield leaderboards, feature importance, admin hot-reload | `/api/ml/model`, `/api/ml/yield-model` |
-| MCP tools | Discovers the MCP server's tools and calls any of them from a generated form | `/mcp` (JSON-RPC, stateless HTTP) |
+| MCP tools (`/mcp-tools`) | Discovers the MCP server's tools and calls any of them from a generated form | `/mcp` (JSON-RPC, stateless HTTP) |
 | System health | Live per-worker metrics, replica distribution, caches, busiest routes, **load probe** | `/api/system/*` |
 
 ## Run

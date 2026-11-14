@@ -92,7 +92,7 @@ function LoadProbe() {
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5">
             <div>
               <p className="mb-2 text-[13px] font-medium text-ink">Answered by</p>
               <BarList format={(v) => fmtNumber(v)} items={Object.entries(report.byInstance).sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label, value }))} />
@@ -147,14 +147,14 @@ export default function SystemPage() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard title="Throughput" subtitle="Requests per second (1-minute average) of the answering worker, sampled every 2 s" icon="speed"
           table={{ columns: [{ key: "time", label: "Time" }, { key: "rps", label: "req/s", align: "right", format: (v) => v.toFixed(3) }, { key: "instance", label: "Worker" }], rows: [...points].reverse() }}>
-          {points.length < 2 ? <Skeleton className="h-[220px]" /> : (
+          {points.length < 2 ? <Skeleton className="h-55" /> : (
             <TrendChart data={points} xKey="time" height={220} area series={[{ key: "rps", label: "req/s" }]} yFormat={(v) => Number(v).toFixed(2)} />
           )}
         </ChartCard>
         <ChartCard title="Latency" subtitle="Rolling percentiles over the worker's last 4,096 requests" icon="schedule"
           legend={[{ label: "p50", color: c.series[0], shape: "line" }, { label: "p95", color: c.series[1], shape: "line" }]}
           table={{ columns: [{ key: "time", label: "Time" }, { key: "p50", label: "p50 (ms)", align: "right" }, { key: "p95", label: "p95 (ms)", align: "right" }], rows: [...points].reverse() }}>
-          {points.length < 2 ? <Skeleton className="h-[220px]" /> : (
+          {points.length < 2 ? <Skeleton className="h-55" /> : (
             <TrendChart data={points} xKey="time" height={220} yFormat={(v) => fmtMs(v)}
               series={[{ key: "p50", label: "p50", slot: 0 }, { key: "p95", label: "p95", slot: 1 }]} />
           )}
@@ -166,7 +166,7 @@ export default function SystemPage() {
           <ServiceMap status={s} isLoading={status.isLoading} error={status.error} refetch={status.refetch} />
           {s && (
             <div className="mt-5 border-t border-outline pt-4">
-              <KeyValue items={[
+              <KeyValue columns={1} items={[
                 ["Environment", s.environment],
                 ["Python", `${s.runtime.python} · ${s.runtime.platform}`],
                 ["Task queue", s.queue.broker],

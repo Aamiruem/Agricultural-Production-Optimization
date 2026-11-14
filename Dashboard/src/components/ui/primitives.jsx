@@ -272,9 +272,9 @@ export function Meter({ value, max = 1, label, valueLabel, tone = "primary" }) {
   );
 }
 
-export function KeyValue({ items }) {
+export function KeyValue({ items, columns = 2 }) {
   return (
-    <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+    <dl className={cx("grid grid-cols-1 gap-x-6 gap-y-2", columns === 2 && "sm:grid-cols-2")}>
       {items.map(([k, v]) => (
         <div key={k} className="flex min-w-0 items-baseline justify-between gap-3 border-b border-outline/60 py-1.5">
           <dt className="text-[13px] text-ink-2">{k}</dt>

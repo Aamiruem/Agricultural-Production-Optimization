@@ -49,6 +49,7 @@ class Settings(BaseSettings):
     max_concurrency: int = 64
     prediction_cache_size: int = 4096
     prediction_cache_ttl_s: float = 900
+    warmup: bool = True  # preload models/SHAP in a background thread at startup (app/services/warmup.py)
 
     # Sibling services probed by GET /api/system/status (the dashboard's service map)
     farm_service_url: str = "http://127.0.0.1:4100"

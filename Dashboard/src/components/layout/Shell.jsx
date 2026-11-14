@@ -14,7 +14,7 @@ export function BrandMark({ size = 32 }) {
   return (
     <span className="relative grid place-items-center rounded-xl bg-surface-2" style={{ width: size, height: size }} aria-hidden>
       <Icon name="eco" size={size * 0.62} filled className="text-good" />
-      <span className="absolute -bottom-0.5 left-1/2 flex -translate-x-1/2 gap-[2px]">
+      <span className="absolute -bottom-0.5 left-1/2 flex -translate-x-1/2 gap-0.5">
         {["bg-brand-blue", "bg-brand-red", "bg-brand-yellow", "bg-brand-green"].map((c) => (
           <span key={c} className={cx("size-1.5 rounded-full", c)} />
         ))}
