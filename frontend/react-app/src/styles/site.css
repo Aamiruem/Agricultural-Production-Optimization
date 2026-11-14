@@ -1,5 +1,5 @@
 :root,
-[data-bs-theme=light] {
+[data-bs-theme="light"] {
   --ag-forest: #14532d;
   --ag-forest-2: #166534;
   --ag-leaf: #22c55e;
@@ -19,7 +19,7 @@
   --ag-display: "Plus Jakarta Sans", "Google Sans", "Noto Sans Devanagari", system-ui, sans-serif;
 }
 
-[data-bs-theme=dark] {
+[data-bs-theme="dark"] {
   --ag-forest: #4ade80;
   --ag-forest-2: #86efac;
   --ag-leaf: #22c55e;
@@ -58,7 +58,11 @@ h3,
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.15s, background 0.15s, box-shadow 0.15s, color 0.15s;
+  transition:
+    transform 0.15s,
+    background 0.15s,
+    box-shadow 0.15s,
+    color 0.15s;
 }
 .site-btn:hover {
   transform: translateY(-1px);
@@ -133,10 +137,10 @@ h3,
   color: #fff;
 }
 
-[data-bs-theme=dark] .lp-btn--dark {
+[data-bs-theme="dark"] .lp-btn--dark {
   color: #052e16;
 }
-[data-bs-theme=dark] .lp-btn--dark:hover {
+[data-bs-theme="dark"] .lp-btn--dark:hover {
   color: #052e16;
 }
 
@@ -261,7 +265,9 @@ h3,
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(90deg, rgba(5, 46, 22, 0.88) 0%, rgba(5, 46, 22, 0.55) 55%, rgba(5, 46, 22, 0.15) 100%), linear-gradient(0deg, rgba(5, 46, 22, 0.55) 0%, transparent 45%);
+  background:
+    linear-gradient(90deg, rgba(5, 46, 22, 0.88) 0%, rgba(5, 46, 22, 0.55) 55%, rgba(5, 46, 22, 0.15) 100%),
+    linear-gradient(0deg, rgba(5, 46, 22, 0.55) 0%, transparent 45%);
 }
 .site-hero--compact {
   min-height: clamp(300px, 42vh, 420px);
@@ -274,7 +280,7 @@ h3,
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .site-hero-inner {
@@ -478,7 +484,7 @@ h3,
   color: #14532d;
 }
 
-[data-bs-theme=dark] .ai-icon {
+[data-bs-theme="dark"] .ai-icon {
   background: linear-gradient(135deg, #14532d, #166534);
   color: #dcfce7;
 }
@@ -547,7 +553,9 @@ h3,
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background: var(--ag-leaf) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/70% no-repeat;
+  background: var(--ag-leaf)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E")
+    center/70% no-repeat;
 }
 
 .chip-nav {
@@ -595,7 +603,7 @@ h3,
   height: auto;
   aspect-ratio: 3/2;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transition: transform 0.5s;
 }
 .photo-tile:hover img {
@@ -676,14 +684,16 @@ h3,
   color: var(--ag-ink);
   box-shadow: var(--ag-shadow);
   text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .topic-card-link img {
   width: 100%;
   height: auto;
   aspect-ratio: 3/2;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .topic-card-link:hover {
   color: var(--ag-ink);
@@ -805,11 +815,11 @@ h3,
   color: #b45309;
 }
 
-[data-bs-theme=dark] .pros-cons .pros {
+[data-bs-theme="dark"] .pros-cons .pros {
   background: #0f2a1a;
   border-color: #14532d;
 }
-[data-bs-theme=dark] .pros-cons .cons {
+[data-bs-theme="dark"] .pros-cons .cons {
   background: #2a230c;
   border-color: #713f12;
 }
@@ -866,7 +876,7 @@ h3,
   height: 48px;
   border-radius: 10px;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .aside-related a:hover span {
   color: var(--ag-leaf-text);
@@ -935,7 +945,7 @@ h3,
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .machine-media figcaption {
   position: absolute;
@@ -1241,7 +1251,7 @@ p.machine-function svg {
   height: auto;
   aspect-ratio: 3/2;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .season-card > div {
   display: grid;
@@ -1356,7 +1366,7 @@ p.machine-function svg {
   height: auto;
   aspect-ratio: 3/2;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border-radius: var(--ag-radius-lg);
   box-shadow: var(--ag-shadow-lg);
 }
@@ -1419,7 +1429,7 @@ p.machine-function svg {
   line-height: 1.55;
 }
 
-[data-bs-theme=dark] .medical-disclaimer {
+[data-bs-theme="dark"] .medical-disclaimer {
   border-color: #713f12;
   background: #2a230c;
   color: #fde68a;
@@ -1447,7 +1457,7 @@ p.machine-function svg {
   color: #fff;
   transform: translateY(-2px);
 }
-.helpline-grid li:nth-child(n+3) a {
+.helpline-grid li:nth-child(n + 3) a {
   background: linear-gradient(160deg, #14532d, #166534);
 }
 .helpline-grid b {
@@ -1544,7 +1554,7 @@ p.machine-function svg {
   height: auto;
   aspect-ratio: 16/9;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .health-card-body,
@@ -1599,7 +1609,7 @@ p.machine-function svg {
   height: 100%;
   min-height: 260px;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .nutrition-body {
@@ -1699,7 +1709,7 @@ p.machine-function svg {
   height: auto;
   aspect-ratio: 16/9;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .edu-card .site-more {
   margin-top: 0.25rem;
@@ -1756,7 +1766,7 @@ p.machine-function svg {
   line-height: 1.55;
 }
 
-[data-bs-theme=dark] .scheme-card {
+[data-bs-theme="dark"] .scheme-card {
   border-top-color: #22c55e;
 }
 
@@ -1913,7 +1923,7 @@ p.machine-function svg {
   border: 6px solid var(--ag-card);
   border-radius: 50%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   box-shadow: var(--ag-shadow-lg);
   background: var(--ag-cream);
 }
@@ -2143,7 +2153,9 @@ p.machine-function svg {
   margin-inline: auto;
   padding: clamp(1.5rem, 4vw, 2.75rem);
   border-radius: var(--ag-radius-lg);
-  background: radial-gradient(circle at 90% 10%, rgba(250, 204, 21, 0.25), transparent 40%), linear-gradient(135deg, #052e16, #14532d 60%, #166534);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(250, 204, 21, 0.25), transparent 40%),
+    linear-gradient(135deg, #052e16, #14532d 60%, #166534);
   color: #fff;
 }
 .cta-band h2 {
@@ -2299,7 +2311,7 @@ p.machine-function svg {
   color: #14532d;
 }
 
-[data-bs-theme=dark] .form-status {
+[data-bs-theme="dark"] .form-status {
   background: #0f2a1a;
   color: #bbf7d0;
 }
@@ -2350,14 +2362,16 @@ p.machine-function svg {
   color: var(--ag-ink);
   box-shadow: var(--ag-shadow);
   text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .explore-card img {
   width: 100%;
   height: auto;
   aspect-ratio: 3/2;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .explore-card:hover {
   color: var(--ag-ink);
@@ -2394,7 +2408,11 @@ p.machine-function svg {
   position: relative;
   margin-top: 3rem;
   overflow: hidden;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%2322c55e' stroke-opacity='0.07' stroke-width='2'%3E%3Cpath d='M60 100c0-30 0-50 0-70M60 55c-12-4-20-14-22-26 12 2 20 12 22 26zM60 45c12-4 20-14 22-26-12 2-20 12-22 26zM60 75c-12-4-20-14-22-26 12 2 20 12 22 26zM60 65c12-4 20-14 22-26-12 2-20 12-22 26z'/%3E%3C/g%3E%3C/svg%3E"), radial-gradient(circle at 15% 0%, rgba(34, 197, 94, 0.18), transparent 45%), radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.12), transparent 40%), linear-gradient(180deg, #0b3b1f, #052e16);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%2322c55e' stroke-opacity='0.07' stroke-width='2'%3E%3Cpath d='M60 100c0-30 0-50 0-70M60 55c-12-4-20-14-22-26 12 2 20 12 22 26zM60 45c12-4 20-14 22-26-12 2-20 12-22 26zM60 75c-12-4-20-14-22-26 12 2 20 12 22 26zM60 65c12-4 20-14 22-26-12 2-20 12-22 26z'/%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(circle at 15% 0%, rgba(34, 197, 94, 0.18), transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.12), transparent 40%),
+    linear-gradient(180deg, #0b3b1f, #052e16);
   color: rgba(255, 255, 255, 0.82);
 }
 .agri-footer a {
@@ -2466,7 +2484,9 @@ p.machine-function svg {
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.06);
   color: #fff;
-  transition: background 0.15s, transform 0.15s;
+  transition:
+    background 0.15s,
+    transform 0.15s;
 }
 .agri-social a:hover {
   background: #22c55e;
@@ -2606,4 +2626,4 @@ p.machine-function svg {
   min-height: 300px;
   border-radius: var(--ag-radius);
   background: var(--ag-cream);
-}/*# sourceMappingURL=site.css.map */
+} /*# sourceMappingURL=site.css.map */

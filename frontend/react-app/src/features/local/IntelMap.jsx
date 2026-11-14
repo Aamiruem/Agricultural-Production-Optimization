@@ -1,5 +1,7 @@
 import "leaflet/dist/leaflet.css";
 
+import L from "leaflet";
+
 import { useEffect, useMemo, useState } from "react";
 import {
   CircleMarker,
@@ -204,6 +206,7 @@ export function IntelMap({
               );
               layer.on("click", (e) => {
                 if (mode === "draw") return;
+                L.DomEvent.stopPropagation(e); // the polygon handles it; skip the generic map click
                 onStateClick?.(f, [e.latlng.lat, e.latlng.lng]);
               });
             }}
@@ -223,6 +226,7 @@ export function IntelMap({
               layer.bindTooltip(`${f.properties.name} district`, { sticky: true });
               layer.on("click", (e) => {
                 if (mode === "draw") return;
+                L.DomEvent.stopPropagation(e); // the polygon handles it; skip the generic map click
                 onDistrictClick?.(f, [e.latlng.lat, e.latlng.lng]);
               });
             }}

@@ -60,6 +60,13 @@ class Settings(BaseSettings):
     mcp_url: str = "http://127.0.0.1:8100"
     service_probe_timeout_s: float = 2.0
 
+    # Local agriculture intelligence (app/services/local). Public APIs are called server-side
+    # with caching and per-host rate limits; keys stay in the environment, never in the browser.
+    nominatim_user_agent: str = "AgriSmart/1.0 (+https://agrismart-two-iota.vercel.app)"
+    data_gov_in_api_key: str | None = None  # AGMARKNET mandi prices via api.data.gov.in
+    local_http_timeout_s: float = 30.0
+    soilgrids_timeout_s: float = 80.0
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

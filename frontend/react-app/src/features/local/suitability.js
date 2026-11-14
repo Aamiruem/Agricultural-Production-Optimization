@@ -103,7 +103,13 @@ export function scoreCrops(ctx) {
   const months = SEASON_MONTHS[ctx.season] ?? [];
   const seasonTemp = avg(ctx.monthlyNormals?.filter((m) => months.includes(m.month)).map((m) => m.temp));
   const seasonRain = sumOf(ctx.monthlyNormals?.filter((m) => months.includes(m.month)).map((m) => m.rain));
-  const stateCropKeys = new Set((ctx.stateCrops ?? []).map(cropKey));
+  // State statistics: names, or {crop, avgAreaHa} so we know how established each crop is.
+  const stateArea = new Map();
+  for (const c of ctx.stateCrops ?? []) {
+    if (typeof c === "string") stateArea.set(cropKey(c), null);
+    else stateArea.set(cropKey(c.crop), c.avgAreaHa ?? null);
+  }
+  const totalArea = [...stateArea.values()].reduce((s, v) => s + (v ?? 0), 0);
 
   let ml = null;
   if (ctx.npk && [ctx.npk.N, ctx.npk.P, ctx.npk.K].every((v) => v != null) && ctx.ph != null && seasonTemp != null) {
@@ -134,7 +140,7 @@ export function scoreCrops(ctx) {
     if (seasonTemp != null || perennial) {
       const t = perennial ? avg(ctx.monthlyNormals?.map((m) => m.temp)) : seasonTemp;
       const d = Math.abs(t - c.temp);
-      parts.temperature = clamp01(1 - d / 8);
+      parts.temperature = clamp01(1 - Math.max(0, d - 4) / 8); // full fit within ±4 °C of the optimum
       (parts.temperature >= 0.7 ? reasons : cautions).push(
         `${perennial ? "Annual" : ctx.season} mean temperature ${round(t, 1)} °C vs ~${c.temp} °C optimum`,
       );
@@ -178,9 +184,17 @@ export function scoreCrops(ctx) {
     }
     // Local practice (state statistics).
     const yName = YIELD_NAME[c.name];
-    const grownHere = yName && stateCropKeys.has(cropKey(yName));
-    parts.local = grownHere ? 1 : 0.4;
-    if (grownHere) reasons.push(`Grown in ${ctx.state} according to state crop statistics`);
+    const grownHere = Boolean(yName) && stateArea.has(cropKey(yName));
+    const area = grownHere ? stateArea.get(cropKey(yName)) : null;
+    const share = area != null && totalArea > 0 ? area / totalArea : null;
+    // Established crops (≥ 5% of the state's cropped area) get full credit; minor ones partial.
+    parts.local = !grownHere ? 0.3 : share == null ? 0.8 : 0.5 + 0.5 * Math.min(1, share / 0.05);
+    if (grownHere)
+      reasons.push(
+        share != null
+          ? `${round(share * 100, 1)}% of ${ctx.state}'s cropped area in state statistics`
+          : `Grown in ${ctx.state} according to state crop statistics`,
+      );
     // ML (only with real soil-test NPK).
     if (ml && ML_NAME[c.name] && ml[ML_NAME[c.name]] != null) {
       parts.ml = ml[ML_NAME[c.name]];
@@ -188,7 +202,7 @@ export function scoreCrops(ctx) {
         reasons.push("ML model (trained on N, P, K, pH and climate) ranks it highly for your soil test");
     }
 
-    const W = { temperature: 0.2, water: 0.25, soil: 0.15, ph: 0.1, local: 0.15, ml: 0.15 };
+    const W = { temperature: 0.2, water: 0.25, soil: 0.15, ph: 0.1, local: 0.2, ml: 0.15 };
     const used = Object.keys(parts);
     const wSum = used.reduce((s, k) => s + W[k], 0);
     const score = wSum ? (used.reduce((s, k) => s + W[k] * parts[k], 0) / wSum) * 100 : null;
@@ -251,7 +265,7 @@ export function scoreCrops(ctx) {
     ranked,
     avoid,
     method:
-      "Suitability = weighted mean of temperature fit (20%), water fit (25%), soil class (15%), pH (10%), local practice (15%) and the ML model (15%, only with soil-test N, P, K). Out-of-season crops are excluded. This is an agronomic screening score, not a prediction accuracy.",
+      "Suitability = weighted mean of temperature fit (20%; full within ±4 °C of the crop optimum, zero beyond ±12 °C), water fit (25%), soil class (15%), pH (10%), local practice — share of the state's cropped area in the dataset (20%) and the ML model (15%, only with soil-test N, P, K). Out-of-season crops are excluded. This is an agronomic screening score, not a prediction accuracy.",
   };
 }
 

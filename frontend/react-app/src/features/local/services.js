@@ -10,9 +10,21 @@ import { featureAt, haversineKm, round } from "./geo";
 import { parseSoilgrids, SOILGRIDS_PROPS, SOILGRIDS_URL } from "./soil";
 import { missing, sv } from "./sources";
 
-let backend = null; // null = unknown, true/false after the first attempt this session
+let backend = null; // null = unknown, true/false after the first probe this session
+let probe = null;
+
+/** One health check decides whether the AgriSmart API is deployed (avoids parallel 404s). */
+function ensureBackend() {
+  if (backend !== null) return Promise.resolve(backend);
+  probe ??= api
+    .get("/health", { timeout: 8000 })
+    .then((r) => (backend = typeof r.data === "object" && r.data !== null))
+    .catch(() => (backend = false));
+  return probe;
+}
 
 async function viaBackendOr(remote, direct) {
+  await ensureBackend();
   if (backend !== false) {
     try {
       const data = await remote();
@@ -338,14 +350,23 @@ export async function fetchSoil([lat, lon]) {
       if (hit) return hit;
       const query = (la, lo) =>
         `${SOILGRIDS_URL}?lon=${lo.toFixed(5)}&lat=${la.toFixed(5)}&${SOILGRIDS_PROPS.map((p) => `property=${p}`).join("&")}&depth=0-5cm&depth=5-15cm&depth=15-30cm&value=mean`;
-      let json = await getJson(query(lat, lon), { timeout: 45000 });
+      // SoilGrids is often slow (40–90 s observed): long timeout and one retry.
+      const fetchSg = async (url) => {
+        try {
+          return await getJson(url, { timeout: 75000 });
+        } catch (e) {
+          if (e.status && e.status < 500 && e.status !== 429) throw e;
+          return getJson(url, { timeout: 75000 });
+        }
+      };
+      let json = await fetchSg(query(lat, lon));
       let sample = [lat, lon];
       const empty = (j) => !j?.properties?.layers?.some((l) => l.depths.some((d) => d.values.mean != null));
       for (const [dn, de] of OFFSETS_KM) {
         if (!empty(json)) break;
         const la = lat + dn / 111.32;
         const lo = lon + de / (111.32 * Math.cos((lat * Math.PI) / 180));
-        json = await getJson(query(la, lo), { timeout: 45000 });
+        json = await fetchSg(query(la, lo));
         sample = [la, lo];
       }
       const out = {

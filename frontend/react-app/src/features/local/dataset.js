@@ -134,6 +134,8 @@ export const BUILTIN_DATASETS = {
     path: "/data/crop_yield.csv",
     source: "cropYieldDataset",
     resolution: "state",
+    // Area/production are totals for a whole state and crop, not farm values.
+    notComparable: { area: "Dataset area is the total crop area of the state, not a farm area." },
     units: {
       area: "ha",
       production: "t (tonnes; bales/nuts for some crops)",

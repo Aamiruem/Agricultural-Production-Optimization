@@ -259,6 +259,16 @@ describe("matching (shared hand-computed cases)", () => {
     });
   }
 
+  it("marks aggregate dataset area as not comparable with a farm area", () => {
+    const res = compareProfiles(
+      { state: "Punjab", area: 5750, crops: [], seasons: [] },
+      { state: "Punjab", area: 2, crops: [], levels: {} },
+      { notComparable: { area: "state total" } },
+    );
+    expect(res.rows.find((r) => r.key === "area").status).toBe("not comparable");
+    expect(res.score).toBe(60);
+  });
+
   it("never counts missing values as matches", () => {
     const res = compareProfiles({ state: "Goa", crops: [], seasons: [] }, { state: "Goa", crops: [], levels: {} });
     expect(res.score).toBe(60); // only location is comparable
@@ -316,7 +326,13 @@ describe("crop suitability", () => {
     ph: 7.8,
     npk: null,
     humidity: 60,
-    stateCrops: ["Wheat", "Rice", "Rapeseed &Mustard", "Gram", "Barley"],
+    stateCrops: [
+      { crop: "Wheat", avgAreaHa: 3500000 },
+      { crop: "Rice", avgAreaHa: 3000000 },
+      { crop: "Rapeseed &Mustard", avgAreaHa: 30000 },
+      { crop: "Gram", avgAreaHa: 2000 },
+      { crop: "Barley", avgAreaHa: 10000 },
+    ],
     conditions: [],
   };
 
@@ -328,6 +344,16 @@ describe("crop suitability", () => {
     expect(r.avoid.some((a) => a.crop === "Cotton")).toBe(true); // Kharif crop
     expect(r.mlUsed).toBe(false); // no soil-test NPK -> no ML
     expect(r.top[0].reasons.length).toBeGreaterThan(0);
+  });
+
+  it("keeps wheat in Punjab's Rabi top 5 with real Ludhiana temperatures (ERA5 normals)", () => {
+    const temps = [12.5, 15.5, 20, 26, 31, 33, 31, 30, 29, 25, 19, 14];
+    const r = scoreCrops({
+      ...ctx,
+      monthlyNormals: monthly.map((m, i) => ({ ...m, temp: temps[i] })),
+      annualRain: 781,
+    });
+    expect(r.top.map((t) => t.crop)).toContain("Wheat");
   });
 
   it("uses the ML model only with soil-test N, P, K", () => {

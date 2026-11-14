@@ -44,6 +44,9 @@ export default function AppPage() {
         <Link to="/dashboard" className="site-btn site-btn--gold">
           Open the app <ArrowRight size={18} aria-hidden="true" />
         </Link>
+        <Link to="/local-intelligence" className="site-btn site-btn--ghost">
+          Analyze my farm location
+        </Link>
         {prompt && !installed && (
           <button
             type="button"

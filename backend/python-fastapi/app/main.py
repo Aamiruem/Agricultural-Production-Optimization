@@ -19,28 +19,29 @@ for _path in (_SERVICE_DIR, _REPO_ROOT):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from fastapi import FastAPI  # noqa: E402
-from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
-from app.api.routes import (  # noqa: E402
+from app.api.routes import (
     assistant,
     auth,
     crops,
     health,
     history,
+    local_intel,
     ml,
     realtime,
     system,
     yield_analytics,
     yield_prediction,
 )
-from app.core.config import get_settings  # noqa: E402
-from app.core.logging import RequestLogMiddleware, configure_logging  # noqa: E402
-from app.core.resilience import LoadShedMiddleware  # noqa: E402
-from app.db import models  # noqa: E402,F401  (register tables on Base.metadata)
-from app.db.session import Base, engine  # noqa: E402
-from app.services.warmup import start_warmup  # noqa: E402
+from app.core.config import get_settings
+from app.core.logging import RequestLogMiddleware, configure_logging
+from app.core.resilience import LoadShedMiddleware
+from app.db import models  # noqa: F401  (register tables on Base.metadata)
+from app.db.session import Base, engine
+from app.services.warmup import start_warmup
 
 
 @asynccontextmanager
@@ -76,7 +77,19 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
         expose_headers=["X-Request-ID", "X-Served-By", "Retry-After"],
     )
-    for module in (health, auth, crops, history, ml, yield_prediction, yield_analytics, assistant, realtime, system):
+    for module in (
+        health,
+        auth,
+        crops,
+        history,
+        ml,
+        yield_prediction,
+        yield_analytics,
+        assistant,
+        realtime,
+        system,
+        local_intel,
+    ):
         app.include_router(module.router, prefix="/api")
     return app
 

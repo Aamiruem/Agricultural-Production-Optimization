@@ -24,18 +24,54 @@ W, H = 1200, 630
 
 # key -> (photo relative to public/images, headline, subline)
 PAGES: dict[str, tuple[str, str, str]] = {
-    "home": ("india-agriculture-hero.webp", "Transforming Agriculture Through Smart Technology", "Production systems · Smart machines · AI farming tools"),
-    "about": ("education/farmers-in-field-1200.webp", "About AgriSmart", "Empowering agriculture through technology, knowledge and sustainable innovation"),
-    "agriculture": ("systems/crop-production-systems-1200.webp", "Agricultural Production Systems", "16 farming systems explained: definitions, process, pros & cons"),
-    "machines": ("machines/combine-harvester-1200.webp", "Smart Agricultural Machines", "Tractors, harvesters, drones, robots and smart irrigation"),
-    "ai": ("ai/satellite-monitoring-1200.webp", "AI in Agriculture", "Crop recommendation, yield prediction and disease detection"),
-    "crops-food": ("food/harvesting-1200.webp", "Crops & Food Production in India", "Kharif, Rabi, Zaid · post-harvest · food security"),
-    "health": ("health/doctor-consultation-1200.webp", "Farmer Health & Rural Healthcare", "First aid, heat stress, pesticide safety and wellness"),
+    "home": (
+        "india-agriculture-hero.webp",
+        "Transforming Agriculture Through Smart Technology",
+        "Production systems · Smart machines · AI farming tools",
+    ),
+    "about": (
+        "education/farmers-in-field-1200.webp",
+        "About AgriSmart",
+        "Empowering agriculture through technology, knowledge and sustainable innovation",
+    ),
+    "agriculture": (
+        "systems/crop-production-systems-1200.webp",
+        "Agricultural Production Systems",
+        "16 farming systems explained: definitions, process, pros & cons",
+    ),
+    "machines": (
+        "machines/combine-harvester-1200.webp",
+        "Smart Agricultural Machines",
+        "Tractors, harvesters, drones, robots and smart irrigation",
+    ),
+    "ai": (
+        "ai/satellite-monitoring-1200.webp",
+        "AI in Agriculture",
+        "Crop recommendation, yield prediction and disease detection",
+    ),
+    "crops-food": (
+        "food/harvesting-1200.webp",
+        "Crops & Food Production in India",
+        "Kharif, Rabi, Zaid · post-harvest · food security",
+    ),
+    "health": (
+        "health/doctor-consultation-1200.webp",
+        "Farmer Health & Rural Healthcare",
+        "First aid, heat stress, pesticide safety and wellness",
+    ),
     "nutrition": ("nutrition/healthy-fruits-1200.webp", "Food & Nutrition Guide", "Balanced diet from farm to plate"),
-    "education": ("education/modern-farming-1200.webp", "Farmer Education & Resources", "Techniques, soil testing and official government schemes"),
+    "education": (
+        "education/modern-farming-1200.webp",
+        "Farmer Education & Resources",
+        "Techniques, soil testing and official government schemes",
+    ),
     "services": ("machines/crop-sensors-1200.webp", "AgriTech, AI/ML & Software Services", "By Aamir Hussain Azad"),
     "projects": ("ai/soil-analysis-1200.webp", "Projects by Aamir Hussain Azad", "AI/ML and full-stack portfolio"),
-    "developer": ("education/farmers-in-field-1200.webp", "Aamir Hussain Azad", "AI/ML Engineer & Full-Stack Developer · Gurugram"),
+    "developer": (
+        "education/farmers-in-field-1200.webp",
+        "Aamir Hussain Azad",
+        "AI/ML Engineer & Full-Stack Developer · Gurugram",
+    ),
     "contact": ("education/agri-economics-1200.webp", "Contact AgriSmart", "WhatsApp or call +91 99318 79953"),
     "app": ("india-agriculture-hero.webp", "AgriSmart Web App", "Free AI farming tools on any phone"),
 }
@@ -122,7 +158,12 @@ def main() -> None:
         render(key, photo, headline, sub)
     manifest = json.loads((ROOT / "scripts" / "commons_images.json").read_text(encoding="utf-8"))
     for slug in manifest["systems"]:
-        render(f"systems-{slug}", f"systems/{slug}-1200.webp", SYSTEM_TITLES[slug], "Definition · process · advantages · limitations")
+        render(
+            f"systems-{slug}",
+            f"systems/{slug}-1200.webp",
+            SYSTEM_TITLES[slug],
+            "Definition · process · advantages · limitations",
+        )
     print(f"{len(list(OUT.glob('*.jpg')))} images -> {OUT.relative_to(ROOT)}")
 
 

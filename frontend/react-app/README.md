@@ -75,6 +75,7 @@ There is **no login, registration or account page**: every page is public.
 | `/services`, `/projects` | Services (with availability) and verified portfolio projects |
 | `/contact` | WhatsApp, call, email, form that opens WhatsApp/email (no fake "sent") |
 | `/app` | Web-app landing page and install (PWA) instructions |
+| `/local-intelligence` | Analyze My Agricultural Location: India map (state → district → tehsil), GPS, village search, field drawing, live weather, ERA5 climate, SoilGrids, dataset matching score, crop suitability, yield, CSV/PDF report — see `docs/local-intelligence.md` |
 | `/privacy-policy`, `/disclaimer`, `/image-credits` | Legal pages and photo licences |
 
 **Tools** (unchanged behaviour)

@@ -208,7 +208,11 @@ export function datasetProfile(records, { level, latestYears = 5 } = {}) {
  * `local` = { lat, lon, state, district, soilClasses[], texture, ph, N, P, K, oc, nBasis, rainfall,
  *             temperature, humidity, crops[], season, area, levels: {param: sourceLevel} }
  */
-export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now = new Date(), units = {} } = {}) {
+export function compareProfiles(
+  profile,
+  local,
+  { weights = DEFAULT_WEIGHTS, now = new Date(), units = {}, notComparable: forced = {} } = {},
+) {
   const rows = [];
   const add = (key, datasetValue, localValue, s, extra = {}) => {
     const w = Number(weights[key] ?? 0);
@@ -256,7 +260,8 @@ export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now
     const tol = TOLERANCES[key];
     // Nutrients must be on the same basis (available kg/ha from a soil test).
     const notComparable =
-      ["N", "P", "K"].includes(key) && b != null && local.nutrientBasis && local.nutrientBasis !== "available-kg-ha";
+      Boolean(forced[key]) ||
+      (["N", "P", "K"].includes(key) && b != null && local.nutrientBasis && local.nutrientBasis !== "available-kg-ha");
     const s = notComparable ? null : numericSimilarity(a, b, tol);
     add(key, a == null ? null : round(a, 2), b == null ? null : round(b, 2), s, {
       unit: units[key] ?? tol.unit,

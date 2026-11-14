@@ -22,9 +22,9 @@ import { Link } from "react-router";
 import { PageHero, SectionTitle } from "@/components/site/SiteKit";
 import {
   buildDataset,
-  compareDataset,
+  compareDatasetAuto,
   cropSuitability,
-  datasetQuality,
+  datasetQualityAuto,
   gatherLocal,
   loadBuiltinDataset,
   predictCropYield,
@@ -47,7 +47,7 @@ import {
   SoilPanel,
   YieldPanel,
 } from "@/features/local/ResultsPanels";
-import { backendStatus, searchPlaces } from "@/features/local/services";
+import { searchPlaces } from "@/features/local/services";
 import { buildSuggestions } from "@/features/local/suggestions";
 import { YIELD_NAME } from "@/features/local/suitability";
 import { ATLAS_CROPS } from "@/lib/atlas";
@@ -282,7 +282,7 @@ export default function LocalIntelligencePage() {
     try {
       const ds = await currentDataset();
       if (!ds) return set("compare", "empty", "Upload a CSV first or choose a built-in dataset.");
-      const res = compareDataset(ds, data, { weights, cropFilter: cropFilter || null });
+      const res = await compareDatasetAuto(ds, data, { weights, cropFilter: cropFilter || null });
       setComparison(res);
       if (res.noLocation)
         set("compare", "empty", "This dataset has no location columns — see the explanation in section E.");
@@ -306,7 +306,7 @@ export default function LocalIntelligencePage() {
     try {
       const ds = await currentDataset();
       if (!ds) return set("quality", "empty", "Upload a CSV first or choose a built-in dataset.");
-      const q = datasetQuality(ds);
+      const q = await datasetQualityAuto(ds);
       setQuality(q);
       set(
         "quality",
@@ -825,11 +825,11 @@ export default function LocalIntelligencePage() {
         </details>
         <p className="muted-note">
           Engine:{" "}
-          {backendStatus() === true
-            ? "AgriSmart API (FastAPI)"
-            : backendStatus() === false
-              ? "browser — calling public APIs directly (no AgriSmart API on this deployment)"
-              : "decided on first request"}
+          {local?.location?.via === "backend"
+            ? "AgriSmart API (FastAPI) — public data fetched server-side with caching and rate limits"
+            : local
+              ? "browser — public APIs called directly (no AgriSmart API reachable on this deployment)"
+              : "chosen on the first request (AgriSmart API if deployed, otherwise the browser)"}
           .
         </p>
       </section>

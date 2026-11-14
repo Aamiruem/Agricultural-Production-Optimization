@@ -153,7 +153,9 @@ def main(src_dir: Path) -> None:
         if state not in known:
             print(f"warning: sub-district state '{state}' has no state outline")
         s = slug(state)
-        d_size = write(OUT / "districts" / f"{s}.json", fc(sorted(by_state_dist[state], key=lambda f: f["properties"]["name"])))
+        d_size = write(
+            OUT / "districts" / f"{s}.json", fc(sorted(by_state_dist[state], key=lambda f: f["properties"]["name"]))
+        )
         s_size = write(OUT / "subdistricts" / f"{s}.json", fc(by_state_sub[state]))
         geom = next(shape(f["geometry"]) for f in state_features if f["properties"]["name"] == state)
         minx, miny, maxx, maxy = geom.bounds
@@ -175,7 +177,9 @@ def main(src_dir: Path) -> None:
             "states": index,
         },
     )
-    print(f"districts: {sum(v['districts'] for v in index.values())}, subdistricts: {sum(v['subdistricts'] for v in index.values())}")
+    print(
+        f"districts: {sum(v['districts'] for v in index.values())}, subdistricts: {sum(v['subdistricts'] for v in index.values())}"
+    )
     print(f"largest files (KB): {sorted(((v['kb'][1], k) for k, v in index.items()), reverse=True)[:3]}")
 
 

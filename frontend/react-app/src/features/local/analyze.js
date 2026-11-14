@@ -3,13 +3,22 @@
 import { filterDiseases } from "@/data/diseases";
 import { STATE_BY_NAME } from "@/data/indiaAgri";
 import { ATLAS_STATES } from "@/lib/atlas";
+import { api, isApiUnavailable } from "@/services/apiClient";
 import { predictYield } from "@/services/mlService";
 
 import { classifyConditions, cropSeason, imdSeason, summarizeHistory } from "./climate";
 import { BUILTIN_DATASETS, canonicalRows, detectSchema, parseCsv, recordsFor, stateAgriculture } from "./dataset";
 import { convertArea, round } from "./geo";
 import { compareProfiles, datasetProfile, DEFAULT_WEIGHTS, validateDataset } from "./matching";
-import { fetchCsv, fetchHistory, fetchMarketPrices, fetchSoil, fetchWeather, reverseGeocode } from "./services";
+import {
+  backendStatus,
+  fetchCsv,
+  fetchHistory,
+  fetchMarketPrices,
+  fetchSoil,
+  fetchWeather,
+  reverseGeocode,
+} from "./services";
 import { regionalSoils, soilIndicators, userSoilValues } from "./soil";
 import { isMissing, missing, sv } from "./sources";
 import { historicalYield, scoreCrops, YIELD_NAME } from "./suitability";
@@ -232,7 +241,13 @@ export function compareDataset(
   }
   if (cropFilter) records = records.filter((r) => String(r.crop ?? "").toLowerCase() === cropFilter.toLowerCase());
   const profile = datasetProfile(records, { level });
-  const comparison = compareProfiles(profile, lm, { weights, now, units: dataset.meta.units ?? {} });
+  const comparison = compareProfiles(profile, lm, {
+    weights,
+    now,
+    units: dataset.meta.units ?? {},
+    notComparable: dataset.meta.notComparable ?? {},
+  });
+  for (const r of comparison.rows) if (dataset.meta.notComparable?.[r.key]) r.basis = dataset.meta.notComparable[r.key];
   return {
     dataset: dataset.meta,
     schema,
@@ -245,6 +260,39 @@ export function compareDataset(
 
 export function datasetQuality(dataset) {
   return validateDataset(dataset.rows);
+}
+
+const isBuiltin = (dataset) => Boolean(BUILTIN_DATASETS[dataset?.meta?.id]);
+
+/** Compare on the AgriSmart API when it is deployed (built-in datasets), else in the browser. */
+export async function compareDatasetAuto(dataset, local, opts = {}) {
+  if (backendStatus() === true && isBuiltin(dataset)) {
+    try {
+      const { data } = await api.post("/agriculture/compare-dataset", {
+        dataset: dataset.meta.id,
+        local: localForMatching(local),
+        weights: opts.weights,
+        crop: opts.cropFilter || null,
+      });
+      return { ...data, via: "backend" };
+    } catch (e) {
+      if (!isApiUnavailable(e)) throw e;
+    }
+  }
+  return { ...compareDataset(dataset, local, opts), via: "browser" };
+}
+
+/** Data-quality check on the API when deployed (built-in datasets), else in the browser. */
+export async function datasetQualityAuto(dataset) {
+  if (backendStatus() === true && isBuiltin(dataset)) {
+    try {
+      const { data } = await api.post("/agriculture/validate-data", { dataset: dataset.meta.id });
+      return { ...data, via: "backend" };
+    } catch (e) {
+      if (!isApiUnavailable(e)) throw e;
+    }
+  }
+  return { ...datasetQuality(dataset), via: "browser" };
 }
 
 // ------------------------------------------------------------------ crops & yield
@@ -262,7 +310,7 @@ export function cropSuitability(local, { season, irrigation }) {
     ph: lm.ph,
     npk: lm.nutrientBasis ? { N: lm.N, P: lm.P, K: lm.K } : null,
     humidity: lm.humidity,
-    stateCrops: stats?.crops?.map((c) => c.crop) ?? [],
+    stateCrops: stats?.crops?.map((c) => ({ crop: c.crop, avgAreaHa: c.avgAreaHa })) ?? [],
     conditions: local.conditions?.flags ?? [],
   });
 }
