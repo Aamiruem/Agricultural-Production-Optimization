@@ -28,8 +28,14 @@ export function ThemeProvider({ children }) {
 
   const resolved = preference === "system" ? (osDark ? "dark" : "light") : preference;
 
-  useEffect(() => {
+  // Applied during render (idempotent) so children that read CSS variables while
+  // rendering — the chart colours — already see the new theme. An effect would run
+  // after the children have rendered with the old palette.
+  if (typeof document !== "undefined" && document.documentElement.dataset.theme !== resolved) {
     document.documentElement.dataset.theme = resolved;
+  }
+
+  useEffect(() => {
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolved === "dark" ? "#1f1f1f" : "#1a73e8");
   }, [resolved]);
 
