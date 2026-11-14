@@ -9,6 +9,8 @@ import math
 import threading
 from pathlib import Path
 
+from app.core.cache import clear_all as clear_prediction_caches
+from app.core.cache import get_cache, rounded_key
 from app.core.config import get_settings
 from app.data.crops import CROPS, FEATURES
 from app.schemas import CropRecommendation, CropScore, SoilConditions
@@ -52,6 +54,7 @@ def get_bundle():
 def reload_model() -> dict:
     with _lock:
         _cache["loaded"] = False
+    clear_prediction_caches()  # never serve predictions from the previous model
     return model_info()
 
 
@@ -131,4 +134,6 @@ def recommend_many(soils: list[SoilConditions], k: int = 3) -> list[CropRecommen
 
 
 def recommend_crops(soil: SoilConditions, k: int = 3) -> CropRecommendation:
-    return recommend_many([soil], k)[0]
+    """Single recommendation, served from the prediction cache when the same reading was seen recently."""
+    key = rounded_key(f"crop:k={k}", soil.model_dump())
+    return get_cache("crop_recommendation").get_or_compute(key, lambda: recommend_many([soil], k)[0])

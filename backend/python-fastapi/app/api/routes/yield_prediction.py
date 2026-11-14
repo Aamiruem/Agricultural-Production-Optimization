@@ -5,6 +5,8 @@ import sys
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from app.core.cache import get_cache, rounded_key
+
 REPO_ROOT = Path(__file__).resolve().parents[5]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -27,13 +29,16 @@ def predict_yield(payload: YieldPredictionInput):
     try:
         from AIML.agentic_ai.tools import predict_yield as run_yield_model
 
-        result = run_yield_model(
-            crop=payload.crop,
-            season=payload.season,
-            state=payload.state,
-            year=payload.year,
-            area_ha=payload.area_ha,
-            annual_rainfall=payload.annual_rainfall,
+        result = get_cache("yield_prediction").get_or_compute(
+            rounded_key("yield", payload.model_dump()),
+            lambda: run_yield_model(
+                crop=payload.crop,
+                season=payload.season,
+                state=payload.state,
+                year=payload.year,
+                area_ha=payload.area_ha,
+                annual_rainfall=payload.annual_rainfall,
+            ),
         )
     except FileNotFoundError as exc:
         raise HTTPException(status_code=503, detail="Yield model is not installed on this API instance.") from exc

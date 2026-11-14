@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AgriSmart operations dashboard: AI crop recommendations with SHAP explanations, yield analytics, model health, farms, MCP tools and live platform status." />
+    <meta name="theme-color" content="#1a73e8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>AgriSmart Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Code:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="%ICON_FONT_URL%" />
+    <script>
+      // Apply the saved theme before first paint (no light flash in dark mode).
+      (function () {
+        var pref = "system";
+        try { pref = localStorage.getItem("agrismart.console.theme") || "system"; } catch (e) {}
+        var dark = pref === "dark" || (pref === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

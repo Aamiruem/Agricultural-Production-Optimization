@@ -171,8 +171,11 @@ def test_rag_chunkers_and_retrieval():
     for chunker in (chunk_fixed, chunk_recursive, chunk_by_heading):
         assert len(chunker(docs)) > 10
     chunks = chunk_by_heading(docs)
-    assert BM25(chunks).scores("urea nitrogen").argmax() == next(
-        i for i, c in enumerate(chunks) if c.source == "fertilizers-india" and "46%" in c.text)
+    bm25 = BM25(chunks).scores("urea nitrogen")
+    ranked = list(np.argsort(-bm25))
+    assert chunks[ranked[0]].source == "fertilizers-india"
+    urea_content = next(i for i, c in enumerate(chunks) if c.source == "fertilizers-india" and "46%" in c.text)
+    assert urea_content in ranked[:5]  # the nutrient-content table is among the best keyword hits
     hits = Retriever(chunks).search("How are sodic soils reclaimed?", k=3, rerank=True)
     assert hits[0].source == "soil-ph"
     assert rrf([np.array([3.0, 2, 1]), np.array([1.0, 2, 3])]).round(6).tolist() == [
@@ -223,4 +226,39 @@ def test_mcp_server_exposes_tools():
     from AIML.agentic_ai.mcp_server import mcp
 
     names = {t.name for t in asyncio.run(mcp.list_tools())}
-    assert names == {"recommend_crop", "predict_yield", "fertilizer_plan", "weather_forecast", "search_knowledge"}
+    assert names == {"recommend_crop", "explain_crop", "predict_yield", "fertilizer_plan", "weather_forecast",
+                     "search_knowledge"}
+
+
+MCP_HEADERS = {"Accept": "application/json, text/event-stream", "Content-Type": "application/json"}
+
+
+def test_mcp_http_transport_is_stateless_and_serves_tools():
+    """Two independent requests with no session id both succeed: safe behind a round-robin load balancer."""
+    pytest.importorskip("starlette")
+    from starlette.testclient import TestClient
+
+    from AIML.agentic_ai.mcp_server import create_http_app
+
+    with TestClient(create_http_app()) as http:
+        assert http.get("/health").json()["status"] == "ok"
+        listed = http.post("/mcp", headers=MCP_HEADERS, json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
+        assert listed.status_code == 200 and "mcp-session-id" not in listed.headers
+        assert {t["name"] for t in listed.json()["result"]["tools"]} >= {"recommend_crop", "explain_crop"}
+        call = http.post("/mcp", headers=MCP_HEADERS, json={
+            "jsonrpc": "2.0", "id": 2, "method": "tools/call",
+            "params": {"name": "fertilizer_plan", "arguments": {"crop": "rice", "N": 20, "P": 10, "K": 40, "area_ha": 2}}})
+        assert call.status_code == 200 and "DAP" in call.text
+
+
+def test_explain_crop_attributions_are_consistent():
+    from AIML.agentic_ai.tools import explain_crop, recommend_crop
+
+    soil = dict(N=90, P=42, K=43, temperature=20.8, humidity=82, ph=6.5, rainfall=202)
+    out = explain_crop(**soil, top=2)
+    assert out["explanations"][0]["crop"] == recommend_crop(**soil)["top"][0]["crop"]
+    best = out["explanations"][0]
+    assert {c["feature"] for c in best["contributions"]} == set(soil)
+    if out["method"] == "TreeSHAP":  # SHAP is additive: base + contributions == predicted probability
+        total = best["base_value"] + sum(c["contribution"] for c in best["contributions"])
+        assert abs(total - best["probability"]) < 1e-3

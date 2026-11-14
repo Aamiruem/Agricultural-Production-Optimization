@@ -44,6 +44,17 @@ class Settings(BaseSettings):
     qdrant_collection: str = "agri_knowledge"
     embeddings: str = "auto"  # auto | sentence-transformers | tfidf
 
+    # Load handling: per-worker cap on concurrent HTTP requests (0 disables) and the
+    # in-memory prediction cache (size 0 disables). See app/core/resilience.py.
+    max_concurrency: int = 64
+    prediction_cache_size: int = 4096
+    prediction_cache_ttl_s: float = 900
+
+    # Sibling services probed by GET /api/system/status (the dashboard's service map)
+    farm_service_url: str = "http://127.0.0.1:4100"
+    mcp_url: str = "http://127.0.0.1:8100"
+    service_probe_timeout_s: float = 2.0
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

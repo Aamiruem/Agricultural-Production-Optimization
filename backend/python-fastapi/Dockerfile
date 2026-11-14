@@ -21,4 +21,6 @@ WORKDIR /app/backend/python-fastapi
 EXPOSE 8000
 HEALTHCHECK --interval=20s --timeout=5s --start-period=30s \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Several worker processes per container (WEB_CONCURRENCY); the gateway balances across containers.
+ENV WEB_CONCURRENCY=2
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers ${WEB_CONCURRENCY} --proxy-headers --forwarded-allow-ips='*' --timeout-keep-alive 30"]

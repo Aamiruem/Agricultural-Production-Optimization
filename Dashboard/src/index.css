@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+/* Dark mode follows the data-theme attribute set by ThemeContext (and index.html before paint). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ----------------------------------------------------------------------------
+   Design tokens — Google Material surfaces and ink, Google brand accents.
+   Chart series colours were validated for colour-vision deficiency with the
+   dataviz palette checker (light on #ffffff, dark on #292a2d, adjacent pairs):
+   slot order blue → red → green → yellow. Yellow is under 3:1 on white, so
+   yellow series always carry direct labels or the table view.
+   Status colours are reserved for state and always ship with an icon + label.
+   ------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --surface-2: #f1f3f4;
+  --surface-3: #e8eaed;
+  --outline: #dadce0;
+  --grid: #eceef1;
+  --ink: #202124;
+  --ink-2: #5f6368;
+  --ink-3: #80868b;
+  --primary: #1a73e8;
+  --primary-hover: #1765cc;
+  --on-primary: #ffffff;
+  --primary-soft: #e8f0fe;
+  --on-primary-soft: #1967d2;
+
+  --series-1: #1a73e8;
+  --series-2: #d93025;
+  --series-3: #188038;
+  --series-4: #d18b00;
+  --diverge-pos: #1a73e8;
+  --diverge-neg: #d93025;
+
+  --good: #137333;
+  --good-soft: #e6f4ea;
+  --warn: #b06000;
+  --warn-soft: #fef7e0;
+  --bad: #c5221f;
+  --bad-soft: #fce8e6;
+
+  --brand-blue: #4285f4;
+  --brand-red: #ea4335;
+  --brand-yellow: #fbbc04;
+  --brand-green: #34a853;
+
+  --shadow-1: 0 1px 2px rgb(60 64 67 / 0.3), 0 1px 3px 1px rgb(60 64 67 / 0.15);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1f1f1f;
+  --surface: #292a2d;
+  --surface-2: #303134;
+  --surface-3: #3c4043;
+  --outline: #3c4043;
+  --grid: #35363a;
+  --ink: #e8eaed;
+  --ink-2: #bdc1c6;
+  --ink-3: #9aa0a6;
+  --primary: #8ab4f8;
+  --primary-hover: #aecbfa;
+  --on-primary: #202124;
+  --primary-soft: rgb(138 180 248 / 0.16);
+  --on-primary-soft: #a8c7fa;
+
+  --series-1: #4c8df6;
+  --series-2: #e8584c;
+  --series-3: #14a08a;
+  --series-4: #c98500;
+  --diverge-pos: #4c8df6;
+  --diverge-neg: #e8584c;
+
+  --good: #81c995;
+  --good-soft: rgb(129 201 149 / 0.14);
+  --warn: #fdd663;
+  --warn-soft: rgb(253 214 99 / 0.14);
+  --bad: #f28b82;
+  --bad-soft: rgb(242 139 130 / 0.14);
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.5), 0 1px 3px 1px rgb(0 0 0 / 0.3);
+}
+
+@theme inline {
+  --font-sans: "Google Sans", "Google Sans Text", Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "Google Sans Code", "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-outline: var(--outline);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-on-primary-soft: var(--on-primary-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-red: var(--brand-red);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-green: var(--brand-green);
+
+  --shadow-card: var(--shadow-1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--primary-soft);
+  }
+  input[type="range"] {
+    accent-color: var(--primary);
+  }
+}
+
+/* Material Symbols: hide ligature text until the icon font has loaded (display=block). */
+.material-symbols-rounded {
+  font-family: "Material Symbols Rounded";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  user-select: none;
+}
+.material-symbols-rounded.filled {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* Recharts: tabular numbers on axes, no focus box around the SVG. */
+.recharts-wrapper svg:focus,
+.recharts-surface:focus {
+  outline: none;
+}
+.recharts-cartesian-axis-tick-value {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-dot, .animate-spin, .animate-pulse { animation: none; }
+}

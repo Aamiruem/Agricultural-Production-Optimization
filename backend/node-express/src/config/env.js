@@ -17,6 +17,8 @@ const schema = z
     S3_BUCKET: z.string().optional(),
     S3_PUBLIC_BASE_URL: z.string().url().optional(), // e.g. a CloudFront domain
     LOG_LEVEL: z.string().default("info"),
+    // Optional: with Redis, Socket.IO events reach clients on every replica (Redis adapter).
+    REDIS_URL: z.string().optional(),
   })
   .refine((e) => e.NODE_ENV !== "production" || (e.JWT_SECRET !== DEV_SECRET && e.JWT_SECRET.length >= 32), {
     message: "Set JWT_SECRET (>= 32 chars) in production",

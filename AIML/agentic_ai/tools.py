@@ -35,6 +35,15 @@ def recommend_crop(N: float, P: float, K: float, temperature: float, humidity: f
     return {"model": b["name"], "top": [{"crop": c, "probability": round(float(p), 3)} for c, p in top]}
 
 
+def explain_crop(N: float, P: float, K: float, temperature: float, humidity: float, ph: float, rainfall: float,
+                 top: int = 3) -> dict:
+    """Why the model ranks each top crop: per-feature TreeSHAP contributions to its probability."""
+    from AIML.advanced_ml.attribution import explain_crop as _explain
+
+    soil = {"N": N, "P": P, "K": K, "temperature": temperature, "humidity": humidity, "ph": ph, "rainfall": rainfall}
+    return _explain(_bundle(str(MODEL_BUNDLE_PATH)), soil, top=top)
+
+
 @lru_cache(maxsize=1)
 def _typical_areas() -> dict[str, dict]:
     """Median cultivated area (ha) per crop|state|season, crop and overall, from the training data.
