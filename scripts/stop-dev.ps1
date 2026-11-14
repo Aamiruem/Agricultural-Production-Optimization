@@ -5,11 +5,14 @@ if (-not (Test-Path $pidFile)) { Write-Host "No AgriSmart development stack PID 
 
 $stack = Get-Content $pidFile -Raw | ConvertFrom-Json
 $expected = @{
-    api = "uvicorn app.main:app"
+    fastapi = "uvicorn app.main:app"
+    api = "uvicorn app.main:app"   # PID files written by older versions of dev.ps1
+    mcp = "AIML.agentic_ai.mcp_server"
     express = "src/server.js"
     vite = "frontend\react-app\node_modules\vite\bin\vite.js"
+    dashboard = "Dashboard\node_modules\vite\bin\vite.js"
 }
-foreach ($name in @("vite", "express", "api")) {
+foreach ($name in @("dashboard", "vite", "express", "mcp", "fastapi", "api")) {
     if ($null -eq $stack.$name) { continue }
     $id = [int]$stack.$name
     $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId=$id" -ErrorAction SilentlyContinue

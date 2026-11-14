@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 import { ThemeContext } from "./theme.js";
 
@@ -28,14 +28,10 @@ export function ThemeProvider({ children }) {
 
   const resolved = preference === "system" ? (osDark ? "dark" : "light") : preference;
 
-  // Applied during render (idempotent) so children that read CSS variables while
-  // rendering — the chart colours — already see the new theme. An effect would run
-  // after the children have rendered with the old palette.
-  if (typeof document !== "undefined" && document.documentElement.dataset.theme !== resolved) {
+  // Layout effect: the attribute flips before paint, so CSS tokens and the JS chart
+  // palette (keyed on `resolved`) switch in the same frame.
+  useLayoutEffect(() => {
     document.documentElement.dataset.theme = resolved;
-  }
-
-  useEffect(() => {
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolved === "dark" ? "#1f1f1f" : "#1a73e8");
   }, [resolved]);
 

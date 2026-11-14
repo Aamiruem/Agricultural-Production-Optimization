@@ -2,7 +2,8 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { BarList, DivergingBars } from "@/components/charts/Charts.jsx";
-import { Card, Chip, Code, cx, ErrorState, Icon, RangeField, Segmented, Select, Skeleton, TextField } from "@/components/ui/primitives.jsx";
+import { cx } from "@/lib/cx.js";
+import { Card, Chip, Code, ErrorState, Icon, RangeField, Segmented, Select, Skeleton, TextField } from "@/components/ui/primitives.jsx";
 import { useDebounced } from "@/hooks/useSamples.js";
 import { useLiveRecommend } from "@/hooks/useLiveRecommend.js";
 import { api } from "@/lib/api.js";

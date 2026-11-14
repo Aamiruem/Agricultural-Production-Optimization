@@ -1,6 +1,7 @@
 import { Sparkline } from "@/components/charts/Charts.jsx";
 
-import { cx, Icon, Skeleton } from "./primitives.jsx";
+import { cx } from "@/lib/cx.js";
+import { Icon, Skeleton } from "./primitives.jsx";
 
 /**
  * Stat tile: label · value · optional delta (signed, vs a named period, coloured by

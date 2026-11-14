@@ -7,7 +7,8 @@ import {
   Area, Bar, BarChart, CartesianGrid, ComposedChart, LabelList, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 
-import { cx, Card, Segmented } from "@/components/ui/primitives.jsx";
+import { cx } from "@/lib/cx.js";
+import { Card, Segmented } from "@/components/ui/primitives.jsx";
 import { fmtNumber } from "@/lib/format.js";
 
 import { useChartColors } from "./useChartColors.js";

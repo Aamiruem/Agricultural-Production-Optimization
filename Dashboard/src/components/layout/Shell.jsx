@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 
-import { Button, cx, Icon, IconButton, StatusPill } from "@/components/ui/primitives.jsx";
+import { cx } from "@/lib/cx.js";
+import { Button, Icon, IconButton, StatusPill } from "@/components/ui/primitives.jsx";
 import { useAuth } from "@/context/auth.js";
 import { useTheme } from "@/context/theme.js";
 import { breakerState } from "@/lib/api.js";

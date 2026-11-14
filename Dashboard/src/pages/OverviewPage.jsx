@@ -4,7 +4,8 @@ import { Link } from "react-router";
 
 import { ChartCard, ColumnChart, TrendChart } from "@/components/charts/Charts.jsx";
 import { useChartColors } from "@/components/charts/useChartColors.js";
-import { Button, Card, cx, ErrorState, Icon, Meter, Select, Skeleton, StatusPill } from "@/components/ui/primitives.jsx";
+import { cx } from "@/lib/cx.js";
+import { Button, Card, ErrorState, Icon, Meter, Select, Skeleton, StatusPill } from "@/components/ui/primitives.jsx";
 import { StatTile } from "@/components/ui/StatTile.jsx";
 import { useAuth } from "@/context/auth.js";
 import { useSamples } from "@/hooks/useSamples.js";

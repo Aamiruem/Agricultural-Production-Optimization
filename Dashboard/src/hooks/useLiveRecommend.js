@@ -15,7 +15,9 @@ export function useLiveRecommend(soil) {
   const failures = useRef(0);
   const sentAt = useRef(0);
 
-  latest.current = soil;
+  useEffect(() => {
+    latest.current = soil; // read by onopen to send the newest reading after a reconnect
+  }, [soil]);
 
   useEffect(() => {
     let closed = false;

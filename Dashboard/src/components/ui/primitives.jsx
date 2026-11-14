@@ -1,12 +1,9 @@
 // Building blocks in the Google Material 3 idiom: rounded surfaces, tonal buttons,
 // pill chips, Material Symbols icons. Every colour comes from a theme token.
+import { cx } from "@/lib/cx.js";
 import { ICON_NAMES } from "@/lib/icons.js";
 
 const KNOWN = new Set(ICON_NAMES);
-
-export function cx(...parts) {
-  return parts.filter(Boolean).join(" ");
-}
 
 export function Icon({ name, filled = false, size = 20, className = "", label }) {
   if (import.meta.env?.DEV && !KNOWN.has(name)) console.warn(`Icon "${name}" is not in ICON_NAMES (src/lib/icons.js)`);

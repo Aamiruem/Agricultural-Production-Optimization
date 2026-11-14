@@ -7,7 +7,7 @@ export const ICON_NAMES = [
   "database", "delete", "dns", "eco", "error", "experiment", "forum", "grass", "hub", "info", "insights", "key",
   "landscape", "light_mode", "location_on", "login", "logout", "memory", "menu", "model_training", "monitoring",
   "partly_cloudy_day", "play_arrow", "psychology", "query_stats", "rainy", "refresh", "rocket_launch", "schedule",
-  "science", "send", "smart_toy", "space_dashboard", "speed", "stop", "storage", "sync", "table_chart", "terminal",
+  "science", "send", "show_chart", "smart_toy", "space_dashboard", "speed", "stop", "storage", "sync", "table_chart", "terminal",
   "thermostat", "trending_down", "trending_up", "tune", "verified", "warning", "water_drop",
 ];
 
