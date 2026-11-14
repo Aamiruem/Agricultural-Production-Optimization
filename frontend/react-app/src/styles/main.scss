@@ -2,11 +2,11 @@
 // Bootstrap is compiled with M3 shapes and Google Sans; the app layer defines M3
 // colour roles (light + dark) and Google-style components.
 @use "bootstrap/scss/bootstrap" with (
-  $primary: #188038,
-  $secondary: #5f6368,
-  $success: #188038,
+  $primary: #14532d,
+  $secondary: #4b5563,
+  $success: #15803d,
   $info: #1a73e8,
-  $warning: #f9ab00,
+  $warning: #facc15,
   $danger: #d93025,
   $border-radius: 0.75rem,
   $border-radius-sm: 0.5rem,
@@ -22,12 +22,13 @@
     sans-serif,
   ),
   $headings-font-family: (
+    "Plus Jakarta Sans",
     "Google Sans",
     "Noto Sans Devanagari",
     "Roboto",
     sans-serif,
   ),
-  $headings-font-weight: 500,
+  $headings-font-weight: 700,
   $link-decoration: none,
   $enable-shadows: false,
   $btn-border-radius: 100px,
@@ -48,23 +49,23 @@
 // ------------------------------------------------------------ M3 colour roles
 :root,
 [data-bs-theme="light"] {
-  --md-primary: #188038;
+  --md-primary: #14532d;
   --md-on-primary: #ffffff;
-  --md-primary-container: #c4eed0;
-  --md-on-primary-container: #072711;
+  --md-primary-container: #dcfce7;
+  --md-on-primary-container: #052e16;
   --md-secondary-container: #d3e3fd;
   --md-on-secondary-container: #041e49;
-  --md-tertiary: #1a73e8;
-  --md-bg: #f8fafd;
+  --md-tertiary: #a16207;
+  --md-bg: #fbfaf5;
   --md-surface: #ffffff;
-  --md-surface-low: #f8fafd;
-  --md-surface-container: #f0f4f9;
-  --md-surface-high: #e9eef6;
-  --md-surface-highest: #dde3ea;
-  --md-on-surface: #1f1f1f;
-  --md-on-surface-variant: #444746;
-  --md-outline: #747775;
-  --md-outline-variant: #c4c7c5;
+  --md-surface-low: #fbfaf5;
+  --md-surface-container: #f3f4ec;
+  --md-surface-high: #ebede2;
+  --md-surface-highest: #e2e5d8;
+  --md-on-surface: #1c2420;
+  --md-on-surface-variant: #3f4a43;
+  --md-outline: #6b746d;
+  --md-outline-variant: #cfd5c9;
   --md-scrim: rgba(0, 0, 0, 0.32);
   --md-elev-1: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
   --md-elev-2: 0 1px 2px rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
@@ -88,19 +89,19 @@
 
 [data-bs-theme="dark"] {
   color-scheme: dark;
-  --md-primary: #6dd58c;
-  --md-on-primary: #00391b;
-  --md-primary-container: #0f5223;
-  --md-on-primary-container: #c4eed0;
+  --md-primary: #4ade80;
+  --md-on-primary: #052e16;
+  --md-primary-container: #14532d;
+  --md-on-primary-container: #dcfce7;
   --md-secondary-container: #004a77;
   --md-on-secondary-container: #c2e7ff;
-  --md-tertiary: #a8c7fa;
-  --md-bg: #131314;
-  --md-surface: #1e1f20;
-  --md-surface-low: #1b1b1c;
-  --md-surface-container: #1e1f20;
-  --md-surface-high: #282a2c;
-  --md-surface-highest: #333537;
+  --md-tertiary: #fde047;
+  --md-bg: #0f1512;
+  --md-surface: #161d19;
+  --md-surface-low: #131a16;
+  --md-surface-container: #161d19;
+  --md-surface-high: #1f2823;
+  --md-surface-highest: #29332d;
   --md-on-surface: #e3e3e3;
   --md-on-surface-variant: #c4c7c5;
   --md-outline: #8e918f;
@@ -116,10 +117,10 @@
   --bs-tertiary-bg: var(--md-surface-high);
   --bs-border-color: var(--md-outline-variant);
   --bs-secondary-color: #9aa0a6;
-  --bs-primary: #6dd58c;
-  --bs-primary-rgb: 109, 213, 140;
-  --bs-link-color: #6dd58c;
-  --bs-link-hover-color: #a8e6b8;
+  --bs-primary: #4ade80;
+  --bs-primary-rgb: 74, 222, 128;
+  --bs-link-color: #4ade80;
+  --bs-link-hover-color: #86efac;
   --bs-emphasis-color: #e3e3e3;
 }
 
@@ -338,7 +339,7 @@ a {
 
 // ------------------------------------------------------------ icon tiles & chips
 .icon-badge {
-  --c: #188038;
+  --c: #15803d;
   display: inline-grid;
   place-items: center;
   flex: none;
@@ -754,7 +755,7 @@ a {
   }
 }
 .g-search-lead {
-  --c: #188038;
+  --c: #15803d;
   display: grid;
   place-items: center;
   width: 36px;
@@ -940,7 +941,7 @@ li.on .g-search-go {
   text-transform: uppercase;
 }
 .side-nav-link {
-  --c: #188038;
+  --c: #15803d;
   display: flex;
   align-items: center;
   gap: 0.85rem;
@@ -1466,7 +1467,7 @@ li.on .g-search-go {
   }
 }
 .rt {
-  --c: #188038;
+  --c: #15803d;
   display: grid;
   gap: 0.2rem;
   padding: 1rem 1.1rem;
@@ -1752,7 +1753,7 @@ li.on .g-search-go {
     font-size: 0.78rem;
   }
   .kpi-up {
-    color: #188038;
+    color: #15803d;
   }
   .kpi-down {
     color: #d93025;
@@ -2350,7 +2351,7 @@ li.on .g-search-go {
   margin-bottom: 1rem;
   scrollbar-width: thin;
   button {
-    --c: #188038;
+    --c: #15803d;
     flex: none;
     display: inline-flex;
     align-items: center;
@@ -2430,7 +2431,7 @@ li.on .g-search-go {
   margin-bottom: 1.75rem;
 }
 .crop-group-title {
-  --c: #188038;
+  --c: #15803d;
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -2461,7 +2462,7 @@ li.on .g-search-go {
   gap: 0.9rem;
 }
 .crop-tile {
-  --c: #188038;
+  --c: #15803d;
   --bg: #e6f4ea;
   display: flex;
   gap: 0.9rem;
@@ -2647,7 +2648,7 @@ li.on .g-search-go {
     font-weight: 500;
   }
   &.kharif {
-    background: color-mix(in srgb, #188038 7%, var(--md-surface));
+    background: color-mix(in srgb, #15803d 7%, var(--md-surface));
   }
   &.rabi {
     background: color-mix(in srgb, #1a73e8 7%, var(--md-surface));
@@ -2738,7 +2739,7 @@ li.on .g-search-go {
   gap: 1rem;
 }
 .wi-card {
-  --c: #188038;
+  --c: #15803d;
   display: grid;
   gap: 0.3rem;
   align-content: start;
@@ -3181,7 +3182,7 @@ li.active .farm-text small {
   gap: 0.6rem;
 }
 .fi-tile {
-  --c: #188038;
+  --c: #15803d;
   display: grid;
   gap: 0.2rem;
   align-content: start;
@@ -4832,7 +4833,7 @@ li.active .farm-text small {
     height: 56px;
     border-radius: 50%;
     background: var(--md-surface-container);
-    color: #188038;
+    color: #15803d;
   }
 }
 .kb-nutrients {
@@ -4866,7 +4867,7 @@ li.active .farm-text small {
   font-size: 1.1rem;
   font-weight: 600;
   &.is-primary {
-    background: #188038;
+    background: #15803d;
   }
   &.is-secondary {
     background: #1a73e8;
@@ -5014,13 +5015,13 @@ li.active .farm-text small {
 // Forest green + cream, rounded photo hero, service cards, split "how it works",
 // results band, mission banner, article cards and a large call to action.
 .landing {
-  --lp-green: #0f4d3a;
-  --lp-green-2: #17694f;
-  --lp-lime: #b7e07a;
-  --lp-cream: #f4f1e6;
-  --lp-cream-2: #ebe6d4;
-  --lp-ink: #13261e;
-  --lp-muted: #4b5c53;
+  --lp-green: #14532d;
+  --lp-green-2: #166534;
+  --lp-lime: #facc15;
+  --lp-cream: #f6f4e8;
+  --lp-cream-2: #ece8d4;
+  --lp-ink: #1c2420;
+  --lp-muted: #4b5a51;
   --lp-radius: 28px;
   display: grid;
   gap: clamp(3rem, 7vw, 6rem);
@@ -5028,8 +5029,8 @@ li.active .farm-text small {
   color: var(--lp-ink);
 }
 [data-bs-theme="dark"] .landing {
-  --lp-green: #2f8f6b;
-  --lp-green-2: #3aa57d;
+  --lp-green: #22c55e;
+  --lp-green-2: #4ade80;
   --lp-cream: #1c2621;
   --lp-cream-2: #24302a;
   --lp-ink: #e6efe9;
@@ -5106,9 +5107,9 @@ li.active .farm-text small {
   }
   &--light {
     background: #fff;
-    color: #0f4d3a;
+    color: #14532d;
     &:hover {
-      color: #0f4d3a;
+      color: #14532d;
       box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
     }
   }
@@ -5405,7 +5406,7 @@ li.active .farm-text small {
     padding: 0.5rem 0.9rem;
     border-radius: 999px;
     background: rgb(255 255 255 / 0.92);
-    color: #0f4d3a;
+    color: #14532d;
     font-size: 0.85rem;
     font-weight: 500;
   }

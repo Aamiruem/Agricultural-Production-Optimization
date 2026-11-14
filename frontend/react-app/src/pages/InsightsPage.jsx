@@ -1,4 +1,3 @@
-import Button from "react-bootstrap/Button";
 import { Link } from "react-router";
 
 import { EmptyState } from "@/components/common/EmptyState";
@@ -29,10 +28,10 @@ export default function InsightsPage() {
           <MyHistory />
         ) : (
           <EmptyState>
-            <p className="mb-2">Sign in to see your saved recommendations and run batch jobs.</p>
-            <Button as={Link} to="/login?next=/insights" size="sm">
-              Sign in
-            </Button>
+            <p className="mb-0">
+              Saved prediction history needs the AgriSmart API service. Your recent crop recommendations are kept in this
+              browser on the <Link to="/crop-recommendation">crop advisor</Link> page.
+            </p>
           </EmptyState>
         )}
       </section>

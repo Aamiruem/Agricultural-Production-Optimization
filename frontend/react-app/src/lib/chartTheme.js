@@ -14,7 +14,7 @@ export function chartColors(mode) {
     axis: dark ? "#c4c7c5" : "#444746",
     text: dark ? "#e3e3e3" : "#1f1f1f",
     surface: dark ? "#1e1f20" : "#ffffff",
-    primary: dark ? "#6dd58c" : "#188038",
+    primary: dark ? "#4ade80" : "#15803d",
     muted: dark ? "#5f6368" : "#bdc1c6",
     muted2: dark ? "#80868b" : "#9aa0a6",
   };

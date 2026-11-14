@@ -4,7 +4,7 @@ import { MIcon } from "./MIcon";
  * Colourful tonal icon tile (Google style). `icon` is a Material Symbol name (string)
  * or a lucide component; `color` tints the icon and a soft container behind it.
  */
-export function IconBadge({ icon, color = "#188038", size = 22, className = "", box }) {
+export function IconBadge({ icon, color = "#15803d", size = 22, className = "", box }) {
   const Icon = icon;
   return (
     <span

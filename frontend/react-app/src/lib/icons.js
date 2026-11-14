@@ -81,7 +81,7 @@ export const G = {
   blue: "#1a73e8",
   red: "#d93025",
   yellow: "#f9ab00",
-  green: "#188038",
+  green: "#15803d",
   purple: "#9334e6",
   cyan: "#12b5cb",
   orange: "#e8710a",

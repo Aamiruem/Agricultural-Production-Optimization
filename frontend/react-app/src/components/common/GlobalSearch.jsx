@@ -125,7 +125,7 @@ export function GlobalSearch({ autoFocus = false, onDone }) {
               onClick={() => go(r)}
               onMouseEnter={() => setActive(i)}
             >
-              <span className="g-search-lead" style={{ "--c": r.color || "#188038" }}>
+              <span className="g-search-lead" style={{ "--c": r.color || "#15803d" }}>
                 {r.emoji ? <span className="emoji">{r.emoji}</span> : <MIcon name={r.icon} size={20} fill />}
               </span>
               <span className="g-search-text">

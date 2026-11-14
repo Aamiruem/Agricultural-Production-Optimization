@@ -12,6 +12,25 @@ import { BRAND } from "../data/site.js";
 
 const UPDATED = BRAND.contentUpdated;
 
+// Hero photo per page: preloaded in the static HTML (faster LCP) and listed in the
+// image sitemap. Keys are /images/<key>-640|1200.webp; values starting with "/" are files.
+const HERO = {
+  "/": "/images/india-agriculture-hero.webp",
+  "/app": "/images/india-agriculture-hero.webp",
+  "/about": "education/farmers-in-field",
+  "/developer": "education/farmers-in-field",
+  "/agricultural-production-systems": "systems/crop-production-systems",
+  "/smart-agricultural-machines": "machines/combine-harvester",
+  "/ai-in-agriculture": "ai/satellite-monitoring",
+  "/crops-and-food": "food/harvesting",
+  "/farmer-health": "health/doctor-consultation",
+  "/food-and-nutrition": "nutrition/healthy-fruits",
+  "/farmer-education": "education/modern-farming",
+  "/services": "machines/crop-sensors",
+  "/projects": "ai/soil-analysis",
+  "/contact": "education/agri-economics",
+};
+
 /**
  * @typedef {object} RouteSeo
  * @property {string} path
@@ -24,7 +43,7 @@ const UPDATED = BRAND.contentUpdated;
  * @property {number} [priority]   Sitemap priority.
  * @property {string} [changefreq] Sitemap change frequency.
  * @property {boolean} [noindex]   Exclude from search and sitemap.
- * @property {string[]} [images]   Extra page images for the image sitemap.
+ * @property {string} [hero]       Hero photo key (see HERO) for preload and the image sitemap.
  */
 
 /** @type {RouteSeo[]} */
@@ -39,7 +58,6 @@ const STATIC_ROUTES = [
     type: "WebPage",
     priority: 1.0,
     changefreq: "weekly",
-    images: ["/images/india-agriculture-hero.webp"],
   },
   {
     path: "/about",
@@ -405,7 +423,10 @@ const STATIC_ROUTES = [
 
 const SYSTEM_ROUTES = PRODUCTION_SYSTEMS.map((s) => ({
   path: `/agricultural-production-systems/${s.slug}`,
-  title: `${s.title} – Definition, Process, Pros & Cons`.slice(0, 70),
+  title:
+    `${s.title}: Definition, Process, Pros & Cons`.length <= 62
+      ? `${s.title}: Definition, Process, Pros & Cons`
+      : `${s.title}: Definition & Examples`,
   description: `${s.summary} Learn the definition, importance, working process, advantages and limitations of ${s.title.toLowerCase()}, with Indian examples.`,
   crumb: s.title,
   parent: "/agricultural-production-systems",
@@ -413,7 +434,7 @@ const SYSTEM_ROUTES = PRODUCTION_SYSTEMS.map((s) => ({
   type: "Article",
   priority: 0.8,
   changefreq: "monthly",
-  images: [`/images/${s.image}-1200.webp`],
+  hero: s.image,
 }));
 
 // Crop detail pages are thin (a table of averages), so they stay out of the index.
@@ -431,8 +452,15 @@ export const SEO_ROUTES = [...STATIC_ROUTES, ...SYSTEM_ROUTES, ...CROP_ROUTES].m
   type: "WebPage",
   image: "/og/home.jpg",
   updated: UPDATED,
+  hero: HERO[r.path],
   ...r,
 }));
+
+/** Absolute-path URL of a route's hero image (1200 px), or undefined. */
+export function heroUrl(route) {
+  if (!route?.hero) return undefined;
+  return route.hero.startsWith("/") ? route.hero : `/images/${route.hero}-1200.webp`;
+}
 
 const BY_PATH = new Map(SEO_ROUTES.map((r) => [r.path, r]));
 

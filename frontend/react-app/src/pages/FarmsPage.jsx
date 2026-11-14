@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link } from "react-router";
 
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { IconBadge } from "@/components/common/IconBadge";
@@ -20,8 +19,8 @@ const REASONS = {
   "signed-out": [
     "Saved on this device",
     "इस डिवाइस पर सहेजा गया",
-    "Sign in to sync farms across devices.",
-    "सभी डिवाइस पर सिंक करने के लिए साइन इन करें।",
+    "No account needed: your farms stay private in this browser.",
+    "खाते की ज़रूरत नहीं: आपके खेत इसी ब्राउज़र में सुरक्षित रहते हैं।",
   ],
   "database-down": [
     "Database offline — saved on this device",
@@ -79,11 +78,6 @@ export default function FarmsPage() {
           <span>
             <b>{hi ? reason[1] : reason[0]}</b> — {hi ? reason[3] : reason[2]}
           </span>
-        )}
-        {storage.reason === "signed-out" && (
-          <Link to="/login" className="btn btn-tonal btn-sm ms-auto">
-            {hi ? "साइन इन" : "Sign in"}
-          </Link>
         )}
       </div>
 

@@ -4,7 +4,7 @@
 
 import { BRAND, OWNER } from "../data/site.js";
 
-import { breadcrumbTrail, routeSeo } from "./routes.js";
+import { breadcrumbTrail, heroUrl, routeSeo } from "./routes.js";
 
 const abs = (site, path) => (path?.startsWith("http") ? path : `${site}${path}`);
 
@@ -107,7 +107,7 @@ export function structuredData(site, pathname) {
       "@id": `${url}#article`,
       headline: r.title.split(/ [–|] /)[0],
       description: r.description,
-      image: [abs(site, r.image), ...(r.images || []).map((i) => abs(site, i))],
+      image: [abs(site, r.image), ...(heroUrl(r) ? [abs(site, heroUrl(r))] : [])],
       datePublished: r.updated,
       dateModified: r.updated,
       author: { "@id": `${site}/developer#person` },

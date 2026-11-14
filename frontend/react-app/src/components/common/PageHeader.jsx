@@ -8,7 +8,7 @@ import { IconBadge } from "./IconBadge";
  * Pass `page` (a key in translations.pages) for bilingual copy, or explicit title/description.
  * `icon` is a Material Symbol name (or a lucide component).
  */
-export function PageHeader({ page, title, description, icon, color = "#188038", actions }) {
+export function PageHeader({ page, title, description, icon, color = "#15803d", actions }) {
   const { t } = useT();
   const [pTitle, pDesc] = page ? t(`pages.${page}`) : [];
   const heading = title ?? pTitle;

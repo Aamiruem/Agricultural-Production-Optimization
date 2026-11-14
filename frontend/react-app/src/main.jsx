@@ -1,4 +1,5 @@
 import "./styles/main.scss";
+import "./styles/site.scss";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
