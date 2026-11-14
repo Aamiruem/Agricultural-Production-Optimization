@@ -1,35 +1,103 @@
 import { expect, test } from "@playwright/test";
 
-test("home page shows the AgriSmart hero, primary navigation and remembers dark mode", async ({ page }) => {
+const USER = {
+  id: 7,
+  email: "asha@example.com",
+  full_name: "Asha Devi",
+  role: "user",
+  created_at: "2026-11-01T00:00:00Z",
+};
+
+/**
+ * Any API call a test does not mock answers 503, so pages use their honest offline paths and
+ * never reach a real backend (a real one would reject the fake token and sign the test out).
+ */
+async function isolateApi(page) {
+  await page.route("**/api/**", (route) => route.fulfill({ status: 503, json: { detail: "offline in e2e" } }));
+}
+
+/** Start the page already signed in (same shape the app persists after a real login). */
+async function signIn(page) {
+  await page.addInitScript((user) => {
+    localStorage.setItem(
+      "agri-auth",
+      JSON.stringify({ state: { token: "e2e-token", user, expiresAt: Date.now() + 3_600_000 }, version: 0 }),
+    );
+  }, USER);
+}
+
+test("public home page: hero, navigation, CTAs and no internal tools", async ({ page }) => {
+  await isolateApi(page);
   await page.goto("/");
   await expect(page).toHaveTitle(/AgriSmart/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Transforming Agriculture");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Grow Smarter");
   const nav = page.getByRole("navigation", { name: "Primary" });
-  for (const label of [
-    "Home",
-    "About",
-    "Agriculture",
-    "Smart Machines",
-    "AI Solutions",
-    "Crops & Food",
-    "Healthcare",
-    "Projects",
-    "Contact",
-  ]) {
+  for (const label of ["Home", "About", "Features", "AI Solutions", "How It Works", "Contact"]) {
     await expect(nav.getByRole("link", { name: label, exact: true })).toBeVisible();
   }
-  await expect(page.getByRole("link", { name: /Contact on WhatsApp/ })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "Login", exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Explore AgriSmart" }).first()).toBeVisible();
+  // Signed-out visitors see no dashboard sidebar or app shell.
+  await expect(page.locator(".app-shell, .side-nav")).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Chat with AgriSmart on WhatsApp" })).toHaveAttribute(
     "href",
     /^https:\/\/wa\.me\/919931879953/,
   );
 
-  await page.getByRole("button", { name: "Toggle theme" }).click();
+  await page.getByRole("button", { name: "Toggle dark mode" }).first().click();
   await expect(page.locator("html")).toHaveAttribute("data-bs-theme", "dark");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-bs-theme", "dark");
 });
 
+test("private pages send signed-out visitors to login and return them after sign-in", async ({ page }) => {
+  await isolateApi(page);
+  await page.route("**/api/auth/token", (route) =>
+    route.fulfill({ json: { access_token: "jwt", token_type: "bearer", expires_in: 3600, user: USER } }),
+  );
+  await page.goto("/weather");
+  await expect(page).toHaveURL(/\/login\?next=%2Fweather$/);
+  await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Login" }).click();
+  await expect(page.getByText("Enter a valid email")).toBeVisible();
+
+  await page.getByLabel("Email").fill("asha@example.com");
+  await page.getByLabel("Password", { exact: true }).fill("secret123");
+  await page.getByRole("button", { name: "Login" }).click();
+  await expect(page).toHaveURL(/\/weather$/);
+  await expect(page.locator(".app-shell")).toBeVisible();
+});
+
+test("login shows the API's error and never fakes success", async ({ page }) => {
+  await isolateApi(page);
+  await page.route("**/api/auth/token", (route) =>
+    route.fulfill({ status: 401, json: { detail: "Incorrect email or password" } }),
+  );
+  await page.goto("/login");
+  await page.getByLabel("Email").fill("asha@example.com");
+  await page.getByLabel("Password", { exact: true }).fill("wrong-pass1");
+  await page.getByRole("button", { name: "Login" }).click();
+  await expect(page.getByRole("alert")).toContainText("Incorrect email or password");
+  await expect(page).toHaveURL(/\/login$/);
+});
+
+test("signed-in dashboard: welcome, sidebar and honest empty overview", async ({ page }) => {
+  await isolateApi(page);
+  await signIn(page);
+  await page.goto("/dashboard");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Welcome back, Asha");
+  await expect(page.getByRole("heading", { name: "Your latest analysis" })).toBeVisible();
+  await expect(page.getByText("No location analysed yet.")).toBeVisible();
+
+  // Signed-in users skip the login screen.
+  await page.goto("/login");
+  await expect(page).toHaveURL(/\/dashboard$/);
+});
+
 test("crop advisor validates, calls the API and shows ranked crops", async ({ page }) => {
+  await isolateApi(page);
+  await signIn(page);
   await page.route("**/api/recommend/crop", (route) =>
     route.fulfill({
       json: {
@@ -43,6 +111,7 @@ test("crop advisor validates, calls the API and shows ranked crops", async ({ pa
     }),
   );
   await page.goto("/recommend");
+  await expect(page).toHaveURL(/\/crop-recommendation$/);
   const form = page.getByRole("form", { name: "Crop recommendation" });
   await form.getByRole("button", { name: "Recommend crops" }).click();
   await expect(page.getByText("Nitrogen is required")).toBeVisible();
@@ -52,10 +121,11 @@ test("crop advisor validates, calls the API and shows ranked crops", async ({ pa
   const results = page.getByRole("region", { name: "Recommended crops" });
   await expect(results.getByRole("link", { name: /Rice/ })).toBeVisible();
   await expect(results.getByText("ML model")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Recent recommendations" })).toBeVisible();
 });
 
 test("planner (Redux) adds a field, advances status and survives a reload", async ({ page }) => {
+  await isolateApi(page);
+  await signIn(page);
   await page.goto("/planner");
   const form = page.getByRole("form", { name: "Add field" });
   await form.getByLabel("Field name").fill("North plot");
@@ -71,17 +141,27 @@ test("planner (Redux) adds a field, advances status and survives a reload", asyn
   await expect(page.getByRole("listitem").filter({ hasText: "North plot" })).toContainText("sown");
 });
 
-test("no login anywhere: farms open without an account and old auth URLs go home", async ({ page }) => {
-  await page.goto("/farms");
-  await expect(page).toHaveURL(/\/farms$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("My farms");
-  await expect(page.locator('a[href*="/login"], a[href*="/register"]')).toHaveCount(0);
+test("contact form validates and reports a real server result", async ({ page }) => {
+  await isolateApi(page);
+  await page.route("**/api/contact", (route) =>
+    route.fulfill({ status: 201, json: { id: 42, detail: "Thanks — your message has been received." } }),
+  );
+  await page.goto("/contact");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.getByText("Please enter your name.")).toBeVisible();
 
-  await page.goto("/login");
-  await expect(page).toHaveURL(/\/$/);
+  const form = page.getByRole("form", { name: "Send a message" });
+  await form.getByLabel("Name").fill("Asha Devi");
+  await form.getByLabel("Email").fill("asha@example.com");
+  await form.getByLabel("Subject").fill("Soil data");
+  await form.getByLabel("Message").fill("Is district soil data available for Bihar?");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.getByRole("status")).toContainText("Reference #42");
 });
 
 test("assistant streams tokens, tool steps and sources", async ({ page }) => {
+  await isolateApi(page);
+  await signIn(page);
   await page.route("**/api/assistant/status", (route) =>
     route.fulfill({
       json: {
