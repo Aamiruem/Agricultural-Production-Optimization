@@ -1,9 +1,10 @@
 """Farmer-query intent classification: TF-IDF features + linear models.
 
 Compares Logistic Regression, Linear SVM and Multinomial Naive Bayes with
-stratified 5-fold cross-validation, then saves the best as a pipeline that
-FastAPI serves at `POST /api/nlp/intent` (routing questions to the right
-tool: pest doctor, fertilizer calculator, weather, ...).
+stratified 5-fold cross-validation, then saves the best as a pipeline
+(AIML/models/intent_model.joblib). The multi-agent supervisor
+(AIML/agentic_ai/multi_agent.py) uses it to route a farmer's question to the
+right tool: pest doctor, fertilizer calculator, weather, ...
 
     python -m AIML.nlp.intent_classifier
 """

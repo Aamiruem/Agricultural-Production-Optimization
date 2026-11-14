@@ -5,7 +5,7 @@ import { Link } from "react-router";
 import { ChartCard, ColumnChart, TrendChart } from "@/components/charts/Charts.jsx";
 import { useChartColors } from "@/components/charts/useChartColors.js";
 import { cx } from "@/lib/cx.js";
-import { Button, Card, ErrorState, Icon, Meter, Select, Skeleton, StatusPill } from "@/components/ui/primitives.jsx";
+import { Card, ErrorState, Icon, Meter, Select, Skeleton, StatusPill } from "@/components/ui/primitives.jsx";
 import { StatTile } from "@/components/ui/StatTile.jsx";
 import { useAuth } from "@/context/auth.js";
 import { useSamples } from "@/hooks/useSamples.js";
@@ -18,6 +18,13 @@ const SERVICE_META = {
   "farm-service": { label: "Express · Farms", icon: "agriculture" },
   mcp: { label: "MCP server", icon: "hub" },
 };
+
+/** Indian cropping season for the current month. */
+function currentSeason(month = new Date().getMonth() + 1) {
+  if (month >= 6 && month <= 10) return "Kharif";
+  if (month >= 11 || month <= 3) return "Rabi";
+  return "Zaid";
+}
 
 function greeting() {
   const h = new Date().getHours();
@@ -225,32 +232,48 @@ export default function OverviewPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-[28px] font-normal text-ink">
-            {greeting()}
-            {user ? `, ${user.full_name.split(" ")[0]}` : ""}
-          </p>
-          <p className="mt-1 text-sm text-ink-2">
-            {new Date().toLocaleDateString("en-IN", {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}{" "}
-            · live view of models, farms and platform health
-          </p>
+      <section className="relative grid overflow-hidden rounded-3xl bg-[#0f4d3a] text-white md:grid-cols-[1fr_auto]">
+        <div className="relative z-10 flex flex-col gap-4 p-6 sm:p-8">
+          <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium tracking-wide uppercase">
+            <Icon name="eco" size={16} filled /> {currentSeason()} season · live farm intelligence
+          </span>
+          <div>
+            <p className="text-[28px] leading-tight font-medium sm:text-[34px]">
+              {greeting()}
+              {user ? `, ${user.full_name.split(" ")[0]}` : ""}
+            </p>
+            <p className="mt-1 text-sm text-white/80">
+              {new Date().toLocaleDateString("en-IN", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}{" "}
+              · models, farms and platform health in one place
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/studio"
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-[#0f4d3a] transition hover:shadow-lg"
+            >
+              <Icon name="auto_awesome" size={18} /> Recommend a crop
+            </Link>
+            <Link
+              to="/yield"
+              className="inline-flex h-10 items-center gap-2 rounded-full border border-white/60 px-5 text-sm font-medium text-white transition hover:bg-white/10"
+            >
+              <Icon name="query_stats" size={18} /> Forecast yield
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Link to="/studio">
-            <Button icon="auto_awesome">Recommend a crop</Button>
-          </Link>
-          <Link to="/yield">
-            <Button variant="tonal" icon="query_stats">
-              Forecast yield
-            </Button>
-          </Link>
-        </div>
+        <img
+          src="/images/farm-illustration.webp"
+          alt=""
+          width="240"
+          height="240"
+          className="hidden h-full max-h-60 w-60 object-cover md:block"
+        />
       </section>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Key metrics">

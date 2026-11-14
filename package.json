@@ -4,8 +4,8 @@
   "description": "AgriSmart monorepo: FastAPI + AIML, Express farm service, React web app, operations Dashboard, MCP server and gateway",
   "scripts": {
     "setup": "node scripts/tasks.mjs setup",
-    "dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev.ps1",
-    "stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stop-dev.ps1",
+    "dev": "python main.py",
+    "aiml": "python -m AIML",
     "docker": "docker compose up --build",
     "test": "node scripts/tasks.mjs test",
     "lint": "node scripts/tasks.mjs lint",

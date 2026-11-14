@@ -28,7 +28,7 @@ npm run dev        # http://localhost:5180
 The dev server proxies `/api` → FastAPI (`:8000`), `/farm-api` → Express (`:4100`)
 and `/mcp` → MCP server (`:8100`); override with `API_PROXY_TARGET`,
 `FARM_PROXY_TARGET`, `MCP_PROXY_TARGET` (see `.env.example`). From the repository
-root, `.\scripts\dev.ps1` starts every service including this dashboard.
+root, `python main.py` starts every service including this dashboard.
 
 With Docker, `docker compose up --build` serves it behind the load-balancing
 gateway at **http://localhost:8090**.

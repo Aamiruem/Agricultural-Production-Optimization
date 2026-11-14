@@ -1,77 +1,94 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, MapPinned, ShieldCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 import { Area, AreaChart, Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
-import { IconBadge } from "@/components/common/IconBadge";
 import { MIcon } from "@/components/common/MIcon";
 import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
-import { CATEGORIES, CROPS, SEASONS, STATES, STATE_BY_NAME } from "@/data/indiaAgri";
+import { CROPS, SEASONS, STATES, STATE_BY_NAME } from "@/data/indiaAgri";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useWeather, weatherLabel } from "@/hooks/useWeather";
 import { useT } from "@/i18n/useT";
-import { ATLAS_CROPS } from "@/lib/atlas";
 import { useChartColors } from "@/lib/chartTheme";
-import { G } from "@/lib/icons";
 
-const SOLUTIONS = [
+// The AI tools, in the order a farmer meets them.
+const TOOLS = [
   {
     to: "/crop-recommendation",
     icon: "potted_plant",
-    color: G.green,
     key: "side.cropAdvisor",
-    en: "Best crop for your N-P-K, pH, temperature, humidity and rainfall.",
-    hi: "आपकी मिट्टी और जलवायु के लिए सर्वोत्तम फसल।",
+    en: "Best crop for your N-P-K, pH, temperature, humidity and rainfall — with the reasons.",
+    hi: "आपकी मिट्टी और जलवायु के लिए सर्वोत्तम फसल — कारणों सहित।",
   },
   {
     to: "/yield-prediction",
     icon: "trending_up",
-    color: G.blue,
     key: "side.yield",
-    en: "Predict t/ha and total production with historical ranges.",
-    hi: "ऐतिहासिक सीमा सहित उपज और कुल उत्पादन का अनुमान।",
+    en: "Expected t/ha and total production, with the historical range for your state.",
+    hi: "राज्य की ऐतिहासिक सीमा सहित अपेक्षित उपज और कुल उत्पादन।",
   },
   {
     to: "/soil-analysis",
     icon: "science",
-    color: G.brown,
     key: "side.soilHealth",
-    en: "Soil Health Card scoring with radar charts and fixes.",
-    hi: "रडार चार्ट और सुधार सहित मृदा स्वास्थ्य स्कोर।",
+    en: "Soil Health Card scoring with clear fixes for every nutrient.",
+    hi: "हर पोषक तत्व के सुधार सहित मृदा स्वास्थ्य कार्ड स्कोर।",
   },
   {
     to: "/disease-detection",
     icon: "pest_control",
-    color: G.red,
     key: "side.disease",
-    en: "Leaf-photo screening plus a symptom matcher.",
-    hi: "पत्ती की फ़ोटो जाँच और लक्षण मिलान।",
+    en: "Leaf-photo screening and a region-wise library of diseases and pests.",
+    hi: "पत्ती की फ़ोटो जाँच और क्षेत्र-वार रोग व कीट पुस्तकालय।",
   },
   {
     to: "/fertilizer",
     icon: "compost",
-    color: G.orange,
     key: "side.fertilizer",
-    en: "DAP, Urea and MOP doses for your exact nutrient gap.",
-    hi: "पोषक तत्व की कमी के अनुसार DAP, यूरिया, MOP।",
+    en: "DAP, urea and MOP doses that close your exact nutrient gap.",
+    hi: "पोषक तत्व की कमी के अनुसार DAP, यूरिया और MOP की मात्रा।",
   },
   {
     to: "/irrigation-optimization",
     icon: "water_drop",
-    color: G.cyan,
     key: "side.irrigation",
-    en: "FAO-56 water budget from live evapotranspiration.",
-    hi: "लाइव वाष्पोत्सर्जन से FAO-56 जल बजट।",
+    en: "FAO-56 water budget from live evapotranspiration — water only when needed.",
+    hi: "लाइव वाष्पोत्सर्जन से FAO-56 जल बजट — ज़रूरत पर ही सिंचाई।",
   },
 ];
 
-const FEATURES = [
-  { to: "/dashboard", icon: "space_dashboard", color: G.blue, key: "side.dashboard" },
-  { to: "/weather", icon: "partly_cloudy_day", color: G.yellow, key: "side.weather" },
-  { to: "/reports", icon: "monitoring", color: G.purple, key: "side.reports" },
-  { to: "/states", icon: "map", color: G.teal, key: "side.stateGuide" },
+const STEPS = ["how1", "how2", "how3", "how4"];
+
+const LEARN = [
+  {
+    to: "/learn#seasons",
+    image: "/images/kharif-season.webp",
+    tag: { en: "Seasons", hi: "मौसम" },
+    title: { en: "Kharif, Rabi and Zaid at a glance", hi: "खरीफ, रबी और ज़ायद एक नज़र में" },
+  },
+  {
+    to: "/disease-detection",
+    image: "/images/crops/rice.webp",
+    tag: { en: "Crop health", hi: "फसल स्वास्थ्य" },
+    title: { en: "Diseases and pests by state and season", hi: "राज्य और मौसम अनुसार रोग और कीट" },
+  },
+  {
+    to: "/learn#nutrients",
+    image: "/images/rabi-season.webp",
+    tag: { en: "Soil", hi: "मिट्टी" },
+    title: { en: "Eight soil nutrients and their deficiency signs", hi: "आठ मृदा पोषक तत्व और कमी के लक्षण" },
+  },
+  {
+    to: "/crop-gallery",
+    image: "/images/zaid-horticulture.webp",
+    tag: { en: "Crops", hi: "फसलें" },
+    title: { en: "Photo guide to 45 Indian crops", hi: "45 भारतीय फसलों की चित्र मार्गदर्शिका" },
+  },
 ];
+
+// Real data sources and technology behind the app (not endorsements).
+const BUILT_WITH = ["Open-Meteo", "data.gov.in", "scikit-learn", "XGBoost", "SHAP", "FastAPI", "React", "MCP"];
 
 const FAQ = [
   [
@@ -106,6 +123,17 @@ const FAQ = [
   ],
 ];
 
+function SectionHead({ kicker, title, lead, align = "center" }) {
+  return (
+    <div className={`lp-head lp-head--${align}`}>
+      {kicker && <span className="lp-kicker">{kicker}</span>}
+      <h2>{title}</h2>
+      {lead && <p>{lead}</p>}
+    </div>
+  );
+}
+
+/** Landing page: what AgriSmart does, how it works, real results and where to start. */
 export default function HomePage() {
   const { t, lang } = useT();
   const hi = lang === "hi";
@@ -126,125 +154,84 @@ export default function HomePage() {
   const delhi = STATE_BY_NAME.Delhi;
   const w = useWeather(delhi);
 
+  const STATS = [
+    {
+      value: `${(metrics.recommend.test_accuracy * 100).toFixed(1)}%`,
+      label: hi ? "फसल मॉडल सटीकता" : "Crop-model accuracy",
+    },
+    { value: metrics.yield.r2_log.toFixed(2), label: hi ? "उपज मॉडल R² (log)" : "Yield-model R² (log)" },
+    { value: CROPS.length, label: hi ? "फसलें शामिल" : "Crops covered" },
+    { value: STATES.length, label: hi ? "राज्य और UT" : "States & UTs" },
+  ];
+
   return (
-    <div className="home">
+    <div className="home landing">
       {/* Hero */}
-      <section className="hero-x">
-        <div className="hero-x-bg" aria-hidden="true" />
-        <div className="hero-x-content">
-          <motion.span className="eyebrow" {...rise()}>
-            <MIcon name="auto_awesome" size={18} fill /> {t("home.eyebrow")}
+      <section className="lp-hero">
+        <img
+          className="lp-hero-photo"
+          src="/images/india-agriculture-hero.webp"
+          alt=""
+          width="1600"
+          height="900"
+          fetchpriority="high"
+        />
+        <div className="lp-hero-content">
+          <motion.span className="lp-pill" {...rise()}>
+            <MIcon name="auto_awesome" size={16} fill /> {t("home.eyebrow")}
           </motion.span>
           <motion.h1 {...rise(0.05)}>
-            {t("home.title1")} <em>{t("home.title2")}</em> <span>{t("home.title3")}</span>
+            {t("home.title1")} <em>{t("home.title2")}</em> {t("home.title3")}
           </motion.h1>
           <motion.p {...rise(0.1)}>{t("home.lead")}</motion.p>
-          <motion.div className="hero-ctas" {...rise(0.15)}>
-            <Link to="/register" className="btn btn-cta btn-lg">
-              {t("home.ctaPrimary")} <ArrowRight size={18} />
+          <motion.div className="lp-actions" {...rise(0.15)}>
+            <Link to="/crop-recommendation" className="lp-btn lp-btn--light">
+              {hi ? "फसल सलाह लें" : "Get crop advice"} <ArrowRight size={18} />
             </Link>
-            <Link to="/dashboard" className="btn btn-outline btn-lg">
+            <Link to="/dashboard" className="lp-btn lp-btn--ghost">
               {t("home.ctaSecondary")}
             </Link>
           </motion.div>
-          <motion.div className="hero-badges" {...rise(0.2)}>
-            <span>
-              <ShieldCheck size={15} /> {hi ? "मुफ़्त और सुरक्षित" : "Free & private"}
-            </span>
-            <span>
-              <MapPinned size={15} /> {hi ? "36 राज्य/UT" : "36 states & UTs"}
-            </span>
-            <span>अ/A {hi ? "हिंदी + English" : "English + हिंदी"}</span>
-          </motion.div>
         </div>
-        <div className="hero-x-visual" aria-hidden="true">
-          <img
-            className="hero-photo"
-            src="/images/india-agriculture-hero.webp"
-            alt=""
-            width="1600"
-            height="900"
-            fetchpriority="high"
-          />
-          <div className="float-card f1">
-            <span>🌾</span>
-            <div>
-              <b>{hi ? "गेहूँ — 4.6 t/ha" : "Wheat — 4.6 t/ha"}</b>
-              <small>{hi ? "AI पूर्वानुमान" : "AI forecast · Punjab"}</small>
-            </div>
-          </div>
-          <div className="float-card f2">
-            <span>💧</span>
-            <div>
-              <b>−32%</b>
-              <small>{hi ? "ड्रिप से पानी बचत" : "water with drip"}</small>
-            </div>
-          </div>
-          <div className="float-card f3">
-            <span>🧪</span>
-            <div>
-              <b>N · P · K</b>
-              <small>{hi ? "मृदा स्वास्थ्य 78/100" : "Soil health 78/100"}</small>
-            </div>
-          </div>
-        </div>
+        <ul className="lp-hero-chips" aria-label={hi ? "मुख्य बातें" : "Highlights"}>
+          <li>
+            <MIcon name="verified_user" size={16} fill /> {hi ? "मुफ़्त और सुरक्षित" : "Free & private"}
+          </li>
+          <li>
+            <MIcon name="map" size={16} fill /> {hi ? "36 राज्य/UT" : "36 states & UTs"}
+          </li>
+          <li>
+            <MIcon name="translate" size={16} fill /> English + हिंदी
+          </li>
+        </ul>
+        <Link to="/learn" className="lp-hero-card">
+          <img src="/images/farm-illustration.webp" alt="" width="72" height="72" />
+          <span>
+            <b>{hi ? "ज्ञान केंद्र" : "Explore the Knowledge hub"}</b>
+            <small>{hi ? "मौसम, पोषक तत्व, सूत्र" : "Seasons, nutrients, formulas"}</small>
+          </span>
+          <ArrowRight size={18} />
+        </Link>
       </section>
 
-      {/* Statistics */}
-      <section className="stats-band" aria-label={t("home.statsTitle")}>
-        {[
-          [CROPS.length, t("home.stat1"), "#16a34a"],
-          [STATES.length, t("home.stat2"), "#2563eb"],
-          [analytics.rows.toLocaleString("en-IN"), t("home.stat3"), "#d97706"],
-          [`${(metrics.recommend.test_accuracy * 100).toFixed(1)}%`, t("home.stat4"), "#7c3aed"],
-        ].map(([v, l, col]) => (
-          <motion.div key={l} {...rise()} style={{ "--c": col }}>
-            <b>{v}</b>
-            <span>{l}</span>
-          </motion.div>
-        ))}
-      </section>
-
-      {/* About */}
-      <section className="home-section about-split" id="about">
-        <motion.div {...rise()}>
-          <span className="section-kicker">{t("nav.about")}</span>
-          <h2>{t("home.aboutTitle")}</h2>
-          <p className="lead-text">{t("home.aboutText")}</p>
-          <Link to="/about" className="text-link">
-            {hi ? "और जानें" : "Learn more"} <ArrowRight size={16} />
-          </Link>
-        </motion.div>
-        <div className="mv-cards">
-          <motion.div className="mv-card" {...rise(0.05)}>
-            <IconBadge icon="flag" color={G.green} box={48} size={24} />
-            <h3>{t("home.mission")}</h3>
-            <p>{t("home.missionText")}</p>
-          </motion.div>
-          <motion.div className="mv-card" {...rise(0.1)}>
-            <IconBadge icon="visibility" color={G.blue} box={48} size={24} />
-            <h3>{t("home.vision")}</h3>
-            <p>{t("home.visionText")}</p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* AI solutions */}
-      <section className="home-section" id="solutions">
-        <div className="section-head">
-          <span className="section-kicker">{t("nav.solutions")}</span>
-          <h2>{t("home.solutionsTitle")}</h2>
-          <p>{t("home.solutionsLead")}</p>
-        </div>
-        <div className="solution-grid">
-          {SOLUTIONS.map((s, i) => (
-            <motion.div key={s.to} {...rise(i * 0.04)}>
-              <Link to={s.to} className="solution-card" style={{ "--c": s.color }}>
-                <IconBadge icon={s.icon} color={s.color} box={56} size={28} />
-                <h3>{t(s.key)}</h3>
-                <p>{hi ? s.hi : s.en}</p>
-                <span className="text-link">
-                  {hi ? "खोलें" : "Open tool"} <ArrowRight size={15} />
+      {/* About + tools */}
+      <section className="lp-section" id="about">
+        <SectionHead
+          kicker={t("nav.about")}
+          title={hi ? "मिट्टी से बाज़ार तक, डेटा-आधारित खेती" : "Data-driven farming, from soil to harvest"}
+          lead={t("home.aboutText")}
+        />
+        <div className="lp-cards" id="solutions">
+          {TOOLS.map((tool, i) => (
+            <motion.div key={tool.to} {...rise(i * 0.04)}>
+              <Link to={tool.to} className="lp-card">
+                <span className="lp-icon">
+                  <MIcon name={tool.icon} size={24} fill />
+                </span>
+                <h3>{t(tool.key)}</h3>
+                <p>{hi ? tool.hi : tool.en}</p>
+                <span className="lp-chip">
+                  {hi ? "टूल खोलें" : "Open tool"} <ArrowRight size={14} />
                 </span>
               </Link>
             </motion.div>
@@ -252,51 +239,73 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features */}
-      <section className="home-section" id="features">
-        <div className="section-head">
-          <span className="section-kicker">{t("nav.features")}</span>
-          <h2>{hi ? "और भी बहुत कुछ" : "Everything in one platform"}</h2>
-        </div>
-        <div className="feature-row">
-          {FEATURES.map((f) => (
-            <Link key={f.to} to={f.to} className="feature-pill">
-              <IconBadge icon={f.icon} color={f.color} />
-              {t(f.key)}
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* How it works */}
-      <section className="home-section" id="how-it-works">
-        <div className="section-head">
-          <span className="section-kicker">{t("nav.how")}</span>
-          <h2>{t("home.howTitle")}</h2>
-        </div>
-        <ol className="steps">
-          {[
-            ["how1", "edit_calendar", G.green],
-            ["how2", "psychology", G.purple],
-            ["how3", "auto_awesome", G.yellow],
-            ["how4", "rocket_launch", G.blue],
-          ].map(([k, icon, col], i) => (
-            <motion.li key={k} {...rise(i * 0.06)} style={{ "--c": col }}>
-              <span className="step-num">{i + 1}</span>
-              <IconBadge icon={icon} color={col} box={52} size={26} />
-              <h3>{t(`home.${k}`)}</h3>
-              <p>{t(`home.${k}t`)}</p>
-            </motion.li>
-          ))}
-        </ol>
+      <section className="lp-section lp-split" id="how-it-works">
+        <motion.div className="lp-split-text" {...rise()}>
+          <span className="lp-kicker">{t("nav.how")}</span>
+          <h2>{hi ? "आसान प्रक्रिया, मापने योग्य परिणाम।" : "Simple process. Measurable results."}</h2>
+          <ol className="lp-steps">
+            {STEPS.map((k, i) => (
+              <li key={k}>
+                <span>{i + 1}</span>
+                <div>
+                  <b>{t(`home.${k}`)}</b>
+                  <small>{t(`home.${k}t`)}</small>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <Link to="/crop-recommendation" className="lp-btn lp-btn--dark">
+            {hi ? "अभी शुरू करें" : "Start now"} <ArrowRight size={18} />
+          </Link>
+        </motion.div>
+        <motion.figure className="lp-split-media" {...rise(0.1)}>
+          <img
+            src="/images/farm-illustration.webp"
+            alt={hi ? "सब्ज़ी और फूलों की क्यारियों वाला खेत" : "A diversified farm with vegetable beds and greenhouses"}
+            width="590"
+            height="590"
+            loading="lazy"
+          />
+          <figcaption>
+            <MIcon name="eco" size={18} fill /> {hi ? "विविध खेती, बेहतर आय" : "Diversify crops, steady income"}
+          </figcaption>
+        </motion.figure>
       </section>
 
-      {/* Dashboard preview */}
-      <section className="home-section preview" aria-labelledby="preview-title">
-        <div className="section-head">
-          <h2 id="preview-title">{t("home.previewTitle")}</h2>
-          <p>{t("home.previewLead")}</p>
+      {/* Results */}
+      <section className="lp-section">
+        <SectionHead title={hi ? "हमारे मॉडल के परिणाम" : "Results you can check"} />
+        <div className="lp-stats">
+          {STATS.map((s, i) => (
+            <motion.div key={s.label} className={i === 0 ? "is-featured" : undefined} {...rise(i * 0.05)}>
+              <b>{s.value}</b>
+              <span>{s.label}</span>
+            </motion.div>
+          ))}
         </div>
+        <p className="lp-note">
+          {hi
+            ? "मॉडल मीट्रिक परीक्षण डेटा पर मापे गए हैं — मॉडल इनसाइट्स में पूरा विवरण देखें।"
+            : "Model metrics are measured on held-out test data — see Model insights for the full leaderboard."}{" "}
+          <Link to="/insights" className="text-link">
+            {t("side.modelInsights")} <ArrowRight size={14} />
+          </Link>
+        </p>
+      </section>
+
+      {/* Mission */}
+      <section className="lp-mission">
+        <img src="/images/rabi-season.webp" alt="" loading="lazy" width="1200" height="800" />
+        <div>
+          <span className="lp-kicker">{t("home.mission")}</span>
+          <p>{t("home.missionText")}</p>
+        </div>
+      </section>
+
+      {/* Live data preview */}
+      <section className="lp-section" aria-labelledby="preview-title">
+        <SectionHead title={t("home.previewTitle")} lead={t("home.previewLead")} />
         <div className="preview-frame">
           <div className="g-card span-8">
             <div className="card-head2">
@@ -352,123 +361,44 @@ export default function HomePage() {
           </div>
         </div>
         <div className="text-center mt-4">
-          <Link to="/dashboard" className="btn btn-cta btn-lg">
+          <Link to="/dashboard" className="lp-btn lp-btn--dark">
             {t("home.ctaSecondary")} <ArrowRight size={18} />
           </Link>
         </div>
       </section>
 
-      {/* Benefits */}
-      <section className="home-section">
-        <div className="section-head">
-          <h2>{t("home.benefitsTitle")}</h2>
-        </div>
-        <div className="benefit-grid">
-          {[
-            ["b1", "water_drop", G.cyan],
-            ["b2", "psychology", G.purple],
-            ["b3", "savings", G.yellow],
-            ["b4", "verified_user", G.green],
-          ].map(([k, icon, col], i) => (
-            <motion.div key={k} className="benefit-card" {...rise(i * 0.05)} style={{ "--c": col }}>
-              <IconBadge icon={icon} color={col} box={52} size={26} />
-              <h3>{t(`home.${k}`)}</h3>
-              <p>{t(`home.${k}t`)}</p>
+      {/* Learn */}
+      <section className="lp-section">
+        <SectionHead kicker={hi ? "सीखें" : "Learn"} title={hi ? "सीखें और खोजें" : "Learn & explore"} />
+        <div className="lp-articles">
+          {LEARN.map((a, i) => (
+            <motion.div key={a.to} {...rise(i * 0.05)}>
+              <Link to={a.to} className="lp-article">
+                <img src={a.image} alt="" loading="lazy" width="480" height="300" />
+                <span className="lp-tag">{hi ? a.tag.hi : a.tag.en}</span>
+                <h3>{hi ? a.title.hi : a.title.en}</h3>
+                <span className="lp-chip">
+                  {hi ? "पढ़ें" : "Read more"} <ArrowRight size={14} />
+                </span>
+              </Link>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Seasonal gallery */}
-      <section className="home-section" aria-labelledby="season-gallery">
-        <div className="section-head">
-          <span className="section-kicker">{hi ? "मौसमी फसल गैलरी" : "Seasonal crop gallery"}</span>
-          <h2 id="season-gallery">{hi ? "पूरे वर्ष भारतीय खेती" : "Indian farming across the year"}</h2>
-        </div>
-        <div className="season-gallery">
-          {[
-            [
-              "kharif-season",
-              hi ? "खरीफ" : "Kharif",
-              hi ? "मानसून फसलें · धान, मक्का, कपास, सोयाबीन" : "Monsoon crops · rice, maize, cotton, soybean",
-              "kharif",
-            ],
-            [
-              "rabi-season",
-              hi ? "रबी" : "Rabi",
-              hi ? "सर्दी की फसलें · गेहूँ, सरसों, चना, आलू" : "Winter crops · wheat, mustard, chickpea, potato",
-              "rabi",
-            ],
-            [
-              "zaid-horticulture",
-              hi ? "ज़ायद और बागवानी" : "Zaid & horticulture",
-              hi ? "गर्मी की फसलें · तरबूज, खीरा, सब्ज़ियाँ, फल" : "Summer crops · watermelon, cucumber, vegetables, orchards",
-              "zaid",
-            ],
-          ].map(([img, title, text, season]) => (
-            <Link key={img} to={`/crops?season=${season}`} className="season-photo">
-              <img
-                src={`/images/${img}.webp`}
-                alt={`${title} season farming`}
-                loading="lazy"
-                width="1600"
-                height="1067"
-              />
-              <span>
-                <b>{title}</b>
-                <small>{text}</small>
-              </span>
-            </Link>
+      {/* Built with */}
+      <section className="lp-built" aria-label={hi ? "डेटा और तकनीक" : "Data and technology"}>
+        <span>{hi ? "खुले डेटा और भरोसेमंद तकनीक पर आधारित" : "Built on open data and proven technology"}</span>
+        <ul>
+          {BUILT_WITH.map((name) => (
+            <li key={name}>{name}</li>
           ))}
-        </div>
+        </ul>
       </section>
 
-      {/* Supported crops */}
-      <section className="home-section">
-        <div className="section-head">
-          <h2>{t("home.cropsTitle")}</h2>
-          <p>{t("home.cropsLead")}</p>
-        </div>
-        <div className="photo-strip" aria-hidden="true">
-          {ATLAS_CROPS.slice(0, 16).map((c) => (
-            <img key={c.name} src={c.image} alt="" loading="lazy" width="96" height="96" title={c.name} />
-          ))}
-        </div>
-        <div className="text-center mb-4">
-          <Link to="/crop-gallery" className="btn btn-tonal">
-            <MIcon name="photo_library" size={20} /> {hi ? "सभी 45 फसल चित्र देखें" : "Browse all 45 crop photos"}
-          </Link>
-        </div>
-        <div className="cat-cards">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.id}
-              to={`/crops?category=${cat.id}`}
-              className="cat-card"
-              style={{ "--c": cat.color, "--bg": cat.bg }}
-            >
-              <span className="cat-emoji">{cat.emoji}</span>
-              <b>{hi ? cat.hi : cat.en}</b>
-              <small>
-                {CROPS.filter((x) => x.category === cat.id)
-                  .slice(0, 4)
-                  .map((x) => (hi ? x.hi : x.en.split(" (")[0]))
-                  .join(", ")}
-                …
-              </small>
-              <em>
-                {CROPS.filter((x) => x.category === cat.id).length} {hi ? "फसलें" : "crops"}
-              </em>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Weather & insights */}
-      <section className="home-section weather-insights">
-        <div className="section-head">
-          <h2>{t("home.weatherTitle")}</h2>
-        </div>
+      {/* Weather & seasons */}
+      <section className="lp-section weather-insights">
+        <SectionHead title={t("home.weatherTitle")} />
         <div className="wi-grid">
           <div className="wi-card live">
             <small>
@@ -503,10 +433,8 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="home-section faq" id="faq">
-        <div className="section-head">
-          <h2>{t("home.faqTitle")}</h2>
-        </div>
+      <section className="lp-section faq" id="faq">
+        <SectionHead title={t("home.faqTitle")} />
         <div className="faq-list">
           {FAQ.map(([q, qh, a, ah]) => (
             <details key={q}>
@@ -517,15 +445,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="final-cta">
-        <h2>{t("home.ctaTitle")}</h2>
+      {/* Call to action */}
+      <section className="lp-cta">
+        <h2>{hi ? "अपने खेत को बेहतर बनाने के लिए तैयार?" : "Ready to optimise your fields?"}</h2>
         <p>{t("home.ctaText")}</p>
-        <div className="hero-ctas center">
-          <Link to="/register" className="btn btn-cta btn-lg">
+        <div className="lp-actions">
+          <Link to="/register" className="lp-btn lp-btn--dark">
             {t("home.ctaPrimary")} <ArrowRight size={18} />
           </Link>
-          <Link to="/contact" className="btn btn-outline btn-lg">
+          <Link to="/contact" className="lp-btn lp-btn--outline">
             {t("nav.contact")}
           </Link>
         </div>

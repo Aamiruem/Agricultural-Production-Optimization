@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // One entry point for the whole monorepo (see the root package.json):
 //
-//   npm run setup    Python venv + every Python and Node dependency
+//   npm run setup    Python venv + every Python and Node dependency  (then: python main.py)
 //   npm test         FastAPI, AIML, Express, React app and Dashboard test suites
 //   npm run lint     ESLint in every JavaScript project
 //   npm run format   Prettier (JavaScript/CSS) + Ruff (Python) across the repo
@@ -18,7 +18,7 @@ const VENV = join(ROOT, "backend", ".venv");
 const PY = WINDOWS ? join(VENV, "Scripts", "python.exe") : join(VENV, "bin", "python");
 const NPM = WINDOWS ? "npm.cmd" : "npm";
 const JS_PROJECTS = ["backend/node-express", "frontend/react-app", "Dashboard"];
-const PY_SOURCES = ["backend/python-fastapi", "AIML", "scripts"];
+const PY_SOURCES = ["main.py", "backend/python-fastapi", "AIML", "scripts"];
 
 const step = (label, cmd, args, cwd = ".", env = {}) => ({ label, cmd, args, cwd, env });
 

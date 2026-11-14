@@ -56,13 +56,14 @@ Python 3.12+ and Node 20+. Run these from the repository root:
 | Command | What it does |
 |---|---|
 | `npm run setup` | Creates `backend/.venv` and installs **every** Python and Node dependency (first time only) |
-| `npm run dev` | Starts FastAPI + AIML, the MCP server, Express, the React app and the Dashboard together (Windows) |
-| `npm run stop` | Stops everything `npm run dev` started |
+| `python main.py` (or `npm run dev`) | Starts FastAPI + AIML, the MCP server, Express, the React app and the Dashboard together — any OS; **Ctrl+C stops everything** |
+| `python main.py api dashboard` | Starts only the services you name (`python main.py --list` shows them) |
+| `python -m AIML` (or `npm run aiml`) | Shows each AI/ML technology, its trained model and which page uses it; also `train` · `serve` · `mcp` |
 | `npm run docker` | The whole load-balanced stack in Docker (any OS) |
 | `npm test` | Every test suite: FastAPI, AIML, Express, React app, Dashboard |
 | `npm run lint` · `npm run format` | ESLint everywhere · Prettier (JS/CSS) + Ruff (Python) |
 
-| Service (`npm run dev`) | URL |
+| Service (`python main.py`) | URL |
 |---|---|
 | Operations dashboard | http://localhost:5180 |
 | React web app | http://localhost:5175 |
