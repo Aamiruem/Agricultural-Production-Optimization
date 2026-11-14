@@ -122,7 +122,7 @@ function renderHead(template, siteUrl, route, { notFound = false } = {}) {
   const links = NOSCRIPT_LINKS.map(([href, label]) => `<a href="${href}">${label}</a>`).join(" · ");
   html = swap(
     html,
-    /<noscript[\s\S]*?<\/noscript\s*>/,
+    /<noscript\s*><!--seo:noscript-->[\s\S]*?<\/noscript\s*>/, // the body fallback, not the font <noscript> in <head>
     `<noscript>${crumbs}<h1>${esc(route.title.split(/ [–|] /)[0])}</h1><p>${esc(route.description)}</p><p>${links}</p></noscript>`,
     "noscript",
   );

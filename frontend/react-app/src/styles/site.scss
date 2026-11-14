@@ -2384,8 +2384,12 @@ p.machine-function {
     }
   }
 }
-.agri-footer-wa {
+.agri-footer .agri-footer-wa {
   justify-self: start;
+  color: #fff;
+  &:hover {
+    color: #fff;
+  }
 }
 .agri-footer-cols {
   display: grid;
