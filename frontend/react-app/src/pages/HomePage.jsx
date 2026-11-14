@@ -1,16 +1,20 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Link } from "react-router";
 import { Area, AreaChart, Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 import { MIcon } from "@/components/common/MIcon";
+import { SitePhoto } from "@/components/site/SiteKit";
 import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
 import { CROPS, SEASONS, STATES, STATE_BY_NAME } from "@/data/indiaAgri";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useWeather, weatherLabel } from "@/hooks/useWeather";
 import { useT } from "@/i18n/useT";
+import { OWNER, whatsappLink } from "@/data/site";
 import { useChartColors } from "@/lib/chartTheme";
+
+const WA_TEXT = "Hello Aamir, I visited AgriSmart and would like to know more.";
 
 // The AI tools, in the order a farmer meets them.
 const TOOLS = [
@@ -60,6 +64,58 @@ const TOOLS = [
 
 const STEPS = ["how1", "how2", "how3", "how4"];
 
+// The information hub: one card per main section of the site.
+const EXPLORE = [
+  {
+    to: "/agricultural-production-systems",
+    image: "systems/intensive-farming",
+    title: "Agricultural production systems",
+    text: "16 farming systems and practices: definitions, process, pros and cons.",
+  },
+  {
+    to: "/smart-agricultural-machines",
+    image: "machines/agricultural-drone",
+    title: "Smart agricultural machines",
+    text: "Tractors, harvesters, drones, robots, sensors and greenhouse automation.",
+  },
+  {
+    to: "/ai-in-agriculture",
+    image: "ai/satellite-monitoring",
+    title: "AI & machine learning",
+    text: "Crop recommendation, yield prediction, disease detection and more.",
+  },
+  {
+    to: "/crops-and-food",
+    image: "food/rice-field",
+    title: "Crops & food production",
+    text: "Kharif, Rabi and Zaid crops, post-harvest care and food security.",
+  },
+  {
+    to: "/farmer-health",
+    image: "health/rural-healthcare",
+    title: "Healthcare for farmers",
+    text: "Rural healthcare, first aid, heat stress, pesticide safety and wellness.",
+  },
+  {
+    to: "/food-and-nutrition",
+    image: "nutrition/balanced-diet",
+    title: "Food & nutrition",
+    text: "Fruits, vegetables, grains, pulses, dairy and a balanced Indian plate.",
+  },
+  {
+    to: "/farmer-education",
+    image: "education/government-schemes",
+    title: "Farmer education & schemes",
+    text: "Techniques, soil testing, seeds and official government schemes.",
+  },
+  {
+    to: "/projects",
+    image: "machines/soil-testing-equipment",
+    title: "Projects & services",
+    text: "AI/ML and full-stack projects, and services you can hire.",
+  },
+];
+
 const LEARN = [
   {
     to: "/learn#seasons",
@@ -106,8 +162,8 @@ const FAQ = [
   [
     "Do I need an account?",
     "क्या खाता ज़रूरी है?",
-    "No. All tools work without signing in. An account lets you save farms, fields and prediction history.",
-    "नहीं। सभी टूल बिना लॉगिन चलते हैं। खाते से आप खेत और इतिहास सहेज सकते हैं।",
+    "No. AgriSmart has no sign-up or login. Every page and tool is free and public; farm records you add are saved on your own device.",
+    "नहीं। एग्रीस्मार्ट में कोई साइन-अप या लॉगिन नहीं है। सभी पेज और टूल मुफ़्त हैं; खेत का रिकॉर्ड आपके डिवाइस पर सहेजा जाता है।",
   ],
   [
     "Where does the weather data come from?",
@@ -171,26 +227,30 @@ export default function HomePage() {
         <img
           className="lp-hero-photo"
           src="/images/india-agriculture-hero.webp"
-          alt=""
+          alt="A farmer with a tablet overlooking rice, wheat, cotton and sugarcane fields"
           width="1600"
           height="900"
-          fetchpriority="high"
+          fetchPriority="high"
         />
         <div className="lp-hero-content">
           <motion.span className="lp-pill" {...rise()}>
             <MIcon name="auto_awesome" size={16} fill /> {t("home.eyebrow")}
           </motion.span>
           <motion.h1 {...rise(0.05)}>
-            {t("home.title1")} <em>{t("home.title2")}</em> {t("home.title3")}
+            {t("home.title1")} <em>{t("home.title2")}</em>
+            {t("home.title3") ? ` ${t("home.title3")}` : "."}
           </motion.h1>
           <motion.p {...rise(0.1)}>{t("home.lead")}</motion.p>
           <motion.div className="lp-actions" {...rise(0.15)}>
-            <Link to="/crop-recommendation" className="lp-btn lp-btn--light">
-              {hi ? "फसल सलाह लें" : "Get crop advice"} <ArrowRight size={18} />
+            <Link to="/agricultural-production-systems" className="lp-btn lp-btn--light">
+              {hi ? "कृषि देखें" : "Explore Agriculture"} <ArrowRight size={18} />
             </Link>
-            <Link to="/dashboard" className="lp-btn lp-btn--ghost">
-              {t("home.ctaSecondary")}
+            <Link to="/smart-agricultural-machines" className="lp-btn lp-btn--ghost">
+              {hi ? "स्मार्ट मशीनें देखें" : "Discover Smart Machines"}
             </Link>
+            <a href={whatsappLink(WA_TEXT)} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn--whatsapp">
+              <MessageCircle size={18} aria-hidden="true" /> {hi ? "WhatsApp पर संपर्क" : "Contact on WhatsApp"}
+            </a>
           </motion.div>
         </div>
         <ul className="lp-hero-chips" aria-label={hi ? "मुख्य बातें" : "Highlights"}>
@@ -204,14 +264,43 @@ export default function HomePage() {
             <MIcon name="translate" size={16} fill /> English + हिंदी
           </li>
         </ul>
-        <Link to="/learn" className="lp-hero-card">
-          <img src="/images/farm-illustration.webp" alt="" width="72" height="72" />
+        <Link to="/smart-agricultural-machines" className="lp-hero-card">
+          <img src="/images/machines/agricultural-drone-640.webp" alt="" width="72" height="72" />
           <span>
-            <b>{hi ? "ज्ञान केंद्र" : "Explore the Knowledge hub"}</b>
-            <small>{hi ? "मौसम, पोषक तत्व, सूत्र" : "Seasons, nutrients, formulas"}</small>
+            <b>{hi ? "ड्रोन, ट्रैक्टर और रोबोट" : "Drones, tractors & farm robots"}</b>
+            <small>{hi ? "12 स्मार्ट कृषि मशीनें" : "12 smart agricultural machines"}</small>
           </span>
           <ArrowRight size={18} />
         </Link>
+      </section>
+
+      {/* Information hub */}
+      <section className="lp-section" id="explore" aria-labelledby="explore-title">
+        <div className="lp-head lp-head--center">
+          <span className="lp-kicker">{hi ? "एग्रीस्मार्ट देखें" : "Explore AgriSmart"}</span>
+          <h2 id="explore-title">{hi ? "खेत से थाली तक, सब एक जगह" : "Everything from field to plate, in one place"}</h2>
+          <p>
+            {hi
+              ? "कृषि उत्पादन प्रणालियाँ, आधुनिक मशीनें, AI समाधान, फसलें, स्वास्थ्य और पोषण।"
+              : "Agricultural production systems, modern machines, AI solutions, crops, rural health and nutrition, explained clearly, with free tools to act on it."}
+          </p>
+        </div>
+        <div className="explore-grid">
+          {EXPLORE.map((e, i) => (
+            <motion.div key={e.to} {...rise(i * 0.03)}>
+              <Link to={e.to} className="explore-card">
+                <SitePhoto image={e.image} alt="" sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 25vw" />
+                <span className="explore-card-body">
+                  <b>{e.title}</b>
+                  <small>{e.text}</small>
+                  <span className="lp-chip">
+                    {hi ? "देखें" : "Explore"} <ArrowRight size={14} />
+                  </span>
+                </span>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
       {/* About + tools */}
@@ -450,9 +539,12 @@ export default function HomePage() {
         <h2>{hi ? "अपने खेत को बेहतर बनाने के लिए तैयार?" : "Ready to optimise your fields?"}</h2>
         <p>{t("home.ctaText")}</p>
         <div className="lp-actions">
-          <Link to="/register" className="lp-btn lp-btn--dark">
-            {t("home.ctaPrimary")} <ArrowRight size={18} />
+          <Link to="/crop-recommendation" className="lp-btn lp-btn--dark">
+            {hi ? "मुफ़्त फसल सलाह" : "Get free crop advice"} <ArrowRight size={18} />
           </Link>
+          <a href={whatsappLink(WA_TEXT)} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn--whatsapp">
+            <MessageCircle size={18} aria-hidden="true" /> WhatsApp {OWNER.phoneDisplay}
+          </a>
           <Link to="/contact" className="lp-btn lp-btn--outline">
             {t("nav.contact")}
           </Link>

@@ -8,6 +8,21 @@ import { G } from "@/lib/icons";
 // grows, then analyse the results.
 export const NAV_GROUPS = [
   {
+    id: "site",
+    label: "side.groupSite",
+    links: [
+      { to: "/agricultural-production-systems", key: "nav.agriculture", icon: "agriculture", color: G.green },
+      { to: "/smart-agricultural-machines", key: "nav.machines", icon: "precision_manufacturing", color: G.orange },
+      { to: "/ai-in-agriculture", key: "nav.ai", icon: "psychology", color: G.purple },
+      { to: "/crops-and-food", key: "nav.cropsFood", icon: "grass", color: G.yellow },
+      { to: "/farmer-health", key: "nav.health", icon: "medical_services", color: G.red },
+      { to: "/food-and-nutrition", key: "nav.nutrition", icon: "restaurant", color: G.pink },
+      { to: "/farmer-education", key: "nav.education", icon: "school", color: G.blue },
+      { to: "/services", key: "nav.services", icon: "work", color: G.teal },
+      { to: "/projects", key: "nav.projects", icon: "code", color: G.brown },
+    ],
+  },
+  {
     id: "home",
     label: "side.groupHome",
     links: [
@@ -69,6 +84,8 @@ export const NAV_GROUPS = [
 /** Small links under the drawer's help card (not farming tools, so not a section). */
 export const SECONDARY_LINKS = [
   { to: "/about", key: "side.about", icon: "info", color: G.blue },
+  { to: "/developer", key: "nav.developer", icon: "person", color: G.green },
+  { to: "/app", key: "nav.app", icon: "install_mobile", color: G.purple },
   { to: "/contact", key: "side.contact", icon: "mail", color: G.red },
 ];
 
@@ -77,15 +94,18 @@ const group = (id) => NAV_GROUPS.find((g) => g.id === id).links;
 /** Every destination, for global search. */
 export const ALL_LINKS = [...NAV_GROUPS.flatMap((g) => g.links), ...SECONDARY_LINKS];
 
-/** Footer "AI solutions" column: the planning and growing tools. */
+/** Footer "AI tools" column: the planning and growing tools. */
 export const FOOTER_TOOLS = [...group("plan"), ...group("grow")];
 
 export const TOP_LINKS = [
   { to: "/", key: "nav.home" },
   { to: "/about", key: "nav.about" },
-  { to: "/#features", key: "nav.features" },
-  { to: "/#solutions", key: "nav.solutions" },
-  { to: "/#how-it-works", key: "nav.how" },
+  { to: "/agricultural-production-systems", key: "nav.agriculture" },
+  { to: "/smart-agricultural-machines", key: "nav.machines" },
+  { to: "/ai-in-agriculture", key: "nav.ai" },
+  { to: "/crops-and-food", key: "nav.cropsFood" },
+  { to: "/farmer-health", key: "nav.health" },
+  { to: "/projects", key: "nav.projects" },
   { to: "/contact", key: "nav.contact" },
 ];
 
@@ -97,11 +117,5 @@ export const BOTTOM_LINKS = [
   { to: "/weather", key: "side.weather", icon: "partly_cloudy_day" },
 ];
 
-/** Old short URLs kept working as redirects to the canonical page. */
-export const ROUTE_ALIASES = {
-  "/recommend": "/crop-recommendation",
-  "/yield": "/yield-prediction",
-  "/soil": "/soil-analysis",
-  "/irrigation": "/irrigation-optimization",
-  "/disease": "/disease-detection",
-};
+/** Old short URLs kept working as redirects to the canonical page (also 301s on the host). */
+export { REDIRECTS as ROUTE_ALIASES } from "@/seo/routes";

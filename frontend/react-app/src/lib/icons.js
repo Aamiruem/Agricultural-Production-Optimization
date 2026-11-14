@@ -66,6 +66,14 @@ export const ICON_NAMES = [
   "menu_book",
   "calculate",
   "eco",
+  "precision_manufacturing",
+  "medical_services",
+  "restaurant",
+  "school",
+  "work",
+  "code",
+  "person",
+  "install_mobile",
 ];
 
 /** Google's product palette, used to tint icons (each icon keeps a fixed colour). */

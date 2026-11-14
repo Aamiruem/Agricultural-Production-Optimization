@@ -1,8 +1,6 @@
 import { lazy } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router";
 
-import { AdminRoute } from "@/components/common/AdminRoute";
-import { AuthLayout } from "@/layouts/AuthLayout";
 import { MainLayout } from "@/layouts/MainLayout";
 import { ROUTE_ALIASES } from "@/layouts/navigation";
 
@@ -31,11 +29,25 @@ const SeasonalAdvisorPage = lazy(() => import("@/pages/SeasonalAdvisorPage"));
 const RotationPlannerPage = lazy(() => import("@/pages/RotationPlannerPage"));
 const AboutPage = lazy(() => import("@/pages/AboutPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
-const AdminPage = lazy(() => import("@/pages/AdminPage"));
-const LoginPage = lazy(() => import("@/pages/LoginPage"));
-const RegisterPage = lazy(() => import("@/pages/RegisterPage"));
 const KnowledgePage = lazy(() => import("@/pages/KnowledgePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+
+// Content pages (public information hub)
+const AgriculturePage = lazy(() => import("@/pages/site/AgriculturePage"));
+const ProductionSystemPage = lazy(() => import("@/pages/site/ProductionSystemPage"));
+const MachinesPage = lazy(() => import("@/pages/site/MachinesPage"));
+const AiSolutionsPage = lazy(() => import("@/pages/site/AiSolutionsPage"));
+const CropsFoodPage = lazy(() => import("@/pages/site/CropsFoodPage"));
+const HealthPage = lazy(() => import("@/pages/site/HealthPage"));
+const NutritionPage = lazy(() => import("@/pages/site/NutritionPage"));
+const EducationPage = lazy(() => import("@/pages/site/EducationPage"));
+const ServicesPage = lazy(() => import("@/pages/site/ServicesPage"));
+const ProjectsPage = lazy(() => import("@/pages/site/ProjectsPage"));
+const DeveloperPage = lazy(() => import("@/pages/site/DeveloperPage"));
+const AppPage = lazy(() => import("@/pages/site/AppPage"));
+const PrivacyPolicyPage = lazy(() => import("@/pages/site/LegalPages").then((m) => ({ default: m.PrivacyPolicyPage })));
+const DisclaimerPage = lazy(() => import("@/pages/site/LegalPages").then((m) => ({ default: m.DisclaimerPage })));
+const ImageCreditsPage = lazy(() => import("@/pages/site/LegalPages").then((m) => ({ default: m.ImageCreditsPage })));
 
 /** Old short URL -> canonical page, keeping any ?query and #hash. */
 function Redirect({ to }) {
@@ -43,11 +55,31 @@ function Redirect({ to }) {
   return <Navigate to={`${to}${search}${hash}`} replace />;
 }
 
+// No login, registration or account pages: every page is public.
 export default function App() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
+
+        {/* Information hub */}
+        <Route path="about" element={<AboutPage />} />
+        <Route path="agricultural-production-systems" element={<AgriculturePage />} />
+        <Route path="agricultural-production-systems/:slug" element={<ProductionSystemPage />} />
+        <Route path="smart-agricultural-machines" element={<MachinesPage />} />
+        <Route path="ai-in-agriculture" element={<AiSolutionsPage />} />
+        <Route path="crops-and-food" element={<CropsFoodPage />} />
+        <Route path="farmer-health" element={<HealthPage />} />
+        <Route path="food-and-nutrition" element={<NutritionPage />} />
+        <Route path="farmer-education" element={<EducationPage />} />
+        <Route path="services" element={<ServicesPage />} />
+        <Route path="projects" element={<ProjectsPage />} />
+        <Route path="developer" element={<DeveloperPage />} />
+        <Route path="app" element={<AppPage />} />
+        <Route path="contact" element={<ContactPage />} />
+        <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="disclaimer" element={<DisclaimerPage />} />
+        <Route path="image-credits" element={<ImageCreditsPage />} />
 
         {/* Home */}
         <Route path="dashboard" element={<DashboardPage />} />
@@ -79,27 +111,14 @@ export default function App() {
         <Route path="soil-types" element={<SoilTypesPage />} />
         <Route path="learn" element={<KnowledgePage />} />
 
-        {/* My farm — works signed out (saved on the device); signed-in users sync to the farm-service. */}
+        {/* My farm — saved on this device, no account needed. */}
         <Route path="farms" element={<FarmsPage />} />
         <Route path="assistant" element={<AssistantPage />} />
-
-        <Route path="about" element={<AboutPage />} />
-        <Route path="contact" element={<ContactPage />} />
-
-        {/* RBAC: admins only */}
-        <Route element={<AdminRoute />}>
-          <Route path="admin" element={<AdminPage />} />
-        </Route>
 
         {Object.entries(ROUTE_ALIASES).map(([from, to]) => (
           <Route key={from} path={from} element={<Redirect to={to} />} />
         ))}
         <Route path="*" element={<NotFoundPage />} />
-      </Route>
-
-      <Route element={<AuthLayout />}>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
       </Route>
     </Routes>
   );

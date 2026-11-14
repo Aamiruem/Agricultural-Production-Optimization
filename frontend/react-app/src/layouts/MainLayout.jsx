@@ -1,3 +1,4 @@
+import { MessageCircle } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
 
@@ -5,8 +6,8 @@ import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { Loader } from "@/components/common/Loader";
 import { MIcon } from "@/components/common/MIcon";
 import { useT } from "@/i18n/useT";
+import { whatsappLink } from "@/data/site";
 import { trackPageView } from "@/lib/analytics";
-import { useSessionExpiry } from "@/store/authStore";
 
 import { BOTTOM_LINKS } from "./navigation";
 import { SideNav } from "./SideNav";
@@ -27,7 +28,7 @@ function AnnouncementBar() {
     <div className="announcement-bar" role="region" aria-label="Announcement">
       <MIcon name="auto_awesome" size={18} fill />
       <span>{t("announce.text")}</span>
-      <Link to="/dashboard">{t("announce.cta")}</Link>
+      <Link to="/agricultural-production-systems">{t("announce.cta")}</Link>
       <button
         type="button"
         aria-label="Dismiss announcement"
@@ -76,7 +77,6 @@ export function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(
     () => typeof window === "undefined" || window.matchMedia("(min-width: 992px)").matches,
   );
-  useSessionExpiry();
 
   // Hash links (/#solutions) scroll to the section; other navigations start at the top.
   useEffect(() => {
@@ -116,6 +116,15 @@ export function MainLayout() {
           <SiteFooter />
         </div>
       </div>
+      <a
+        href={whatsappLink("Hello Aamir, I visited AgriSmart and would like to know more.")}
+        className="fab-whatsapp"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with AgriSmart on WhatsApp"
+      >
+        <MessageCircle size={24} aria-hidden="true" />
+      </a>
       {pathname !== "/assistant" && (
         <Link to="/assistant" className="fab" aria-label={t("side.assistant")}>
           <MIcon name="auto_awesome" size={22} fill />

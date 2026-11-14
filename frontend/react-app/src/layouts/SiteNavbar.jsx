@@ -1,3 +1,4 @@
+import { MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Link, NavLink, useLocation } from "react-router";
@@ -7,8 +8,8 @@ import { GlobalSearch } from "@/components/common/GlobalSearch";
 import { MIcon } from "@/components/common/MIcon";
 import { useTheme } from "@/hooks/useTheme";
 import { useT } from "@/i18n/useT";
+import { whatsappLink } from "@/data/site";
 import { seasonalNotifications } from "@/lib/notifications";
-import { useAuthStore, useSession } from "@/store/authStore";
 
 import { TOP_LINKS } from "./navigation";
 
@@ -18,8 +19,6 @@ const READ_KEY = "agri-notifications-read";
 export function SiteNavbar({ onMenuClick, sidebarOpen }) {
   const { mode, toggle } = useTheme();
   const { t, lang, setLang } = useT();
-  const { user, isAdmin } = useSession();
-  const logout = useAuthStore((s) => s.logout);
   const { pathname, hash } = useLocation();
   const [searchOpen, setSearchOpen] = useState(false);
   const notifications = useMemo(() => seasonalNotifications(new Date().getMonth(), lang), [lang]);
@@ -40,14 +39,10 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
       /* storage unavailable */
     }
   };
-  const initials = (user?.full_name || user?.email || "U")
-    .split(/\s+/)
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
   const tabActive = (to) =>
-    to.includes("#") ? pathname === "/" && hash === to.slice(1) : pathname === to && !(to === "/" && hash);
+    to.includes("#")
+      ? pathname === "/" && hash === to.slice(1)
+      : (pathname === to || (to !== "/" && pathname.startsWith(`${to}/`))) && !(to === "/" && hash);
 
   return (
     <header className="app-bar">
@@ -85,16 +80,6 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
               {t(l.key)}
             </NavLink>
           ))}
-          {!user && (
-            <Link to="/login" className="app-tab mobile-only">
-              {t("nav.login")}
-            </Link>
-          )}
-          {!user && (
-            <Link to="/register" className="app-tab mobile-only">
-              {t("nav.register")}
-            </Link>
-          )}
         </nav>
 
         <div className="app-bar-search">
@@ -161,46 +146,15 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
             <MIcon name={mode === "dark" ? "light_mode" : "dark_mode"} />
           </button>
 
-          {user ? (
-            <Dropdown align="end">
-              <Dropdown.Toggle as="button" type="button" className="avatar-btn no-caret" aria-label={t("nav.profile")}>
-                <span className="avatar">{initials}</span>
-              </Dropdown.Toggle>
-              <Dropdown.Menu className="g-menu profile-menu">
-                <div className="profile-head">
-                  <span className="avatar lg">{initials}</span>
-                  <b>
-                    {lang === "hi" ? "नमस्ते" : "Hi"}, {user.full_name?.split(" ")[0] || "Farmer"}!
-                  </b>
-                  <small>{user.email}</small>
-                </div>
-                <Dropdown.Item as={Link} to="/farms">
-                  <MIcon name="agriculture" size={20} /> {t("nav.myFarms")}
-                </Dropdown.Item>
-                <Dropdown.Item as={Link} to="/dashboard">
-                  <MIcon name="account_circle" size={20} /> {t("nav.profile")}
-                </Dropdown.Item>
-                {isAdmin && (
-                  <Dropdown.Item as={Link} to="/admin">
-                    <MIcon name="admin_panel_settings" size={20} /> {t("nav.admin")}
-                  </Dropdown.Item>
-                )}
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={logout}>
-                  <MIcon name="logout" size={20} /> {t("nav.signOut")}
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          ) : (
-            <div className="auth-buttons">
-              <Link to="/login" className="btn btn-text">
-                {t("nav.login")}
-              </Link>
-              <Link to="/register" className="btn btn-cta">
-                {t("nav.start")}
-              </Link>
-            </div>
-          )}
+          <a
+            href={whatsappLink("Hello Aamir, I visited AgriSmart and would like to know more.")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn nav-whatsapp"
+          >
+            <MessageCircle size={18} aria-hidden="true" />
+            <span>WhatsApp</span>
+          </a>
         </div>
       </div>
     </header>
