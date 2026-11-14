@@ -71,7 +71,12 @@ export async function fieldFertilizerPlan(req, res) {
   if ([N, P, K].some((v) => v === undefined || v === null)) {
     throw new HttpError(422, "Add the field's soil N, P and K first");
   }
-  res.json(await fertilizerPlan({ crop: field.crop, N, P, K, areaHa: field.areaHa }));
+  res.json(
+    await fertilizerPlan(
+      { crop: field.crop, N, P, K, areaHa: field.areaHa },
+      { authorization: req.headers.authorization },
+    ),
+  );
 }
 
 export async function presignPhoto(req, res) {

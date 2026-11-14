@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { API_URL } from "@/services/apiClient";
+import { getValidToken } from "@/store/authStore";
 
 function wsUrl() {
   const base = new URL(API_URL, window.location.origin); // works for "/api" and absolute URLs
   base.protocol = base.protocol === "https:" ? "wss:" : "ws:";
-  return `${base.href.replace(/\/$/, "")}/ws/recommend`;
+  // Browsers cannot set headers on a WebSocket, so the JWT travels in the query string.
+  const token = getValidToken();
+  return `${base.href.replace(/\/$/, "")}/ws/recommend${token ? `?token=${encodeURIComponent(token)}` : ""}`;
 }
 
 /**

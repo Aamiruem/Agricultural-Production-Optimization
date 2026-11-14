@@ -19,7 +19,7 @@ const REASONS = {
   "signed-out": [
     "Saved on this device",
     "इस डिवाइस पर सहेजा गया",
-    "No account needed: your farms stay private in this browser.",
+    "Your farms are saved privately in this browser.",
     "खाते की ज़रूरत नहीं: आपके खेत इसी ब्राउज़र में सुरक्षित रहते हैं।",
   ],
   "database-down": [

@@ -12,60 +12,134 @@ export function PrivacyPolicyPage() {
       <PageHero
         kicker="Legal"
         title="Privacy Policy"
-        lead="AgriSmart has no accounts, sign-up or login. This page explains what little data is involved when you use the site."
+        lead="What AgriSmart stores when you create an account and use the tools, and how to have it removed."
         compact
       />
       <article className="site-section site-prose legal">
-        <Reviewed date={BRAND.contentUpdated}>Effective from</Reviewed>
+        <Reviewed date="2026-11-14">Effective from</Reviewed>
         <h2>1. Who we are</h2>
         <p>
-          AgriSmart is an educational website and web app developed and operated by {OWNER.name}, {OWNER.location}.
-          Contact: <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a>.
+          AgriSmart is an agricultural technology website and web app developed and operated by {OWNER.name},{" "}
+          {OWNER.location}. Contact: <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a>.
         </p>
-        <h2>2. No accounts</h2>
+        <h2>2. Public pages</h2>
         <p>
-          You can use every page and tool without creating an account. We do not ask for passwords or payment details.
+          The home page and knowledge pages can be read without an account. We do not ask for personal data to read
+          them.
         </p>
-        <h2>3. Data stored in your browser</h2>
-        <p>
-          Some preferences and tool data are saved only in your own browser (localStorage/sessionStorage) and are not
-          sent to us: colour theme, language, dismissed announcements, notification read status, farms and fields you
-          record on the &ldquo;My farms&rdquo; page, and recent recommendation history. Clearing your browser&apos;s
-          site data removes them.
-        </p>
-        <h2>4. Third-party services</h2>
+        <h2>3. Your account</h2>
         <ul>
           <li>
-            <b>Weather:</b> weather tools request forecasts from Open-Meteo for the location you choose (for example a
-            state capital).
+            <b>What we store:</b> your name, email address and a one-way Argon2 hash of your password (we never store or
+            see the password itself), your role and when the account was created.
           </li>
           <li>
-            <b>Fonts:</b> fonts and icons load from Google Fonts.
+            <b>What you create:</b> crop recommendations you save, batch jobs, and farms, fields and activities you add.
           </li>
           <li>
-            <b>Hosting:</b> the site is hosted on Vercel, which processes standard request logs (such as IP address and
-            browser type) to deliver and secure the site.
+            <b>Sessions:</b> after you sign in, a signed access token is kept in your browser and expires after a
+            limited time; logging out removes it from the browser.
           </li>
           <li>
-            <b>Analytics:</b> if Google Analytics is enabled for this deployment, it records anonymised page views to
-            help us understand which content is useful. IP anonymisation is requested.
-          </li>
-          <li>
-            <b>Contact:</b> WhatsApp, phone and email links open those apps; messages are handled under their own
-            privacy policies.
+            <b>Password reset:</b> reset links are time-limited and work only once.
           </li>
         </ul>
-        <h2>5. Contact form</h2>
+        <h2>4. Location and analysis data</h2>
         <p>
-          The contact form does not send data to a server. It prepares your message and opens WhatsApp or your email
-          app, where you review and send it yourself.
+          When you analyse a location, its coordinates are sent to the data providers below to fetch weather, soil and
+          place information. Soil-test values and farm areas you enter are used for that analysis. A short summary of
+          your latest analysis is kept in your browser so the dashboard can show it.
         </p>
-        <h2>6. Children</h2>
-        <p>The site is intended for a general audience and does not knowingly collect personal data from children.</p>
-        <h2>7. Changes and contact</h2>
+        <h2>5. Third-party services</h2>
+        <ul>
+          <li>
+            <b>Weather and climate:</b> Open-Meteo. <b>Soil:</b> ISRIC SoilGrids. <b>Place names:</b> OpenStreetMap
+            Nominatim.
+          </li>
+          <li>
+            <b>Fonts and icons:</b> Google Fonts. <b>Hosting:</b> standard request logs (IP address, browser type) are
+            processed by the hosting provider to deliver and secure the site.
+          </li>
+          <li>
+            <b>Analytics:</b> if enabled for a deployment, anonymised page views via Google Analytics.
+          </li>
+          <li>
+            <b>Contact:</b> WhatsApp, phone and email links open those apps under their own privacy policies.
+          </li>
+        </ul>
+        <h2>6. Contact form</h2>
         <p>
-          We may update this policy; the date above shows the latest version. Questions? Email{" "}
-          <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a> or see <Link to="/contact">Contact</Link>.
+          Messages sent through the contact form (name, email, subject and message) are stored so we can reply, and are
+          visible only to administrators.
+        </p>
+        <h2>7. Your choices</h2>
+        <p>
+          You can update your name and password in Profile &amp; settings. To have your account and its data deleted,
+          email <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a> from the address you registered with.
+        </p>
+        <h2>8. Changes</h2>
+        <p>
+          We may update this policy; the date above shows the latest version. See also the{" "}
+          <Link to="/terms">Terms</Link> and <Link to="/disclaimer">Disclaimer</Link>.
+        </p>
+      </article>
+    </div>
+  );
+}
+
+export function TermsPage() {
+  return (
+    <div className="site-page">
+      <PageHero
+        kicker="Legal"
+        title="Terms and Conditions"
+        lead="The rules for using the AgriSmart website, account and tools."
+        compact
+      />
+      <article className="site-section site-prose legal">
+        <Reviewed date="2026-11-14">Effective from</Reviewed>
+        <h2>1. Using AgriSmart</h2>
+        <p>
+          AgriSmart is provided by {OWNER.name} for agricultural information and planning. By creating an account or
+          using the tools you agree to these terms.
+        </p>
+        <h2>2. Your account</h2>
+        <ul>
+          <li>Give accurate registration details and keep your password private.</li>
+          <li>You are responsible for activity under your account; tell us if you suspect misuse.</li>
+          <li>We may suspend accounts that abuse the service, attempt unauthorised access or overload it.</li>
+        </ul>
+        <h2>3. Information and predictions</h2>
+        <p>
+          Crop recommendations, yield predictions, matching scores and other outputs are estimates from models and
+          third-party data. They are planning aids, not guarantees. Confirm important decisions with a soil test, your
+          Krishi Vigyan Kendra or another qualified expert. Health and nutrition pages are educational and not medical
+          advice. See the <Link to="/disclaimer">Disclaimer</Link>.
+        </p>
+        <h2>4. Your data</h2>
+        <p>
+          You keep ownership of the data you enter or upload. You allow us to process it to provide the service, as
+          described in the <Link to="/privacy-policy">Privacy Policy</Link>.
+        </p>
+        <h2>5. Acceptable use</h2>
+        <ul>
+          <li>Do not upload unlawful content or data you have no right to use.</li>
+          <li>Do not try to bypass authentication, scrape the service at scale or disrupt it.</li>
+        </ul>
+        <h2>6. Availability</h2>
+        <p>
+          We aim to keep AgriSmart available but do not guarantee uninterrupted service. External data providers may be
+          slow or unavailable at times; the app reports this rather than showing invented values.
+        </p>
+        <h2>7. Liability</h2>
+        <p>
+          To the extent permitted by law, AgriSmart is not liable for losses arising from decisions made using its
+          information or predictions.
+        </p>
+        <h2>8. Contact</h2>
+        <p>
+          Questions about these terms: <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a> or the{" "}
+          <Link to="/contact">contact page</Link>.
         </p>
       </article>
     </div>

@@ -1,16 +1,10 @@
-import { Globe, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import { CheckCircle2, Globe, Loader2, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { useState } from "react";
 
-import { GithubIcon, LinkedinIcon, PageHero, SectionTitle } from "@/components/site/SiteKit";
-import { OWNER, mailtoLink, whatsappLink } from "@/data/site";
-
-const TOPICS = [
-  "General question",
-  "Project / service request",
-  "Job or internship opportunity",
-  "Feedback on AgriSmart",
-  "Data correction",
-];
+import { GithubIcon, LinkedinIcon } from "@/components/site/SiteKit";
+import { mailtoLink, OWNER, whatsappLink } from "@/data/site";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { api, getErrorMessage, isApiUnavailable } from "@/services/apiClient";
 
 const CHANNELS = [
   {
@@ -19,7 +13,6 @@ const CHANNELS = [
     value: OWNER.phoneDisplay,
     href: whatsappLink("Hello Aamir, I'm contacting you from AgriSmart."),
     external: true,
-    tone: "whatsapp",
   },
   { icon: Phone, label: "Call", value: OWNER.phoneDisplay, href: `tel:${OWNER.phone}` },
   { icon: Mail, label: "Email", value: OWNER.email, href: `mailto:${OWNER.email}` },
@@ -28,141 +21,191 @@ const CHANNELS = [
   { icon: GithubIcon, label: "GitHub", value: "github.com/Aamiruem", href: OWNER.github, external: true },
 ];
 
-/**
- * Contact page. The form has no backend: it composes the message and opens WhatsApp
- * or the visitor's email app, where they press send themselves. We never claim a
- * message was delivered.
- */
-export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", topic: TOPICS[0], message: "" });
-  const [opened, setOpened] = useState(null);
-  const [error, setError] = useState("");
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+const EMPTY = { name: "", email: "", subject: "", message: "", website: "" };
 
-  const compose = () =>
+function validate(v) {
+  const e = {};
+  if (v.name.trim().length < 2) e.name = "Please enter your name.";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email.trim())) e.email = "Please enter a valid email address.";
+  if (v.subject.trim().length < 3) e.subject = "Please add a short subject.";
+  if (v.message.trim().length < 10) e.message = "Please write at least 10 characters.";
+  return e;
+}
+
+/** Contact page: the form posts to the AgriSmart API, which stores the message. */
+export default function ContactPage() {
+  useDocumentTitle("Contact", null);
+  const [values, setValues] = useState(EMPTY);
+  const [errors, setErrors] = useState({});
+  const [state, setState] = useState({ status: "idle" });
+  const set = (k) => (e) => setValues((v) => ({ ...v, [k]: e.target.value }));
+
+  const body = () =>
     [
-      `Hello Aamir,`,
+      `Subject: ${values.subject}`,
       "",
-      form.message.trim(),
+      values.message.trim(),
       "",
-      `— ${form.name.trim()}${form.email.trim() ? ` (${form.email.trim()})` : ""}`,
-      `Topic: ${form.topic}`,
-      "Sent from the AgriSmart contact page",
+      `— ${values.name.trim()} (${values.email.trim()})`,
     ].join("\n");
 
-  const valid = () => {
-    if (!form.name.trim() || !form.message.trim()) {
-      setError("Please enter your name and a message.");
-      return false;
-    }
-    setError("");
-    return true;
-  };
-
-  const sendWhatsApp = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!valid()) return;
-    window.open(whatsappLink(compose()), "_blank", "noopener,noreferrer");
-    setOpened("WhatsApp");
+    const errs = validate(values);
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+    setState({ status: "sending" });
+    try {
+      const { data } = await api.post("/contact", values);
+      if (typeof data !== "object" || !data?.id) throw Object.assign(new Error("no api"), { code: "API_HTML" });
+      setState({ status: "sent", message: data.detail, id: data.id });
+      setValues(EMPTY);
+    } catch (err) {
+      if (err.code === "API_HTML" || isApiUnavailable(err)) {
+        setState({ status: "offline" });
+      } else {
+        setState({ status: "error", message: getErrorMessage(err) });
+      }
+    }
   };
 
-  const sendEmail = () => {
-    if (!valid()) return;
-    window.location.href = mailtoLink(`[AgriSmart] ${form.topic}`, compose());
-    setOpened("your email app");
-  };
+  const field = (k, label, props = {}) => (
+    <div className="field-x">
+      <label htmlFor={`c-${k}`}>{label}</label>
+      {props.as === "textarea" ? (
+        <textarea
+          id={`c-${k}`}
+          value={values[k]}
+          onChange={set(k)}
+          aria-invalid={Boolean(errors[k])}
+          aria-describedby={errors[k] ? `c-${k}-err` : undefined}
+          rows="6"
+        />
+      ) : (
+        <input
+          id={`c-${k}`}
+          value={values[k]}
+          onChange={set(k)}
+          aria-invalid={Boolean(errors[k])}
+          aria-describedby={errors[k] ? `c-${k}-err` : undefined}
+          {...props}
+        />
+      )}
+      {errors[k] && (
+        <span id={`c-${k}-err`} className="field-err" role="alert">
+          {errors[k]}
+        </span>
+      )}
+    </div>
+  );
 
   return (
-    <div className="site-page">
-      <PageHero
-        kicker="Contact"
-        title="Contact AgriSmart"
-        lead={`Talk directly with ${OWNER.name}, ${OWNER.title}, in ${OWNER.city}. WhatsApp is the fastest way to reach me.`}
-        image="education/agri-economics"
-        imageAlt="Farmers and traders talking at a produce market"
-        compact
-      />
-
-      <section className="site-section contact-layout">
-        <div className="contact-card-main">
-          <h2>{OWNER.name}</h2>
-          <p className="contact-role">{OWNER.title}</p>
-          <p className="contact-loc">
-            <MapPin size={16} aria-hidden="true" /> {OWNER.city}, India
-          </p>
-          <ul className="channel-list">
-            {CHANNELS.map(({ icon: Icon, label, value, href, external, tone }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  className={`channel${tone ? ` channel--${tone}` : ""}`}
-                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                >
-                  <span className="channel-icon" aria-hidden="true">
-                    <Icon size={20} />
-                  </span>
-                  <span>
-                    <b>{label}</b>
-                    <small>{value}</small>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <form className="contact-form" onSubmit={sendWhatsApp} noValidate>
-          <SectionTitle
-            kicker="Send a message"
-            title="Write to me"
-            lead="Your message opens in WhatsApp or your email app so you can review it and press send."
-          />
-          <label className="field-label">
-            Your name
-            <input required value={form.name} onChange={set("name")} autoComplete="name" placeholder="Name" />
-          </label>
-          <label className="field-label">
-            Email (optional)
-            <input
-              type="email"
-              value={form.email}
-              onChange={set("email")}
-              autoComplete="email"
-              placeholder="you@example.com"
-            />
-          </label>
-          <label className="field-label">
-            Topic
-            <select value={form.topic} onChange={set("topic")}>
-              {TOPICS.map((t) => (
-                <option key={t}>{t}</option>
-              ))}
-            </select>
-          </label>
-          <label className="field-label">
-            Message
-            <textarea required rows="5" value={form.message} onChange={set("message")} placeholder="How can I help?" />
-          </label>
-          {error && (
-            <p className="form-error" role="alert">
-              {error}
-            </p>
-          )}
-          <div className="contact-form-actions">
-            <button type="submit" className="site-btn site-btn--whatsapp">
-              <MessageCircle size={18} aria-hidden="true" /> Continue in WhatsApp
-            </button>
-            <button type="button" className="site-btn site-btn--light" onClick={sendEmail}>
-              <Send size={18} aria-hidden="true" /> Continue in email
-            </button>
+    <>
+      <section className="hp-hero" aria-labelledby="contact-title">
+        <div className="container-x">
+          <div className="sec-head" style={{ marginBottom: 0 }}>
+            <span className="eyebrow">Contact</span>
+            <h1 id="contact-title" style={{ fontSize: "var(--fs-hero)", fontWeight: 800, margin: 0, lineHeight: 1.1 }}>
+              Let&apos;s talk about smarter farming
+            </h1>
+            <p>Questions, feedback, data corrections or a project idea — send a message and we will reply by email.</p>
           </div>
-          {opened && (
-            <p className="form-status" role="status">
-              We opened {opened} with your message. It is sent only after you press <b>Send</b> there.
-            </p>
-          )}
-        </form>
+        </div>
       </section>
-    </div>
+
+      <section className="sec sec--white" aria-label="Contact options">
+        <div className="container-x contact-layout">
+          <div className="contact-card-main">
+            <h2>{OWNER.name}</h2>
+            <p className="contact-role">{OWNER.title}</p>
+            <p className="contact-loc">
+              <MapPin size={16} aria-hidden="true" /> {OWNER.location}
+            </p>
+            <ul className="channel-list">
+              {CHANNELS.map(({ icon: Icon, label, value, href, external }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    className={`channel${label === "WhatsApp" ? " channel--whatsapp" : ""}`}
+                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  >
+                    <span className="channel-icon" aria-hidden="true">
+                      <Icon size={20} />
+                    </span>
+                    <span>
+                      <b>{label}</b>
+                      <small>{value}</small>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <form className="contact-form auth-form" onSubmit={submit} noValidate aria-labelledby="form-title">
+            <h2 id="form-title" style={{ margin: 0, fontWeight: 800 }}>
+              Send a message
+            </h2>
+            {state.status === "sent" ? (
+              <div className="form-alert form-alert--ok" role="status">
+                <CheckCircle2 size={18} aria-hidden="true" /> {state.message} Reference #{state.id}.
+              </div>
+            ) : (
+              <>
+                {field("name", "Name", { autoComplete: "name" })}
+                {field("email", "Email", { type: "email", autoComplete: "email" })}
+                {field("subject", "Subject")}
+                {field("message", "Message", { as: "textarea" })}
+                <input
+                  type="text"
+                  name="website"
+                  value={values.website}
+                  onChange={set("website")}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="visually-hidden"
+                />
+                {state.status === "error" && (
+                  <div className="form-alert form-alert--error" role="alert">
+                    {state.message}
+                  </div>
+                )}
+                {state.status === "offline" && (
+                  <div className="form-alert form-alert--info" role="alert">
+                    The message service is not reachable right now, so nothing was sent. You can send the same message
+                    yourself:
+                    <div className="hp-cta-row" style={{ marginTop: "0.75rem" }}>
+                      <a
+                        className="btn-x btn-x--sm btn-x--primary"
+                        href={whatsappLink(body())}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MessageCircle size={16} aria-hidden="true" /> WhatsApp
+                      </a>
+                      <a
+                        className="btn-x btn-x--sm btn-x--secondary"
+                        href={mailtoLink(`[AgriSmart] ${values.subject}`, body())}
+                      >
+                        <Mail size={16} aria-hidden="true" /> Email
+                      </a>
+                    </div>
+                  </div>
+                )}
+                <button type="submit" className="btn-x btn-x--primary" disabled={state.status === "sending"}>
+                  {state.status === "sending" ? (
+                    <Loader2 size={18} className="spin-x" aria-hidden="true" />
+                  ) : (
+                    <Send size={18} aria-hidden="true" />
+                  )}
+                  {state.status === "sending" ? "Sending…" : "Send message"}
+                </button>
+              </>
+            )}
+          </form>
+        </div>
+      </section>
+    </>
   );
 }

@@ -36,6 +36,8 @@ import { MIcon } from "@/components/common/MIcon";
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
 import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
+import { AnalysisOverview } from "@/components/dashboard/AnalysisOverview";
+import { useSession } from "@/store/authStore";
 import { StateSelect } from "@/components/common/StateSelect";
 import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
@@ -63,6 +65,8 @@ const TASK_COLORS = [G.green, G.blue, G.yellow];
 
 export default function DashboardPage() {
   const { t, lang } = useT();
+  const { user } = useSession();
+  const firstName = user?.full_name?.trim().split(/\s+/)[0];
   const [stateName, setStateName] = useState("Madhya Pradesh");
   const [metric, setMetric] = useState("production");
   const c = useChartColors();
@@ -129,6 +133,7 @@ export default function DashboardPage() {
     <div className="dash">
       <PageHeader
         page="dashboard"
+        title={firstName ? `Welcome back, ${firstName}` : undefined}
         icon="space_dashboard"
         color={G.blue}
         actions={
@@ -141,6 +146,11 @@ export default function DashboardPage() {
         }
       />
 
+      <AnalysisOverview />
+
+      <h2 className="dash-sub">
+        {stateName} at a glance <small>(state statistics from the bundled crop dataset)</small>
+      </h2>
       <section className="dash-kpis">
         <Kpi
           icon="landscape"

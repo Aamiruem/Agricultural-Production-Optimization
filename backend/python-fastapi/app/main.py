@@ -19,13 +19,14 @@ for _path in (_SERVICE_DIR, _REPO_ROOT):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
 from app.api.routes import (
     assistant,
     auth,
+    contact,
     crops,
     health,
     history,
@@ -36,6 +37,7 @@ from app.api.routes import (
     yield_analytics,
     yield_prediction,
 )
+from app.api.deps import require_session
 from app.core.config import get_settings
 from app.core.logging import RequestLogMiddleware, configure_logging
 from app.core.resilience import LoadShedMiddleware
@@ -77,20 +79,15 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
         expose_headers=["X-Request-ID", "X-Served-By", "Retry-After"],
     )
-    for module in (
-        health,
-        auth,
-        crops,
-        history,
-        ml,
-        yield_prediction,
-        yield_analytics,
-        assistant,
-        realtime,
-        system,
-        local_intel,
-    ):
+    # Public: health, sign-in/registration/password reset, contact form, platform status.
+    for module in (health, auth, contact, system):
         app.include_router(module.router, prefix="/api")
+    # Private: every agricultural tool and data endpoint needs a signed-in session (JWT).
+    # Admin-only routes inside these modules add their own role check (AdminUser).
+    for module in (crops, history, ml, yield_prediction, yield_analytics, assistant, local_intel):
+        app.include_router(module.router, prefix="/api", dependencies=[Depends(require_session)])
+    # WebSocket: authenticates with ?token=<JWT> inside the handler (see realtime.py).
+    app.include_router(realtime.router, prefix="/api")
     return app
 
 

@@ -6,6 +6,7 @@ import { MIcon } from "@/components/common/MIcon";
 import { PageHero, SectionTitle } from "@/components/site/SiteKit";
 import { NAV_GROUPS } from "@/layouts/navigation";
 import { useT } from "@/i18n/useT";
+import { useSession } from "@/store/authStore";
 
 /** Captures Chrome/Edge's install prompt so we can offer a real "Install" button. */
 function useInstallPrompt() {
@@ -30,21 +31,25 @@ function useInstallPrompt() {
 export default function AppPage() {
   const { t } = useT();
   const { prompt, installed, clear } = useInstallPrompt();
-  const tools = NAV_GROUPS.filter((g) => ["plan", "grow", "analyse"].includes(g.id)).flatMap((g) => g.links);
+  const tools = NAV_GROUPS.filter((g) => ["overview", "plan", "farm"].includes(g.id))
+    .flatMap((g) => g.links)
+    .filter((l) => !l.to.includes("#"));
+  const { user } = useSession();
+  const open = (to) => (user ? to : `/login?next=${encodeURIComponent(to)}`);
 
   return (
     <div className="site-page">
       <PageHero
         kicker="AgriSmart web app"
         title="Free AI Farming Tools on Any Phone"
-        lead="Crop advisor, yield forecast, soil health, fertilizer, irrigation, disease screening and live weather — no download store, no sign-up. Add it to your home screen and open it like an app."
+        lead="Crop advisor, yield forecast, soil health, fertilizer, irrigation, disease screening and live weather — no app store needed. Create a free account, add AgriSmart to your home screen and open it like an app."
         legacyImage="/images/india-agriculture-hero.webp"
         imageAlt="A farmer using a tablet beside rice, wheat, cotton and sugarcane fields"
       >
-        <Link to="/dashboard" className="site-btn site-btn--gold">
-          Open the app <ArrowRight size={18} aria-hidden="true" />
+        <Link to={user ? "/dashboard" : "/register?next=%2Fdashboard"} className="site-btn site-btn--gold">
+          {user ? "Open the app" : "Create a free account"} <ArrowRight size={18} aria-hidden="true" />
         </Link>
-        <Link to="/local-intelligence" className="site-btn site-btn--ghost">
+        <Link to={open("/local-intelligence")} className="site-btn site-btn--ghost">
           Analyze my farm location
         </Link>
         {prompt && !installed && (
@@ -70,7 +75,7 @@ export default function AppPage() {
         />
         <div className="app-tools">
           {tools.map((l) => (
-            <Link key={l.to} to={l.to} className="app-tool" style={{ "--c": l.color }}>
+            <Link key={l.to} to={open(l.to)} className="app-tool" style={{ "--c": l.color }}>
               <MIcon name={l.icon} size={24} fill />
               <span>{t(l.key)}</span>
             </Link>

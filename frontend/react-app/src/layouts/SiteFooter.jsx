@@ -3,79 +3,38 @@ import { Link } from "react-router";
 
 import logo from "@/assets/logo.svg";
 import { GithubIcon, LinkedinIcon } from "@/components/site/SiteKit";
-import { PRODUCTION_SYSTEM_INDEX as PRODUCTION_SYSTEMS } from "@/data/content/productionSystemsIndex";
 import { BRAND, OWNER, whatsappLink } from "@/data/site";
-
-const pick = (list, slugs) => slugs.map((s) => list.find((x) => x.slug === s));
+import { useSession } from "@/store/authStore";
 
 const COLUMNS = [
   {
-    title: "About AgriSmart",
+    title: "Explore",
     links: [
-      { to: "/about", label: "About us" },
-      { to: "/about#mission", label: "Mission & vision" },
-      { to: "/developer", label: "Developer" },
-      { to: "/services", label: "Services" },
-      { to: "/projects", label: "Projects" },
+      { to: "/", label: "Home" },
+      { to: "/about", label: "About" },
+      { to: "/features", label: "Features" },
+      { to: "/ai-in-agriculture", label: "AI Solutions" },
+      { to: "/#how-it-works", label: "How It Works" },
     ],
   },
   {
-    title: "Agriculture",
+    title: "Agricultural Solutions",
+    links: [
+      { to: "/ai-in-agriculture#crop-yield-prediction", label: "Crop Prediction" },
+      { to: "/ai-in-agriculture#soil-nutrient-analysis", label: "Soil Intelligence" },
+      { to: "/ai-in-agriculture#weather-forecasting", label: "Weather Analysis" },
+      { to: "/agricultural-production-systems/precision-agriculture", label: "Smart Farming" },
+      { to: "/features#data", label: "Agricultural Data" },
+    ],
+  },
+  {
+    title: "Learn",
     links: [
       { to: "/agricultural-production-systems", label: "Production systems" },
-      ...pick(PRODUCTION_SYSTEMS, [
-        "organic-farming",
-        "precision-agriculture",
-        "sustainable-agriculture",
-        "irrigation-systems",
-      ]).map((s) => ({
-        to: `/agricultural-production-systems/${s.slug}`,
-        label: s.title,
-      })),
+      { to: "/smart-agricultural-machines", label: "Smart machines" },
       { to: "/crops-and-food", label: "Crops & food" },
-    ],
-  },
-  {
-    title: "Smart Machines",
-    links: [
-      { to: "/smart-agricultural-machines", label: "All machines" },
-      { to: "/smart-agricultural-machines#smart-tractors", label: "Smart Tractors" },
-      { to: "/smart-agricultural-machines#combine-harvesters", label: "Combine Harvesters" },
-      { to: "/smart-agricultural-machines#agricultural-drones", label: "Agricultural Drones" },
-      { to: "/smart-agricultural-machines#agricultural-robots", label: "Agricultural Robots" },
-      { to: "/smart-agricultural-machines#smart-irrigation-systems", label: "Smart Irrigation" },
-    ],
-  },
-  {
-    title: "AI/ML Solutions",
-    links: [
-      { to: "/ai-in-agriculture", label: "AI in agriculture" },
-      { to: "/crop-recommendation", label: "Crop recommendation" },
-      { to: "/yield-prediction", label: "Crop yield prediction" },
-      { to: "/disease-detection", label: "Plant disease detection" },
-      { to: "/irrigation-optimization", label: "Smart irrigation planner" },
-      { to: "/ai-in-agriculture#satellite-crop-monitoring", label: "Satellite crop monitoring" },
-    ],
-  },
-  {
-    title: "Healthcare & Nutrition",
-    links: [
       { to: "/farmer-health", label: "Farmer health" },
-      { to: "/farmer-health#heat-stress", label: "Heat-stress prevention" },
-      { to: "/farmer-health#pesticide-safety", label: "Pesticide safety" },
-      { to: "/food-and-nutrition", label: "Food & nutrition" },
-      { to: "/food-and-nutrition#balanced-diet", label: "Balanced diet" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
       { to: "/farmer-education", label: "Farmer education" },
-      { to: "/farmer-education#schemes", label: "Government schemes" },
-      { to: "/learn", label: "Knowledge hub" },
-      { to: "/crop-gallery", label: "Crop gallery" },
-      { to: "/app", label: "Web app & tools" },
-      { to: "/image-credits", label: "Image credits" },
     ],
   },
 ];
@@ -89,7 +48,17 @@ const SOCIAL = [
 ];
 
 export function SiteFooter() {
+  const { user } = useSession();
   const year = new Date().getFullYear();
+  const account = user
+    ? [
+        { to: "/dashboard", label: "Dashboard" },
+        { to: "/settings", label: "Profile & settings" },
+      ]
+    : [
+        { to: "/login", label: "Login" },
+        { to: "/register", label: "Register" },
+      ];
   return (
     <footer className="agri-footer">
       <div className="agri-footer-top">
@@ -102,6 +71,10 @@ export function SiteFooter() {
             </span>
           </Link>
           <p className="agri-footer-tagline">{BRAND.tagline}</p>
+          <p className="agri-footer-desc">
+            Agricultural intelligence, AI crop insights, weather and soil analysis in one platform for better farming
+            decisions.
+          </p>
           <ul className="agri-social" aria-label="AgriSmart on social media">
             {SOCIAL.map((s) => (
               <li key={s.label}>
@@ -116,14 +89,14 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
-          <a
-            href={whatsappLink("Hello Aamir, I visited AgriSmart and would like to know more.")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="site-btn site-btn--whatsapp agri-footer-wa"
-          >
-            <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
-          </a>
+          <address className="agri-footer-address">
+            <span>
+              <MapPin size={15} aria-hidden="true" /> {OWNER.location}
+            </span>
+            <a href={`tel:${OWNER.phone}`}>
+              <Phone size={15} aria-hidden="true" /> {OWNER.phoneDisplay}
+            </a>
+          </address>
         </div>
 
         <nav className="agri-footer-cols" aria-label="Footer">
@@ -139,34 +112,31 @@ export function SiteFooter() {
               </ul>
             </div>
           ))}
-          <div className="agri-footer-contact">
-            <h2>Contact Information</h2>
-            <address>
-              <b>{OWNER.name}</b>
-              <span>{OWNER.title}</span>
-              <span>
-                <MapPin size={15} aria-hidden="true" /> {OWNER.location}
-              </span>
-              <a href={`tel:${OWNER.phone}`}>
-                <Phone size={15} aria-hidden="true" /> {OWNER.phoneDisplay}
-              </a>
-              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-                <MessageCircle size={15} aria-hidden="true" /> WhatsApp chat
-              </a>
-              <a href={`mailto:${OWNER.email}`}>
-                <Mail size={15} aria-hidden="true" /> {OWNER.email}
-              </a>
-              <a href={OWNER.portfolio} target="_blank" rel="noopener noreferrer">
-                <Globe size={15} aria-hidden="true" /> Portfolio
-              </a>
-            </address>
+          <div>
+            <h2>Account</h2>
+            <ul>
+              {account.map((l) => (
+                <li key={l.to}>
+                  <Link to={l.to}>{l.label}</Link>
+                </li>
+              ))}
+              <li>
+                <Link to="/contact">Contact</Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link to="/terms">Terms and Conditions</Link>
+              </li>
+            </ul>
           </div>
         </nav>
       </div>
 
       <div className="agri-footer-bottom">
         <p>
-          &copy; {year} AgriSmart. All Rights Reserved. Developed by{" "}
+          &copy; {year} AgriSmart. All rights reserved. Developed by{" "}
           <a href={OWNER.portfolio} target="_blank" rel="noopener noreferrer">
             {OWNER.name}
           </a>
@@ -174,13 +144,10 @@ export function SiteFooter() {
         </p>
         <ul>
           <li>
-            <Link to="/privacy-policy">Privacy Policy</Link>
-          </li>
-          <li>
             <Link to="/disclaimer">Disclaimer</Link>
           </li>
           <li>
-            <Link to="/contact">Contact</Link>
+            <Link to="/image-credits">Image credits</Link>
           </li>
         </ul>
         <button type="button" className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>

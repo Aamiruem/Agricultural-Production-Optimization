@@ -15,10 +15,7 @@
     { "source": "/machines", "destination": "/smart-agricultural-machines", "permanent": true },
     { "source": "/ai-solutions", "destination": "/ai-in-agriculture", "permanent": true },
     { "source": "/healthcare", "destination": "/farmer-health", "permanent": true },
-    { "source": "/nutrition", "destination": "/food-and-nutrition", "permanent": true },
-    { "source": "/login", "destination": "/", "permanent": true },
-    { "source": "/register", "destination": "/", "permanent": true },
-    { "source": "/admin", "destination": "/", "permanent": true }
+    { "source": "/nutrition", "destination": "/food-and-nutrition", "permanent": true }
   ],
   "headers": [
     {

@@ -67,6 +67,16 @@ class Settings(BaseSettings):
     local_http_timeout_s: float = 30.0
     soilgrids_timeout_s: float = 80.0
 
+    # Account emails (password reset). Without SMTP, development returns the reset link in the
+    # API response and logs it; production refuses rather than pretending an email was sent.
+    frontend_url: str = "http://localhost:5173"
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_user: str | None = None
+    smtp_password: str | None = None
+    smtp_from: str | None = None
+    smtp_starttls: bool = True
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

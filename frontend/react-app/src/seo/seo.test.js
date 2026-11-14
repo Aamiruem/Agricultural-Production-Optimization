@@ -34,7 +34,7 @@ describe("SEO registry", () => {
 
   it("registers every route declared in App.jsx", () => {
     const app = readFileSync(path.join(ROOT, "src/App.jsx"), "utf8");
-    const paths = [...app.matchAll(/path="([^"]+)"/g)]
+    const paths = [...app.matchAll(/(?:path="|^\s*\[")([^"]+)"/gm)]
       .map((m) => `/${m[1]}`)
       .filter((p) => !p.includes(":") && p !== "/*");
     for (const p of paths) expect(routeSeo(p), p).toBeDefined();

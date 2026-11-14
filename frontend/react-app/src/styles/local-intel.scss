@@ -427,7 +427,7 @@
     color: var(--ag-muted);
   }
 }
-.score-row {
+.local-intel .score-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
   gap: 0.6rem;
@@ -549,7 +549,7 @@
     text-align: right;
   }
 }
-.crop-facts {
+.local-intel .crop-facts {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.35rem 0.75rem;

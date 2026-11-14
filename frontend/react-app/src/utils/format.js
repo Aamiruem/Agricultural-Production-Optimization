@@ -12,6 +12,6 @@ export function formatDate(iso) {
 }
 
 /** Only allow same-site relative redirects (prevents open redirects after login). */
-export function safeRedirect(next, fallback = "/farms") {
+export function safeRedirect(next, fallback = "/dashboard") {
   return typeof next === "string" && next.startsWith("/") && !next.startsWith("//") ? next : fallback;
 }

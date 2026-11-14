@@ -8,6 +8,7 @@ import { MIcon } from "@/components/common/MIcon";
 import { useT } from "@/i18n/useT";
 import { whatsappLink } from "@/data/site";
 import { trackPageView } from "@/lib/analytics";
+import { useSessionExpiry } from "@/store/authStore";
 
 import { BOTTOM_LINKS } from "./navigation";
 import { SideNav } from "./SideNav";
@@ -73,7 +74,7 @@ function BottomNav({ onMore }) {
 export function MainLayout() {
   const { t } = useT();
   const { pathname, hash } = useLocation();
-  const isHome = pathname === "/";
+  useSessionExpiry();
   const [sidebarOpen, setSidebarOpen] = useState(
     () => typeof window === "undefined" || window.matchMedia("(min-width: 992px)").matches,
   );
@@ -105,7 +106,7 @@ export function MainLayout() {
         <SideNav open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="app-content">
           <main id="main">
-            <div className={isHome ? "home-shell" : "page-shell"}>
+            <div className="page-shell">
               <ErrorBoundary key={pathname}>
                 <Suspense
                   fallback={

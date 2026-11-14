@@ -18,3 +18,21 @@ export async function fetchMe() {
   const { data } = await api.get("/auth/me");
   return data;
 }
+
+export async function forgotPassword(email) {
+  const { data } = await api.post("/auth/forgot-password", { email });
+  return data;
+}
+
+export async function resetPassword(token, password) {
+  await api.post("/auth/reset-password", { token, password });
+}
+
+export async function changePassword(current_password, new_password) {
+  await api.post("/auth/change-password", { current_password, new_password });
+}
+
+export async function updateProfile(full_name) {
+  const { data } = await api.patch("/auth/me", { full_name });
+  return data;
+}

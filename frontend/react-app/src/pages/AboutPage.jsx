@@ -81,7 +81,7 @@ const VALUES = [
   { icon: Users, title: "Farmer first", text: "Built for real decisions on real farms, in simple language." },
   { icon: Leaf, title: "Sustainability", text: "Better yields that do not cost the land its future." },
   { icon: Lightbulb, title: "Innovation", text: "Practical technology that is affordable and accessible." },
-  { icon: HandHeart, title: "Inclusion", text: "Free to use, no sign-up, works on low-cost phones." },
+  { icon: HandHeart, title: "Inclusion", text: "Free to use with a free account, works on low-cost phones." },
 ];
 
 export default function AboutPage() {

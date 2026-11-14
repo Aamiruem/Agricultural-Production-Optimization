@@ -1,63 +1,53 @@
 import { G } from "@/lib/icons";
 
-// Single source of truth for navigation: side drawer, footer, global search and
-// the mobile bottom bar. Labels are i18n keys (src/i18n/translations.js), icons are
-// Material Symbols names and colours come from Google's palette.
+// Single source of truth for navigation.
 //
-// Sections follow a farmer's season: plan what to grow, look after it while it
-// grows, then analyse the results.
+// PUBLIC_LINKS  — the public website navbar (signed-out visitors and everyone on public pages).
+// NAV_GROUPS    — the signed-in app's sidebar (labels are i18n keys, icons are Material Symbols).
+
+export const PUBLIC_LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/features", label: "Features" },
+  { to: "/ai-in-agriculture", label: "AI Solutions" },
+  { to: "/#how-it-works", label: "How It Works" },
+  { to: "/contact", label: "Contact" },
+];
+
 export const NAV_GROUPS = [
   {
-    id: "site",
-    label: "side.groupSite",
-    links: [
-      { to: "/local-intelligence", key: "nav.localIntel", icon: "my_location", color: G.red },
-      { to: "/agricultural-production-systems", key: "nav.agriculture", icon: "agriculture", color: G.green },
-      { to: "/smart-agricultural-machines", key: "nav.machines", icon: "precision_manufacturing", color: G.orange },
-      { to: "/ai-in-agriculture", key: "nav.ai", icon: "psychology", color: G.purple },
-      { to: "/crops-and-food", key: "nav.cropsFood", icon: "grass", color: G.yellow },
-      { to: "/farmer-health", key: "nav.health", icon: "medical_services", color: G.red },
-      { to: "/food-and-nutrition", key: "nav.nutrition", icon: "restaurant", color: G.pink },
-      { to: "/farmer-education", key: "nav.education", icon: "school", color: G.blue },
-      { to: "/services", key: "nav.services", icon: "work", color: G.teal },
-      { to: "/projects", key: "nav.projects", icon: "code", color: G.brown },
-    ],
-  },
-  {
-    id: "home",
-    label: "side.groupHome",
+    id: "overview",
+    label: "side.groupOverview",
     links: [
       { to: "/dashboard", key: "side.dashboard", icon: "space_dashboard", color: G.blue },
-      { to: "/data-dashboard", key: "side.dataStudio", icon: "upload_file", color: G.purple },
+      { to: "/local-intelligence#map", key: "side.indiaMap", icon: "map", color: G.teal },
+      { to: "/local-intelligence", key: "side.locationAnalysis", icon: "my_location", color: G.red },
+      { to: "/weather", key: "side.weatherIntel", icon: "partly_cloudy_day", color: G.yellow },
+      { to: "/soil-analysis", key: "side.soilHealth", icon: "science", color: G.brown },
+      { to: "/crop-recommendation", key: "side.cropAdvisor", icon: "potted_plant", color: G.green },
+      { to: "/yield-prediction", key: "side.yield", icon: "trending_up", color: G.blue },
+      { to: "/data-dashboard", key: "side.dataCompare", icon: "upload_file", color: G.purple },
+      { to: "/reports", key: "side.reports", icon: "monitoring", color: G.purple },
     ],
   },
   {
     id: "plan",
     label: "side.groupPlan",
     links: [
-      { to: "/crop-recommendation", key: "side.cropAdvisor", icon: "potted_plant", color: G.green },
       { to: "/seasonal-advisor", key: "side.seasonAdvisor", icon: "calendar_month", color: G.yellow },
       { to: "/rotation-planner", key: "side.rotation", icon: "autorenew", color: G.teal },
       { to: "/planner", key: "side.fieldPlanner", icon: "edit_calendar", color: G.green },
-    ],
-  },
-  {
-    id: "grow",
-    label: "side.groupGrow",
-    links: [
-      { to: "/soil-analysis", key: "side.soilHealth", icon: "science", color: G.brown },
       { to: "/fertilizer", key: "side.fertilizer", icon: "compost", color: G.orange },
       { to: "/irrigation-optimization", key: "side.irrigation", icon: "water_drop", color: G.cyan },
       { to: "/disease-detection", key: "side.disease", icon: "pest_control", color: G.red },
-      { to: "/weather", key: "side.weather", icon: "partly_cloudy_day", color: G.yellow },
     ],
   },
   {
-    id: "analyse",
-    label: "side.groupAnalyse",
+    id: "farm",
+    label: "side.groupFarm",
     links: [
-      { to: "/yield-prediction", key: "side.yield", icon: "trending_up", color: G.blue },
-      { to: "/reports", key: "side.reports", icon: "monitoring", color: G.purple },
+      { to: "/farms", key: "side.myFarms", icon: "agriculture", color: G.orange },
+      { to: "/assistant", key: "side.assistant", icon: "smart_toy", color: G.purple },
       { to: "/insights", key: "side.modelInsights", icon: "insights", color: G.pink },
     ],
   },
@@ -72,49 +62,23 @@ export const NAV_GROUPS = [
       { to: "/learn", key: "side.knowledge", icon: "menu_book", color: G.green },
     ],
   },
-  {
-    id: "farm",
-    label: "side.groupFarm",
-    links: [
-      { to: "/farms", key: "side.myFarms", icon: "agriculture", color: G.orange },
-      { to: "/assistant", key: "side.assistant", icon: "smart_toy", color: G.purple },
-    ],
-  },
 ];
 
-/** Small links under the drawer's help card (not farming tools, so not a section). */
+/** Links under the sidebar's help card. */
 export const SECONDARY_LINKS = [
-  { to: "/about", key: "side.about", icon: "info", color: G.blue },
-  { to: "/developer", key: "nav.developer", icon: "person", color: G.green },
-  { to: "/app", key: "nav.app", icon: "install_mobile", color: G.purple },
+  { to: "/settings", key: "side.settings", icon: "tune", color: G.blue },
+  { to: "/", key: "side.publicSite", icon: "home", color: G.green },
   { to: "/contact", key: "side.contact", icon: "mail", color: G.red },
 ];
 
-const group = (id) => NAV_GROUPS.find((g) => g.id === id).links;
-
-/** Every destination, for global search. */
+/** Every app destination, for the app's global search. */
 export const ALL_LINKS = [...NAV_GROUPS.flatMap((g) => g.links), ...SECONDARY_LINKS];
 
-/** Footer "AI tools" column: the planning and growing tools. */
-export const FOOTER_TOOLS = [...group("plan"), ...group("grow")];
-
-export const TOP_LINKS = [
-  { to: "/", key: "nav.home" },
-  { to: "/about", key: "nav.about" },
-  { to: "/agricultural-production-systems", key: "nav.agriculture" },
-  { to: "/smart-agricultural-machines", key: "nav.machines" },
-  { to: "/ai-in-agriculture", key: "nav.ai" },
-  { to: "/crops-and-food", key: "nav.cropsFood" },
-  { to: "/farmer-health", key: "nav.health" },
-  { to: "/projects", key: "nav.projects" },
-  { to: "/contact", key: "nav.contact" },
-];
-
-/** Mobile bottom navigation (Google app style); the menu button opens the drawer. */
+/** Mobile bottom navigation in the app; "More" opens the sidebar drawer. */
 export const BOTTOM_LINKS = [
-  { to: "/", key: "nav.home", icon: "home" },
   { to: "/dashboard", key: "side.dashboard", icon: "space_dashboard" },
-  { to: "/crops", key: "side.cropLibrary", icon: "nutrition" },
+  { to: "/local-intelligence", key: "side.locationAnalysis", icon: "my_location" },
+  { to: "/crop-recommendation", key: "side.cropAdvisor", icon: "potted_plant" },
   { to: "/weather", key: "side.weather", icon: "partly_cloudy_day" },
 ];
 

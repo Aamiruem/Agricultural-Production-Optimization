@@ -69,3 +69,23 @@ export const farmFieldSchema = plannerFieldSchema.extend({
   P: optionalNum("P", 200),
   K: optionalNum("K", 250),
 });
+
+const newPassword = z
+  .string()
+  .min(8, "Use at least 8 characters")
+  .max(128)
+  .refine((v) => /[a-z]/i.test(v) && /\d/.test(v), "Mix letters and numbers");
+
+export const forgotSchema = z.object({ email: z.email("Enter a valid email") });
+
+export const resetSchema = z
+  .object({ password: newPassword, confirm: z.string() })
+  .refine((v) => v.password === v.confirm, { message: "Passwords do not match", path: ["confirm"] });
+
+export const changePasswordSchema = z
+  .object({
+    current_password: z.string().min(1, "Enter your current password"),
+    new_password: newPassword,
+    confirm: z.string(),
+  })
+  .refine((v) => v.new_password === v.confirm, { message: "Passwords do not match", path: ["confirm"] });

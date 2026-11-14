@@ -15,7 +15,8 @@ const UPDATED = BRAND.contentUpdated;
 // Hero photo per page: preloaded in the static HTML (faster LCP) and listed in the
 // image sitemap. Keys are /images/<key>-640|1200.webp; values starting with "/" are files.
 const HERO = {
-  "/": "/images/india-agriculture-hero.webp",
+  "/": "machines/agricultural-drone",
+  "/features": "ai/satellite-monitoring",
   "/app": "/images/india-agriculture-hero.webp",
   "/about": "education/farmers-in-field",
   "/developer": "education/farmers-in-field",
@@ -215,10 +216,31 @@ const STATIC_ROUTES = [
     changefreq: "weekly",
   },
   {
+    path: "/features",
+    title: "AgriSmart Features – Weather, Soil, Crop & Yield AI Tools",
+    description:
+      "Every AgriSmart feature in one place: India agriculture map, location analysis, weather intelligence, soil analysis, crop recommendation, yield prediction and reports.",
+    crumb: "Features",
+    image: "/og/ai.jpg",
+    type: "WebPage",
+    priority: 0.9,
+    changefreq: "monthly",
+  },
+  {
+    path: "/terms",
+    title: "Terms and Conditions | AgriSmart",
+    description:
+      "The rules for using the AgriSmart website, account and agricultural tools: accounts, acceptable use, data ownership, predictions and liability.",
+    crumb: "Terms",
+    type: "WebPage",
+    priority: 0.2,
+    changefreq: "yearly",
+  },
+  {
     path: "/privacy-policy",
     title: "Privacy Policy | AgriSmart",
     description:
-      "How AgriSmart handles data: what is stored in your browser, analytics, third-party services and how to contact us about privacy.",
+      "How AgriSmart handles your data: account details, hashed passwords, sessions, location analysis, third-party services and how to request deletion.",
     crumb: "Privacy Policy",
     type: "WebPage",
     priority: 0.2,
@@ -449,6 +471,61 @@ const STATIC_ROUTES = [
   },
 ];
 
+const ACCOUNT_ROUTES = [
+  ["/login", "Login | AgriSmart", "Sign in to your AgriSmart account to open your dashboard and tools.", "Login"],
+  [
+    "/register",
+    "Create Account | AgriSmart",
+    "Create a free AgriSmart account to use the farm analysis tools.",
+    "Create account",
+  ],
+  [
+    "/forgot-password",
+    "Forgot Password | AgriSmart",
+    "Request a link to reset your AgriSmart password.",
+    "Forgot password",
+  ],
+  [
+    "/reset-password",
+    "Reset Password | AgriSmart",
+    "Choose a new password for your AgriSmart account.",
+    "Reset password",
+  ],
+  ["/settings", "Settings | AgriSmart", "Manage your AgriSmart profile, password and preferences.", "Settings"],
+  ["/admin", "Admin | AgriSmart", "AgriSmart administration.", "Admin"],
+].map(([path, title, description, crumb]) => ({ path, title, description, crumb, noindex: true }));
+
+/**
+ * The signed-in app: every tool needs an account, so search engines would only see the login
+ * screen. These stay out of the index and sitemap; the public pages describe them instead.
+ */
+export const PRIVATE_PATHS = new Set([
+  "/dashboard",
+  "/data-dashboard",
+  "/local-intelligence",
+  "/crop-recommendation",
+  "/seasonal-advisor",
+  "/rotation-planner",
+  "/planner",
+  "/soil-analysis",
+  "/fertilizer",
+  "/irrigation-optimization",
+  "/disease-detection",
+  "/weather",
+  "/yield-prediction",
+  "/reports",
+  "/insights",
+  "/crops",
+  "/crop-gallery",
+  "/states",
+  "/soil-types",
+  "/learn",
+  "/farms",
+  "/assistant",
+  "/settings",
+  "/admin",
+]);
+
 const SYSTEM_ROUTES = PRODUCTION_SYSTEMS.map((s) => ({
   path: `/agricultural-production-systems/${s.slug}`,
   title:
@@ -475,13 +552,14 @@ const CROP_ROUTES = Object.keys(CROP_PROFILES).map((name) => ({
   noindex: true,
 }));
 
-export const SEO_ROUTES = [...STATIC_ROUTES, ...SYSTEM_ROUTES, ...CROP_ROUTES].map((r) => ({
+export const SEO_ROUTES = [...STATIC_ROUTES, ...ACCOUNT_ROUTES, ...SYSTEM_ROUTES, ...CROP_ROUTES].map((r) => ({
   parent: r.path === "/" ? undefined : "/",
   type: "WebPage",
   image: "/og/home.jpg",
   updated: UPDATED,
   hero: HERO[r.path],
   ...r,
+  ...(PRIVATE_PATHS.has(r.path) ? { noindex: true } : null),
 }));
 
 /** Absolute-path URL of a route's hero image (1200 px), or undefined. */
@@ -523,7 +601,4 @@ export const REDIRECTS = {
   "/ai-solutions": "/ai-in-agriculture",
   "/healthcare": "/farmer-health",
   "/nutrition": "/food-and-nutrition",
-  "/login": "/",
-  "/register": "/",
-  "/admin": "/",
 };

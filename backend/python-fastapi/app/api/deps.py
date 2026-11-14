@@ -48,6 +48,21 @@ def require_role(*roles: str):
     return checker
 
 
+def require_session(user: Annotated[User, Depends(get_current_user)]) -> User:
+    """Router-level guard for the private (signed-in) API areas. See app/main.py."""
+    return user
+
+
+def user_from_token(db: Session, token: str | None) -> User | None:
+    """User for a raw JWT (WebSockets cannot send an Authorization header from browsers)."""
+    if not token:
+        return None
+    try:
+        return users_repo.get(db, int(decode_access_token(token)["sub"]))
+    except (jwt.InvalidTokenError, ValueError, KeyError):
+        return None
+
+
 OptionalUser = Annotated[User | None, Depends(get_optional_user)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 AdminUser = Annotated[User, Depends(require_role("admin"))]

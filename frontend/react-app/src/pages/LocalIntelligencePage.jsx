@@ -1,3 +1,5 @@
+import "@/styles/local-intel.scss";
+
 import {
   BarChart3,
   Crosshair,
@@ -33,6 +35,7 @@ import { CROP_SEASONS } from "@/features/local/climate";
 import { BUILTIN_DATASETS } from "@/features/local/dataset";
 import { AREA_UNITS, convertArea, ringAreaM2, ringCentroid, round } from "@/features/local/geo";
 import { IntelMap } from "@/features/local/IntelMap";
+import { saveLastAnalysis, summarizeLocal } from "@/features/local/lastAnalysis";
 import { buildChoropleth, MAP_LAYERS, UNAVAILABLE_LAYERS } from "@/features/local/mapLayers";
 import { DEFAULT_WEIGHTS, PARAM_LABELS } from "@/features/local/matching";
 import { downloadText, reportCsv } from "@/features/local/report";
@@ -258,6 +261,7 @@ export default function LocalIntelligencePage() {
         season: season || null,
       });
       setLocal(data);
+      saveLastAnalysis(summarizeLocal(data, point));
       const errs = [data.locationError, data.weatherError, data.historyError, data.soilError].filter(Boolean);
       set(
         key,
@@ -284,6 +288,12 @@ export default function LocalIntelligencePage() {
       if (!ds) return set("compare", "empty", "Upload a CSV first or choose a built-in dataset.");
       const res = await compareDatasetAuto(ds, data, { weights, cropFilter: cropFilter || null });
       setComparison(res);
+      saveLastAnalysis({
+        match:
+          res.noLocation || !res.matchedRecords
+            ? { score: null, records: 0, level: null }
+            : { score: res.comparison.score ?? null, records: res.matchedRecords, level: res.matchLevel },
+      });
       if (res.noLocation)
         set("compare", "empty", "This dataset has no location columns — see the explanation in section E.");
       else if (!res.matchedRecords)
@@ -325,6 +335,7 @@ export default function LocalIntelligencePage() {
       return set("crops", "error", "State could not be identified, so crop statistics cannot be used.");
     const s = cropSuitability(data, { season: season || data.seasons.crop, irrigation: irrigation === "yes" });
     setSuitability(s);
+    saveLastAnalysis({ crops: s.top.map((t) => t.crop) });
     set(
       "crops",
       s.top.length ? "success" : "empty",
@@ -435,7 +446,7 @@ export default function LocalIntelligencePage() {
       </PageHero>
 
       {/* ------------------------------------------------ dashboard */}
-      <section className="site-section intel-dashboard" aria-labelledby="dash-title">
+      <section id="map" className="site-section intel-dashboard" aria-labelledby="dash-title">
         <SectionTitle id="dash-title" kicker="Step 1" title="Choose a location" />
         <div className="intel-grid">
           <div className="intel-controls">

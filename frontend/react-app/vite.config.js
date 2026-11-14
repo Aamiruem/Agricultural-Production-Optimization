@@ -233,7 +233,11 @@ export default defineConfig(({ mode }) => {
         output: {
           // Split large vendor libraries into their own cacheable chunks.
           manualChunks(id) {
+            if (/cjs[\/]react[.-]/.test(id) || /node_modules[\/]react[\/]index/.test(id)) console.log("CHUNKID", id);
             if (!id.includes("node_modules")) return undefined;
+            // React first: otherwise it is pulled into whichever vendor chunk claims it (it was
+            // landing in "bootstrap", forcing every public page to download react-bootstrap).
+            if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) return "react-core";
             if (/react-bootstrap|@restart|bootstrap/.test(id)) return "bootstrap";
             if (/socket\.io|engine\.io/.test(id)) return "realtime"; // farms page only, not every page
             if (/@tanstack|axios/.test(id)) return "data";

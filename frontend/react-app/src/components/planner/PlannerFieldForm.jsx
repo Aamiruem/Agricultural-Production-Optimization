@@ -31,7 +31,7 @@ export function PlannerFieldForm() {
         <Card.Title as="h2" className="h5">
           Add a field
         </Card.Title>
-        <p className="small text-body-secondary">Saved in this browser — no account needed.</p>
+        <p className="small text-body-secondary">Saved privately in this browser.</p>
         <form noValidate aria-label="Add field" onSubmit={handleSubmit(onSubmit)} className="d-grid gap-3">
           <Form.Group controlId="pl-name">
             <Form.Label className="small fw-medium mb-1">Field name</Form.Label>

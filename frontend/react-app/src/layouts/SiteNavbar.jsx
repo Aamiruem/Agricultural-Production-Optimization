@@ -1,17 +1,14 @@
-import { MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
-import { Link, NavLink, useLocation } from "react-router";
+import { Link } from "react-router";
 
 import logo from "@/assets/logo.svg";
 import { GlobalSearch } from "@/components/common/GlobalSearch";
 import { MIcon } from "@/components/common/MIcon";
 import { useTheme } from "@/hooks/useTheme";
 import { useT } from "@/i18n/useT";
-import { whatsappLink } from "@/data/site";
 import { seasonalNotifications } from "@/lib/notifications";
-
-import { TOP_LINKS } from "./navigation";
+import { useAuthStore, useSession } from "@/store/authStore";
 
 const READ_KEY = "agri-notifications-read";
 
@@ -19,7 +16,14 @@ const READ_KEY = "agri-notifications-read";
 export function SiteNavbar({ onMenuClick, sidebarOpen }) {
   const { mode, toggle } = useTheme();
   const { t, lang, setLang } = useT();
-  const { pathname, hash } = useLocation();
+  const { user, isAdmin } = useSession();
+  const logout = useAuthStore((st) => st.logout);
+  const initials = (user?.full_name || user?.email || "U")
+    .split(/\s+/)
+    .map((x) => x[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
   const [searchOpen, setSearchOpen] = useState(false);
   const notifications = useMemo(() => seasonalNotifications(new Date().getMonth(), lang), [lang]);
   const [read, setRead] = useState(() => {
@@ -39,10 +43,6 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
       /* storage unavailable */
     }
   };
-  const tabActive = (to) =>
-    to.includes("#")
-      ? pathname === "/" && hash === to.slice(1)
-      : (pathname === to || (to !== "/" && pathname.startsWith(`${to}/`))) && !(to === "/" && hash);
 
   return (
     <header className="app-bar">
@@ -57,7 +57,7 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
         >
           <MIcon name="menu" />
         </button>
-        <Link to="/" className="brand-link" aria-label="AgriSmart home">
+        <Link to="/dashboard" className="brand-link" aria-label="AgriSmart dashboard">
           <img src={logo} alt="" width="40" height="40" className="brand-mark" />
           <span className="brand-wordmark">
             <span>
@@ -67,20 +67,6 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
             <small>{t("brand.tagline")}</small>
           </span>
         </Link>
-
-        <nav className="app-tabs" aria-label="Primary">
-          {TOP_LINKS.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              end
-              className={() => `app-tab${tabActive(l.to) ? " active" : ""}`}
-              aria-current={tabActive(l.to) ? "page" : undefined}
-            >
-              {t(l.key)}
-            </NavLink>
-          ))}
-        </nav>
 
         <div className="app-bar-search">
           <GlobalSearch autoFocus={searchOpen} onDone={() => setSearchOpen(false)} />
@@ -146,16 +132,38 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
             <MIcon name={mode === "dark" ? "light_mode" : "dark_mode"} />
           </button>
 
-          <a
-            href={whatsappLink("Hello Aamir, I visited AgriSmart and would like to know more.")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn nav-whatsapp"
-            aria-label="Chat on WhatsApp"
-          >
-            <MessageCircle size={18} aria-hidden="true" />
-            <span>WhatsApp</span>
-          </a>
+          <Dropdown align="end">
+            <Dropdown.Toggle as="button" type="button" className="avatar-btn no-caret" aria-label={t("nav.profile")}>
+              <span className="avatar">{initials}</span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="g-menu profile-menu">
+              <div className="profile-head">
+                <span className="avatar lg">{initials}</span>
+                <b>
+                  {lang === "hi" ? "नमस्ते" : "Hi"}, {user?.full_name?.split(" ")[0] || "Farmer"}!
+                </b>
+                <small>{user?.email}</small>
+              </div>
+              <Dropdown.Item as={Link} to="/settings">
+                <MIcon name="account_circle" size={20} /> {t("side.settings")}
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to="/farms">
+                <MIcon name="agriculture" size={20} /> {t("nav.myFarms")}
+              </Dropdown.Item>
+              {isAdmin && (
+                <Dropdown.Item as={Link} to="/admin">
+                  <MIcon name="admin_panel_settings" size={20} /> {t("nav.admin")}
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item as={Link} to="/">
+                <MIcon name="home" size={20} /> {t("side.publicSite")}
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={logout}>
+                <MIcon name="logout" size={20} /> {t("nav.signOut")}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </div>
     </header>

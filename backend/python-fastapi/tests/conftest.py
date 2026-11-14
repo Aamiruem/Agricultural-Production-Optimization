@@ -25,10 +25,26 @@ from app.db.session import Base, engine  # noqa: E402
 from app.main import app  # noqa: E402
 
 
+from app.api.deps import require_session  # noqa: E402
+
+
 @pytest.fixture(scope="session")
 def client():
+    # Feature tests exercise the private API without a login; the session guard itself is
+    # tested in test_access_control.py with the override removed (see `guarded`).
+    app.dependency_overrides[require_session] = lambda: None
     with TestClient(app) as c:  # runs lifespan (creates tables)
         yield c
+    app.dependency_overrides.pop(require_session, None)
+
+
+@pytest.fixture
+def guarded(client):
+    """The real session guard for one test (private endpoints need a JWT)."""
+    saved = app.dependency_overrides.pop(require_session, None)
+    yield client
+    if saved is not None:
+        app.dependency_overrides[require_session] = saved
 
 
 @pytest.fixture(autouse=True)

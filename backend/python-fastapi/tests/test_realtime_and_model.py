@@ -10,8 +10,25 @@ from app.services import recommender
 RICE = {"N": 85, "P": 45, "K": 40, "temperature": 23.5, "humidity": 82, "ph": 6.5, "rainfall": 230}
 
 
+def _token(client):
+    r = client.post(
+        "/api/auth/register", json={"email": "ws@example.com", "full_name": "WS User", "password": "green123"}
+    )
+    return r.json()["access_token"]
+
+
+def test_websocket_requires_a_token(client):
+    import pytest
+    from starlette.websockets import WebSocketDisconnect
+
+    with pytest.raises(WebSocketDisconnect) as exc:
+        with client.websocket_connect("/api/ws/recommend") as ws:
+            ws.receive_json()
+    assert exc.value.code == 1008
+
+
 def test_websocket_live_recommendations(client):
-    with client.websocket_connect("/api/ws/recommend") as ws:
+    with client.websocket_connect(f"/api/ws/recommend?token={_token(client)}") as ws:
         ws.send_json(RICE)
         msg = ws.receive_json()
         assert msg["type"] == "recommendation" and msg["top"][0]["crop"] == "rice"

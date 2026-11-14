@@ -1,6 +1,4 @@
 import { Component } from "react";
-import Alert from "react-bootstrap/Alert";
-import Button from "react-bootstrap/Button";
 
 /** Catches rendering errors in a page so the rest of the app keeps working. */
 export class ErrorBoundary extends Component {
@@ -17,13 +15,13 @@ export class ErrorBoundary extends Component {
   render() {
     if (!this.state.error) return this.props.children;
     return (
-      <Alert variant="danger">
-        <Alert.Heading className="h5">Something went wrong on this page.</Alert.Heading>
+      <div className="alert alert-danger" role="alert">
+        <h2 className="alert-heading h5">Something went wrong on this page.</h2>
         <p className="small mb-2">{this.state.error.message}</p>
-        <Button size="sm" variant="outline-danger" onClick={() => this.setState({ error: null })}>
+        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => this.setState({ error: null })}>
           Try again
-        </Button>
-      </Alert>
+        </button>
+      </div>
     );
   }
 }
