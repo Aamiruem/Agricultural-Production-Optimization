@@ -11,6 +11,7 @@ export const NAV_GROUPS = [
     id: "site",
     label: "side.groupSite",
     links: [
+      { to: "/local-intelligence", key: "nav.localIntel", icon: "my_location", color: G.red },
       { to: "/agricultural-production-systems", key: "nav.agriculture", icon: "agriculture", color: G.green },
       { to: "/smart-agricultural-machines", key: "nav.machines", icon: "precision_manufacturing", color: G.orange },
       { to: "/ai-in-agriculture", key: "nav.ai", icon: "psychology", color: G.purple },

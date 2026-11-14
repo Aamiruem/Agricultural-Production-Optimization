@@ -45,6 +45,7 @@ const ServicesPage = lazy(() => import("@/pages/site/ServicesPage"));
 const ProjectsPage = lazy(() => import("@/pages/site/ProjectsPage"));
 const DeveloperPage = lazy(() => import("@/pages/site/DeveloperPage"));
 const AppPage = lazy(() => import("@/pages/site/AppPage"));
+const LocalIntelligencePage = lazy(() => import("@/pages/LocalIntelligencePage"));
 const PrivacyPolicyPage = lazy(() => import("@/pages/site/LegalPages").then((m) => ({ default: m.PrivacyPolicyPage })));
 const DisclaimerPage = lazy(() => import("@/pages/site/LegalPages").then((m) => ({ default: m.DisclaimerPage })));
 const ImageCreditsPage = lazy(() => import("@/pages/site/LegalPages").then((m) => ({ default: m.ImageCreditsPage })));
@@ -76,6 +77,7 @@ export default function App() {
         <Route path="projects" element={<ProjectsPage />} />
         <Route path="developer" element={<DeveloperPage />} />
         <Route path="app" element={<AppPage />} />
+        <Route path="local-intelligence" element={<LocalIntelligencePage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="disclaimer" element={<DisclaimerPage />} />

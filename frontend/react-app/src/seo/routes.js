@@ -203,6 +203,18 @@ const STATIC_ROUTES = [
     changefreq: "monthly",
   },
   {
+    path: "/local-intelligence",
+    title: "Analyze My Farm Location – Local Weather, Soil & Crop AI India",
+    description:
+      "Select your village or farm on an India map to get local weather, 10-year rainfall, soil estimates, dataset comparison, crop suitability and yield prediction.",
+    crumb: "Local analysis",
+    parent: "/app",
+    image: "/og/ai.jpg",
+    type: "WebPage",
+    priority: 0.9,
+    changefreq: "weekly",
+  },
+  {
     path: "/privacy-policy",
     title: "Privacy Policy | AgriSmart",
     description:

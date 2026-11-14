@@ -54,10 +54,11 @@ async function getJson(url, { timeout = 20000 } = {}) {
   const timer = setTimeout(() => ctrl.abort(), timeout);
   try {
     const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
-    if (!res.ok) throw Object.assign(new Error(`${new URL(url).hostname} returned HTTP ${res.status}`), { status: res.status });
+    if (!res.ok)
+      throw Object.assign(new Error(`${new URL(url).hostname} returned HTTP ${res.status}`), { status: res.status });
     return await res.json();
   } catch (e) {
-    if (e.name === "AbortError") throw new Error(`${new URL(url).hostname} did not respond in time`);
+    if (e.name === "AbortError") throw new Error(`${new URL(url).hostname} did not respond in time`, { cause: e });
     throw e;
   } finally {
     clearTimeout(timer);
@@ -89,7 +90,10 @@ export async function adminLookup([lat, lon]) {
   const state = featureAt([lat, lon], states);
   if (!state) return { state: null, district: null, subdistrict: null };
   const slug = state.properties.slug;
-  const [districts, subs] = await Promise.all([loadGeo(`districts/${slug}.json`), loadGeo(`subdistricts/${slug}.json`)]);
+  const [districts, subs] = await Promise.all([
+    loadGeo(`districts/${slug}.json`),
+    loadGeo(`subdistricts/${slug}.json`),
+  ]);
   const district = featureAt([lat, lon], districts);
   const sub = featureAt([lat, lon], subs);
   return {
@@ -103,7 +107,17 @@ export async function adminLookup([lat, lon]) {
 }
 
 // ------------------------------------------------------------------ location
-const PLACE_KEYS = ["hamlet", "village", "suburb", "neighbourhood", "quarter", "town", "city_district", "city", "municipality"];
+const PLACE_KEYS = [
+  "hamlet",
+  "village",
+  "suburb",
+  "neighbourhood",
+  "quarter",
+  "town",
+  "city_district",
+  "city",
+  "municipality",
+];
 
 function normalizeNominatim(r) {
   const a = r.address ?? {};
@@ -135,7 +149,9 @@ export async function searchPlaces(query) {
       const key = `search:${q.toLowerCase()}`;
       const hit = cacheGet(key, 24 * 3600e3);
       if (hit) return hit;
-      const json = await nominatim(`search?format=jsonv2&addressdetails=1&countrycodes=in&limit=8&accept-language=en&q=${encodeURIComponent(q)}`);
+      const json = await nominatim(
+        `search?format=jsonv2&addressdetails=1&countrycodes=in&limit=8&accept-language=en&q=${encodeURIComponent(q)}`,
+      );
       const out = { results: json.map(normalizeNominatim), source: "nominatim", retrievedAt: new Date().toISOString() };
       cacheSet(key, out);
       return out;
@@ -152,8 +168,12 @@ export async function reverseGeocode([lat, lon]) {
         const key = `rev:${lat.toFixed(4)},${lon.toFixed(4)}`;
         const hit = cacheGet(key, 24 * 3600e3);
         if (hit) return hit;
-        const json = await nominatim(`reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en&lat=${lat}&lon=${lon}`);
-        const out = json?.error ? { place: null, error: json.error } : { place: normalizeNominatim(json), retrievedAt: new Date().toISOString() };
+        const json = await nominatim(
+          `reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en&lat=${lat}&lon=${lon}`,
+        );
+        const out = json?.error
+          ? { place: null, error: json.error }
+          : { place: normalizeNominatim(json), retrievedAt: new Date().toISOString() };
         cacheSet(key, out);
         return out;
       },
@@ -162,16 +182,36 @@ export async function reverseGeocode([lat, lon]) {
   ]);
   const p = osm.place ?? {};
   const resolution = "point (reverse geocoded)";
-  const named = (v, src, note) => (v ? sv(v, null, src, { type: "reference", resolution, note }) : missing(null, "Not identified at this point", { source: src }));
+  const named = (v, src, note) =>
+    v
+      ? sv(v, null, src, { type: "reference", resolution, note })
+      : missing(null, "Not identified at this point", { source: src });
   return {
     lat: round(lat, 6),
     lon: round(lon, 6),
     inIndia: Boolean(admin.state),
-    state: admin.state ? sv(admin.state, null, "boundaries", { type: "reference", resolution: "state boundary" }) : named(p.state, "nominatim"),
-    district: admin.district ? sv(admin.district, null, "boundaries", { type: "reference", resolution: "district boundary (~2019)" }) : named(p.district, "nominatim"),
-    subdistrict: admin.subdistrict ? sv(admin.subdistrict, null, "boundaries", { type: "reference", resolution: "sub-district (tehsil/taluka) boundary (~2019)" }) : named(p.tehsil, "nominatim"),
-    block: missing(null, "Block boundaries are not available in open, verifiable data; use the district/tehsil and point location.", { source: "boundaries" }),
-    village: named(p.village || p.town, "nominatim", "Nearest named place in OpenStreetMap — not an official village boundary"),
+    state: admin.state
+      ? sv(admin.state, null, "boundaries", { type: "reference", resolution: "state boundary" })
+      : named(p.state, "nominatim"),
+    district: admin.district
+      ? sv(admin.district, null, "boundaries", { type: "reference", resolution: "district boundary (~2019)" })
+      : named(p.district, "nominatim"),
+    subdistrict: admin.subdistrict
+      ? sv(admin.subdistrict, null, "boundaries", {
+          type: "reference",
+          resolution: "sub-district (tehsil/taluka) boundary (~2019)",
+        })
+      : named(p.tehsil, "nominatim"),
+    block: missing(
+      null,
+      "Block boundaries are not available in open, verifiable data; use the district/tehsil and point location.",
+      { source: "boundaries" },
+    ),
+    village: named(
+      p.village || p.town,
+      "nominatim",
+      "Nearest named place in OpenStreetMap — not an official village boundary",
+    ),
     locality: named(p.locality, "nominatim", "OpenStreetMap neighbourhood/suburb, if mapped"),
     displayName: p.displayName ?? null,
     adminSlug: admin.stateSlug ?? null,
@@ -183,8 +223,28 @@ export async function reverseGeocode([lat, lon]) {
 // ------------------------------------------------------------------ weather
 const FORECAST = "https://api.open-meteo.com/v1/forecast";
 const ARCHIVE = "https://archive-api.open-meteo.com/v1/archive";
-const CURRENT_VARS = ["temperature_2m", "apparent_temperature", "relative_humidity_2m", "precipitation", "rain", "weather_code", "wind_speed_10m", "wind_direction_10m", "surface_pressure", "cloud_cover", "shortwave_radiation"];
-const DAILY_VARS = ["temperature_2m_max", "temperature_2m_min", "precipitation_sum", "precipitation_probability_max", "wind_speed_10m_max", "et0_fao_evapotranspiration", "shortwave_radiation_sum"];
+const CURRENT_VARS = [
+  "temperature_2m",
+  "apparent_temperature",
+  "relative_humidity_2m",
+  "precipitation",
+  "rain",
+  "weather_code",
+  "wind_speed_10m",
+  "wind_direction_10m",
+  "surface_pressure",
+  "cloud_cover",
+  "shortwave_radiation",
+];
+const DAILY_VARS = [
+  "temperature_2m_max",
+  "temperature_2m_min",
+  "precipitation_sum",
+  "precipitation_probability_max",
+  "wind_speed_10m_max",
+  "et0_fao_evapotranspiration",
+  "shortwave_radiation_sum",
+];
 const SOIL_MOISTURE = ["soil_moisture_0_to_1cm", "soil_moisture_3_to_9cm", "soil_moisture_9_to_27cm"];
 
 /** Current conditions, 7-day forecast and modelled soil moisture. */
@@ -216,7 +276,13 @@ export async function fetchHistory([lat, lon], today = new Date()) {
       const start = `${today.getFullYear() - 10}-01-01`;
       const url = `${ARCHIVE}?latitude=${lat}&longitude=${lon}&start_date=${start}&end_date=${end}&daily=precipitation_sum,temperature_2m_mean,relative_humidity_2m_mean&timezone=Asia%2FKolkata`;
       const json = await getJson(url, { timeout: 40000 });
-      const out = { daily: json.daily, latitude: json.latitude, longitude: json.longitude, source: "openMeteoArchive", retrievedAt: new Date().toISOString() };
+      const out = {
+        daily: json.daily,
+        latitude: json.latitude,
+        longitude: json.longitude,
+        source: "openMeteoArchive",
+        retrievedAt: new Date().toISOString(),
+      };
       cacheSet(key, out);
       return out;
     },
@@ -230,13 +296,21 @@ export async function fetchPointsWeather(points) {
   const key = `pts:${lat}:${lon}`.slice(0, 200);
   const hit = cacheGet(key, 30 * 60e3);
   if (hit) return hit;
-  const json = await getJson(`${FORECAST}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&daily=precipitation_sum&past_days=30&forecast_days=1&timezone=Asia%2FKolkata`, { timeout: 30000 });
+  const json = await getJson(
+    `${FORECAST}?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m&daily=precipitation_sum&past_days=30&forecast_days=1&timezone=Asia%2FKolkata`,
+    { timeout: 30000 },
+  );
   const list = Array.isArray(json) ? json : [json];
   const out = list.map((r, i) => ({
     ...points[i],
     temp: r.current?.temperature_2m ?? null,
     humidity: r.current?.relative_humidity_2m ?? null,
-    rain30: r.daily?.precipitation_sum ? round(r.daily.precipitation_sum.slice(0, 30).reduce((s, v) => s + (v ?? 0), 0), 0) : null,
+    rain30: r.daily?.precipitation_sum
+      ? round(
+          r.daily.precipitation_sum.slice(0, 30).reduce((s, v) => s + (v ?? 0), 0),
+          0,
+        )
+      : null,
     time: r.current?.time ?? null,
   }));
   cacheSet(key, out);
@@ -262,7 +336,8 @@ export async function fetchSoil([lat, lon]) {
       const key = `soil:${lat.toFixed(3)},${lon.toFixed(3)}`;
       const hit = cacheGet(key, 7 * 864e5);
       if (hit) return hit;
-      const query = (la, lo) => `${SOILGRIDS_URL}?lon=${lo.toFixed(5)}&lat=${la.toFixed(5)}&${SOILGRIDS_PROPS.map((p) => `property=${p}`).join("&")}&depth=0-5cm&depth=5-15cm&depth=15-30cm&value=mean`;
+      const query = (la, lo) =>
+        `${SOILGRIDS_URL}?lon=${lo.toFixed(5)}&lat=${la.toFixed(5)}&${SOILGRIDS_PROPS.map((p) => `property=${p}`).join("&")}&depth=0-5cm&depth=5-15cm&depth=15-30cm&value=mean`;
       let json = await getJson(query(lat, lon), { timeout: 45000 });
       let sample = [lat, lon];
       const empty = (j) => !j?.properties?.layers?.some((l) => l.depths.some((d) => d.values.mean != null));
@@ -273,7 +348,12 @@ export async function fetchSoil([lat, lon]) {
         json = await getJson(query(la, lo), { timeout: 45000 });
         sample = [la, lo];
       }
-      const out = { json: empty(json) ? null : json, sample, source: "soilgrids", retrievedAt: new Date().toISOString() };
+      const out = {
+        json: empty(json) ? null : json,
+        sample,
+        source: "soilgrids",
+        retrievedAt: new Date().toISOString(),
+      };
       cacheSet(key, out);
       return out;
     },
@@ -281,7 +361,12 @@ export async function fetchSoil([lat, lon]) {
     if (r.parsed) return r; // backend already parsed
     if (!r.json) return { masked: true, sample: r.sample, retrievedAt: r.retrievedAt, via: r.via };
     const offsetKm = haversineKm([lat, lon], r.sample);
-    return { ...parseSoilgrids(r.json, { offsetKm: offsetKm > 0.05 ? offsetKm : 0 }), sample: r.sample, retrievedAt: r.retrievedAt, via: r.via };
+    return {
+      ...parseSoilgrids(r.json, { offsetKm: offsetKm > 0.05 ? offsetKm : 0 }),
+      sample: r.sample,
+      retrievedAt: r.retrievedAt,
+      via: r.via,
+    };
   });
 }
 
@@ -293,8 +378,14 @@ export async function fetchMarketPrices({ state, district }) {
     if (typeof data === "string") throw Object.assign(new Error("no backend"), { code: "API_HTML" });
     return data;
   } catch (e) {
-    if (isApiUnavailable(e)) return { unavailable: true, reason: "Mandi prices need the AgriSmart API with a data.gov.in key (AGMARKNET). Not available on the static site." };
-    if (e.response?.status === 503) return { unavailable: true, reason: e.response.data?.detail ?? "Market price service not configured." };
+    if (isApiUnavailable(e))
+      return {
+        unavailable: true,
+        reason:
+          "Mandi prices need the AgriSmart API with a data.gov.in key (AGMARKNET). Not available on the static site.",
+      };
+    if (e.response?.status === 503)
+      return { unavailable: true, reason: e.response.data?.detail ?? "Market price service not configured." };
     throw e;
   }
 }

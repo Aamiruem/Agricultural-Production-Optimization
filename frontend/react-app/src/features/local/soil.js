@@ -101,9 +101,20 @@ export function parseSoilgrids(json, { sampledAt, offsetKm = 0 } = {}) {
   const ph = val("phh2o");
   const cec = val("cec");
   const bdod = val("bdod");
-  const resolution = offsetKm ? `250 m grid cell ${round(offsetKm, 1)} km from your point (your point is masked, e.g. built-up)` : "250 m grid cell";
-  const meta = { type: "modelled", resolution, observedAt: "SoilGrids 2.0 (2020 release)", confidence: "medium", note: "0–30 cm depth-weighted mean" };
-  const pick = (v, unit, digits = 1, extra = {}) => (v == null ? missing(unit, "Not available at this location in SoilGrids (masked or no data).", { source: "soilgrids" }) : sv(round(v, digits), unit, "soilgrids", { ...meta, ...extra }));
+  const resolution = offsetKm
+    ? `250 m grid cell ${round(offsetKm, 1)} km from your point (your point is masked, e.g. built-up)`
+    : "250 m grid cell";
+  const meta = {
+    type: "modelled",
+    resolution,
+    observedAt: "SoilGrids 2.0 (2020 release)",
+    confidence: "medium",
+    note: "0–30 cm depth-weighted mean",
+  };
+  const pick = (v, unit, digits = 1, extra = {}) =>
+    v == null
+      ? missing(unit, "Not available at this location in SoilGrids (masked or no data).", { source: "soilgrids" })
+      : sv(round(v, digits), unit, "soilgrids", { ...meta, ...extra });
   const texture = usdaTexture(sand, silt, clay);
   const om = soc == null ? null : (soc / 10) * 1.724;
   const awc = availableWaterMmPerM(sand, clay, om);
@@ -113,12 +124,33 @@ export function parseSoilgrids(json, { sampledAt, offsetKm = 0 } = {}) {
     silt: pick(silt, "%", 0),
     clay: pick(clay, "%", 0),
     organicCarbon: pick(soc == null ? null : soc / 10, "%", 2, { note: "Soil organic carbon, 0–30 cm" }),
-    totalNitrogen: pick(n, "g/kg", 2, { note: "Total nitrogen — not the same as Soil Health Card 'available N' (kg/ha)" }),
+    totalNitrogen: pick(n, "g/kg", 2, {
+      note: "Total nitrogen — not the same as Soil Health Card 'available N' (kg/ha)",
+    }),
     cec: pick(cec, "cmol(+)/kg", 1),
     bulkDensity: pick(bdod, "g/cm³", 2),
-    texture: texture ? sv(texture, null, "derived", { type: "estimated", resolution, note: "USDA texture class from SoilGrids sand/silt/clay" }) : missing(null, "Texture needs sand, silt and clay.", { source: "derived" }),
-    waterHolding: awc == null ? missing("mm/m", "Needs sand, clay and organic carbon.", { source: "derived" }) : sv(round(awc, 0), "mm per m", "derived", { type: "estimated", resolution, note: "Saxton & Rawls (2006) pedotransfer estimate" }),
-    drainage: texture ? sv(drainageFromTexture(texture), null, "derived", { type: "estimated", resolution, note: "Inferred from texture class" }) : missing(null, "Needs texture.", { source: "derived" }),
+    texture: texture
+      ? sv(texture, null, "derived", {
+          type: "estimated",
+          resolution,
+          note: "USDA texture class from SoilGrids sand/silt/clay",
+        })
+      : missing(null, "Texture needs sand, silt and clay.", { source: "derived" }),
+    waterHolding:
+      awc == null
+        ? missing("mm/m", "Needs sand, clay and organic carbon.", { source: "derived" })
+        : sv(round(awc, 0), "mm per m", "derived", {
+            type: "estimated",
+            resolution,
+            note: "Saxton & Rawls (2006) pedotransfer estimate",
+          }),
+    drainage: texture
+      ? sv(drainageFromTexture(texture), null, "derived", {
+          type: "estimated",
+          resolution,
+          note: "Inferred from texture class",
+        })
+      : missing(null, "Needs texture.", { source: "derived" }),
     sampledAt: sampledAt ?? null,
     offsetKm,
   };
@@ -130,11 +162,28 @@ export const MICRO_LIMITS = { S: 10, Zn: 0.6, Fe: 4.5, B: 0.5 };
 /** Sourced values from a user's Soil Health Card / lab report. */
 export function userSoilValues(card = {}) {
   const out = {};
-  const units = { N: "kg/ha", P: "kg/ha", K: "kg/ha", ph: "pH", ec: "dS/m", oc: "%", S: "ppm", Zn: "ppm", Fe: "ppm", B: "ppm", moisture: "%" };
+  const units = {
+    N: "kg/ha",
+    P: "kg/ha",
+    K: "kg/ha",
+    ph: "pH",
+    ec: "dS/m",
+    oc: "%",
+    S: "ppm",
+    Zn: "ppm",
+    Fe: "ppm",
+    B: "ppm",
+    moisture: "%",
+  };
   for (const [key, unit] of Object.entries(units)) {
     const v = card[key];
     if (v === "" || v == null || Number.isNaN(Number(v))) continue;
-    out[key] = sv(Number(v), unit, "user", { type: "measured", resolution: "your field (sample)", observedAt: card.sampleDate || null, confidence: "high" });
+    out[key] = sv(Number(v), unit, "user", {
+      type: "measured",
+      resolution: "your field (sample)",
+      observedAt: card.sampleDate || null,
+      confidence: "high",
+    });
   }
   return out;
 }
@@ -146,9 +195,16 @@ export function soilIndicators({ ph, ec, micro = {} }) {
     if (ph > 8.5) out.push({ key: "alkalinity", label: "Alkaline / possibly sodic", detail: `pH ${ph} > 8.5` });
     else if (ph < 5.5) out.push({ key: "acidity", label: "Strongly acidic", detail: `pH ${ph} < 5.5` });
   }
-  if (ec != null && ec >= 1) out.push({ key: "salinity", label: ec >= 4 ? "Saline" : "Salinity building up", detail: `EC ${ec} dS/m` });
+  if (ec != null && ec >= 1)
+    out.push({ key: "salinity", label: ec >= 4 ? "Saline" : "Salinity building up", detail: `EC ${ec} dS/m` });
   for (const [k, limit] of Object.entries(MICRO_LIMITS)) {
-    if (micro[k] != null) out.push({ key: k, label: `${k} ${micro[k] < limit ? "deficient" : "sufficient"}`, detail: `${micro[k]} ppm vs critical ${limit} ppm`, deficient: micro[k] < limit });
+    if (micro[k] != null)
+      out.push({
+        key: k,
+        label: `${k} ${micro[k] < limit ? "deficient" : "sufficient"}`,
+        detail: `${micro[k]} ppm vs critical ${limit} ppm`,
+        deficient: micro[k] < limit,
+      });
   }
   return out;
 }

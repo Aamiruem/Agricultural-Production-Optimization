@@ -21,9 +21,19 @@ export const MAP_LAYERS = [
 ];
 
 export const UNAVAILABLE_LAYERS = [
-  { label: "Irrigation availability", reason: "No open, verifiable irrigation-coverage API is connected (India-WRIS / Bhuvan layers need agreements or are not machine-readable here). Enter your own irrigation status in the farm form." },
-  { label: "Village / gram panchayat / block boundaries", reason: "No openly licensed national dataset was verified; villages are located as points through OpenStreetMap." },
-  { label: "Satellite crop-type map", reason: "Not connected; ESA WorldCover was unreachable during testing, so it is not shown." },
+  {
+    label: "Irrigation availability",
+    reason:
+      "No open, verifiable irrigation-coverage API is connected (India-WRIS / Bhuvan layers need agreements or are not machine-readable here). Enter your own irrigation status in the farm form.",
+  },
+  {
+    label: "Village / gram panchayat / block boundaries",
+    reason: "No openly licensed national dataset was verified; villages are located as points through OpenStreetMap.",
+  },
+  {
+    label: "Satellite crop-type map",
+    reason: "Not connected; ESA WorldCover was unreachable during testing, so it is not shown.",
+  },
 ];
 
 const SOIL_COLORS = {
@@ -46,7 +56,11 @@ const SOIL_COLORS = {
 export async function buildChoropleth(id, { crop } = {}) {
   if (id === "none") return null;
   if (["temp", "humidity", "rain30"].includes(id)) {
-    const pts = STATES.filter((s) => s.lat != null && s.lon != null).map((s) => ({ name: s.name, lat: s.lat, lon: s.lon }));
+    const pts = STATES.filter((s) => s.lat != null && s.lon != null).map((s) => ({
+      name: s.name,
+      lat: s.lat,
+      lon: s.lon,
+    }));
     const data = await fetchPointsWeather(pts);
     const key = { temp: "temp", humidity: "humidity", rain30: "rain30" }[id];
     const values = Object.fromEntries(data.map((d) => [d.name, d[key]]));
@@ -67,7 +81,9 @@ export async function buildChoropleth(id, { crop } = {}) {
     const values = {};
     for (const s of STATES) {
       const first = ATLAS_STATES[s.name]?.soils?.[0] ?? (Array.isArray(s.soils) ? s.soils[0] : null);
-      if (first) values[s.name] = Object.keys(SOIL_COLORS).find((k) => String(first).toLowerCase().includes(k.toLowerCase())) ?? "Other";
+      if (first)
+        values[s.name] =
+          Object.keys(SOIL_COLORS).find((k) => String(first).toLowerCase().includes(k.toLowerCase())) ?? "Other";
     }
     const used = new Set(Object.values(values));
     return {

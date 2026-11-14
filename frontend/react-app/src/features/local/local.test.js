@@ -25,12 +25,13 @@ describe("geo", () => {
   });
 
   it("shrinks east-west distance with latitude", () => {
-    const at = (lat) => ringAreaM2([
-      [lat, 0],
-      [lat, 0.01],
-      [lat + 0.01, 0.01],
-      [lat + 0.01, 0],
-    ]);
+    const at = (lat) =>
+      ringAreaM2([
+        [lat, 0],
+        [lat, 0.01],
+        [lat + 0.01, 0.01],
+        [lat + 0.01, 0],
+      ]);
     expect(at(60) / at(0)).toBeCloseTo(Math.cos((60 * Math.PI) / 180), 2);
   });
 
@@ -56,8 +57,20 @@ describe("geo", () => {
           geometry: {
             type: "Polygon",
             coordinates: [
-              [[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]],
-              [[4, 4], [6, 4], [6, 6], [4, 6], [4, 4]],
+              [
+                [0, 0],
+                [10, 0],
+                [10, 10],
+                [0, 10],
+                [0, 0],
+              ],
+              [
+                [4, 4],
+                [6, 4],
+                [6, 6],
+                [4, 6],
+                [4, 4],
+              ],
             ],
           },
         },
@@ -96,7 +109,10 @@ describe("climate", () => {
         p.push(m >= 6 && m <= 9 ? (y === 2026 ? 2 : 5) : 0.5);
       }
     }
-    const h = summarizeHistory({ time, precipitation_sum: p, temperature_2m_mean: p.map(() => 25), relative_humidity_2m_mean: p.map(() => 60) }, new Date("2026-09-10"));
+    const h = summarizeHistory(
+      { time, precipitation_sum: p, temperature_2m_mean: p.map(() => 25), relative_humidity_2m_mean: p.map(() => 60) },
+      new Date("2026-09-10"),
+    );
     expect(h.years).toHaveLength(10);
     expect(h.monthly[6].rain).toBeCloseTo(155, 0); // July: 31 × 5 mm
     expect(h.departure.category).toBe("Large deficient"); // 2 vs 5 mm/day = -60%: IMD "large deficient" is -60% to -99%
@@ -106,7 +122,12 @@ describe("climate", () => {
   it("flags heat, waterlogging and water stress from the forecast", () => {
     const flags = classifyConditions({
       current: { relative_humidity_2m: 80 },
-      daily: { temperature_2m_max: [41, 39], temperature_2m_min: [28, 27], precipitation_sum: [70, 0], et0_fao_evapotranspiration: [6, 6] },
+      daily: {
+        temperature_2m_max: [41, 39],
+        temperature_2m_min: [28, 27],
+        precipitation_sum: [70, 0],
+        et0_fao_evapotranspiration: [6, 6],
+      },
     }).flags.map((f) => f.id);
     expect(flags).toEqual(expect.arrayContaining(["heat", "humid", "waterlogging"]));
   });
@@ -127,8 +148,23 @@ describe("soil", () => {
   });
 
   it("parses SoilGrids units and flags masked cells as missing (no guesses)", () => {
-    const layer = (name, d, values) => ({ name, unit_measure: { d_factor: d }, depths: ["0-5cm", "5-15cm", "15-30cm"].map((label, i) => ({ label, values: { mean: values[i] } })) });
-    const json = { properties: { layers: [layer("phh2o", 10, [78, 79, 78]), layer("clay", 10, [247, 246, 287]), layer("sand", 10, [387, 388, 360]), layer("silt", 10, [366, 366, 353]), layer("soc", 10, [130, 88, 80]), layer("nitrogen", 100, [103, 76, 64])] } };
+    const layer = (name, d, values) => ({
+      name,
+      unit_measure: { d_factor: d },
+      depths: ["0-5cm", "5-15cm", "15-30cm"].map((label, i) => ({ label, values: { mean: values[i] } })),
+    });
+    const json = {
+      properties: {
+        layers: [
+          layer("phh2o", 10, [78, 79, 78]),
+          layer("clay", 10, [247, 246, 287]),
+          layer("sand", 10, [387, 388, 360]),
+          layer("silt", 10, [366, 366, 353]),
+          layer("soc", 10, [130, 88, 80]),
+          layer("nitrogen", 100, [103, 76, 64]),
+        ],
+      },
+    };
     expect(soilgridsLayer(json, "phh2o")).toBeCloseTo(7.83, 2);
     const s = parseSoilgrids(json);
     expect(s.ph.value).toBe(7.8);
@@ -143,7 +179,18 @@ describe("dataset schema detection", () => {
     const text = readFileSync(path.join(ROOT, "frontend/react-app/public/data/crop_yield.csv"), "utf8");
     const { headers, rows } = parseCsv(text);
     const s = detectSchema(headers, rows);
-    expect(s.mapping).toMatchObject({ crop: "Crop", year: "Crop_Year", season: "Season", state: "State", area: "Area", production: "Production", rainfall: "Annual_Rainfall", fertilizer: "Fertilizer", pesticide: "Pesticide", yield: "Yield" });
+    expect(s.mapping).toMatchObject({
+      crop: "Crop",
+      year: "Crop_Year",
+      season: "Season",
+      state: "State",
+      area: "Area",
+      production: "Production",
+      rainfall: "Annual_Rainfall",
+      fertilizer: "Fertilizer",
+      pesticide: "Pesticide",
+      yield: "Yield",
+    });
     expect(s.hasLocation).toBe(true);
     expect(s.hasCoordinates).toBe(false);
     const canon = canonicalRows(rows, s.mapping);
@@ -159,20 +206,39 @@ describe("dataset schema detection", () => {
     const text = readFileSync(path.join(ROOT, "frontend/react-app/public/data/crop_data.csv"), "utf8");
     const { headers, rows } = parseCsv(text);
     const s = detectSchema(headers, rows);
-    expect(s.mapping).toMatchObject({ N: "N", P: "P", K: "K", temperature: "temperature", humidity: "humidity", ph: "ph", rainfall: "rainfall", crop: "label" });
+    expect(s.mapping).toMatchObject({
+      N: "N",
+      P: "P",
+      K: "K",
+      temperature: "temperature",
+      humidity: "humidity",
+      ph: "ph",
+      rainfall: "rainfall",
+      crop: "label",
+    });
     expect(s.hasLocation).toBe(false);
   });
 
   it("detects coordinates and messy headers in an uploaded file", () => {
-    const { headers, rows } = parseCsv("Village Name,Latitude,Longitude,Soil pH,Crop Type\nRampur,26.1,80.2,7.1,Wheat\nSitapur,27.5,80.6,6.8,Rice");
+    const { headers, rows } = parseCsv(
+      "Village Name,Latitude,Longitude,Soil pH,Crop Type\nRampur,26.1,80.2,7.1,Wheat\nSitapur,27.5,80.6,6.8,Rice",
+    );
     const s = detectSchema(headers, rows);
-    expect(s.mapping).toMatchObject({ village: "Village Name", lat: "Latitude", lon: "Longitude", ph: "Soil pH", crop: "Crop Type" });
+    expect(s.mapping).toMatchObject({
+      village: "Village Name",
+      lat: "Latitude",
+      lon: "Longitude",
+      ph: "Soil pH",
+      crop: "Crop Type",
+    });
     expect(s.hasCoordinates).toBe(true);
   });
 
   it("keeps the static copies identical to the AIML datasets", () => {
     for (const f of ["crop_yield.csv", "crop_data.csv"]) {
-      expect(readFileSync(path.join(ROOT, "frontend/react-app/public/data", f), "utf8")).toBe(readFileSync(path.join(ROOT, "AIML/datasets", f), "utf8"));
+      expect(readFileSync(path.join(ROOT, "frontend/react-app/public/data", f), "utf8")).toBe(
+        readFileSync(path.join(ROOT, "AIML/datasets", f), "utf8"),
+      );
     }
   });
 });
@@ -184,8 +250,10 @@ describe("matching (shared hand-computed cases)", () => {
       const res = compareProfiles(c.profile, c.local, { now: new Date(c.now) });
       expect(res.score).toBeCloseTo(c.expected.score, 1);
       expect(res.coverage).toBeCloseTo(c.expected.coverage, 1);
-      for (const [k, st] of Object.entries(c.expected.status)) expect(res.rows.find((r) => r.key === k).status, k).toBe(st);
-      for (const [k, sim] of Object.entries(c.expected.similarity)) expect(res.rows.find((r) => r.key === k).similarity, k).toBeCloseTo(sim, 2);
+      for (const [k, st] of Object.entries(c.expected.status))
+        expect(res.rows.find((r) => r.key === k).status, k).toBe(st);
+      for (const [k, sim] of Object.entries(c.expected.similarity))
+        expect(res.rows.find((r) => r.key === k).similarity, k).toBeCloseTo(sim, 2);
       expect(res.confidence.temporal.level).toBe(c.expected.temporal);
       expect(res.disclaimer).toMatch(/not the accuracy/);
     });
@@ -210,7 +278,16 @@ describe("data quality", () => {
       { state: "Punjab", crop: "Wheat", season: "Rabi", year: 2020, area: 100, production: 500, yield: 5, ph: 7 },
       { state: "Punjab", crop: "Wheat", season: "Rabi", year: 2020, area: 100, production: 500, yield: 5, ph: 7 },
       { state: "Punjab", crop: "Wheat", season: "Rabi", year: 2020, area: 100, production: 900, yield: 5, ph: 14 },
-      { state: "Punjab", crop: "Rice", season: "Kharif", year: 2020, area: 100, production: null, yield: null, ph: null },
+      {
+        state: "Punjab",
+        crop: "Rice",
+        season: "Kharif",
+        year: 2020,
+        area: 100,
+        production: null,
+        yield: null,
+        ph: null,
+      },
     ];
     const q = validateDataset(rows, { now: new Date("2026-11-14") });
     expect(q.duplicates).toBe(1);
@@ -223,8 +300,25 @@ describe("data quality", () => {
 });
 
 describe("crop suitability", () => {
-  const monthly = Array.from({ length: 12 }, (_, i) => ({ month: i + 1, temp: [14, 17, 23, 29, 33, 33, 31, 30, 29, 26, 20, 15][i], rain: [20, 25, 20, 10, 15, 70, 200, 180, 90, 10, 5, 10][i] }));
-  const ctx = { state: "Punjab", season: "Rabi", monthlyNormals: monthly, annualRain: 655, irrigation: true, soilClasses: ["Alluvial"], texture: "Loam", ph: 7.8, npk: null, humidity: 60, stateCrops: ["Wheat", "Rice", "Rapeseed &Mustard", "Gram", "Barley"], conditions: [] };
+  const monthly = Array.from({ length: 12 }, (_, i) => ({
+    month: i + 1,
+    temp: [14, 17, 23, 29, 33, 33, 31, 30, 29, 26, 20, 15][i],
+    rain: [20, 25, 20, 10, 15, 70, 200, 180, 90, 10, 5, 10][i],
+  }));
+  const ctx = {
+    state: "Punjab",
+    season: "Rabi",
+    monthlyNormals: monthly,
+    annualRain: 655,
+    irrigation: true,
+    soilClasses: ["Alluvial"],
+    texture: "Loam",
+    ph: 7.8,
+    npk: null,
+    humidity: 60,
+    stateCrops: ["Wheat", "Rice", "Rapeseed &Mustard", "Gram", "Barley"],
+    conditions: [],
+  };
 
   it("ranks Rabi crops in Punjab and excludes out-of-season ones", () => {
     const r = scoreCrops(ctx);

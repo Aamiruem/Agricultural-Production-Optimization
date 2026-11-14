@@ -71,7 +71,11 @@ const ACID_LOVING = new Set(["Tea", "Coffee", "Rubber", "Cardamom", "Pineapple",
 
 const SEASON_MONTHS = { Kharif: [6, 7, 8, 9, 10], Rabi: [11, 12, 1, 2, 3], Zaid: [3, 4, 5] };
 const SOWING = { Kharif: "June–July (with the monsoon)", Rabi: "October–December", Zaid: "March–April" };
-const WATER_MM = { Low: "low (≈ 300–500 mm per season)", Medium: "medium (≈ 500–900 mm)", High: "high (> 900 mm or assured irrigation)" };
+const WATER_MM = {
+  Low: "low (≈ 300–500 mm per season)",
+  Medium: "medium (≈ 500–900 mm)",
+  High: "high (> 900 mm or assured irrigation)",
+};
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 
@@ -103,7 +107,18 @@ export function scoreCrops(ctx) {
 
   let ml = null;
   if (ctx.npk && [ctx.npk.N, ctx.npk.P, ctx.npk.K].every((v) => v != null) && ctx.ph != null && seasonTemp != null) {
-    const res = recommendLocal({ N: ctx.npk.N, P: ctx.npk.P, K: ctx.npk.K, temperature: seasonTemp, humidity: ctx.humidity ?? 70, ph: ctx.ph, rainfall: seasonRain ?? ctx.annualRain / 3 }, 22);
+    const res = recommendLocal(
+      {
+        N: ctx.npk.N,
+        P: ctx.npk.P,
+        K: ctx.npk.K,
+        temperature: seasonTemp,
+        humidity: ctx.humidity ?? 70,
+        ph: ctx.ph,
+        rainfall: seasonRain ?? ctx.annualRain / 3,
+      },
+      22,
+    );
     const max = Math.max(...res.top.map((t) => t.confidence));
     ml = Object.fromEntries(res.top.map((t) => [t.crop, t.confidence / max]));
   }
@@ -120,7 +135,9 @@ export function scoreCrops(ctx) {
       const t = perennial ? avg(ctx.monthlyNormals?.map((m) => m.temp)) : seasonTemp;
       const d = Math.abs(t - c.temp);
       parts.temperature = clamp01(1 - d / 8);
-      (parts.temperature >= 0.7 ? reasons : cautions).push(`${perennial ? "Annual" : ctx.season} mean temperature ${round(t, 1)} °C vs ~${c.temp} °C optimum`);
+      (parts.temperature >= 0.7 ? reasons : cautions).push(
+        `${perennial ? "Annual" : ctx.season} mean temperature ${round(t, 1)} °C vs ~${c.temp} °C optimum`,
+      );
     }
     // Water: rainfall vs need, relaxed when irrigation is available.
     if (ctx.annualRain != null) {
@@ -130,7 +147,8 @@ export function scoreCrops(ctx) {
         reasons.push(`Irrigation available; local rain ${ctx.annualRain} mm/yr vs ~${c.rain} mm need`);
       } else {
         parts.water = ratio >= 1 ? (ratio > 2.5 ? 0.6 : 1) : clamp01(ratio);
-        if (ratio < 0.8) cautions.push(`Rain-fed: local rain ${ctx.annualRain} mm/yr is below the ~${c.rain} mm the crop needs`);
+        if (ratio < 0.8)
+          cautions.push(`Rain-fed: local rain ${ctx.annualRain} mm/yr is below the ~${c.rain} mm the crop needs`);
         else if (ratio > 2.5) cautions.push(`Very wet location (${ctx.annualRain} mm/yr) — drainage needed`);
         else reasons.push(`Local rain ${ctx.annualRain} mm/yr meets the ~${c.rain} mm need`);
       }
@@ -138,10 +156,15 @@ export function scoreCrops(ctx) {
     // Soil class / texture.
     if (ctx.soilClasses?.length || ctx.texture) {
       const classes = (ctx.soilClasses ?? []).map((s) => s.toLowerCase());
-      const direct = c.soils.some((s) => classes.some((x) => x.includes(s.toLowerCase()) || s.toLowerCase().includes(x)));
+      const direct = c.soils.some((s) =>
+        classes.some((x) => x.includes(s.toLowerCase()) || s.toLowerCase().includes(x)),
+      );
       const fam = c.soils.some((s) => (SOIL_FAMILY[s.toLowerCase()] ?? []).includes(ctx.texture));
       parts.soil = direct ? 1 : fam ? 0.7 : 0.4;
-      if (direct || fam) reasons.push(`Grows on ${c.soils.join("/")} soils (${direct ? "regional class" : `texture ${ctx.texture}`} matches)`);
+      if (direct || fam)
+        reasons.push(
+          `Grows on ${c.soils.join("/")} soils (${direct ? "regional class" : `texture ${ctx.texture}`} matches)`,
+        );
       else cautions.push(`Prefers ${c.soils.join("/")} soils`);
     }
     // pH.
@@ -149,7 +172,9 @@ export function scoreCrops(ctx) {
       const mlProfile = ML_NAME[c.name];
       if (ACID_LOVING.has(c.name)) parts.ph = ctx.ph <= 6.5 ? 1 : ctx.ph <= 7 ? 0.5 : 0.1;
       else parts.ph = ctx.ph < 5 || ctx.ph > 8.5 ? 0.2 : ctx.ph < 5.5 || ctx.ph > 8 ? 0.6 : 1;
-      (parts.ph >= 0.6 ? reasons : cautions).push(`Soil pH ${ctx.ph}${ACID_LOVING.has(c.name) ? " (acid-soil crop)" : ""}${mlProfile ? "" : ""}`);
+      (parts.ph >= 0.6 ? reasons : cautions).push(
+        `Soil pH ${ctx.ph}${ACID_LOVING.has(c.name) ? " (acid-soil crop)" : ""}${mlProfile ? "" : ""}`,
+      );
     }
     // Local practice (state statistics).
     const yName = YIELD_NAME[c.name];
@@ -159,7 +184,8 @@ export function scoreCrops(ctx) {
     // ML (only with real soil-test NPK).
     if (ml && ML_NAME[c.name] && ml[ML_NAME[c.name]] != null) {
       parts.ml = ml[ML_NAME[c.name]];
-      if (parts.ml >= 0.5) reasons.push("ML model (trained on N, P, K, pH and climate) ranks it highly for your soil test");
+      if (parts.ml >= 0.5)
+        reasons.push("ML model (trained on N, P, K, pH and climate) ranks it highly for your soil test");
     }
 
     const W = { temperature: 0.2, water: 0.25, soil: 0.15, ph: 0.1, local: 0.15, ml: 0.15 };
@@ -168,14 +194,20 @@ export function scoreCrops(ctx) {
     const score = wSum ? (used.reduce((s, k) => s + W[k] * parts[k], 0) / wSum) * 100 : null;
 
     const meta = CROPS.find((x) => x.en === c.name);
-    const hist = historicalYield(ctx.state, c.name, perennial && !c.seasons.includes(ctx.season) ? "Whole Year" : ctx.season);
+    const hist = historicalYield(
+      ctx.state,
+      c.name,
+      perennial && !c.seasons.includes(ctx.season) ? "Whole Year" : ctx.season,
+    );
     const risks = [];
     for (const f of ctx.conditions ?? []) {
       if (f.id === "heat" && c.temp < 26) risks.push("Current heat stress is harmful to this cool-season crop");
       if (f.id === "waterlogging" && c.water !== "High") risks.push("Heavy rain forecast — waterlogging risk");
-      if ((f.id === "drought" || f.id === "water-stress") && c.water === "High" && !ctx.irrigation) risks.push("Rainfall deficit and high water need");
+      if ((f.id === "drought" || f.id === "water-stress") && c.water === "High" && !ctx.irrigation)
+        risks.push("Rainfall deficit and high water need");
       if (f.id === "cold" && c.temp >= 25) risks.push("Cold/frost risk for a warm-season crop");
-      if (f.id === "humid" && ["Potato", "Tomato", "Chilli", "Grapes", "Onion"].includes(c.name)) risks.push("Humid weather favours fungal disease");
+      if (f.id === "humid" && ["Potato", "Tomato", "Chilli", "Grapes", "Onion"].includes(c.name))
+        risks.push("Humid weather favours fungal disease");
     }
 
     return {
@@ -200,8 +232,15 @@ export function scoreCrops(ctx) {
 
   const ranked = results.filter((r) => r.inSeason && r.score != null).sort((a, b) => b.score - a.score);
   const avoid = [
-    ...results.filter((r) => !r.inSeason).map((r) => ({ crop: r.crop, reason: `Not a ${ctx.season} crop (${ATLAS_CROPS.find((x) => x.name === r.crop).seasons.join(", ")})` })),
-    ...ranked.filter((r) => r.score < 45).map((r) => ({ crop: r.crop, reason: r.cautions[0] ?? "Low overall suitability" })),
+    ...results
+      .filter((r) => !r.inSeason)
+      .map((r) => ({
+        crop: r.crop,
+        reason: `Not a ${ctx.season} crop (${ATLAS_CROPS.find((x) => x.name === r.crop).seasons.join(", ")})`,
+      })),
+    ...ranked
+      .filter((r) => r.score < 45)
+      .map((r) => ({ crop: r.crop, reason: r.cautions[0] ?? "Low overall suitability" })),
   ];
   return {
     season: ctx.season,

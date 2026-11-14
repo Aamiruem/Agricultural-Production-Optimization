@@ -49,7 +49,8 @@ function inRing(lon, lat, ring) {
 /** True if [lat, lon] lies inside a GeoJSON Polygon or MultiPolygon geometry (holes respected). */
 export function pointInGeometry([lat, lon], geometry) {
   if (!geometry) return false;
-  const polys = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.type === "MultiPolygon" ? geometry.coordinates : [];
+  const polys =
+    geometry.type === "Polygon" ? [geometry.coordinates] : geometry.type === "MultiPolygon" ? geometry.coordinates : [];
   return polys.some(([outer, ...holes]) => inRing(lon, lat, outer) && !holes.some((h) => inRing(lon, lat, h)));
 }
 

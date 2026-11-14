@@ -107,4 +107,5 @@ export function confidenceForLevel(level) {
   return "low";
 }
 
-export const isMissing = (v) => !v || v.missing || v.value == null || (typeof v.value === "number" && Number.isNaN(v.value));
+export const isMissing = (v) =>
+  !v || v.missing || v.value == null || (typeof v.value === "number" && Number.isNaN(v.value));

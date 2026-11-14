@@ -38,16 +38,39 @@ export async function loadBuiltinDataset(id) {
 }
 
 /** Build a dataset object from CSV text (built-in or uploaded). */
-export function buildDataset(text, meta = { id: "upload", label: "Your uploaded dataset", source: "user", resolution: "as detected", units: {} }) {
+export function buildDataset(
+  text,
+  meta = { id: "upload", label: "Your uploaded dataset", source: "user", resolution: "as detected", units: {} },
+) {
   const { rows, headers, errors } = parseCsv(text);
   const schema = detectSchema(headers, rows);
-  return { meta, headers, schema, rows: canonicalRows(rows, schema.mapping), rawCount: rows.length, parseErrors: errors };
+  return {
+    meta,
+    headers,
+    schema,
+    rows: canonicalRows(rows, schema.mapping),
+    rawCount: rows.length,
+    parseErrors: errors,
+  };
 }
 
 // ------------------------------------------------------------------ local data
 /** Fetch and assemble local data for a point (and optional farm inputs). */
-export async function gatherLocal({ point, areaHa = null, areaNote = null, userSoil = {}, irrigation = null, season = null, today = new Date() }) {
-  const [loc, wx, hist, soil] = await Promise.all([settle(reverseGeocode(point)), settle(fetchWeather(point)), settle(fetchHistory(point, today)), settle(fetchSoil(point))]);
+export async function gatherLocal({
+  point,
+  areaHa = null,
+  areaNote = null,
+  userSoil = {},
+  irrigation = null,
+  season = null,
+  today = new Date(),
+}) {
+  const [loc, wx, hist, soil] = await Promise.all([
+    settle(reverseGeocode(point)),
+    settle(fetchWeather(point)),
+    settle(fetchHistory(point, today)),
+    settle(fetchSoil(point)),
+  ]);
   const location = loc.ok ? loc.data : null;
   const state = location?.state?.value ?? null;
 
@@ -64,7 +87,9 @@ export async function gatherLocal({ point, areaHa = null, areaNote = null, userS
   // Agriculture: reference crop lists (state-level) + state statistics from the dataset.
   const atlasState = ATLAS_STATES[state] ?? null;
   const indiaState = STATE_BY_NAME[state] ?? null;
-  const referenceCrops = [...new Set([...(atlasState?.crops ?? []), ...(indiaState?.kharif ?? []), ...(indiaState?.rabi ?? [])].flat())]
+  const referenceCrops = [
+    ...new Set([...(atlasState?.crops ?? []), ...(indiaState?.kharif ?? []), ...(indiaState?.rabi ?? [])].flat()),
+  ]
     .map((c) => (Array.isArray(c) ? c[0] : c))
     .filter((c) => typeof c === "string");
   const yieldDs = await settle(loadBuiltinDataset("crop_yield"));
@@ -81,7 +106,10 @@ export async function gatherLocal({ point, areaHa = null, areaNote = null, userS
     analyzedAt: new Date().toISOString(),
     location,
     locationError: loc.ok ? null : loc.error,
-    area: areaHa != null ? sv(round(areaHa, 4), "ha", "user", { type: "measured", resolution: "your field", note: areaNote }) : missing("ha", "No farm area entered or drawn."),
+    area:
+      areaHa != null
+        ? sv(round(areaHa, 4), "ha", "user", { type: "measured", resolution: "your field", note: areaNote })
+        : missing("ha", "No farm area entered or drawn."),
     weather,
     weatherError: wx.ok ? null : wx.error,
     history,
@@ -97,14 +125,32 @@ export async function gatherLocal({ point, areaHa = null, areaNote = null, userS
       ec: user.ec?.value ?? null,
       micro: { S: user.S?.value, Zn: user.Zn?.value, Fe: user.Fe?.value, B: user.B?.value },
     }),
-    irrigation: irrigation == null ? missing(null, "Irrigation not specified — open data on farm-level irrigation is not available. Tell us in the farm form.") : sv(irrigation ? "Available" : "Rain-fed", null, "user", { type: "measured", resolution: "your field" }),
+    irrigation:
+      irrigation == null
+        ? missing(
+            null,
+            "Irrigation not specified — open data on farm-level irrigation is not available. Tell us in the farm form.",
+          )
+        : sv(irrigation ? "Available" : "Rain-fed", null, "user", { type: "measured", resolution: "your field" }),
     agriculture: {
-      referenceCrops: referenceCrops.length ? sv(referenceCrops, null, "atlas", { type: "reference", resolution: "state" }) : missing(null, "No reference crop list for this state."),
-      stats: stats ? sv(stats, null, "cropYieldDataset", { type: "observed", resolution: "state", observedAt: `${stats.firstYear}–${stats.latestYear}` }) : missing(null, yieldDs.ok ? "No records for this state in the dataset." : yieldDs.error),
+      referenceCrops: referenceCrops.length
+        ? sv(referenceCrops, null, "atlas", { type: "reference", resolution: "state" })
+        : missing(null, "No reference crop list for this state."),
+      stats: stats
+        ? sv(stats, null, "cropYieldDataset", {
+            type: "observed",
+            resolution: "state",
+            observedAt: `${stats.firstYear}–${stats.latestYear}`,
+          })
+        : missing(null, yieldDs.ok ? "No records for this state in the dataset." : yieldDs.error),
       zone: atlasState?.zone ?? null,
       pests,
       market: market?.ok ? market.data : { unavailable: true, reason: market?.error ?? "State not identified." },
-      groundwater: missing(null, "Groundwater levels need CGWB / India-WRIS station data, which has no open API wired here.", { source: "derived" }),
+      groundwater: missing(
+        null,
+        "Groundwater levels need CGWB / India-WRIS station data, which has no open API wired here.",
+        { source: "derived" },
+      ),
     },
   };
 }
@@ -151,7 +197,11 @@ export function localForMatching(local) {
 }
 
 /** Compare a dataset with the gathered local data. */
-export function compareDataset(dataset, local, { weights = DEFAULT_WEIGHTS, cropFilter = null, now = new Date() } = {}) {
+export function compareDataset(
+  dataset,
+  local,
+  { weights = DEFAULT_WEIGHTS, cropFilter = null, now = new Date() } = {},
+) {
   const lm = localForMatching(local);
   const { schema } = dataset;
   if (!schema.hasLocation) {
@@ -159,13 +209,19 @@ export function compareDataset(dataset, local, { weights = DEFAULT_WEIGHTS, crop
       dataset: dataset.meta,
       schema,
       noLocation: true,
-      message: "This dataset has no location columns (state, district, village or latitude/longitude), so it cannot be matched to a place. It is used as crop requirement profiles in the suitability engine instead.",
+      message:
+        "This dataset has no location columns (state, district, village or latitude/longitude), so it cannot be matched to a place. It is used as crop requirement profiles in the suitability engine instead.",
     };
   }
   let records;
   let level;
   if (schema.hasCoordinates) {
-    const near = dataset.rows.filter((r) => r.lat != null && r.lon != null).map((r) => ({ r, d: Math.hypot(r.lat - lm.lat, (r.lon - lm.lon) * Math.cos((lm.lat * Math.PI) / 180)) * 111.32 }));
+    const near = dataset.rows
+      .filter((r) => r.lat != null && r.lon != null)
+      .map((r) => ({
+        r,
+        d: Math.hypot(r.lat - lm.lat, (r.lon - lm.lon) * Math.cos((lm.lat * Math.PI) / 180)) * 111.32,
+      }));
     records = near.filter((x) => x.d <= 50).map((x) => x.r);
     level = "coordinates (within 50 km)";
   }
@@ -222,11 +278,18 @@ export async function predictCropYield(local, { crop, season, areaHa, year = new
   const dsState = state === "Jammu & Kashmir" ? "Jammu and Kashmir" : state;
   const dsSeason = season === "Zaid" ? "Summer" : season;
   const hist = historicalYield(state, crop, season);
-  const res = await predictYield({ crop: yName, season: dsSeason, state: dsState, year, area_ha: areaHa, annual_rainfall: local.history?.annualMean ?? undefined });
+  const res = await predictYield({
+    crop: yName,
+    season: dsSeason,
+    state: dsState,
+    year,
+    area_ha: areaHa,
+    annual_rainfall: local.history?.annualMean ?? undefined,
+  });
   const yieldTHa = res.yield_t_ha;
   const thin = !hist || hist.n < 5;
-  const low = res.low_t_ha ?? (res.history?.p25 ?? null);
-  const high = res.high_t_ha ?? (res.history?.p75 ?? null);
+  const low = res.low_t_ha ?? res.history?.p25 ?? null;
+  const high = res.high_t_ha ?? res.history?.p75 ?? null;
   return {
     crop,
     datasetCrop: yName,

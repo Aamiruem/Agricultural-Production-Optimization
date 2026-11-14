@@ -88,7 +88,9 @@ function soilSimilarity(datasetSoil, localClasses = [], localTexture) {
   if (localTexture && d === localTexture.toLowerCase()) return 1;
   const fam = Object.entries(SOIL_FAMILY).find(([k]) => d.includes(k));
   if (fam && localTexture && fam[1].includes(localTexture)) return 0.5;
-  const localFamilies = localClasses.map((c) => SOIL_FAMILY[Object.keys(SOIL_FAMILY).find((k) => String(c).toLowerCase().includes(k))] ?? []);
+  const localFamilies = localClasses.map(
+    (c) => SOIL_FAMILY[Object.keys(SOIL_FAMILY).find((k) => String(c).toLowerCase().includes(k))] ?? [],
+  );
   if (localFamilies.some((f) => f.some((t) => t.toLowerCase() === d))) return 0.5;
   return 0;
 }
@@ -100,7 +102,35 @@ function cropSimilarity(datasetCrops = [], localCrops = []) {
   return top.filter((c) => loc.has(cropKey(c))).length / top.length;
 }
 
-const CROP_SYNONYMS = { "arhar/tur": "pigeon pea", tur: "pigeon pea", arhar: "pigeon pea", pigeonpeas: "pigeon pea", gram: "chickpea", "rapeseed &mustard": "mustard", "rapeseed & mustard": "mustard", "moong(green gram)": "green gram", mungbean: "green gram", urad: "black gram", blackgram: "black gram", bajra: "pearl millet", jowar: "sorghum", ragi: "finger millet", paddy: "rice", "cotton(lint)": "cotton", masoor: "lentil", kidneybeans: "kidney beans", mothbeans: "moth bean", soyabean: "soybean", sesamum: "sesame", "dry chillies": "chilli", cashewnut: "cashew", "black pepper": "black pepper", "peas & beans (pulses)": "peas", "finger millet": "finger millet", "pearl millet": "pearl millet" };
+const CROP_SYNONYMS = {
+  "arhar/tur": "pigeon pea",
+  tur: "pigeon pea",
+  arhar: "pigeon pea",
+  pigeonpeas: "pigeon pea",
+  gram: "chickpea",
+  "rapeseed &mustard": "mustard",
+  "rapeseed & mustard": "mustard",
+  "moong(green gram)": "green gram",
+  mungbean: "green gram",
+  urad: "black gram",
+  blackgram: "black gram",
+  bajra: "pearl millet",
+  jowar: "sorghum",
+  ragi: "finger millet",
+  paddy: "rice",
+  "cotton(lint)": "cotton",
+  masoor: "lentil",
+  kidneybeans: "kidney beans",
+  mothbeans: "moth bean",
+  soyabean: "soybean",
+  sesamum: "sesame",
+  "dry chillies": "chilli",
+  cashewnut: "cashew",
+  "black pepper": "black pepper",
+  "peas & beans (pulses)": "peas",
+  "finger millet": "finger millet",
+  "pearl millet": "pearl millet",
+};
 export function cropKey(name) {
   const s = String(name ?? "")
     .toLowerCase()
@@ -121,8 +151,10 @@ function locationSimilarity(profile, local) {
     const d = haversineKm([profile.lat, profile.lon], [local.lat, local.lon]);
     return { s: clamp01(1 - d / TOLERANCES.location.km), distanceKm: round(d, 1), basis: "coordinates" };
   }
-  if (profile.district && local.district && normPlace(profile.district) === normPlace(local.district)) return { s: 0.85, basis: "same district" };
-  if (profile.state && local.state && normPlace(profile.state) === normPlace(local.state)) return { s: 0.6, basis: "same state (dataset has no finer location)" };
+  if (profile.district && local.district && normPlace(profile.district) === normPlace(local.district))
+    return { s: 0.85, basis: "same district" };
+  if (profile.state && local.state && normPlace(profile.state) === normPlace(local.state))
+    return { s: 0.6, basis: "same state (dataset has no finer location)" };
   if (profile.state || profile.district) return { s: 0, basis: "different area" };
   return null;
 }
@@ -200,16 +232,31 @@ export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now
   };
 
   const loc = profile ? locationSimilarity(profile, local) : null;
-  add("location", profile ? [profile.district, profile.state].filter(Boolean).join(", ") || (profile.lat != null ? `${round(profile.lat, 4)}, ${round(profile.lon, 4)}` : null) : null, [local.district, local.state].filter(Boolean).join(", ") || null, loc?.s ?? null, { basis: loc?.basis, distanceKm: loc?.distanceKm });
+  add(
+    "location",
+    profile
+      ? [profile.district, profile.state].filter(Boolean).join(", ") ||
+          (profile.lat != null ? `${round(profile.lat, 4)}, ${round(profile.lon, 4)}` : null)
+      : null,
+    [local.district, local.state].filter(Boolean).join(", ") || null,
+    loc?.s ?? null,
+    { basis: loc?.basis, distanceKm: loc?.distanceKm },
+  );
 
-  add("soil_type", profile?.soil_type ?? null, [local.texture, ...(local.soilClasses ?? [])].filter(Boolean).join(" / ") || null, soilSimilarity(profile?.soil_type, local.soilClasses, local.texture));
+  add(
+    "soil_type",
+    profile?.soil_type ?? null,
+    [local.texture, ...(local.soilClasses ?? [])].filter(Boolean).join(" / ") || null,
+    soilSimilarity(profile?.soil_type, local.soilClasses, local.texture),
+  );
 
   for (const key of ["ph", "N", "P", "K", "oc", "temperature", "humidity", "rainfall", "area"]) {
     const a = profile?.[key];
     const b = local[key];
     const tol = TOLERANCES[key];
     // Nutrients must be on the same basis (available kg/ha from a soil test).
-    const notComparable = ["N", "P", "K"].includes(key) && b != null && local.nutrientBasis && local.nutrientBasis !== "available-kg-ha";
+    const notComparable =
+      ["N", "P", "K"].includes(key) && b != null && local.nutrientBasis && local.nutrientBasis !== "available-kg-ha";
     const s = notComparable ? null : numericSimilarity(a, b, tol);
     add(key, a == null ? null : round(a, 2), b == null ? null : round(b, 2), s, {
       unit: units[key] ?? tol.unit,
@@ -219,8 +266,19 @@ export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now
     });
   }
 
-  add("crop", profile?.crops?.slice(0, 6).join(", ") || null, local.crops?.slice(0, 6).join(", ") || null, cropSimilarity(profile?.crops, local.crops), { basis: "share of the dataset's top crops that are in the local crop list" });
-  add("season", profile?.seasons?.join(", ") || null, local.season ?? null, seasonSimilarity(profile?.seasons, local.season));
+  add(
+    "crop",
+    profile?.crops?.slice(0, 6).join(", ") || null,
+    local.crops?.slice(0, 6).join(", ") || null,
+    cropSimilarity(profile?.crops, local.crops),
+    { basis: "share of the dataset's top crops that are in the local crop list" },
+  );
+  add(
+    "season",
+    profile?.seasons?.join(", ") || null,
+    local.season ?? null,
+    seasonSimilarity(profile?.seasons, local.season),
+  );
 
   const comparable = rows.filter((r) => r.similarity != null && r.weight > 0);
   const wTotal = rows.reduce((s, r) => s + (r.weight > 0 ? r.weight : 0), 0);
@@ -228,18 +286,37 @@ export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now
   const score = wUsed ? (comparable.reduce((s, r) => s + r.weight * r.similarity, 0) / wUsed) * 100 : null;
 
   const age = profile?.latestYear ? now.getFullYear() - profile.latestYear : null;
-  const temporal = age == null ? { level: "unknown", detail: "Dataset has no year column." } : age <= 2 ? { level: "high", detail: `Latest record ${profile.latestYear} (${age} yr old).` } : age <= 6 ? { level: "medium", detail: `Latest record ${profile.latestYear} (${age} yrs old).` } : { level: "low", detail: `Latest record ${profile.latestYear} (${age} yrs old) — outdated.` };
+  const temporal =
+    age == null
+      ? { level: "unknown", detail: "Dataset has no year column." }
+      : age <= 2
+        ? { level: "high", detail: `Latest record ${profile.latestYear} (${age} yr old).` }
+        : age <= 6
+          ? { level: "medium", detail: `Latest record ${profile.latestYear} (${age} yrs old).` }
+          : { level: "low", detail: `Latest record ${profile.latestYear} (${age} yrs old) — outdated.` };
   const geographic =
     loc?.basis === "coordinates"
-      ? { level: loc.distanceKm <= 5 ? "high" : loc.distanceKm <= 25 ? "medium" : "low", detail: `Dataset point ${loc.distanceKm} km away.` }
+      ? {
+          level: loc.distanceKm <= 5 ? "high" : loc.distanceKm <= 25 ? "medium" : "low",
+          detail: `Dataset point ${loc.distanceKm} km away.`,
+        }
       : loc?.basis === "same district"
         ? { level: "medium-high", detail: "Matched at district level." }
         : loc?.basis?.startsWith("same state")
-          ? { level: "medium-low", detail: "Matched at state level only — local variation inside the state is not captured." }
+          ? {
+              level: "medium-low",
+              detail: "Matched at state level only — local variation inside the state is not captured.",
+            }
           : { level: "low", detail: "No geographic match." };
   const lv = Object.values(local.levels ?? {}).filter(Boolean);
   const avgLevel = lv.length ? lv.reduce((a, b) => a + b, 0) / lv.length : null;
-  const reliability = avgLevel == null ? { level: "unknown" } : { level: avgLevel <= 2 ? "high" : avgLevel <= 3.5 ? "medium-high" : avgLevel <= 4.5 ? "medium" : "low", averageSourceLevel: round(avgLevel, 1) };
+  const reliability =
+    avgLevel == null
+      ? { level: "unknown" }
+      : {
+          level: avgLevel <= 2 ? "high" : avgLevel <= 3.5 ? "medium-high" : avgLevel <= 4.5 ? "medium" : "low",
+          averageSourceLevel: round(avgLevel, 1),
+        };
 
   return {
     score: score == null ? null : round(score, 1),
@@ -253,7 +330,8 @@ export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now
     outdated: age != null && age > 6 ? ["year"] : [],
     confidence: { geographic, temporal, reliability },
     formula: "Σ(weight × similarity) ÷ Σ(weights of comparable parameters) × 100",
-    disclaimer: "Data compatibility between your dataset and local data — not the accuracy of any crop or yield prediction.",
+    disclaimer:
+      "Data compatibility between your dataset and local data — not the accuracy of any crop or yield prediction.",
   };
 }
 
@@ -276,12 +354,17 @@ const RANGES = {
 };
 
 /** Data-quality report for canonical rows. */
-export function validateDataset(rows, { now = new Date(), keyFields = ["state", "district", "crop", "season", "year"] } = {}) {
+export function validateDataset(
+  rows,
+  { now = new Date(), keyFields = ["state", "district", "crop", "season", "year"] } = {},
+) {
   const n = rows.length;
   if (!n) return { rows: 0, score: null, issues: ["Dataset is empty."] };
   const fields = [...new Set(rows.flatMap((r) => Object.keys(r)))];
 
-  const completeness = Object.fromEntries(fields.map((f) => [f, rows.filter((r) => r[f] != null && r[f] !== "").length / n]));
+  const completeness = Object.fromEntries(
+    fields.map((f) => [f, rows.filter((r) => r[f] != null && r[f] !== "").length / n]),
+  );
   const avgCompleteness = Object.values(completeness).reduce((a, b) => a + b, 0) / (fields.length || 1);
 
   const seen = new Map();
@@ -363,17 +446,26 @@ export function validateDataset(rows, { now = new Date(), keyFields = ["state", 
     consistency: consistencyChecked ? 1 - inconsistent / consistencyChecked : null,
     timeliness,
   };
-  const weights = { completeness: 0.3, uniqueness: 0.15, validity: 0.2, outliers: 0.15, consistency: 0.1, timeliness: 0.1 };
+  const weights = {
+    completeness: 0.3,
+    uniqueness: 0.15,
+    validity: 0.2,
+    outliers: 0.15,
+    consistency: 0.1,
+    timeliness: 0.1,
+  };
   const usable = Object.entries(parts).filter(([, v]) => v != null);
   const wSum = usable.reduce((s, [k]) => s + weights[k], 0);
   const score = (usable.reduce((s, [k, v]) => s + weights[k] * v, 0) / wSum) * 100;
 
   const issues = [];
-  for (const [f, c] of Object.entries(completeness)) if (c < 0.95) issues.push(`${f}: ${round((1 - c) * 100, 1)}% missing`);
+  for (const [f, c] of Object.entries(completeness))
+    if (c < 0.95) issues.push(`${f}: ${round((1 - c) * 100, 1)}% missing`);
   if (duplicates) issues.push(`${duplicates} exact duplicate rows`);
   if (conflicts) issues.push(`${conflicts} rows share the same ${keys.join("/")} but report different values`);
   for (const [f, c] of Object.entries(invalidByField)) issues.push(`${f}: ${c} values outside plausible range`);
-  for (const [f, c] of Object.entries(outliersByField)) if (c) issues.push(`${f}: ${c} extreme outliers (beyond 3×IQR)`);
+  for (const [f, c] of Object.entries(outliersByField))
+    if (c) issues.push(`${f}: ${c} extreme outliers (beyond 3×IQR)`);
   if (inconsistent) issues.push(`${inconsistent} rows where production ÷ area differs from yield by >5%`);
   if (age != null && age > 6) issues.push(`Latest record is ${latestYear} (${age} years old)`);
 

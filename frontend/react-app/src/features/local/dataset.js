@@ -13,7 +13,11 @@ export const CANONICAL_FIELDS = {
   village: { synonyms: ["village", "villagename", "locality", "colony", "town"], kind: "text" },
   lat: { synonyms: ["lat", "latitude", "y"], kind: "number", range: [6, 38] },
   lon: { synonyms: ["lon", "lng", "long", "longitude", "x"], kind: "number", range: [67, 98] },
-  area: { synonyms: ["area", "areaha", "landarea", "farmarea", "cultivatedarea", "hectares"], kind: "number", range: [0, 1e9] },
+  area: {
+    synonyms: ["area", "areaha", "landarea", "farmarea", "cultivatedarea", "hectares"],
+    kind: "number",
+    range: [0, 1e9],
+  },
   soil_type: { synonyms: ["soiltype", "soil", "soilclass"], kind: "text" },
   ph: { synonyms: ["ph", "soilph"], kind: "number", range: [2, 11] },
   N: { synonyms: ["n", "nitrogen", "availablen"], kind: "number", range: [0, 2000] },
@@ -29,11 +33,18 @@ export const CANONICAL_FIELDS = {
   production: { synonyms: ["production", "totalproduction", "output"], kind: "number", range: [0, 1e12] },
   yield: { synonyms: ["yield", "yieldtha", "productivity"], kind: "number", range: [0, 1e6] },
   year: { synonyms: ["year", "cropyear", "season_year"], kind: "number", range: [1900, 2100] },
-  fertilizer: { synonyms: ["fertilizer", "fertiliser", "fertilizerusage", "fertilizerkg"], kind: "number", range: [0, 1e12] },
+  fertilizer: {
+    synonyms: ["fertilizer", "fertiliser", "fertilizerusage", "fertilizerkg"],
+    kind: "number",
+    range: [0, 1e12],
+  },
   pesticide: { synonyms: ["pesticide", "pesticideusage"], kind: "number", range: [0, 1e12] },
 };
 
-const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, "");
+const norm = (s) =>
+  String(s)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 
 /**
  * Detect canonical fields from headers and sample rows.
@@ -55,14 +66,21 @@ export function detectSchema(headers, rows = []) {
       let confidence = exact ? 0.9 : 0.6;
       if (spec.kind === "number") {
         if (numericShare < 0.9) continue;
-        const inRange = spec.range ? nums.filter((v) => v >= spec.range[0] && v <= spec.range[1]).length / (nums.length || 1) : 1;
+        const inRange = spec.range
+          ? nums.filter((v) => v >= spec.range[0] && v <= spec.range[1]).length / (nums.length || 1)
+          : 1;
         confidence *= inRange >= 0.95 ? 1 : 0.5;
       } else if (numericShare > 0.9) {
         confidence *= 0.4;
       }
       if (!best || confidence > best.confidence) best = { canonical, confidence: round(confidence, 2) };
     }
-    return { header, canonical: best?.canonical ?? null, confidence: best?.confidence ?? 0, numericShare: round(numericShare, 2) };
+    return {
+      header,
+      canonical: best?.canonical ?? null,
+      confidence: best?.confidence ?? 0,
+      numericShare: round(numericShare, 2),
+    };
   });
   const mapping = {};
   for (const f of [...fields].sort((a, b) => b.confidence - a.confidence)) {
@@ -84,7 +102,11 @@ export function detectSchema(headers, rows = []) {
 
 /** Parse CSV text into rows of strings (header row required). */
 export function parseCsv(text) {
-  const { data, meta, errors } = Papa.parse(text.trim(), { header: true, skipEmptyLines: true, transformHeader: (h) => h.trim() });
+  const { data, meta, errors } = Papa.parse(text.trim(), {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (h) => h.trim(),
+  });
   return { rows: data, headers: meta.fields ?? [], errors: errors.slice(0, 5) };
 }
 
@@ -112,7 +134,14 @@ export const BUILTIN_DATASETS = {
     path: "/data/crop_yield.csv",
     source: "cropYieldDataset",
     resolution: "state",
-    units: { area: "ha", production: "t (tonnes; bales/nuts for some crops)", yield: "t/ha", rainfall: "mm/year (Annual_Rainfall)", fertilizer: "kg", pesticide: "kg" },
+    units: {
+      area: "ha",
+      production: "t (tonnes; bales/nuts for some crops)",
+      yield: "t/ha",
+      rainfall: "mm/year (Annual_Rainfall)",
+      fertilizer: "kg",
+      pesticide: "kg",
+    },
   },
   crop_data: {
     id: "crop_data",
@@ -120,7 +149,15 @@ export const BUILTIN_DATASETS = {
     path: "/data/crop_data.csv",
     source: "cropReqDataset",
     resolution: "none (crop profiles)",
-    units: { N: "kg/ha (ratio in source)", P: "kg/ha", K: "kg/ha", temperature: "°C", humidity: "%", rainfall: "mm", ph: "pH" },
+    units: {
+      N: "kg/ha (ratio in source)",
+      P: "kg/ha",
+      K: "kg/ha",
+      temperature: "°C",
+      humidity: "%",
+      rainfall: "mm",
+      ph: "pH",
+    },
   },
 };
 
@@ -145,7 +182,9 @@ export function normPlace(name) {
   return STATE_ALIASES[s] ?? s.replace(/ and /g, " & ");
 }
 export const normSeason = (s) => {
-  const v = String(s ?? "").trim().toLowerCase();
+  const v = String(s ?? "")
+    .trim()
+    .toLowerCase();
   if (!v) return null;
   // "Autumn" and "Winter" (Assam/Bengal rice seasons) are kept as their own labels.
   if (v.startsWith("kharif")) return "Kharif";

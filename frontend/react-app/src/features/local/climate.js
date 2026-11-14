@@ -47,7 +47,10 @@ export function summarizeHistory(daily, today = new Date()) {
   const years = [...new Set(rows.map((r) => r.y))].sort();
   const fullYears = years.filter((y) => rows.filter((r) => r.y === y && r.p != null).length >= 360);
 
-  const annual = fullYears.map((y) => ({ year: y, rain: round(sum(rows.filter((r) => r.y === y).map((r) => r.p)), 0) }));
+  const annual = fullYears.map((y) => ({
+    year: y,
+    rain: round(sum(rows.filter((r) => r.y === y).map((r) => r.p)), 0),
+  }));
   const monsoon = fullYears.map((y) => ({
     year: y,
     rain: round(sum(rows.filter((r) => r.y === y && r.m >= 6 && r.m <= 9).map((r) => r.p)), 0),
@@ -73,10 +76,21 @@ export function summarizeHistory(daily, today = new Date()) {
   if (lastObs && lastObs.y === curYear && season.months.includes(lastObs.m)) {
     const inWindow = (r) => season.months.includes(r.m) && (r.m < lastObs.m || (r.m === lastObs.m && r.d <= lastObs.d));
     const actual = sum(rows.filter((r) => r.y === curYear && inWindow(r)).map((r) => r.p));
-    const normal = mean(fullYears.filter((y) => y < curYear).map((y) => sum(rows.filter((r) => r.y === y && inWindow(r)).map((r) => r.p))));
+    const normal = mean(
+      fullYears
+        .filter((y) => y < curYear)
+        .map((y) => sum(rows.filter((r) => r.y === y && inWindow(r)).map((r) => r.p))),
+    );
     if (normal > 0) {
       const pct = ((actual - normal) / normal) * 100;
-      departure = { season: season.label, actual: round(actual, 0), normal: round(normal, 0), pct: round(pct, 0), category: rainfallCategory(pct), upTo: `${lastObs.y}-${pad(lastObs.m)}-${pad(lastObs.d)}` };
+      departure = {
+        season: season.label,
+        actual: round(actual, 0),
+        normal: round(normal, 0),
+        pct: round(pct, 0),
+        category: rainfallCategory(pct),
+        upTo: `${lastObs.y}-${pad(lastObs.m)}-${pad(lastObs.d)}`,
+      };
     }
   }
 
@@ -105,19 +119,59 @@ export function classifyConditions({ current, daily }, history) {
   const rh = current?.relative_humidity_2m;
   const maxDay = Math.max(...(daily?.precipitation_sum ?? [0]).filter((v) => v != null));
 
-  if (tmax >= 40) flags.push({ id: "heat", label: "Heat stress", detail: `Forecast maximum ${tmax} °C (IMD heat-wave threshold for plains is 40 °C).`, severity: "high" });
-  else if (tmax >= 35) flags.push({ id: "hot", label: "Hot conditions", detail: `Forecast maximum ${tmax} °C.`, severity: "medium" });
-  if (tmin <= 4) flags.push({ id: "cold", label: "Cold / frost risk", detail: `Forecast minimum ${tmin} °C.`, severity: tmin <= 2 ? "high" : "medium" });
-  if (rh != null && rh >= 75) flags.push({ id: "humid", label: "Humid", detail: `Relative humidity ${rh}% — favourable for fungal diseases.`, severity: "medium" });
-  if (rh != null && rh <= 35) flags.push({ id: "dry", label: "Dry air", detail: `Relative humidity ${rh}%.`, severity: "low" });
+  if (tmax >= 40)
+    flags.push({
+      id: "heat",
+      label: "Heat stress",
+      detail: `Forecast maximum ${tmax} °C (IMD heat-wave threshold for plains is 40 °C).`,
+      severity: "high",
+    });
+  else if (tmax >= 35)
+    flags.push({ id: "hot", label: "Hot conditions", detail: `Forecast maximum ${tmax} °C.`, severity: "medium" });
+  if (tmin <= 4)
+    flags.push({
+      id: "cold",
+      label: "Cold / frost risk",
+      detail: `Forecast minimum ${tmin} °C.`,
+      severity: tmin <= 2 ? "high" : "medium",
+    });
+  if (rh != null && rh >= 75)
+    flags.push({
+      id: "humid",
+      label: "Humid",
+      detail: `Relative humidity ${rh}% — favourable for fungal diseases.`,
+      severity: "medium",
+    });
+  if (rh != null && rh <= 35)
+    flags.push({ id: "dry", label: "Dry air", detail: `Relative humidity ${rh}%.`, severity: "low" });
   if (et07 > 0 && rain7 < et07 * 0.3 && et07 >= 20)
-    flags.push({ id: "water-stress", label: "Water stress likely", detail: `7-day crop water demand (ET₀) ${round(et07, 0)} mm vs forecast rain ${round(rain7, 0)} mm.`, severity: "medium" });
+    flags.push({
+      id: "water-stress",
+      label: "Water stress likely",
+      detail: `7-day crop water demand (ET₀) ${round(et07, 0)} mm vs forecast rain ${round(rain7, 0)} mm.`,
+      severity: "medium",
+    });
   if (maxDay >= 64.5 || rain7 >= 150)
-    flags.push({ id: "waterlogging", label: "Heavy rain / waterlogging risk", detail: `Up to ${round(maxDay, 0)} mm in a day (IMD heavy rain ≥ 64.5 mm/day); ${round(rain7, 0)} mm in 7 days.`, severity: "high" });
+    flags.push({
+      id: "waterlogging",
+      label: "Heavy rain / waterlogging risk",
+      detail: `Up to ${round(maxDay, 0)} mm in a day (IMD heavy rain ≥ 64.5 mm/day); ${round(rain7, 0)} mm in 7 days.`,
+      severity: "high",
+    });
   if (history?.departure?.category && ["Deficient", "Large deficient", "No rain"].includes(history.departure.category))
-    flags.push({ id: "drought", label: "Rainfall deficit", detail: `${history.departure.season} rain ${history.departure.pct}% vs normal (${history.departure.category}).`, severity: "high" });
+    flags.push({
+      id: "drought",
+      label: "Rainfall deficit",
+      detail: `${history.departure.season} rain ${history.departure.pct}% vs normal (${history.departure.category}).`,
+      severity: "high",
+    });
   if (history?.departure?.category && ["Excess", "Large excess"].includes(history.departure.category))
-    flags.push({ id: "excess", label: "Excess rainfall", detail: `${history.departure.season} rain +${history.departure.pct}% vs normal.`, severity: "medium" });
+    flags.push({
+      id: "excess",
+      label: "Excess rainfall",
+      detail: `${history.departure.season} rain +${history.departure.pct}% vs normal.`,
+      severity: "medium",
+    });
   return { flags, rain7: round(rain7, 1), et07: round(et07, 1), tmax, tmin };
 }
 
