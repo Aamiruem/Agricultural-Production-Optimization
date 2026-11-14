@@ -78,7 +78,14 @@ export function PageHero({ kicker, title, lead, image, imageAlt, legacyImage, ch
     <header className={`site-hero${compact ? " site-hero--compact" : ""}`}>
       {image && <SitePhoto image={image} alt={imageAlt || ""} sizes="100vw" priority className="site-hero-photo" />}
       {legacyImage && (
-        <img src={legacyImage} alt={imageAlt || ""} className="site-hero-photo" width="1600" height="900" fetchPriority="high" />
+        <img
+          src={legacyImage}
+          alt={imageAlt || ""}
+          className="site-hero-photo"
+          width="1600"
+          height="900"
+          fetchPriority="high"
+        />
       )}
       <div className="site-hero-inner">
         <Breadcrumbs light />
@@ -103,7 +110,12 @@ export function SectionTitle({ id, kicker, title, lead, align = "start", as: Tag
 }
 
 /** WhatsApp call-to-action. External link that opens a chat with the owner. */
-export function WhatsAppButton({ text = "Hello Aamir, I visited AgriSmart and would like to know more.", label = "Chat on WhatsApp", variant = "solid", className = "" }) {
+export function WhatsAppButton({
+  text = "Hello Aamir, I visited AgriSmart and would like to know more.",
+  label = "Chat on WhatsApp",
+  variant = "solid",
+  className = "",
+}) {
   return (
     <a
       href={whatsappLink(text)}
@@ -141,7 +153,10 @@ export function MoreLink({ to, children }) {
 }
 
 /** Closing call-to-action band used at the end of content pages. */
-export function CtaBand({ title = "Have a question or a project in mind?", text = "Talk directly with AgriSmart's developer on WhatsApp, by phone or by email." }) {
+export function CtaBand({
+  title = "Have a question or a project in mind?",
+  text = "Talk directly with AgriSmart's developer on WhatsApp, by phone or by email.",
+}) {
   return (
     <section className="cta-band" aria-label="Contact AgriSmart">
       <div>
@@ -155,7 +170,11 @@ export function CtaBand({ title = "Have a question or a project in mind?", text 
 
 /** Small "last reviewed" note for content freshness. */
 export function Reviewed({ date, children }) {
-  const pretty = new Date(`${date}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+  const pretty = new Date(`${date}T00:00:00`).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
   return (
     <p className="reviewed-note">
       {children ?? "Content last reviewed"} <time dateTime={date}>{pretty}</time>

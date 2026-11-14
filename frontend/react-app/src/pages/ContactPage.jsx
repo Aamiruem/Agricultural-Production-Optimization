@@ -4,10 +4,23 @@ import { useState } from "react";
 import { GithubIcon, LinkedinIcon, PageHero, SectionTitle } from "@/components/site/SiteKit";
 import { OWNER, mailtoLink, whatsappLink } from "@/data/site";
 
-const TOPICS = ["General question", "Project / service request", "Job or internship opportunity", "Feedback on AgriSmart", "Data correction"];
+const TOPICS = [
+  "General question",
+  "Project / service request",
+  "Job or internship opportunity",
+  "Feedback on AgriSmart",
+  "Data correction",
+];
 
 const CHANNELS = [
-  { icon: MessageCircle, label: "WhatsApp", value: OWNER.phoneDisplay, href: whatsappLink("Hello Aamir, I'm contacting you from AgriSmart."), external: true, tone: "whatsapp" },
+  {
+    icon: MessageCircle,
+    label: "WhatsApp",
+    value: OWNER.phoneDisplay,
+    href: whatsappLink("Hello Aamir, I'm contacting you from AgriSmart."),
+    external: true,
+    tone: "whatsapp",
+  },
   { icon: Phone, label: "Call", value: OWNER.phoneDisplay, href: `tel:${OWNER.phone}` },
   { icon: Mail, label: "Email", value: OWNER.email, href: `mailto:${OWNER.email}` },
   { icon: Globe, label: "Portfolio", value: "aamir-hussain-azad.vercel.app", href: OWNER.portfolio, external: true },
@@ -27,7 +40,15 @@ export default function ContactPage() {
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const compose = () =>
-    [`Hello Aamir,`, "", form.message.trim(), "", `— ${form.name.trim()}${form.email.trim() ? ` (${form.email.trim()})` : ""}`, `Topic: ${form.topic}`, "Sent from the AgriSmart contact page"].join("\n");
+    [
+      `Hello Aamir,`,
+      "",
+      form.message.trim(),
+      "",
+      `— ${form.name.trim()}${form.email.trim() ? ` (${form.email.trim()})` : ""}`,
+      `Topic: ${form.topic}`,
+      "Sent from the AgriSmart contact page",
+    ].join("\n");
 
   const valid = () => {
     if (!form.name.trim() || !form.message.trim()) {
@@ -91,14 +112,24 @@ export default function ContactPage() {
         </div>
 
         <form className="contact-form" onSubmit={sendWhatsApp} noValidate>
-          <SectionTitle kicker="Send a message" title="Write to me" lead="Your message opens in WhatsApp or your email app so you can review it and press send." />
+          <SectionTitle
+            kicker="Send a message"
+            title="Write to me"
+            lead="Your message opens in WhatsApp or your email app so you can review it and press send."
+          />
           <label className="field-label">
             Your name
             <input required value={form.name} onChange={set("name")} autoComplete="name" placeholder="Name" />
           </label>
           <label className="field-label">
             Email (optional)
-            <input type="email" value={form.email} onChange={set("email")} autoComplete="email" placeholder="you@example.com" />
+            <input
+              type="email"
+              value={form.email}
+              onChange={set("email")}
+              autoComplete="email"
+              placeholder="you@example.com"
+            />
           </label>
           <label className="field-label">
             Topic

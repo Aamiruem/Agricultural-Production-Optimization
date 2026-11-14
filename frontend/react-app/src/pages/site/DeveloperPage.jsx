@@ -5,8 +5,24 @@ import { ContactActions, GithubIcon, LinkedinIcon, PageHero, SectionTitle } from
 import { OWNER } from "@/data/site";
 
 const SKILL_GROUPS = [
-  { title: "AI & machine learning", skills: ["Machine Learning", "Deep Learning", "Generative AI", "RAG", "AI Agents"] },
-  { title: "Data science", skills: ["Python", "SQL", "NumPy", "Pandas", "Matplotlib", "Scikit-learn", "TensorFlow and Keras", "Data Analytics", "Power BI"] },
+  {
+    title: "AI & machine learning",
+    skills: ["Machine Learning", "Deep Learning", "Generative AI", "RAG", "AI Agents"],
+  },
+  {
+    title: "Data science",
+    skills: [
+      "Python",
+      "SQL",
+      "NumPy",
+      "Pandas",
+      "Matplotlib",
+      "Scikit-learn",
+      "TensorFlow and Keras",
+      "Data Analytics",
+      "Power BI",
+    ],
+  },
   { title: "Full-stack development", skills: ["FastAPI", "React.js", "JavaScript", "HTML and CSS"] },
 ];
 
@@ -43,8 +59,8 @@ export default function DeveloperPage() {
         <div className="profile-text">
           <h2>Professional introduction</h2>
           <blockquote>
-            “I am passionate about Artificial Intelligence, Machine Learning, Data Science and Full-Stack Development. My
-            goal is to build intelligent, scalable and impactful technology solutions that solve real-world problems,
+            “I am passionate about Artificial Intelligence, Machine Learning, Data Science and Full-Stack Development.
+            My goal is to build intelligent, scalable and impactful technology solutions that solve real-world problems,
             including challenges in agriculture, healthcare and sustainable development.”
           </blockquote>
           <p>
@@ -62,10 +78,16 @@ export default function DeveloperPage() {
               <Mail size={18} aria-hidden="true" /> <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a>
             </li>
             <li>
-              <GithubIcon /> <a href={OWNER.github} target="_blank" rel="noopener noreferrer">github.com/Aamiruem</a>
+              <GithubIcon />{" "}
+              <a href={OWNER.github} target="_blank" rel="noopener noreferrer">
+                github.com/Aamiruem
+              </a>
             </li>
             <li>
-              <LinkedinIcon /> <a href={OWNER.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn profile</a>
+              <LinkedinIcon />{" "}
+              <a href={OWNER.linkedin} target="_blank" rel="noopener noreferrer">
+                LinkedIn profile
+              </a>
             </li>
           </ul>
           <ContactActions compact />
@@ -97,7 +119,9 @@ export default function DeveloperPage() {
             <p>
               {OWNER.education.school} · {OWNER.education.year}
             </p>
-            <p className="muted-note">Final-year major project: Agricultural Production &amp; Crop Yield Prediction System.</p>
+            <p className="muted-note">
+              Final-year major project: Agricultural Production &amp; Crop Yield Prediction System.
+            </p>
           </div>
         </div>
       </section>

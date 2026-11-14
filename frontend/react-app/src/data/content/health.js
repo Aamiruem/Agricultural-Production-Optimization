@@ -3,11 +3,31 @@
 // professional details, and none have been verified yet.
 
 export const HEALTH_GALLERY = [
-  { image: "health/doctor-consultation", alt: "A doctor examining a patient with a stethoscope", caption: "Doctor consultation" },
-  { image: "health/healthcare-clinic", alt: "Front of a Primary Health Centre in Mahabubnagar, Telangana", caption: "Primary health centre" },
-  { image: "health/rural-healthcare", alt: "Villagers gathered around a mobile medical unit ambulance in India", caption: "Mobile medical unit" },
-  { image: "health/community-health-worker", alt: "A community health worker giving a vaccination to a child in Odisha", caption: "Community health worker" },
-  { image: "health/awareness-campaign", alt: "Health workers registering people at a vaccination drive in Bhopal", caption: "Vaccination drive" },
+  {
+    image: "health/doctor-consultation",
+    alt: "A doctor examining a patient with a stethoscope",
+    caption: "Doctor consultation",
+  },
+  {
+    image: "health/healthcare-clinic",
+    alt: "Front of a Primary Health Centre in Mahabubnagar, Telangana",
+    caption: "Primary health centre",
+  },
+  {
+    image: "health/rural-healthcare",
+    alt: "Villagers gathered around a mobile medical unit ambulance in India",
+    caption: "Mobile medical unit",
+  },
+  {
+    image: "health/community-health-worker",
+    alt: "A community health worker giving a vaccination to a child in Odisha",
+    caption: "Community health worker",
+  },
+  {
+    image: "health/awareness-campaign",
+    alt: "Health workers registering people at a vaccination drive in Bhopal",
+    caption: "Vaccination drive",
+  },
 ];
 
 export const HEALTH_TOPICS = [
@@ -81,7 +101,8 @@ export const HEALTH_TOPICS = [
     id: "clean-water",
     icon: "GlassWater",
     title: "Clean drinking water",
-    summary: "Unsafe water spreads diarrhoea, cholera, typhoid and hepatitis. Safe water and hand-washing prevent most of these.",
+    summary:
+      "Unsafe water spreads diarrhoea, cholera, typhoid and hepatitis. Safe water and hand-washing prevent most of these.",
     points: [
       "Drink water from a safe, protected source.",
       "If unsure, boil water (bring to a rolling boil) or use chlorine tablets as directed.",

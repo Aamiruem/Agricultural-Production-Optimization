@@ -21,7 +21,18 @@ import { CtaBand, PageHero, Reviewed, SectionTitle, SitePhoto } from "@/componen
 import { HEALTH_GALLERY, HEALTH_RESOURCES, HEALTH_TOPICS, HELPLINES } from "@/data/content/health";
 import { BRAND, mailtoLink } from "@/data/site";
 
-const ICONS = { Stethoscope, Hospital, ShieldCheck, Salad, BriefcaseMedical, GlassWater, HardHat, ThermometerSun, SprayCan, HeartHandshake };
+const ICONS = {
+  Stethoscope,
+  Hospital,
+  ShieldCheck,
+  Salad,
+  BriefcaseMedical,
+  GlassWater,
+  HardHat,
+  ThermometerSun,
+  SprayCan,
+  HeartHandshake,
+};
 
 export default function HealthPage() {
   return (
@@ -86,7 +97,12 @@ export default function HealthPage() {
               AgriSmart lists doctors only after their registration and details are verified. No profiles have been
               verified yet, so none are shown — we will not publish invented names, qualifications, hospitals or phone
               numbers. Registered doctors who would like to share rural health guidance can{" "}
-              <a href={mailtoLink("Doctor listing on AgriSmart", "Name:\nNMC/State registration number:\nQualification:\nClinic/hospital:\n")}>
+              <a
+                href={mailtoLink(
+                  "Doctor listing on AgriSmart",
+                  "Name:\nNMC/State registration number:\nQualification:\nClinic/hospital:\n",
+                )}
+              >
                 contact us by email
               </a>
               .
@@ -108,7 +124,11 @@ export default function HealthPage() {
       </section>
 
       <section className="site-section" id="topics" aria-labelledby="topics-title">
-        <SectionTitle id="topics-title" kicker="Health awareness" title="Health topics for farmers and rural families" />
+        <SectionTitle
+          id="topics-title"
+          kicker="Health awareness"
+          title="Health topics for farmers and rural families"
+        />
         <div className="health-grid">
           {HEALTH_TOPICS.map((t) => {
             const Icon = ICONS[t.icon] ?? Stethoscope;
@@ -142,7 +162,10 @@ export default function HealthPage() {
         <MedicalDisclaimer />
       </section>
 
-      <CtaBand title="Building a rural health or wellness tool?" text="AgriSmart's developer has built a mental-wellness scoring app and data dashboards. Get in touch." />
+      <CtaBand
+        title="Building a rural health or wellness tool?"
+        text="AgriSmart's developer has built a mental-wellness scoring app and data dashboards. Get in touch."
+      />
     </div>
   );
 }

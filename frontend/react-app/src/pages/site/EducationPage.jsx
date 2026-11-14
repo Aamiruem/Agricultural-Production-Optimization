@@ -89,7 +89,11 @@ export default function EducationPage() {
           <span>
             Details checked against official portals on{" "}
             <time dateTime={SCHEMES_CHECKED}>
-              {new Date(`${SCHEMES_CHECKED}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+              {new Date(`${SCHEMES_CHECKED}T00:00:00`).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
             </time>
             . Figures are quoted only where the official page states them.
           </span>
@@ -118,8 +122,8 @@ export default function EducationPage() {
           ))}
         </div>
         <p className="muted-note">
-          AgriSmart is an independent educational website and is not affiliated with or endorsed by any government
-          body. For help applying, contact your Krishi Vigyan Kendra or the Kisan Call Centre (1800-180-1551).
+          AgriSmart is an independent educational website and is not affiliated with or endorsed by any government body.
+          For help applying, contact your Krishi Vigyan Kendra or the Kisan Call Centre (1800-180-1551).
         </p>
         <Reviewed date={BRAND.contentUpdated} />
       </section>

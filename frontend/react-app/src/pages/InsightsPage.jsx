@@ -29,8 +29,8 @@ export default function InsightsPage() {
         ) : (
           <EmptyState>
             <p className="mb-0">
-              Saved prediction history needs the AgriSmart API service. Your recent crop recommendations are kept in this
-              browser on the <Link to="/crop-recommendation">crop advisor</Link> page.
+              Saved prediction history needs the AgriSmart API service. Your recent crop recommendations are kept in
+              this browser on the <Link to="/crop-recommendation">crop advisor</Link> page.
             </p>
           </EmptyState>
         )}

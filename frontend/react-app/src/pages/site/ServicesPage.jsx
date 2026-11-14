@@ -1,4 +1,15 @@
-import { BarChart3, BrainCircuit, Briefcase, CheckCircle2, Clock, Code2, Cpu, Rocket, Tractor, TrendingUp } from "lucide-react";
+import {
+  BarChart3,
+  BrainCircuit,
+  Briefcase,
+  CheckCircle2,
+  Clock,
+  Code2,
+  Cpu,
+  Rocket,
+  Tractor,
+  TrendingUp,
+} from "lucide-react";
 
 import { CtaBand, PageHero, SectionTitle, WhatsAppButton } from "@/components/site/SiteKit";
 import { SERVICE_STATUS, SERVICES } from "@/data/content/services";
@@ -15,7 +26,10 @@ export default function ServicesPage() {
         image="machines/crop-sensors"
         imageAlt="A soil-moisture sensor installed in a field"
       >
-        <WhatsAppButton text="Hello Aamir, I'd like to discuss a project from the AgriSmart services page." label="Discuss a project" />
+        <WhatsAppButton
+          text="Hello Aamir, I'd like to discuss a project from the AgriSmart services page."
+          label="Discuss a project"
+        />
       </PageHero>
 
       <section className="site-section" aria-labelledby="legend-title">
@@ -44,7 +58,11 @@ export default function ServicesPage() {
                     <Icon size={22} />
                   </span>
                   <span className={`status-pill status-pill--${status.tone}`}>
-                    {s.status === "available" ? <CheckCircle2 size={14} aria-hidden="true" /> : <Clock size={14} aria-hidden="true" />}
+                    {s.status === "available" ? (
+                      <CheckCircle2 size={14} aria-hidden="true" />
+                    ) : (
+                      <Clock size={14} aria-hidden="true" />
+                    )}
                     {status.label}
                   </span>
                 </header>
@@ -91,7 +109,10 @@ export default function ServicesPage() {
         </ol>
       </section>
 
-      <CtaBand title="Ready to start?" text="Tell me about your farm, business or idea — I usually reply within a day." />
+      <CtaBand
+        title="Ready to start?"
+        text="Tell me about your farm, business or idea — I usually reply within a day."
+      />
     </div>
   );
 }

@@ -24,7 +24,13 @@ function person(site) {
       addressCountry: OWNER.country,
     },
     alumniOf: { "@type": "CollegeOrUniversity", name: OWNER.education.school },
-    knowsAbout: ["Machine Learning", "Artificial Intelligence", "Data Science", "Full-Stack Development", "Agricultural Technology"],
+    knowsAbout: [
+      "Machine Learning",
+      "Artificial Intelligence",
+      "Data Science",
+      "Full-Stack Development",
+      "Agricultural Technology",
+    ],
     sameAs: [OWNER.portfolio, OWNER.github, OWNER.linkedin],
   };
 }

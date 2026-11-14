@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 import logo from "@/assets/logo.svg";
 import { GithubIcon, LinkedinIcon } from "@/components/site/SiteKit";
-import { PRODUCTION_SYSTEMS } from "@/data/content/productionSystems";
+import { PRODUCTION_SYSTEM_INDEX as PRODUCTION_SYSTEMS } from "@/data/content/productionSystemsIndex";
 import { BRAND, OWNER, whatsappLink } from "@/data/site";
 
 const pick = (list, slugs) => slugs.map((s) => list.find((x) => x.slug === s));
@@ -23,7 +23,12 @@ const COLUMNS = [
     title: "Agriculture",
     links: [
       { to: "/agricultural-production-systems", label: "Production systems" },
-      ...pick(PRODUCTION_SYSTEMS, ["organic-farming", "precision-agriculture", "sustainable-agriculture", "irrigation-systems"]).map((s) => ({
+      ...pick(PRODUCTION_SYSTEMS, [
+        "organic-farming",
+        "precision-agriculture",
+        "sustainable-agriculture",
+        "irrigation-systems",
+      ]).map((s) => ({
         to: `/agricultural-production-systems/${s.slug}`,
         label: s.title,
       })),
@@ -111,7 +116,12 @@ export function SiteFooter() {
               </li>
             ))}
           </ul>
-          <a href={whatsappLink("Hello Aamir, I visited AgriSmart and would like to know more.")} target="_blank" rel="noopener noreferrer" className="site-btn site-btn--whatsapp agri-footer-wa">
+          <a
+            href={whatsappLink("Hello Aamir, I visited AgriSmart and would like to know more.")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="site-btn site-btn--whatsapp agri-footer-wa"
+          >
             <MessageCircle size={18} aria-hidden="true" /> Chat on WhatsApp
           </a>
         </div>

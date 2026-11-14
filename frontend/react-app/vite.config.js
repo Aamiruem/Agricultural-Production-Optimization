@@ -58,17 +58,57 @@ function renderHead(template, siteUrl, route, { notFound = false } = {}) {
 
   let html = template;
   html = swap(html, /<title>[\s\S]*?<\/title>/, `<title>${esc(route.title)}</title>`, "<title>");
-  html = swap(html, meta("name", "description"), `<meta name="description" content="${esc(route.description)}" />`, "description");
+  html = swap(
+    html,
+    meta("name", "description"),
+    `<meta name="description" content="${esc(route.description)}" />`,
+    "description",
+  );
   html = swap(html, meta("name", "robots"), `<meta name="robots" content="${robots}" />`, "robots");
-  html = swap(html, /<link rel="canonical"[\s\S]*?\/>/, notFound ? "" : `<link rel="canonical" href="${esc(url)}" />`, "canonical");
-  html = swap(html, meta("property", "og:type"), `<meta property="og:type" content="${route.type === "Article" ? "article" : "website"}" />`, "og:type");
-  html = swap(html, meta("property", "og:title"), `<meta property="og:title" content="${esc(route.title)}" />`, "og:title");
-  html = swap(html, meta("property", "og:description"), `<meta property="og:description" content="${esc(route.description)}" />`, "og:description");
+  html = swap(
+    html,
+    /<link rel="canonical"[\s\S]*?\/>/,
+    notFound ? "" : `<link rel="canonical" href="${esc(url)}" />`,
+    "canonical",
+  );
+  html = swap(
+    html,
+    meta("property", "og:type"),
+    `<meta property="og:type" content="${route.type === "Article" ? "article" : "website"}" />`,
+    "og:type",
+  );
+  html = swap(
+    html,
+    meta("property", "og:title"),
+    `<meta property="og:title" content="${esc(route.title)}" />`,
+    "og:title",
+  );
+  html = swap(
+    html,
+    meta("property", "og:description"),
+    `<meta property="og:description" content="${esc(route.description)}" />`,
+    "og:description",
+  );
   html = swap(html, meta("property", "og:url"), `<meta property="og:url" content="${esc(url)}" />`, "og:url");
   html = swap(html, meta("property", "og:image"), `<meta property="og:image" content="${esc(image)}" />`, "og:image");
-  html = swap(html, meta("name", "twitter:title"), `<meta name="twitter:title" content="${esc(route.title)}" />`, "twitter:title");
-  html = swap(html, meta("name", "twitter:description"), `<meta name="twitter:description" content="${esc(route.description)}" />`, "twitter:description");
-  html = swap(html, meta("name", "twitter:image"), `<meta name="twitter:image" content="${esc(image)}" />`, "twitter:image");
+  html = swap(
+    html,
+    meta("name", "twitter:title"),
+    `<meta name="twitter:title" content="${esc(route.title)}" />`,
+    "twitter:title",
+  );
+  html = swap(
+    html,
+    meta("name", "twitter:description"),
+    `<meta name="twitter:description" content="${esc(route.description)}" />`,
+    "twitter:description",
+  );
+  html = swap(
+    html,
+    meta("name", "twitter:image"),
+    `<meta name="twitter:image" content="${esc(image)}" />`,
+    "twitter:image",
+  );
   html = swap(html, /<!--seo:preload-->/, preload, "preload marker");
   html = swap(
     html,
@@ -77,11 +117,12 @@ function renderHead(template, siteUrl, route, { notFound = false } = {}) {
     "JSON-LD",
   );
   // Crawlable fallback text and links for clients that do not run JavaScript.
-  const crumbs = trail.length > 1 ? `<p>${trail.map((c) => `<a href="${c.path}">${esc(c.name)}</a>`).join(" › ")}</p>` : "";
+  const crumbs =
+    trail.length > 1 ? `<p>${trail.map((c) => `<a href="${c.path}">${esc(c.name)}</a>`).join(" › ")}</p>` : "";
   const links = NOSCRIPT_LINKS.map(([href, label]) => `<a href="${href}">${label}</a>`).join(" · ");
   html = swap(
     html,
-    /<noscript>[\s\S]*?<\/noscript>/,
+    /<noscript[\s\S]*?<\/noscript\s*>/,
     `<noscript>${crumbs}<h1>${esc(route.title.split(/ [–|] /)[0])}</h1><p>${esc(route.description)}</p><p>${links}</p></noscript>`,
     "noscript",
   );
@@ -131,7 +172,9 @@ function seoPages(siteUrl) {
         `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`,
       );
       writeFileSync(path.join(root, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
-      console.log(`seo: wrote ${SEO_ROUTES.length} page heads, 404.html, sitemap.xml (${indexable.length} URLs), robots.txt`);
+      console.log(
+        `seo: wrote ${SEO_ROUTES.length} page heads, 404.html, sitemap.xml (${indexable.length} URLs), robots.txt`,
+      );
     },
   };
 }

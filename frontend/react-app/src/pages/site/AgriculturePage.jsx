@@ -27,16 +27,17 @@ export default function AgriculturePage() {
         <div className="site-prose">
           <h2>What is an agricultural production system?</h2>
           <p>
-            An <strong>agricultural production system</strong> is the way a farm combines natural resources (soil, water,
-            climate), inputs (seed, nutrients, energy), labour, machinery and management to produce crops and livestock.
-            The right system depends on farm size, rainfall and irrigation, soils, markets and the farmer&apos;s goals —
-            from feeding a household to supplying national and export markets.
+            An <strong>agricultural production system</strong> is the way a farm combines natural resources (soil,
+            water, climate), inputs (seed, nutrients, energy), labour, machinery and management to produce crops and
+            livestock. The right system depends on farm size, rainfall and irrigation, soils, markets and the
+            farmer&apos;s goals — from feeding a household to supplying national and export markets.
           </p>
           <p>
             Modern systems increasingly add data and technology: soil testing, precision application, smart irrigation
-            and <Link to="/ai-in-agriculture">AI in agriculture</Link> help farmers grow more with less water, fertilizer
-            and risk, while <Link to="/agricultural-production-systems/sustainable-agriculture">sustainable practices</Link>{" "}
-            keep land productive for the future.
+            and <Link to="/ai-in-agriculture">AI in agriculture</Link> help farmers grow more with less water,
+            fertilizer and risk, while{" "}
+            <Link to="/agricultural-production-systems/sustainable-agriculture">sustainable practices</Link> keep land
+            productive for the future.
           </p>
         </div>
       </section>
@@ -48,7 +49,11 @@ export default function AgriculturePage() {
             {PRODUCTION_SYSTEMS.filter((s) => s.group === g.id).map((s) => (
               <article key={s.slug} className="topic-card">
                 <Link to={`/agricultural-production-systems/${s.slug}`} className="topic-card-link">
-                  <SitePhoto image={s.image} alt={s.alt} sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw" />
+                  <SitePhoto
+                    image={s.image}
+                    alt={s.alt}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
                   <div className="topic-card-body">
                     <h3>{s.title}</h3>
                     <p>{s.summary}</p>
@@ -125,7 +130,10 @@ export default function AgriculturePage() {
         <Reviewed date={BRAND.contentUpdated} />
       </section>
 
-      <CtaBand title="Want AI tools for your own farm?" text="Use the free crop advisor and yield forecast, or contact AgriSmart's developer for a custom solution." />
+      <CtaBand
+        title="Want AI tools for your own farm?"
+        text="Use the free crop advisor and yield forecast, or contact AgriSmart's developer for a custom solution."
+      />
     </div>
   );
 }

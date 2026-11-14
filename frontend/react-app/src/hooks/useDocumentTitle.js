@@ -51,7 +51,13 @@ export function useDocumentTitle(title, description) {
 
     document.title = full;
     upsert("link", "rel", "canonical", "href", url);
-    upsert("meta", "name", "robots", "content", seo && !seo.noindex ? "index,follow,max-image-preview:large" : "noindex,follow");
+    upsert(
+      "meta",
+      "name",
+      "robots",
+      "content",
+      seo && !seo.noindex ? "index,follow,max-image-preview:large" : "noindex,follow",
+    );
     upsert("meta", "property", "og:title", "content", full);
     upsert("meta", "property", "og:url", "content", url);
     upsert("meta", "property", "og:image", "content", image);

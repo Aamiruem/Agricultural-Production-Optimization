@@ -81,22 +81,52 @@ export const CROP_CATEGORIES = [
 export const FOOD_GALLERY = [
   { image: "food/rice-field", alt: "Ripe golden rice paddy field in Coorg, Karnataka", caption: "Rice fields" },
   { image: "food/wheat-field", alt: "A green wheat field in Punjab", caption: "Wheat fields" },
-  { image: "food/fresh-vegetables", alt: "Tomatoes, cabbages and cauliflowers stacked at an Indian roadside stall", caption: "Fresh vegetables" },
+  {
+    image: "food/fresh-vegetables",
+    alt: "Tomatoes, cabbages and cauliflowers stacked at an Indian roadside stall",
+    caption: "Fresh vegetables",
+  },
   { image: "food/fruits", alt: "A colourful market stall full of fresh fruits", caption: "Fruits" },
-  { image: "food/organic-food", alt: "Organic greens and vegetables on sale at a street fair", caption: "Organic food" },
-  { image: "nutrition/pulses-legumes", alt: "Sacks of pulses and dried red chillies at a market in Ooty", caption: "Grains & pulses" },
-  { image: "food/harvesting", alt: "A woman harvesting ripe rice by hand in Raichur, Karnataka", caption: "Harvesting" },
-  { image: "food/food-processing", alt: "Workers spreading rice to dry at a rice processing mill", caption: "Processing" },
-  { image: "food/food-storage", alt: "A Central Warehousing Corporation godown used to store food grains", caption: "Storage" },
+  {
+    image: "food/organic-food",
+    alt: "Organic greens and vegetables on sale at a street fair",
+    caption: "Organic food",
+  },
+  {
+    image: "nutrition/pulses-legumes",
+    alt: "Sacks of pulses and dried red chillies at a market in Ooty",
+    caption: "Grains & pulses",
+  },
+  {
+    image: "food/harvesting",
+    alt: "A woman harvesting ripe rice by hand in Raichur, Karnataka",
+    caption: "Harvesting",
+  },
+  {
+    image: "food/food-processing",
+    alt: "Workers spreading rice to dry at a rice processing mill",
+    caption: "Processing",
+  },
+  {
+    image: "food/food-storage",
+    alt: "A Central Warehousing Corporation godown used to store food grains",
+    caption: "Storage",
+  },
 ];
 
 export const FOOD_CHAIN = [
   { step: "Production", detail: "Farmers grow crops and raise livestock using seed, water, nutrients and labour." },
   { step: "Harvest", detail: "Crops are harvested at the right maturity to protect quality and yield." },
-  { step: "Post-harvest handling", detail: "Threshing, drying, cleaning, sorting and grading prepare produce for market." },
+  {
+    step: "Post-harvest handling",
+    detail: "Threshing, drying, cleaning, sorting and grading prepare produce for market.",
+  },
   { step: "Storage", detail: "Warehouses, silos, cold stores and hermetic bags protect food from pests and spoilage." },
   { step: "Processing", detail: "Milling, packaging and value addition turn raw produce into food products." },
-  { step: "Distribution", detail: "Mandis, e-NAM, FPOs, wholesalers, retailers and the public distribution system move food to people." },
+  {
+    step: "Distribution",
+    detail: "Mandis, e-NAM, FPOs, wholesalers, retailers and the public distribution system move food to people.",
+  },
   { step: "Consumption", detail: "Households use food for nutrition; reducing waste at this stage matters too." },
 ];
 

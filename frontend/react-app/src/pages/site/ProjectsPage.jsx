@@ -15,7 +15,12 @@ function ProjectLinks({ p }) {
             Live demo <ArrowRight size={15} aria-hidden="true" />
           </Link>
         ) : (
-          <a href={p.live} target="_blank" rel="noopener noreferrer" className="site-btn site-btn--sm site-btn--primary">
+          <a
+            href={p.live}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="site-btn site-btn--sm site-btn--primary"
+          >
             {p.liveLabel ?? "Live demo"} <ExternalLink size={15} aria-hidden="true" />
           </a>
         ))}
@@ -67,14 +72,16 @@ export default function ProjectsPage() {
             <ProjectLinks p={featured} />
           </div>
           <ol className="ml-flow ml-flow--compact" aria-label="Project workflow">
-            {["Raw data", "Clean + engineer", "Train & compare", "Evaluate (MAE, RMSE, R²)", "Predict yield"].map((s, i) => (
-              <li key={s}>
-                <span className="ml-flow-num" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <b>{s}</b>
-              </li>
-            ))}
+            {["Raw data", "Clean + engineer", "Train & compare", "Evaluate (MAE, RMSE, R²)", "Predict yield"].map(
+              (s, i) => (
+                <li key={s}>
+                  <span className="ml-flow-num" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <b>{s}</b>
+                </li>
+              ),
+            )}
           </ol>
         </article>
       </section>
@@ -86,7 +93,9 @@ export default function ProjectsPage() {
             <article key={p.id} className="project-card">
               <p className="project-meta">
                 <span>{p.category}</span>
-                <span className={`status-pill status-pill--${/prototype|learning/i.test(p.status) ? "gold" : "green"}`}>{p.status}</span>
+                <span className={`status-pill status-pill--${/prototype|learning/i.test(p.status) ? "gold" : "green"}`}>
+                  {p.status}
+                </span>
               </p>
               <h3>{p.name}</h3>
               <p>{p.description}</p>
@@ -122,7 +131,11 @@ export default function ProjectsPage() {
               </a>{" "}
               and public repository READMEs, checked on{" "}
               <time dateTime={PROJECTS_VERIFIED_ON}>
-                {new Date(`${PROJECTS_VERIFIED_ON}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
+                {new Date(`${PROJECTS_VERIFIED_ON}T00:00:00`).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
               </time>
               . No results, metrics or live links have been added beyond those sources.
             </p>
@@ -135,7 +148,10 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      <CtaBand title="Like what you see?" text="Hire me for an AI/ML, data or full-stack role, or request a similar project." />
+      <CtaBand
+        title="Like what you see?"
+        text="Hire me for an AI/ML, data or full-stack role, or request a similar project."
+      />
     </div>
   );
 }

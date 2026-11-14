@@ -47,7 +47,11 @@ export const PROJECTS = [
     status: "Live app",
     description:
       "A mental wellness scoring dashboard that evaluates mood, anxiety, sleep quality and stress, and presents an overall wellness index through interactive visualisations.",
-    features: ["Scores multiple wellness dimensions", "Radial gauges, trend lines and breakdowns", "Runs live in the browser"],
+    features: [
+      "Scores multiple wellness dimensions",
+      "Radial gauges, trend lines and breakdowns",
+      "Runs live in the browser",
+    ],
     tech: ["Python", "Streamlit", "Pandas", "Plotly"],
     github: "https://github.com/Aamiruem/Mansik-Santulan-Scores",
     live: "https://mansik-santulan-scores-1.onrender.com",
@@ -77,7 +81,11 @@ export const PROJECTS = [
     status: "Live app",
     description:
       "An end-to-end retail analytics workflow on synthetic data: auditable cleaning, a SQL star schema, EDA, RFM and K-Means customer segmentation, and Excel, Power BI-ready and Streamlit dashboards.",
-    features: ["Data-quality checks and validated KPIs", "RFM + K-Means customer segments", "Interactive Streamlit dashboard"],
+    features: [
+      "Data-quality checks and validated KPIs",
+      "RFM + K-Means customer segments",
+      "Interactive Streamlit dashboard",
+    ],
     tech: ["Python", "SQL", "SQLite", "Excel", "Power BI", "Streamlit"],
     github: "https://github.com/Aamiruem/Retail-sales-customer",
     live: "https://retail-sales-customer-fdug7zphhdjmvfoonctdkw.streamlit.app/",
@@ -100,7 +108,11 @@ export const PROJECTS = [
     status: "Completed",
     description:
       "A real-time video conferencing application with multi-participant calls, in-call chat, mic/camera controls and room-based sessions.",
-    features: ["Peer-to-peer audio/video with WebRTC", "Socket.IO signalling and rooms", "In-call chat and mute/video toggles"],
+    features: [
+      "Peer-to-peer audio/video with WebRTC",
+      "Socket.IO signalling and rooms",
+      "In-call chat and mute/video toggles",
+    ],
     tech: ["Node.js", "Express", "Socket.IO", "WebRTC", "HTML/CSS"],
     github: "https://github.com/Aamiruem/ApnaCollegeZoomClone",
   },
@@ -141,7 +153,11 @@ export const PROJECTS = [
     status: "Learning project",
     description:
       "A learning project spanning the modern stack: a React front end, Node/Express API with MongoDB, and a FastAPI AI service with agents, RAG, MCP, NLP, ML and computer vision.",
-    features: ["Voice and webcam front end", "Node/Express gateway with auth and chat history", "FastAPI AI layer: agent, RAG, tasks and reminders"],
+    features: [
+      "Voice and webcam front end",
+      "Node/Express gateway with auth and chat history",
+      "FastAPI AI layer: agent, RAG, tasks and reminders",
+    ],
     tech: ["React", "Node.js", "Express", "MongoDB", "FastAPI", "Streamlit", "AWS"],
     github: "https://github.com/Aamiruem/Aamir-Jarvis-Assistant",
   },

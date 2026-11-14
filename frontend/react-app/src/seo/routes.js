@@ -7,7 +7,7 @@
 // can load it during the build.
 
 import { CROP_PROFILES } from "../data/cropProfiles.js";
-import { PRODUCTION_SYSTEMS } from "../data/content/productionSystems.js";
+import { PRODUCTION_SYSTEM_INDEX as PRODUCTION_SYSTEMS } from "../data/content/productionSystemsIndex.js";
 import { BRAND } from "../data/site.js";
 
 const UPDATED = BRAND.contentUpdated;
@@ -205,7 +205,8 @@ const STATIC_ROUTES = [
   {
     path: "/privacy-policy",
     title: "Privacy Policy | AgriSmart",
-    description: "How AgriSmart handles data: what is stored in your browser, analytics, third-party services and how to contact us about privacy.",
+    description:
+      "How AgriSmart handles data: what is stored in your browser, analytics, third-party services and how to contact us about privacy.",
     crumb: "Privacy Policy",
     type: "WebPage",
     priority: 0.2,
@@ -214,7 +215,8 @@ const STATIC_ROUTES = [
   {
     path: "/disclaimer",
     title: "Disclaimer | AgriSmart",
-    description: "Important limits of AgriSmart's agricultural, AI model, health and nutrition information. Educational content only — confirm decisions with qualified experts.",
+    description:
+      "Important limits of AgriSmart's agricultural, AI model, health and nutrition information. Educational content only — confirm decisions with qualified experts.",
     crumb: "Disclaimer",
     type: "WebPage",
     priority: 0.2,
@@ -223,7 +225,8 @@ const STATIC_ROUTES = [
   {
     path: "/image-credits",
     title: "Image Credits & Licences | AgriSmart",
-    description: "Authors, licences and sources of the photographs used on AgriSmart, mostly from Wikimedia Commons under Creative Commons and public-domain licences.",
+    description:
+      "Authors, licences and sources of the photographs used on AgriSmart, mostly from Wikimedia Commons under Creative Commons and public-domain licences.",
     crumb: "Image Credits",
     type: "WebPage",
     priority: 0.2,
@@ -234,7 +237,8 @@ const STATIC_ROUTES = [
   {
     path: "/dashboard",
     title: "Smart Farming Dashboard – Weather, Yield & Crop Analytics",
-    description: "Live farm dashboard for India: state crop production trends, weather, seasonal advice and AI model insights in one view.",
+    description:
+      "Live farm dashboard for India: state crop production trends, weather, seasonal advice and AI model insights in one view.",
     crumb: "Dashboard",
     parent: "/app",
     priority: 0.7,
@@ -243,7 +247,8 @@ const STATIC_ROUTES = [
   {
     path: "/data-dashboard",
     title: "Agricultural Data Studio – Upload & Analyse Farm Data",
-    description: "Upload CSV or Excel farm data and explore it with charts, summaries and crop-yield analytics directly in your browser.",
+    description:
+      "Upload CSV or Excel farm data and explore it with charts, summaries and crop-yield analytics directly in your browser.",
     crumb: "Data studio",
     parent: "/app",
     priority: 0.6,
@@ -252,7 +257,8 @@ const STATIC_ROUTES = [
   {
     path: "/crop-recommendation",
     title: "AI Crop Recommendation – Best Crop for Your Soil & Climate",
-    description: "Free AI crop recommendation from soil N, P, K, pH, temperature, humidity and rainfall. Get ranked crops with reasons, trained on Indian data.",
+    description:
+      "Free AI crop recommendation from soil N, P, K, pH, temperature, humidity and rainfall. Get ranked crops with reasons, trained on Indian data.",
     crumb: "Crop advisor",
     parent: "/app",
     priority: 0.9,
@@ -261,7 +267,8 @@ const STATIC_ROUTES = [
   {
     path: "/seasonal-advisor",
     title: "Seasonal Crop Advisor – Kharif, Rabi & Zaid Crops by State",
-    description: "Find suitable Kharif, Rabi and Zaid crops for your state and soil, with sowing windows and water needs.",
+    description:
+      "Find suitable Kharif, Rabi and Zaid crops for your state and soil, with sowing windows and water needs.",
     crumb: "Season advisor",
     parent: "/app",
     priority: 0.7,
@@ -270,7 +277,8 @@ const STATIC_ROUTES = [
   {
     path: "/rotation-planner",
     title: "Crop Rotation Planner – Plan Healthy Crop Sequences",
-    description: "Plan a crop rotation that restores soil nitrogen, breaks pest cycles and spreads income across seasons.",
+    description:
+      "Plan a crop rotation that restores soil nitrogen, breaks pest cycles and spreads income across seasons.",
     crumb: "Rotation planner",
     parent: "/app",
     priority: 0.7,
@@ -288,7 +296,8 @@ const STATIC_ROUTES = [
   {
     path: "/soil-analysis",
     title: "Soil Health Analysis – Soil Testing, NPK & pH Interpretation",
-    description: "Interpret soil test results: N, P, K, pH, EC and organic carbon ratings with Soil Health Card style recommendations.",
+    description:
+      "Interpret soil test results: N, P, K, pH, EC and organic carbon ratings with Soil Health Card style recommendations.",
     crumb: "Soil health",
     parent: "/app",
     priority: 0.8,
@@ -306,7 +315,8 @@ const STATIC_ROUTES = [
   {
     path: "/irrigation-optimization",
     title: "Smart Irrigation Planner – FAO-56 Crop Water Requirement",
-    description: "Smart irrigation and water management: estimate crop water need from live evapotranspiration and plan drip or sprinkler schedules.",
+    description:
+      "Smart irrigation and water management: estimate crop water need from live evapotranspiration and plan drip or sprinkler schedules.",
     crumb: "Irrigation planner",
     parent: "/app",
     priority: 0.8,
@@ -315,7 +325,8 @@ const STATIC_ROUTES = [
   {
     path: "/disease-detection",
     title: "Crop Disease Detection – Leaf Photo Screening & Pest Library",
-    description: "AI crop monitoring and disease detection: screen leaf photos and browse a region-wise library of crop diseases and pests with IPM advice.",
+    description:
+      "AI crop monitoring and disease detection: screen leaf photos and browse a region-wise library of crop diseases and pests with IPM advice.",
     crumb: "Disease scanner",
     parent: "/app",
     priority: 0.8,
@@ -324,7 +335,8 @@ const STATIC_ROUTES = [
   {
     path: "/weather",
     title: "Farm Weather Forecast – 7-Day Weather for Indian States",
-    description: "Live 7-day farm weather for every Indian state: rain, temperature, humidity and wind with farming alerts.",
+    description:
+      "Live 7-day farm weather for every Indian state: rain, temperature, humidity and wind with farming alerts.",
     crumb: "Weather",
     parent: "/app",
     priority: 0.7,
@@ -333,7 +345,8 @@ const STATIC_ROUTES = [
   {
     path: "/yield-prediction",
     title: "Crop Yield Prediction – AI Yield Forecast for Indian Farms",
-    description: "Predict crop yield (t/ha) and production by state, season and crop with a machine-learning model, including the historical range.",
+    description:
+      "Predict crop yield (t/ha) and production by state, season and crop with a machine-learning model, including the historical range.",
     crumb: "Yield forecast",
     parent: "/app",
     priority: 0.9,
@@ -351,7 +364,8 @@ const STATIC_ROUTES = [
   {
     path: "/insights",
     title: "AI Model Insights – Accuracy, Metrics & Feature Importance",
-    description: "How AgriSmart's machine-learning models perform: accuracy, error metrics, model comparison and feature importance.",
+    description:
+      "How AgriSmart's machine-learning models perform: accuracy, error metrics, model comparison and feature importance.",
     crumb: "Model insights",
     parent: "/app",
     priority: 0.5,
@@ -360,7 +374,8 @@ const STATIC_ROUTES = [
   {
     path: "/crops",
     title: "Crop Library – Growing Conditions for 22 Indian Crops",
-    description: "Ideal N, P, K, pH, temperature, humidity and rainfall for 22 major Indian crops, with links to fertilizer planning.",
+    description:
+      "Ideal N, P, K, pH, temperature, humidity and rainfall for 22 major Indian crops, with links to fertilizer planning.",
     crumb: "Crop library",
     parent: "/crops-and-food",
     priority: 0.7,
@@ -369,7 +384,8 @@ const STATIC_ROUTES = [
   {
     path: "/crop-gallery",
     title: "Indian Crop Gallery – Photo Guide to 45 Crops",
-    description: "Photo guide to 45 Indian crops with English and Hindi names, seasons, soils, water needs and growing regions.",
+    description:
+      "Photo guide to 45 Indian crops with English and Hindi names, seasons, soils, water needs and growing regions.",
     crumb: "Crop gallery",
     parent: "/crops-and-food",
     priority: 0.7,
@@ -427,7 +443,7 @@ const SYSTEM_ROUTES = PRODUCTION_SYSTEMS.map((s) => ({
     `${s.title}: Definition, Process, Pros & Cons`.length <= 62
       ? `${s.title}: Definition, Process, Pros & Cons`
       : `${s.title}: Definition & Examples`,
-  description: `${s.summary} Learn the definition, importance, working process, advantages and limitations of ${s.title.toLowerCase()}, with Indian examples.`,
+  description: `${s.summary} Definition, process, pros and cons, with Indian examples.`,
   crumb: s.title,
   parent: "/agricultural-production-systems",
   image: `/og/systems-${s.slug}.jpg`,

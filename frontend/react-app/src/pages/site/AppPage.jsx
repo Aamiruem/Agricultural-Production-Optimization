@@ -60,7 +60,11 @@ export default function AppPage() {
       </PageHero>
 
       <section className="site-section" aria-labelledby="tools-title">
-        <SectionTitle id="tools-title" kicker="Inside the app" title={`${tools.length} tools for planning, growing and analysing`} />
+        <SectionTitle
+          id="tools-title"
+          kicker="Inside the app"
+          title={`${tools.length} tools for planning, growing and analysing`}
+        />
         <div className="app-tools">
           {tools.map((l) => (
             <Link key={l.to} to={l.to} className="app-tool" style={{ "--c": l.color }}>
@@ -110,8 +114,8 @@ export default function AppPage() {
             <WifiOff size={22} aria-hidden="true" />
             <h3>Good to know</h3>
             <p>
-              The app needs an internet connection to load. Farm records and planner data are saved on your device. AgriSmart
-              is not currently listed on Google Play or the App Store.
+              The app needs an internet connection to load. Farm records and planner data are saved on your device.
+              AgriSmart is not currently listed on Google Play or the App Store.
             </p>
           </div>
         </div>

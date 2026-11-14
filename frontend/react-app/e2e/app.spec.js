@@ -1,23 +1,29 @@
 import { expect, test } from "@playwright/test";
 
-const user = {
-  id: 1,
-  email: "ravi@example.com",
-  full_name: "Ravi Kumar",
-  role: "farmer",
-  created_at: "2026-11-13T00:00:00Z",
-};
-
-test("home page links to every tool and the theme toggle remembers dark mode", async ({ page }) => {
+test("home page shows the AgriSmart hero, primary navigation and remembers dark mode", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/AgriOptima/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("right crop");
-  const nav = page.getByRole("navigation", { name: "Main" });
-  for (const label of ["Crop advisor", "Fertilizer", "Crops", "Planner", "Farms", "Assistant", "Insights"]) {
-    await expect(nav.getByRole("link", { name: label })).toBeVisible();
+  await expect(page).toHaveTitle(/AgriSmart/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Transforming Agriculture");
+  const nav = page.getByRole("navigation", { name: "Primary" });
+  for (const label of [
+    "Home",
+    "About",
+    "Agriculture",
+    "Smart Machines",
+    "AI Solutions",
+    "Crops & Food",
+    "Healthcare",
+    "Projects",
+    "Contact",
+  ]) {
+    await expect(nav.getByRole("link", { name: label, exact: true })).toBeVisible();
   }
+  await expect(page.getByRole("link", { name: /Contact on WhatsApp/ })).toHaveAttribute(
+    "href",
+    /^https:\/\/wa\.me\/919931879953/,
+  );
 
-  await page.getByRole("button", { name: "Switch to dark theme" }).click();
+  await page.getByRole("button", { name: "Toggle theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-bs-theme", "dark");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-bs-theme", "dark");
@@ -65,38 +71,14 @@ test("planner (Redux) adds a field, advances status and survives a reload", asyn
   await expect(page.getByRole("listitem").filter({ hasText: "North plot" })).toContainText("sown");
 });
 
-test("protected farms page: sign in, then see farms from the Node service", async ({ page }) => {
-  await page.route("**/api/auth/token", async (route) => {
-    expect(route.request().postData()).toContain("username=ravi%40example.com");
-    await route.fulfill({ json: { access_token: "test-token", token_type: "bearer", expires_in: 3600, user } });
-  });
-  await page.route("**/farm-api/farms", (route) => {
-    expect(route.request().headers().authorization).toBe("Bearer test-token");
-    return route.fulfill({ json: [{ _id: "f1", name: "Green Acres", fields: 0, areaHa: 0, createdAt: "2026-11-13" }] });
-  });
-  await page.route("**/farm-api/farms/f1/**", (route) =>
-    route.fulfill({
-      json: route.request().url().endsWith("/summary")
-        ? {
-            farm: { _id: "f1", name: "Green Acres" },
-            totals: { fields: 0, areaHa: 0 },
-            byCrop: [],
-            byStatus: {},
-            recentActivities: [],
-          }
-        : [],
-    }),
-  );
-
+test("no login anywhere: farms open without an account and old auth URLs go home", async ({ page }) => {
   await page.goto("/farms");
-  await expect(page).toHaveURL(/\/login\?next=%2Ffarms$/);
-  await page.getByLabel("Email").fill("ravi@example.com");
-  await page.getByLabel("Password").fill("green123");
-  await page.getByRole("button", { name: "Sign in" }).click();
-
   await expect(page).toHaveURL(/\/farms$/);
-  await expect(page.getByRole("heading", { name: "Green Acres" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Sign out" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("My farms");
+  await expect(page.locator('a[href*="/login"], a[href*="/register"]')).toHaveCount(0);
+
+  await page.goto("/login");
+  await expect(page).toHaveURL(/\/$/);
 });
 
 test("assistant streams tokens, tool steps and sources", async ({ page }) => {

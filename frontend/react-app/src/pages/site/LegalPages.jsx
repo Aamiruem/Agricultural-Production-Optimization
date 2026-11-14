@@ -9,7 +9,12 @@ import { BRAND, OWNER } from "@/data/site";
 export function PrivacyPolicyPage() {
   return (
     <div className="site-page">
-      <PageHero kicker="Legal" title="Privacy Policy" lead="AgriSmart has no accounts, sign-up or login. This page explains what little data is involved when you use the site." compact />
+      <PageHero
+        kicker="Legal"
+        title="Privacy Policy"
+        lead="AgriSmart has no accounts, sign-up or login. This page explains what little data is involved when you use the site."
+        compact
+      />
       <article className="site-section site-prose legal">
         <Reviewed date={BRAND.contentUpdated}>Effective from</Reviewed>
         <h2>1. Who we are</h2>
@@ -18,13 +23,15 @@ export function PrivacyPolicyPage() {
           Contact: <a href={`mailto:${OWNER.email}`}>{OWNER.email}</a>.
         </p>
         <h2>2. No accounts</h2>
-        <p>You can use every page and tool without creating an account. We do not ask for passwords or payment details.</p>
+        <p>
+          You can use every page and tool without creating an account. We do not ask for passwords or payment details.
+        </p>
         <h2>3. Data stored in your browser</h2>
         <p>
-          Some preferences and tool data are saved only in your own browser (localStorage/sessionStorage) and are not sent
-          to us: colour theme, language, dismissed announcements, notification read status, farms and fields you record
-          on the &ldquo;My farms&rdquo; page, and recent recommendation history. Clearing your browser&apos;s site data
-          removes them.
+          Some preferences and tool data are saved only in your own browser (localStorage/sessionStorage) and are not
+          sent to us: colour theme, language, dismissed announcements, notification read status, farms and fields you
+          record on the &ldquo;My farms&rdquo; page, and recent recommendation history. Clearing your browser&apos;s
+          site data removes them.
         </p>
         <h2>4. Third-party services</h2>
         <ul>
@@ -40,18 +47,18 @@ export function PrivacyPolicyPage() {
             browser type) to deliver and secure the site.
           </li>
           <li>
-            <b>Analytics:</b> if Google Analytics is enabled for this deployment, it records anonymised page views to help
-            us understand which content is useful. IP anonymisation is requested.
+            <b>Analytics:</b> if Google Analytics is enabled for this deployment, it records anonymised page views to
+            help us understand which content is useful. IP anonymisation is requested.
           </li>
           <li>
-            <b>Contact:</b> WhatsApp, phone and email links open those apps; messages are handled under their own privacy
-            policies.
+            <b>Contact:</b> WhatsApp, phone and email links open those apps; messages are handled under their own
+            privacy policies.
           </li>
         </ul>
         <h2>5. Contact form</h2>
         <p>
-          The contact form does not send data to a server. It prepares your message and opens WhatsApp or your email app,
-          where you review and send it yourself.
+          The contact form does not send data to a server. It prepares your message and opens WhatsApp or your email
+          app, where you review and send it yourself.
         </p>
         <h2>6. Children</h2>
         <p>The site is intended for a general audience and does not knowingly collect personal data from children.</p>
@@ -68,7 +75,12 @@ export function PrivacyPolicyPage() {
 export function DisclaimerPage() {
   return (
     <div className="site-page">
-      <PageHero kicker="Legal" title="Disclaimer" lead="Please read these limits before acting on any information or tool output from AgriSmart." compact />
+      <PageHero
+        kicker="Legal"
+        title="Disclaimer"
+        lead="Please read these limits before acting on any information or tool output from AgriSmart."
+        compact
+      />
       <article className="site-section site-prose legal">
         <Reviewed date={BRAND.contentUpdated}>Last updated</Reviewed>
         <h2>Educational information</h2>
@@ -79,9 +91,9 @@ export function DisclaimerPage() {
         </p>
         <h2>AI and model outputs</h2>
         <p>
-          Crop recommendations, yield predictions, fertilizer and irrigation estimates and disease screening are produced
-          by statistical and machine-learning models. They are planning aids, not guarantees, and can be wrong. Model
-          accuracy is reported on the <Link to="/insights">model insights</Link> page.
+          Crop recommendations, yield predictions, fertilizer and irrigation estimates and disease screening are
+          produced by statistical and machine-learning models. They are planning aids, not guarantees, and can be wrong.
+          Model accuracy is reported on the <Link to="/insights">model insights</Link> page.
         </p>
         <h2>Health and nutrition</h2>
         <MedicalDisclaimer />
@@ -113,10 +125,14 @@ export function ImageCreditsPage() {
       />
       <section className="site-section">
         <p className="muted-note">
-          Images were cropped and resized. Licences marked CC BY or CC BY-SA require attribution; CC BY-SA adaptations are
-          shared under the same licence. Crop photos in the crop gallery and the home-page artwork come from the
+          Images were cropped and resized. Licences marked CC BY or CC BY-SA require attribution; CC BY-SA adaptations
+          are shared under the same licence. Crop photos in the crop gallery and the home-page artwork come from the
           companion project{" "}
-          <a href="https://github.com/Aamiruem/Indian-Crop-Optimization-Production" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/Aamiruem/Indian-Crop-Optimization-Production"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Indian Crop Optimization Production
           </a>
           .

@@ -3,7 +3,11 @@
 
 export const PRODUCTION_GROUPS = [
   { id: "systems", title: "Farming systems", lead: "How a farm is organised: scale, purpose, inputs and enterprises." },
-  { id: "practices", title: "Resource & crop management", lead: "The practices every system relies on: water, soil, nutrients and protection." },
+  {
+    id: "practices",
+    title: "Resource & crop management",
+    lead: "The practices every system relies on: water, soil, nutrients and protection.",
+  },
   { id: "patterns", title: "Cropping patterns", lead: "How crops are arranged in time and space on the same land." },
 ];
 
@@ -184,7 +188,8 @@ export const PRODUCTION_SYSTEMS = [
     title: "Organic Farming",
     image: "systems/organic-farming",
     alt: "A diverse organic vegetable plot with mulched beds and trees on the field boundary",
-    summary: "Farming without synthetic fertilizers and pesticides, relying on natural soil fertility and biological pest control.",
+    summary:
+      "Farming without synthetic fertilizers and pesticides, relying on natural soil fertility and biological pest control.",
     definition:
       "Organic farming is a production system that avoids synthetic fertilizers, pesticides, growth regulators and genetically modified organisms. It builds soil fertility with compost, green manure, crop residues and biofertilizers, and manages pests through crop rotation, resistant varieties, natural enemies and botanical preparations.",
     importance:
@@ -319,7 +324,8 @@ export const PRODUCTION_SYSTEMS = [
     title: "Sustainable Agriculture",
     image: "systems/sustainable-agriculture",
     alt: "Vegetables growing under a canopy of trees on a farm practising sustainable agriculture",
-    summary: "Meeting today's food needs while protecting soil, water, biodiversity and farm livelihoods for the future.",
+    summary:
+      "Meeting today's food needs while protecting soil, water, biodiversity and farm livelihoods for the future.",
     definition:
       "Sustainable agriculture is farming that is productive and profitable while conserving natural resources and protecting the environment and community health over the long term. It combines practices such as crop rotation, cover crops, conservation tillage, integrated nutrient and pest management, efficient irrigation and agroforestry.",
     importance:

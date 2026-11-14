@@ -19,7 +19,20 @@ import { CtaBand, PageHero, Reviewed, SectionTitle, SitePhoto } from "@/componen
 import { AI_SOLUTIONS, AI_TECH, ML_WORKFLOW } from "@/data/content/aiSolutions";
 import { BRAND } from "@/data/site";
 
-const ICONS = { Sprout, TrendingUp, Layers, FlaskConical, ScanSearch, CloudSun, Beaker, Droplets, BarChart3, IndianRupee, Satellite, Bot };
+const ICONS = {
+  Sprout,
+  TrendingUp,
+  Layers,
+  FlaskConical,
+  ScanSearch,
+  CloudSun,
+  Beaker,
+  Droplets,
+  BarChart3,
+  IndianRupee,
+  Satellite,
+  Bot,
+};
 
 function Workflow() {
   return (
@@ -61,8 +74,8 @@ export default function AiSolutionsPage() {
           <h2>What AI brings to farming</h2>
           <p>
             Farming decisions depend on many interacting factors — soil nutrients, rainfall, temperature, pests,
-            varieties and prices. Machine-learning models learn these patterns from historical data and apply them to
-            a new field or season in seconds. Used well, AI helps farmers <strong>increase productivity</strong>,{" "}
+            varieties and prices. Machine-learning models learn these patterns from historical data and apply them to a
+            new field or season in seconds. Used well, AI helps farmers <strong>increase productivity</strong>,{" "}
             <strong>reduce input waste</strong> and <strong>manage risk</strong>. It supports — not replaces — local
             expertise, soil tests and agricultural extension officers.
           </p>
@@ -92,7 +105,9 @@ export default function AiSolutionsPage() {
                     <Icon size={22} />
                   </span>
                   <h3>{s.name}</h3>
-                  {s.status === "concept" && <span className="status-pill status-pill--grey">Explainer · tool planned</span>}
+                  {s.status === "concept" && (
+                    <span className="status-pill status-pill--grey">Explainer · tool planned</span>
+                  )}
                 </header>
                 <p className="ai-problem">{s.problem}</p>
                 <div className="ai-pipeline" aria-label={`${s.name} data flow`}>
@@ -158,7 +173,10 @@ export default function AiSolutionsPage() {
         <Reviewed date={BRAND.contentUpdated} />
       </section>
 
-      <CtaBand title="Build an AI solution for your farm or agri-business" text="AI/ML development, crop prediction systems and data analytics — talk to the developer directly." />
+      <CtaBand
+        title="Build an AI solution for your farm or agri-business"
+        text="AI/ML development, crop prediction systems and data analytics — talk to the developer directly."
+      />
     </div>
   );
 }

@@ -38,7 +38,11 @@ export const SERVICES = [
     title: "Smart Farming Solutions",
     status: "planned",
     text: "Connecting field sensors, weather stations and drones to dashboards and alerts. Software integration is possible today; hardware supply and installation are a future capability.",
-    includes: ["IoT sensor dashboards (software)", "Alert rules for irrigation and disease risk", "Drone/satellite data integration (planned)"],
+    includes: [
+      "IoT sensor dashboards (software)",
+      "Alert rules for irrigation and disease risk",
+      "Drone/satellite data integration (planned)",
+    ],
   },
   {
     id: "agri-data-analytics",

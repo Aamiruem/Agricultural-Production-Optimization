@@ -86,7 +86,9 @@ export default function NutritionPage() {
           <div className="info-card">
             <Zap size={22} aria-hidden="true" />
             <h3>Eat for the work you do</h3>
-            <p>Heavy field work needs more energy and water. Do not skip breakfast; carry water and a snack to the field.</p>
+            <p>
+              Heavy field work needs more energy and water. Do not skip breakfast; carry water and a snack to the field.
+            </p>
           </div>
           <div className="info-card">
             <Sprout size={22} aria-hidden="true" />
@@ -96,7 +98,10 @@ export default function NutritionPage() {
           <div className="info-card">
             <HeartPulse size={22} aria-hidden="true" />
             <h3>Prevent anaemia</h3>
-            <p>Combine iron-rich greens, pulses and millets with vitamin C foods such as lemon or amla to absorb more iron.</p>
+            <p>
+              Combine iron-rich greens, pulses and millets with vitamin C foods such as lemon or amla to absorb more
+              iron.
+            </p>
           </div>
           <div className="info-card">
             <Archive size={22} aria-hidden="true" />

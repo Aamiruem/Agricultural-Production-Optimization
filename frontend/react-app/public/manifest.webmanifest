@@ -19,8 +19,16 @@
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ],
   "shortcuts": [
-    { "name": "Crop advisor", "url": "/crop-recommendation", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Yield forecast", "url": "/yield-prediction", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    {
+      "name": "Crop advisor",
+      "url": "/crop-recommendation",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Yield forecast",
+      "url": "/yield-prediction",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
     { "name": "Weather", "url": "/weather", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }

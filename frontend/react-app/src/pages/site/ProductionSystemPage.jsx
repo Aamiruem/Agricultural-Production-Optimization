@@ -15,7 +15,14 @@ export default function ProductionSystemPage() {
 
   return (
     <div className="site-page">
-      <PageHero kicker="Agricultural production systems" title={s.title} lead={s.summary} image={s.image} imageAlt={s.alt} compact />
+      <PageHero
+        kicker="Agricultural production systems"
+        title={s.title}
+        lead={s.summary}
+        image={s.image}
+        imageAlt={s.alt}
+        compact
+      />
 
       <div className="article-layout">
         <article className="article-main">

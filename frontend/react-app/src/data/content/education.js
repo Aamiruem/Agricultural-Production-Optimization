@@ -8,7 +8,12 @@ export const EDUCATION_TOPICS = [
     image: "education/modern-farming",
     alt: "Farmers watching a co-composting training demonstration near Bengaluru",
     text: "Combine improved varieties, mechanisation, micro-irrigation, protected cultivation and digital advisories to raise productivity while cutting costs.",
-    points: ["Direct-seeded rice and zero-till wheat", "Raised-bed and ridge sowing", "Drip fertigation", "Drone and sensor-based monitoring"],
+    points: [
+      "Direct-seeded rice and zero-till wheat",
+      "Raised-bed and ridge sowing",
+      "Drip fertigation",
+      "Drone and sensor-based monitoring",
+    ],
     link: { to: "/agricultural-production-systems/precision-agriculture", label: "Precision agriculture" },
   },
   {
@@ -16,7 +21,11 @@ export const EDUCATION_TOPICS = [
     icon: "FlaskConical",
     title: "Soil testing",
     text: "Test soil every two to three years, or before each major crop. Take samples from 0–15 cm depth in a zig-zag pattern, mix them and send about half a kilogram to a soil-testing laboratory.",
-    points: ["Avoid sampling near bunds, trees or manure heaps", "Sample before applying fertilizer", "Use your Soil Health Card recommendations"],
+    points: [
+      "Avoid sampling near bunds, trees or manure heaps",
+      "Sample before applying fertilizer",
+      "Use your Soil Health Card recommendations",
+    ],
     link: { to: "/soil-analysis", label: "Interpret your soil test" },
   },
   {
@@ -26,7 +35,11 @@ export const EDUCATION_TOPICS = [
     image: "education/seed-selection",
     alt: "A heap of Ponni paddy seed with a label",
     text: "Good seed alone can raise yield noticeably. Choose certified seed of varieties recommended for your region and season.",
-    points: ["Buy certified or truthfully labelled seed with a bill", "Check germination with a simple 100-seed test", "Treat seed with fungicide or biofertilizer before sowing"],
+    points: [
+      "Buy certified or truthfully labelled seed with a bill",
+      "Check germination with a simple 100-seed test",
+      "Treat seed with fungicide or biofertilizer before sowing",
+    ],
     link: { to: "/crop-recommendation", label: "Pick the right crop" },
   },
   {
@@ -34,7 +47,11 @@ export const EDUCATION_TOPICS = [
     icon: "Droplets",
     title: "Irrigation methods",
     text: "Match the method to crop and water: furrow and basin for field crops, sprinkler for close-spaced crops, drip for vegetables, orchards and sugarcane.",
-    points: ["Irrigate at critical crop stages", "Irrigate in the morning or evening to reduce evaporation", "Mulch to conserve moisture"],
+    points: [
+      "Irrigate at critical crop stages",
+      "Irrigate in the morning or evening to reduce evaporation",
+      "Mulch to conserve moisture",
+    ],
     link: { to: "/irrigation-optimization", label: "Irrigation planner" },
   },
   {
@@ -44,7 +61,11 @@ export const EDUCATION_TOPICS = [
     image: "education/crop-protection",
     alt: "A farm worker spraying a young crop with a knapsack sprayer",
     text: "Follow integrated pest management: prevention, regular scouting, economic thresholds and safe, targeted control.",
-    points: ["Use resistant varieties and crop rotation", "Install pheromone and sticky traps", "Spray only when needed, with protective equipment"],
+    points: [
+      "Use resistant varieties and crop rotation",
+      "Install pheromone and sticky traps",
+      "Spray only when needed, with protective equipment",
+    ],
     link: { to: "/disease-detection", label: "Disease scanner" },
   },
   {
@@ -52,7 +73,11 @@ export const EDUCATION_TOPICS = [
     icon: "Beaker",
     title: "Fertilizer application",
     text: "Apply the right source at the right rate, time and place (4R). Combine organic manure with mineral fertilizers based on soil test values.",
-    points: ["Apply phosphorus and potash at sowing", "Split nitrogen into two or three doses", "Do not broadcast urea on dry soil or before heavy rain"],
+    points: [
+      "Apply phosphorus and potash at sowing",
+      "Split nitrogen into two or three doses",
+      "Do not broadcast urea on dry soil or before heavy rain",
+    ],
     link: { to: "/fertilizer", label: "Fertilizer planner" },
   },
   {
@@ -60,7 +85,11 @@ export const EDUCATION_TOPICS = [
     icon: "ClipboardList",
     title: "Farm management",
     text: "Plan crops, labour, inputs and finance for the whole year. Keep simple records of every field's costs, operations and yields.",
-    points: ["Prepare a seasonal crop calendar", "Record inputs, costs and yields by field", "Join an FPO for group buying and selling"],
+    points: [
+      "Prepare a seasonal crop calendar",
+      "Record inputs, costs and yields by field",
+      "Join an FPO for group buying and selling",
+    ],
     link: { to: "/farms", label: "Record your farms" },
   },
   {
@@ -70,7 +99,11 @@ export const EDUCATION_TOPICS = [
     image: "education/agri-economics",
     alt: "Traders and farmers at a busy agricultural produce market",
     text: "Profit depends on cost of cultivation, yield and selling price. Know your break-even price and explore better markets.",
-    points: ["Compare mandi prices on e-NAM before selling", "Check MSP for notified crops", "Use storage and warehouse receipts to avoid distress sales"],
+    points: [
+      "Compare mandi prices on e-NAM before selling",
+      "Check MSP for notified crops",
+      "Use storage and warehouse receipts to avoid distress sales",
+    ],
   },
   {
     id: "sustainable-development",
@@ -79,7 +112,11 @@ export const EDUCATION_TOPICS = [
     image: "education/sustainable-development",
     alt: "Solar panels powering an irrigation pump beside rice fields",
     text: "Protect soil and water, use renewable energy and diversify crops so the farm stays productive for the next generation.",
-    points: ["Solar pumps cut diesel costs", "Avoid residue burning — use happy seeders or composting", "Harvest rainwater in farm ponds"],
+    points: [
+      "Solar pumps cut diesel costs",
+      "Avoid residue burning — use happy seeders or composting",
+      "Harvest rainwater in farm ponds",
+    ],
     link: { to: "/agricultural-production-systems/sustainable-agriculture", label: "Sustainable agriculture" },
   },
   {
@@ -89,7 +126,11 @@ export const EDUCATION_TOPICS = [
     image: "education/government-schemes",
     alt: "A Government of India Krishi Vigyan Kendra vehicle in Baramati, Maharashtra",
     text: "Central and state schemes support income, insurance, credit, irrigation, mechanisation and soil health. Always apply through official portals or your local agriculture office.",
-    points: ["Beware of agents asking for fees", "Keep Aadhaar, land records and bank details updated", "Contact your Krishi Vigyan Kendra for help"],
+    points: [
+      "Beware of agents asking for fees",
+      "Keep Aadhaar, land records and bank details updated",
+      "Contact your Krishi Vigyan Kendra for help",
+    ],
   },
 ];
 
@@ -113,7 +154,8 @@ export const GOVERNMENT_SCHEMES = [
     name: "PMFBY",
     full: "Pradhan Mantri Fasal Bima Yojana",
     since: "Launched 2016",
-    benefit: "Crop insurance against yield losses from natural calamities, pests and diseases. Check premium rates, cut-off dates and claims on the portal.",
+    benefit:
+      "Crop insurance against yield losses from natural calamities, pests and diseases. Check premium rates, cut-off dates and claims on the portal.",
     href: "https://pmfby.gov.in/",
   },
   {
@@ -139,7 +181,8 @@ export const GOVERNMENT_SCHEMES = [
     name: "e-NAM",
     full: "National Agriculture Market",
     since: "Launched 2016",
-    benefit: "Online trading platform linking mandis so farmers can discover prices and sell to more buyers. Helpline: 1800 270 0224.",
+    benefit:
+      "Online trading platform linking mandis so farmers can discover prices and sell to more buyers. Helpline: 1800 270 0224.",
     href: "https://enam.gov.in/web/",
     verified: true,
   },
@@ -158,7 +201,8 @@ export const GOVERNMENT_SCHEMES = [
     name: "PM-KUSUM",
     full: "Pradhan Mantri Kisan Urja Suraksha evam Utthaan Mahabhiyan",
     since: "Launched 2019",
-    benefit: "Support for solar pumps and solarising grid-connected agricultural pumps. Check current state-wise subsidy on the official portal.",
+    benefit:
+      "Support for solar pumps and solarising grid-connected agricultural pumps. Check current state-wise subsidy on the official portal.",
     href: "https://pmkusum.mnre.gov.in/",
   },
   {

@@ -16,7 +16,11 @@ export const MACHINES = [
       "Hydraulic and PTO control for implements",
       "Ergonomic cabins and operator-assist displays",
     ],
-    applications: ["Ploughing, harrowing and rotavation", "Pulling seed drills, sprayers and trailers", "Powering pumps and threshers via PTO"],
+    applications: [
+      "Ploughing, harrowing and rotavation",
+      "Pulling seed drills, sprayers and trailers",
+      "Powering pumps and threshers via PTO",
+    ],
     benefits: [
       "Timely field operations across larger areas",
       "Less overlap means lower fuel, seed and fertilizer use",
@@ -60,7 +64,11 @@ export const MACHINES = [
       "RGB, multispectral or thermal cameras for crop mapping",
       "Obstacle-avoidance and terrain-following sensors",
     ],
-    applications: ["Spraying in tall or flooded crops", "Crop-health (NDVI) mapping", "Field surveying and damage assessment"],
+    applications: [
+      "Spraying in tall or flooded crops",
+      "Crop-health (NDVI) mapping",
+      "Field surveying and damage assessment",
+    ],
     benefits: [
       "Fast coverage with low water use for spraying",
       "Less operator exposure to chemicals",
@@ -83,7 +91,10 @@ export const MACHINES = [
       "Fertilizer boxes for simultaneous placement",
       "Zero-till and Happy Seeder variants for sowing into crop residue",
     ],
-    applications: ["Wheat, rice (DSR), maize, soybean, cotton and pulses", "Direct sowing into residue without burning"],
+    applications: [
+      "Wheat, rice (DSR), maize, soybean, cotton and pulses",
+      "Direct sowing into residue without burning",
+    ],
     benefits: [
       "Uniform germination and plant stand",
       "Lower seed rate and better fertilizer efficiency",
@@ -150,7 +161,11 @@ export const MACHINES = [
       "Soil sampling augers and probes",
     ],
     applications: ["Soil Health Card testing", "Pre-sowing fertility checks", "Monitoring salinity and acidity"],
-    benefits: ["Fertilizer doses based on evidence, not guesswork", "Lower input cost", "Early warning of soil problems"],
+    benefits: [
+      "Fertilizer doses based on evidence, not guesswork",
+      "Lower input cost",
+      "Early warning of soil problems",
+    ],
   },
   {
     slug: "agricultural-robots",
@@ -167,7 +182,11 @@ export const MACHINES = [
       "Interchangeable tools (sprayers, grippers, weeders)",
       "Electric drives with remote monitoring",
     ],
-    applications: ["Precision spraying and weeding", "Fruit picking and greenhouse logistics", "Crop scouting and data collection"],
+    applications: [
+      "Precision spraying and weeding",
+      "Fruit picking and greenhouse logistics",
+      "Crop scouting and data collection",
+    ],
     benefits: ["Works long hours with consistent precision", "Reduces labour shortages", "Collects plant-level data"],
   },
   {
@@ -185,7 +204,11 @@ export const MACHINES = [
       "Adjustable row spacing",
       "Petrol, electric or tractor-mounted options",
     ],
-    applications: ["Vegetables and row crops", "Organic farms where herbicides are not used", "Paddy (cono-weeders) and orchards"],
+    applications: [
+      "Vegetables and row crops",
+      "Organic farms where herbicides are not used",
+      "Paddy (cono-weeders) and orchards",
+    ],
     benefits: ["Less herbicide use and residue", "Saves hand-weeding labour", "Soil aeration while weeding"],
   },
   {
@@ -204,7 +227,11 @@ export const MACHINES = [
       "Threshold alerts for irrigation and disease risk",
     ],
     applications: ["Irrigation scheduling", "Disease forecasting", "Frost and heat-stress alerts"],
-    benefits: ["Decisions based on live field data", "Saves water and spray costs", "Early warning before damage occurs"],
+    benefits: [
+      "Decisions based on live field data",
+      "Saves water and spray costs",
+      "Early warning before damage occurs",
+    ],
   },
   {
     slug: "greenhouse-automation-equipment",
@@ -222,7 +249,11 @@ export const MACHINES = [
       "Sensor dashboards and remote alarms",
     ],
     applications: ["High-value vegetables, flowers and nurseries", "Hydroponic and soilless cultivation"],
-    benefits: ["Year-round, high-quality production", "Efficient water and nutrient use", "Protection from weather extremes and pests"],
+    benefits: [
+      "Year-round, high-quality production",
+      "Efficient water and nutrient use",
+      "Protection from weather extremes and pests",
+    ],
   },
   {
     slug: "grain-harvesting-and-processing-machines",

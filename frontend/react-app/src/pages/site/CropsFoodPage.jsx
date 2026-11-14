@@ -2,7 +2,14 @@ import { Apple, ArrowRight, Bean, Carrot, Droplet, Factory, Flower2, Wheat } fro
 import { Link } from "react-router";
 
 import { CtaBand, PageHero, Reviewed, SectionTitle, SitePhoto } from "@/components/site/SiteKit";
-import { CROP_CATEGORIES, CROP_SEASONS, FOOD_CHAIN, FOOD_GALLERY, FOOD_SECURITY, POST_HARVEST } from "@/data/content/cropsFood";
+import {
+  CROP_CATEGORIES,
+  CROP_SEASONS,
+  FOOD_CHAIN,
+  FOOD_GALLERY,
+  FOOD_SECURITY,
+  POST_HARVEST,
+} from "@/data/content/cropsFood";
 import { BRAND } from "@/data/site";
 
 const ICONS = { Wheat, Bean, Droplet, Apple, Carrot, Factory, Flower2 };
@@ -26,7 +33,12 @@ export default function CropsFoodPage() {
       </PageHero>
 
       <section className="site-section" id="seasons" aria-labelledby="seasons-title">
-        <SectionTitle id="seasons-title" kicker="Cropping seasons" title="Kharif, Rabi and Zaid crops" lead="Indian agriculture follows the monsoon. Each season has its own sowing window and crops." />
+        <SectionTitle
+          id="seasons-title"
+          kicker="Cropping seasons"
+          title="Kharif, Rabi and Zaid crops"
+          lead="Indian agriculture follows the monsoon. Each season has its own sowing window and crops."
+        />
         <div className="season-grid">
           {CROP_SEASONS.map((s) => (
             <article key={s.id} className={`season-card season-card--${s.id}`}>
@@ -99,7 +111,11 @@ export default function CropsFoodPage() {
           ))}
         </ol>
         <div className="split-media">
-          <SitePhoto image="food/supply-chain" alt="A truck carrying sacks of potatoes to cold storage on an Indian highway" sizes="(max-width: 992px) 100vw, 45vw" />
+          <SitePhoto
+            image="food/supply-chain"
+            alt="A truck carrying sacks of potatoes to cold storage on an Indian highway"
+            sizes="(max-width: 992px) 100vw, 45vw"
+          />
           <div>
             <h3>Supply chains and storage</h3>
             <p>
@@ -108,9 +124,8 @@ export default function CropsFoodPage() {
               and allow farmers to avoid selling at the lowest post-harvest prices.
             </p>
             <p>
-              Government-backed facilities such as the Agriculture Infrastructure Fund support investment in
-              warehouses, cold chains and processing units close to farms.{" "}
-              <Link to="/farmer-education#schemes">See schemes</Link>.
+              Government-backed facilities such as the Agriculture Infrastructure Fund support investment in warehouses,
+              cold chains and processing units close to farms. <Link to="/farmer-education#schemes">See schemes</Link>.
             </p>
           </div>
         </div>

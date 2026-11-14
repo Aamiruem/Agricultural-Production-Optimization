@@ -1,4 +1,17 @@
-import { ArrowRight, BrainCircuit, Eye, HandHeart, Leaf, Lightbulb, Scale, ShieldCheck, Sprout, Target, Users, Wheat } from "lucide-react";
+import {
+  ArrowRight,
+  BrainCircuit,
+  Eye,
+  HandHeart,
+  Leaf,
+  Lightbulb,
+  Scale,
+  ShieldCheck,
+  Sprout,
+  Target,
+  Users,
+  Wheat,
+} from "lucide-react";
 import { Link } from "react-router";
 
 import { CtaBand, PageHero, SectionTitle, SitePhoto } from "@/components/site/SiteKit";
@@ -118,7 +131,11 @@ export default function AboutPage() {
       </section>
 
       <section className="site-section split-media" aria-labelledby="objectives-title">
-        <SitePhoto image="education/sustainable-development" alt="Solar panels powering irrigation beside rice fields" sizes="(max-width: 992px) 100vw, 45vw" />
+        <SitePhoto
+          image="education/sustainable-development"
+          alt="Solar panels powering irrigation beside rice fields"
+          sizes="(max-width: 992px) 100vw, 45vw"
+        />
         <div>
           <SectionTitle id="objectives-title" kicker="Objectives" title="What AgriSmart sets out to do" />
           <ol className="process-list">

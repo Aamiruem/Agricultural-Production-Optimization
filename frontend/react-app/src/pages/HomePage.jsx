@@ -248,7 +248,12 @@ export default function HomePage() {
             <Link to="/smart-agricultural-machines" className="lp-btn lp-btn--ghost">
               {hi ? "स्मार्ट मशीनें देखें" : "Discover Smart Machines"}
             </Link>
-            <a href={whatsappLink(WA_TEXT)} target="_blank" rel="noopener noreferrer" className="lp-btn lp-btn--whatsapp">
+            <a
+              href={whatsappLink(WA_TEXT)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="lp-btn lp-btn--whatsapp"
+            >
               <MessageCircle size={18} aria-hidden="true" /> {hi ? "WhatsApp पर संपर्क" : "Contact on WhatsApp"}
             </a>
           </motion.div>

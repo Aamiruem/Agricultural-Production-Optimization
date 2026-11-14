@@ -12,7 +12,8 @@ export const NUTRITION_CATEGORIES = [
       "Fibre aids digestion and helps control blood sugar",
       "Potassium helps maintain healthy blood pressure",
     ],
-    source: "Orchards and horticulture farms — mango, banana, guava, citrus, papaya, apple and grapes are major Indian fruit crops.",
+    source:
+      "Orchards and horticulture farms — mango, banana, guava, citrus, papaya, apple and grapes are major Indian fruit crops.",
     storage: [
       "Store ripe fruits in the refrigerator; ripen mangoes and bananas at room temperature",
       "Keep bananas and apples apart — their ethylene speeds ripening of others",
@@ -49,14 +50,22 @@ export const NUTRITION_CATEGORIES = [
       "Look for the Jaivik Bharat / India Organic logo to verify",
     ],
     source: "Certified organic farms (NPOP or PGS-India) using compost, crop rotation and biological pest control.",
-    storage: ["Store like conventional produce", "Organic produce may spoil faster without preservatives — buy fresh and use soon"],
+    storage: [
+      "Store like conventional produce",
+      "Organic produce may spoil faster without preservatives — buy fresh and use soon",
+    ],
   },
   {
     id: "cereals-grains",
     name: "Cereals and Grains",
     image: "nutrition/cereals-grains",
     alt: "A woman winnowing harvested millet grain by pouring it from a container",
-    nutrients: ["Complex carbohydrates", "B-vitamins", "Fibre (whole grains)", "Iron and calcium (millets such as ragi)"],
+    nutrients: [
+      "Complex carbohydrates",
+      "B-vitamins",
+      "Fibre (whole grains)",
+      "Iron and calcium (millets such as ragi)",
+    ],
     benefits: [
       "Main energy source for physical work",
       "Whole grains and millets keep you full and steady blood sugar",
@@ -81,7 +90,10 @@ export const NUTRITION_CATEGORIES = [
       "Low glycaemic index — good for diabetes management",
     ],
     source: "Gram, arhar, moong, urad, masoor and peas — legumes that also enrich soil with nitrogen.",
-    storage: ["Keep in airtight containers away from moisture", "Soaking and sprouting improve digestibility and nutrient absorption"],
+    storage: [
+      "Keep in airtight containers away from moisture",
+      "Soaking and sprouting improve digestibility and nutrient absorption",
+    ],
   },
   {
     id: "dairy-products",
@@ -112,7 +124,8 @@ export const NUTRITION_CATEGORIES = [
       "Maintains healthy weight and energy for work",
       "Reduces the risk of diet-related diseases",
     ],
-    source: "A traditional thali combines cereals, pulses, vegetables, curd and a little fat — food from many farm systems.",
+    source:
+      "A traditional thali combines cereals, pulses, vegetables, curd and a little fat — food from many farm systems.",
     storage: ["Eat freshly cooked food; refrigerate leftovers promptly and reheat thoroughly"],
     guide:
       "ICMR–National Institute of Nutrition's Dietary Guidelines for Indians (2024) suggest filling about half the plate with vegetables and fruits, with the rest from cereals and millets, pulses or other protein foods, nuts and seeds, and milk or curd.",
@@ -129,7 +142,10 @@ export const NUTRITION_CATEGORIES = [
       "Seeds like flax and sesame add omega-3 and calcium",
     ],
     source: "Groundnut, sesame, mustard and coconut farms, and dry-fruit orchards.",
-    storage: ["Store in airtight jars in a cool, dark place to prevent rancidity", "Buy small quantities that you can use within a few weeks"],
+    storage: [
+      "Store in airtight jars in a cool, dark place to prevent rancidity",
+      "Buy small quantities that you can use within a few weeks",
+    ],
   },
 ];
 

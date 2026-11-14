@@ -8,7 +8,8 @@ export const ML_WORKFLOW = [
   },
   {
     step: "Data Preprocessing",
-    detail: "Clean missing values and outliers, fix units, remove duplicates and split data by season for honest testing.",
+    detail:
+      "Clean missing values and outliers, fix units, remove duplicates and split data by season for honest testing.",
   },
   {
     step: "Feature Engineering",
@@ -28,7 +29,8 @@ export const ML_WORKFLOW = [
   },
   {
     step: "Farmer Recommendations",
-    detail: "Turn predictions into clear actions — what to sow, how much fertilizer, when to irrigate — with reasons and ranges.",
+    detail:
+      "Turn predictions into clear actions — what to sow, how much fertilizer, when to irrigate — with reasons and ranges.",
   },
 ];
 
@@ -61,7 +63,14 @@ export const AI_SOLUTIONS = [
     name: "Crop Yield Prediction",
     icon: "TrendingUp",
     problem: "How much will this field produce this season?",
-    inputs: ["Crop and season", "State/district", "Area", "Rainfall and temperature", "Fertilizer and pesticide use", "Past yields"],
+    inputs: [
+      "Crop and season",
+      "State/district",
+      "Area",
+      "Rainfall and temperature",
+      "Fertilizer and pesticide use",
+      "Past yields",
+    ],
     model: "Regression (gradient boosting, Random Forest, neural networks)",
     output: "Expected yield (t/ha) and production with an uncertainty range",
     example:
@@ -76,7 +85,8 @@ export const AI_SOLUTIONS = [
     inputs: ["Texture (sand/silt/clay)", "Colour", "pH and EC", "Soil photos or spectra"],
     model: "Classifier or CNN on soil images/spectra",
     output: "Soil type (alluvial, black, red, laterite…) with management tips",
-    example: "A dark, clay-rich soil with high water-holding capacity is classified as black (regur) soil, well suited to cotton.",
+    example:
+      "A dark, clay-rich soil with high water-holding capacity is classified as black (regur) soil, well suited to cotton.",
     tool: { to: "/soil-types", label: "Explore soil types" },
   },
   {
@@ -98,7 +108,8 @@ export const AI_SOLUTIONS = [
     inputs: ["Leaf photo from a phone camera"],
     model: "Convolutional neural network (CNN) trained on labelled leaf images",
     output: "Likely disease or pest with confidence and treatment guidance",
-    example: "A tomato leaf with concentric brown rings is flagged as likely early blight, with IPM steps to confirm and manage it.",
+    example:
+      "A tomato leaf with concentric brown rings is flagged as likely early blight, with IPM steps to confirm and manage it.",
     tool: { to: "/disease-detection", label: "Open the disease scanner" },
     image: "ai/plant-disease",
     alt: "Sweet potato leaves showing damage spots used to train plant-health image models",
@@ -124,7 +135,8 @@ export const AI_SOLUTIONS = [
     inputs: ["Crop", "Soil N, P, K", "Target yield", "Field area"],
     model: "Nutrient-gap calculation with crop requirement tables",
     output: "Fertilizer quantities, timing and split doses",
-    example: "For maize on low-phosphorus soil, the planner calculates DAP for basal application and split urea top-dressing.",
+    example:
+      "For maize on low-phosphorus soil, the planner calculates DAP for basal application and split urea top-dressing.",
     tool: { to: "/fertilizer", label: "Plan fertilizer" },
   },
   {
@@ -146,7 +158,8 @@ export const AI_SOLUTIONS = [
     inputs: ["Sown area", "Yield trends", "Monsoon progress", "Satellite crop indices"],
     model: "Time-series and regression models (ARIMA, gradient boosting, LSTM)",
     output: "Production estimates for planning procurement, storage and trade",
-    example: "Below-normal monsoon rainfall in a state lowers the forecast for pulses production, signalling storage and price planning.",
+    example:
+      "Below-normal monsoon rainfall in a state lowers the forecast for pulses production, signalling storage and price planning.",
     tool: { to: "/reports", label: "View reports" },
   },
   {
@@ -170,7 +183,8 @@ export const AI_SOLUTIONS = [
     inputs: ["Sentinel-2 / Landsat multispectral images", "Field boundaries"],
     model: "Vegetation indices (NDVI, NDWI) and CNN-based crop classification",
     output: "Crop-health maps, crop-type maps and stress alerts",
-    example: "A patch of low NDVI in a field highlights water stress or pest damage before it is visible from the ground.",
+    example:
+      "A patch of low NDVI in a field highlights water stress or pest damage before it is visible from the ground.",
     image: "ai/satellite-monitoring",
     alt: "Satellite image showing a patchwork of agricultural fields",
     status: "concept",
@@ -183,7 +197,8 @@ export const AI_SOLUTIONS = [
     inputs: ["Farmer's question in text", "Curated agricultural knowledge base"],
     model: "Retrieval-augmented generation (RAG) with a large language model",
     output: "Answers grounded in the knowledge base, with sources",
-    example: "Asked about the right time to sow mustard, the assistant retrieves the seasonal guide and answers with dates and seed rate.",
+    example:
+      "Asked about the right time to sow mustard, the assistant retrieves the seasonal guide and answers with dates and seed rate.",
     tool: { to: "/assistant", label: "Ask the AI assistant" },
   },
 ];
