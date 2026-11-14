@@ -13,7 +13,7 @@ import { safeRedirect } from "@/utils/format";
 const POINTS = [
   "Location-based weather, climate and soil analysis",
   "AI crop suitability and yield prediction",
-  "Your farms and analyses saved to your account",
+  "One free account for every AgriSmart tool",
 ];
 
 /** Split-screen layout for login, registration and password reset. */

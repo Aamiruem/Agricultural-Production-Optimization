@@ -1086,7 +1086,7 @@
     font-weight: 800;
   }
   .auth-lead {
-    margin: -8px 0 0;
+    margin: var(--sp-2) 0 0;
     color: var(--c-ink-2);
   }
 }
@@ -1255,9 +1255,18 @@
   opacity: 0.85;
 }
 .agri-footer-address {
+  display: grid;
+  gap: var(--sp-2);
   font-style: normal;
   opacity: 0.85;
   line-height: 1.6;
+  > span,
+  > a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: inherit;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .skeleton {

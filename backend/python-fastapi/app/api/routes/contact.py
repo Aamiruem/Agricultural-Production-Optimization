@@ -53,7 +53,7 @@ def send_message(req: ContactIn, request: Request, db: DbSession):
     )
     db.add(msg)
     db.commit()
-    return {"id": msg.id, "detail": "Message received. We usually reply within one working day."}
+    return {"id": msg.id, "detail": "Message received. We will reply to the email address you gave."}
 
 
 @router.get("/contact")
