@@ -183,7 +183,10 @@ export function compareProfiles(profile, local, { weights = DEFAULT_WEIGHTS, now
     let status;
     if (extra.notComparable) status = "not comparable";
     else if (s == null) status = "missing";
-    else status = s >= 0.8 ? "match" : s >= 0.5 ? "partial" : "mismatch";
+    else {
+      const sr = round(s, 3); // classify on the reported (rounded) similarity
+      status = sr >= 0.8 ? "match" : sr >= 0.5 ? "partial" : "mismatch";
+    }
     rows.push({
       key,
       label: PARAM_LABELS[key] ?? key,
