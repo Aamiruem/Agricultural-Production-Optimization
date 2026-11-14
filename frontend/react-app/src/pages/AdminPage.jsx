@@ -28,7 +28,7 @@ export default function AdminPage() {
       <section className="mb-5" aria-labelledby="model-admin">
         <h2 id="model-admin" className="h5">Served model</h2>
         <p className="small text-body-secondary">
-          After retraining (<code>python -m ml.train</code>), reload the model without restarting the API.
+          After retraining (<code>python -m AIML.machine_learning.crop_classifier</code>), reload the model without restarting the API.
         </p>
         <Button variant="outline-primary" size="sm" onClick={() => reload.mutate()} disabled={reload.isPending}
                 className="d-inline-flex align-items-center gap-1">

@@ -1,10 +1,10 @@
 """Explain the trained model's global feature importance.
 
-    python -m AIML.explain        # after `python -m AIML.machine_learning.crop_classifier`
+    python -m AIML.advanced_ml.explain        # after `python -m AIML.machine_learning.crop_classifier`
 
 Uses SHAP (mean |SHAP value| per feature). If SHAP can't be loaded, falls
 back to scikit-learn permutation importance (drop in macro-F1 when a
-feature is shuffled). Writes ml/reports/feature_importance.{json,png}.
+feature is shuffled). Writes AIML/reports/feature_importance.{json,png}.
 """
 import json
 

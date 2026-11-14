@@ -49,12 +49,12 @@ as `mongodb_uri`.
    builds the four images, pushes them to ECR and rolls out the ECS services.
    The API applies database migrations on start.
 7. **Train the model in AWS**: run the worker image as a one-off ECS task with
-   the command `python -m ml.train` (from `/app`), or train locally and bake
-   `ml/models/crop_model.joblib` into the API image.
+   the command `python -m AIML.machine_learning.crop_classifier` (from `/app`), or train locally and bake
+   `AIML/models/crop_model.joblib` into the API image.
 
 ## Alternatives
 
-* **Vercel** for the web app (set the same `NEXT_PUBLIC_*` variables) with the
+* **Vercel** for the React app (set `VITE_API_URL` to the API origin) with the
   APIs on AWS.
 * **Render** / a single EC2 VM: `docker compose up -d` plus the HTTPS server block
   in `infra/nginx/nginx.conf` and a Let's Encrypt certificate.

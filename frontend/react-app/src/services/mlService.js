@@ -3,7 +3,7 @@ import { predictYieldLocal } from "@/lib/agriModels";
 
 import { api, withFallback } from "./apiClient";
 
-/** Served model + training leaderboard produced by `python -m ml.train`. */
+/** Served model + training leaderboard produced by `python -m AIML.machine_learning.crop_classifier`. */
 export async function fetchModelInfo() {
   const { data } = await api.get("/ml/model");
   return data;

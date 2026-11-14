@@ -6,6 +6,7 @@ from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
+SERVICE_DIR = Path(__file__).resolve().parents[2]  # backend/python-fastapi
 DEV_JWT_SECRET = "dev-only-insecure-secret-change-me"
 
 
@@ -17,7 +18,7 @@ class Settings(BaseSettings):
 
     # SQL database (SQLAlchemy URL). SQLite locally, PostgreSQL in Docker/AWS:
     # postgresql+psycopg://user:pass@host:5432/agrioptima
-    database_url: str = "sqlite:///./agrioptima.db"
+    database_url: str = f"sqlite:///{(SERVICE_DIR / 'agrioptima.db').as_posix()}"
     auto_create_tables: bool = True  # production uses `alembic upgrade head`
 
     # JWT (shared with the Node farm-service, which verifies the same tokens)

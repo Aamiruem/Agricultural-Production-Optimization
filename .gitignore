@@ -24,6 +24,7 @@ venv/
 # ML training by-products. Models and datasets in AIML/ are committed on purpose:
 # the API and the Docker image serve them. (*.db above covers MLflow/warehouse DBs.)
 catboost_info/
+AIML/mlruns/
 .ipynb_checkpoints/
 
 # Terraform

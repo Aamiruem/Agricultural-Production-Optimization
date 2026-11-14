@@ -1,6 +1,6 @@
 """Exploratory data analysis: summary statistics, correlations and plots.
 
-    python -m AIML.eda      # writes ml/reports/eda_*.{json,png}
+    python -m AIML.eda      # writes AIML/reports/eda_*.{json,png}
 """
 import json
 

@@ -8,16 +8,16 @@ and the syllabus itself recommends learning one deeply and understanding the oth
 
 | Topic | Where |
 |---|---|
-| HTML5 semantic, accessibility | landmarks, labelled forms, `aria-live` results, keyboard-usable controls throughout `frontend/web/src` |
+| HTML5 semantic, accessibility | landmarks, labelled forms, `aria-live` results, keyboard-usable controls throughout `frontend/react-app/src` and `Dashboard/src` |
 | CSS3, Flexbox, Grid, responsive | every page; mobile nav row in `site-header.tsx` |
 | Sass | `components/hero.module.scss` |
 | Tailwind CSS | all components; theme tokens in `app/globals.css` |
 | Bootstrap (React-Bootstrap) + Sass theme | `frontend/react-app` (`src/styles/main.scss`) |
-| JavaScript (ES6+), JSX | `frontend/react-app` (whole app), `services/farm-service` (plain JS, ES modules) |
+| JavaScript (ES6+), JSX | `frontend/react-app` (whole app), `backend/node-express` (plain JS, ES modules) |
 | React Router (routing, protected/admin routes, lazy pages) | `frontend/react-app/src/App.jsx` |
 | TypeScript | the whole web app; API types in `lib/api/types.ts` |
 | React (hooks, components) | all of `src/components` |
-| Next.js: SSR / SSG / ISR / SEO | `app/crops/page.tsx` (SSR), `app/crops/[name]` (SSG + ISR), `metadata`, `sitemap.ts`, `robots.ts` |
+| SEO for a SPA | `frontend/react-app`: per-page title/description/canonical (`useDocumentTitle`), build-time `sitemap.xml` and `robots.txt` (`vite.config.js`) |
 | State: Context API / Redux Toolkit / Zustand | `context/theme-context.tsx` / `store/fields-slice.ts` / `store/history-store.ts`, `store/auth-store.ts` |
 | Fetch / Axios / TanStack Query | `lib/api/server.ts` / `lib/api/client.ts` / every data hook |
 | React Hook Form + Zod | all forms; schemas in `lib/validation.ts` |
@@ -30,7 +30,7 @@ and the syllabus itself recommends learning one deeply and understanding the oth
 
 | Topic | Where |
 |---|---|
-| Node.js + Express.js | `services/farm-service` |
+| Node.js + Express.js | `backend/node-express` |
 | Python + FastAPI | `backend/app` |
 | REST API | both services; OpenAPI docs at `/docs` |
 | JWT, OAuth 2.0 password flow | `backend/app/core/security.py`, `api/routes/auth.py`; verified in Node `middleware/auth.js` |
@@ -78,7 +78,7 @@ and the syllabus itself recommends learning one deeply and understanding the oth
 | Cross-validation, metrics (precision, recall, F1, confusion matrix) | `ml/train.py` → `metrics.json`, Insights page |
 | Hyperparameter tuning: Optuna | `ml/tune.py` |
 | Explainability: SHAP | `ml/explain.py` |
-| Deep learning: PyTorch (MLP, backprop, early stopping) | `ml/models/torch_mlp.py` |
+| Deep learning: PyTorch (MLP, backprop, early stopping) | `AIML/deep_learning/torch_mlp.py` |
 | Embeddings, vector DB (Qdrant), hybrid search, RAG | `backend/app/ai/rag.py` |
 | Hugging Face | sentence-transformers embeddings (`requirements-ai.txt`) |
 | LLM API (Claude), streaming, tool calling | `backend/app/ai/agent.py` |

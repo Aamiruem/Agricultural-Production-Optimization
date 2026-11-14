@@ -2,8 +2,7 @@
 
 A single-page React app written in plain JavaScript (JSX), built with Vite. It
 talks to the **FastAPI** ML/AI service and the **Node/Express** farm service
-(see the root README). It covers the same features as the Next.js app in
-`frontend/web`, built with a different stack: React Router, Bootstrap and Sass.
+(see the root README). Stack: React Router, Bootstrap, Sass, TanStack Query and Recharts.
 
 ## Run
 

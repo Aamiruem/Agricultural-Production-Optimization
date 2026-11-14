@@ -12,7 +12,7 @@ import { formatDateTime, formatPercent } from "@/utils/format";
 
 const pct = (v) => (v === undefined ? "—" : formatPercent(v, 1));
 
-/** ML model comparison (from `python -m ml.train`) + feature importance. */
+/** ML model comparison (from `python -m AIML.machine_learning.crop_classifier`) + feature importance. */
 export function ModelInsights() {
   const info = useQuery({ queryKey: ["ml-model"], queryFn: fetchModelInfo });
 
@@ -23,7 +23,7 @@ export function ModelInsights() {
   if (!report) {
     return (
       <EmptyState>
-        No trained model yet — recommendations use profile matching. Train one with <code>python -m ml.train</code>.
+        No trained model yet — recommendations use profile matching. Train one with <code>python -m AIML.machine_learning.crop_classifier</code>.
       </EmptyState>
     );
   }

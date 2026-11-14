@@ -9,7 +9,7 @@ load-balancing gateway and AWS deployment.
 
 ```mermaid
 flowchart LR
-  B[Browser<br/>React app · Dashboard · Next.js] -->|REST · SSE · WebSocket| G[Gateway<br/>Nginx load balancer<br/>AWS ALB in the cloud]
+  B[Browser<br/>React app · Dashboard] -->|REST · SSE · WebSocket| G[Gateway<br/>Nginx load balancer<br/>AWS ALB in the cloud]
   C[MCP clients<br/>Claude Code / Desktop] -->|streamable HTTP| G
   G -->|/api · least-conn| A[api × N<br/>FastAPI + AIML]
   G -->|/farm-api · /socket.io sticky| F[farm-service × N<br/>Express]
@@ -18,7 +18,7 @@ flowchart LR
   A --> PG[(PostgreSQL)]
   A --> R[(Redis)] --> C2[worker<br/>Celery]
   A -->|Claude API| L[LLM]
-  A --> ML[[AIML models<br/>Random Forest · XGBoost · TreeSHAP]]
+  A --> ML[[AIML models<br/>Random Forest · XGB[Browser<br/>React app · Dashboard]ost · TreeSHAP]]
   M --> ML
   F --> MG[(MongoDB)]
   F -->|Socket.IO adapter| R
@@ -31,11 +31,10 @@ flowchart LR
 | Folder | What it is | Stack |
 |---|---|---|
 | [Dashboard](Dashboard) | **Operations console**: AI Studio (live recommendations + SHAP), yield analytics, models, farms, assistant, MCP tools, live system health and a load probe | React 19, Vite, Tailwind CSS v4, TanStack Query, React Router, Recharts, Google Sans, Material Symbols |
-| [frontend/react-app](frontend/react-app) | Public web app in plain **JavaScript (JSX)** | React 19, Vite, React Router, Bootstrap 5 + Sass, Redux Toolkit, Zustand, TanStack Query, Axios, Framer Motion, Socket.IO client, Vitest, Playwright |
-| [frontend/web](frontend/web) | Web app in **TypeScript (Next.js)** | Next.js 16, React 19, TypeScript, Tailwind, shadcn/ui, Redux Toolkit, Zustand, TanStack Query, Vitest, Jest, Playwright |
+| [frontend/react-app](frontend/react-app) | Public web app in plain **JavaScript (JSX)** | React 19, Vite, React Router, B[Browser<br/>React app · Dashboard]otstrap 5 + Sass, Redux Toolkit, Zustand, TanStack Query, Axios, Framer Motion, Socket.IO client, Vitest, Playwright |
 | [backend/python-fastapi](backend/python-fastapi) | AI/ML API | FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL/SQLite, JWT + RBAC, WebSockets, SSE, Celery + Redis, Anthropic SDK, LangGraph, Qdrant, load shedding, prediction caches, Prometheus metrics |
-| [backend/node-express](backend/node-express) | Farm management API | Express 5, MongoDB + Mongoose, Zod, JWT, Socket.IO (+ Redis adapter), AWS S3, helmet, rate limiting, pino |
-| [AIML](AIML) | Models, explainability, RAG, agents and the **MCP server** | pandas, scikit-learn, XGBoost, LightGBM, CatBoost, PyTorch, SHAP, Optuna, MLflow, MCP |
+| [backend/node-express](backend/node-express) | Farm management API | Express 5, MongoDB[Browser<br/>React app · Dashboard]+ Mongoose, Zod, JWT, Socket.IO (+ Redis adapter), AWS S3, helmet, rate limiting, pino |
+| [AIML](AIML) | Models, explainability, RAG, agents and the **MCP server** | pandas, scikit-learn, XGB[Browser<br/>React app · Dashboard]ost, LightGBM, CatB[Browser<br/>React app · Dashboard]ost, PyTorch, SHAP, Optuna, MLflow, MCP |
 | [infra](infra) | DevOps | Nginx gateway (load balancer), Docker Compose, Terraform (AWS: VPC, ECS Fargate, ALB, RDS, ElastiCache, S3, CloudFront) |
 | [docs](docs) | Documentation | [architecture](docs/architecture.md) · [AWS deployment](docs/deploy-aws.md) · [syllabus coverage](docs/syllabus-coverage.md) |
 
@@ -43,7 +42,7 @@ flowchart LR
 
 | From → to | How |
 |---|---|
-| Browser → every service | One origin: the gateway (Docker) or the Vite dev proxy (local) routes `/api`, `/farm-api`, `/socket.io`, `/mcp` |
+| B[Browser<br/>React app · Dashboard]owser → every service | One origin: the gateway (Docker) or the Vite dev proxy (local) routes `/api`, `/farm-api`, `/socket.io`, `/mcp` |
 | FastAPI → AIML | Imports the `AIML` package: crop & yield model bundles, TreeSHAP attribution (`AIML/advanced_ml/attribution.py`), agent tools |
 | MCP server → AIML | The same `AIML.agentic_ai.tools` functions, exposed as MCP tools |
 | Express → FastAPI | Fertilizer plans via `callAgriApi` with retries + `Retry-After` handling |
@@ -52,7 +51,7 @@ flowchart LR
 
 ## Run the complete local stack
 
-Python 3.12+, Node 20+. MongoDB on `127.0.0.1:27017` is optional — without it
+Python 3.12+, Node 20+. MongoDB[Browser<br/>React app · Dashboard]on `127.0.0.1:27017` is optional — without it
 everything runs and the farm pages report the database as unavailable.
 
 ```powershell
@@ -138,10 +137,9 @@ Tools: `recommend_crop`, `explain_crop` (TreeSHAP), `predict_yield`,
 |---|---|---|
 | backend/python-fastapi | `pytest` | 44 API tests: auth/JWT/RBAC, history, Celery jobs, WebSocket, model serving, RAG, agent loop, SHAP explanations, caching, load shedding, system status, warm-up |
 | repository root | `pytest AIML/tests` | Algorithms, models, RAG, Hadoop, CV, agents, MCP tools over stdio and stateless HTTP, SHAP additivity |
-| backend/node-express | `npm test` | Integration tests on real MongoDB (skipped without it) + DB-down behaviour |
+| backend/node-express | `npm test` | Integration tests on real MongoDB[Browser<br/>React app · Dashboard](skipped without it) + DB-down behaviour |
 | Dashboard | `npm test` | API client resilience (retry, Retry-After, circuit breaker), SSE parsing, every route renders with services down, icon subset, palette/CSS sync |
 | frontend/react-app | `npm test` · `npm run test:e2e` | Vitest + Playwright |
-| frontend/web | `npm test` · `npm run test:jest` · `npm run test:e2e` | Vitest, Jest, Playwright |
 
 CI ([ci.yml](.github/workflows/ci.yml)) runs all of them, applies the migrations to
 PostgreSQL, smoke-tests the MCP server over HTTP, validates the Compose file and

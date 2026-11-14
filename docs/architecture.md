@@ -4,7 +4,7 @@
 
 | Service | Owns | Why this technology |
 |---|---|---|
-| **web** (Next.js) | UI, SEO pages | Static pages for marketing/tools, server-side rendering for live data (`/crops`), client components for interactive tools. |
+| **web** (React app, `frontend/react-app`) | UI and tools | Vite SPA served as static files; calls `/api` and `/farm-api` through the gateway/ALB |
 | **api** (FastAPI) | Users & auth, predictions, batch jobs, ML serving, AI assistant | ML and AI libraries are Python-first; Pydantic gives typed validation and OpenAPI docs for free. |
 | **worker** (Celery) | Batch recommendations, model retraining | Long work leaves the request path; Redis is the broker. |
 | **farm-service** (Express) | Farms, fields, activity logs, photos | Flexible documents (activities, photos, GeoJSON) fit MongoDB; Socket.IO pushes changes to open tabs. |
@@ -28,7 +28,7 @@ types) → MongoDB.
 ## Request flows
 
 **Crop recommendation**: browser → `POST /api/recommend/crop` → model bundle
-(`ml/models/crop_model.joblib`, best of Logistic Regression / Random Forest /
+(`AIML/models/crop_model.joblib`, best of Logistic Regression / Random Forest /
 XGBoost) → top-3 crops. Signed-in users' requests are stored in `predictions`.
 
 **Live what-if**: browser ↔ `WS /api/ws/recommend`; every slider move sends the
@@ -84,13 +84,13 @@ deleting a farm removes its fields and activities in a transaction.
 
 ## ML lifecycle (MLOps)
 
-1. `python -m ml.data.download_dataset`: public dataset, SHA-256 pinned, schema-validated.
-2. `python -m ml.eda`: statistics, correlations and plots → `ml/reports/`.
-3. `python -m ml.train`: 5-fold CV + held-out test for 3 scikit-learn/XGBoost
+1. `python -m AIML.data.download`: public dataset, SHA-256 pinned, schema-validated.
+2. `python -m AIML.eda.crop_eda`: statistics, correlations and plots → `AIML/reports/`.
+3. `python -m AIML.machine_learning.crop_classifier`: 5-fold CV + held-out test for 3 scikit-learn/XGBoost
    models + a PyTorch MLP; every run logged to **MLflow**; the best model is
    registered as `crop-recommender` and saved as the serving bundle.
-4. `python -m ml.tune`: **Optuna** search for XGBoost (each trial an MLflow run).
-5. `python -m ml.explain`: **SHAP** feature importance.
+4. `python -m AIML.advanced_ml.tuning`: **Optuna** search for XGBoost (each trial an MLflow run).
+5. `python -m AIML.advanced_ml.explain`: **SHAP** feature importance.
 6. Serving reloads without a restart: `POST /api/ml/reload`; `POST /api/ml/retrain`
    runs training on the Celery worker.
 
@@ -102,4 +102,4 @@ deleting a farm removes its fields and activities in a transaction.
   add the Redis adapter (`@socket.io/redis-adapter`) to fan out events across tasks.
 * LangGraph's in-memory checkpointer is per-process; use a Postgres checkpointer
   for multi-instance assistant memory.
-* Read-heavy crop data is cached by Next.js (`"use cache"` + `cacheLife`).
+* Read-heavy reference data is micro-cached by the gateway and cached in the browser by TanStack Query.
