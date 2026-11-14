@@ -101,10 +101,12 @@ def run(runner, message, thread="t1"):
 
 
 def test_agent_tool_loop_streams_and_keeps_valid_history():
-    fake = FakeClient([
-        turn(text("Let me check. "), tool_use("tu_1", "recommend_crop", RICE), stop="tool_use"),
-        turn(text("Rice is the best match.")),
-    ])
+    fake = FakeClient(
+        [
+            turn(text("Let me check. "), tool_use("tu_1", "recommend_crop", RICE), stop="tool_use"),
+            turn(text("Rice is the best match.")),
+        ]
+    )
     runner = agent.SimpleRunner(fake, "claude-opus-5-5", get_knowledge_base())
     events = run(runner, "N 85 P 45 K 40, 23.5C, 82% humidity, pH 6.5, 230mm rain. What should I grow?")
 
@@ -132,11 +134,16 @@ def test_agent_memory_carries_across_turns():
 
 
 def test_agent_reports_invalid_tool_input_as_error_and_cites_sources():
-    fake = FakeClient([
-        turn(tool_use("tu_1", "recommend_crop", {"N": "lots"}),
-             tool_use("tu_2", "search_knowledge", {"query": "urea nitrogen content"}), stop="tool_use"),
-        turn(text("Urea is 46% N [fertilizers-india].")),
-    ])
+    fake = FakeClient(
+        [
+            turn(
+                tool_use("tu_1", "recommend_crop", {"N": "lots"}),
+                tool_use("tu_2", "search_knowledge", {"query": "urea nitrogen content"}),
+                stop="tool_use",
+            ),
+            turn(text("Urea is 46% N [fertilizers-india].")),
+        ]
+    )
     runner = agent.SimpleRunner(fake, "claude-opus-5-5", get_knowledge_base())
     events = run(runner, "fertilizer question")
 
@@ -166,7 +173,9 @@ def test_agent_errors_become_friendly_events():
         pass
 
     class Broken:
-        beta = SimpleNamespace(messages=SimpleNamespace(stream=lambda **_: (_ for _ in ()).throw(AuthenticationError())))
+        beta = SimpleNamespace(
+            messages=SimpleNamespace(stream=lambda **_: (_ for _ in ()).throw(AuthenticationError()))
+        )
 
     runner = agent.SimpleRunner(Broken(), "claude-opus-5-5", get_knowledge_base())
     events = run(runner, "hi")

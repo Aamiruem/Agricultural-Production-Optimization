@@ -11,6 +11,7 @@ Generation grounded answer with citations via Claude (optional)
     python -m AIML.rag.pipeline              # evaluate all strategies
     python -m AIML.rag.pipeline --ask "How much nitrogen does urea contain?"
 """
+
 from __future__ import annotations
 
 import argparse
@@ -51,7 +52,7 @@ def chunk_fixed(docs: dict[str, str], size: int = 60, overlap: int = 15) -> list
     for src, text in docs.items():
         words = re.sub(r"#+ ", "", text).split()
         for i, start in enumerate(range(0, max(len(words) - overlap, 1), size - overlap)):
-            out.append(Chunk(f"{src}#f{i}", src, src, " ".join(words[start:start + size])))
+            out.append(Chunk(f"{src}#f{i}", src, src, " ".join(words[start : start + size])))
     return out
 
 
@@ -83,7 +84,14 @@ def chunk_by_heading(docs: dict[str, str]) -> list[Chunk]:
                 title = line[2:].strip()
             elif line.startswith("## "):
                 if section and any(l.strip() for l in lines):
-                    out.append(Chunk(f"{src}#h{len(out)}", src, f"{title} › {section}", " ".join(l.strip() for l in lines if l.strip())))
+                    out.append(
+                        Chunk(
+                            f"{src}#h{len(out)}",
+                            src,
+                            f"{title} › {section}",
+                            " ".join(l.strip() for l in lines if l.strip()),
+                        )
+                    )
                 section, lines = line[3:].strip(), []
             else:
                 lines.append(line)
@@ -163,9 +171,11 @@ def mmr(query_vec: np.ndarray, doc_vecs: np.ndarray, candidates: list[int], k: i
     chosen: list[int] = []
     rel = doc_vecs @ query_vec
     while candidates and len(chosen) < k:
+
         def score(i):
             redundancy = max((float(doc_vecs[i] @ doc_vecs[j]) for j in chosen), default=0.0)
             return lam * rel[i] - (1 - lam) * redundancy
+
         best = max(candidates, key=score)
         chosen.append(best)
         candidates = [c for c in candidates if c != best]
@@ -226,10 +236,13 @@ def answer(question: str, retriever: Retriever) -> str:
     passages = retriever.search(question, k=3, rerank=True)
     context = "\n\n".join(f"[{c.source}] {c.title}\n{c.text}" for c in passages)
     r = anthropic.Anthropic().beta.messages.create(
-        model="claude-opus-5-5", max_tokens=2000, output_config={"effort": "low"},
-        betas=["server-side-fallback-2026-07-01"], fallbacks="default",
+        model="claude-opus-5-5",
+        max_tokens=2000,
+        output_config={"effort": "low"},
+        betas=["server-side-fallback-2026-07-01"],
+        fallbacks="default",
         system="Answer using only the passages provided and cite them like [source]. "
-               "If they don't contain the answer, say so.",
+        "If they don't contain the answer, say so.",
         messages=[{"role": "user", "content": f"Passages:\n{context}\n\nQuestion: {question}"}],
     )
     return "".join(b.text for b in r.content if b.type == "text")

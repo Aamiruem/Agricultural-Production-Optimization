@@ -10,6 +10,7 @@ Graph:  START → agent ──(tool_use)──► tools ──► agent … ─�
 The node functions are plain Python so they can be unit-tested with a fake
 client; `SimpleRunner` executes the same nodes when LangGraph isn't installed.
 """
+
 import json
 import logging
 import operator
@@ -58,18 +59,20 @@ TOOLS: list[dict] = [
     {
         "name": "recommend_crop",
         "description": "Rank the best crops for a field from its soil N, P, K, pH and climate "
-                       "(temperature, humidity, rainfall) using the trained ML model. Needs all seven values.",
+        "(temperature, humidity, rainfall) using the trained ML model. Needs all seven values.",
         "input_schema": {"type": "object", "properties": _SOIL_PROPS, "required": list(_SOIL_PROPS)},
     },
     {
         "name": "fertilizer_plan",
         "description": "Calculate nutrient gaps and DAP, Urea and MOP doses (kg/ha and total) for a crop, "
-                       "given the soil N, P, K and the field area in hectares.",
+        "given the soil N, P, K and the field area in hectares.",
         "input_schema": {
             "type": "object",
             "properties": {
                 "crop": {"type": "string", "enum": _CROP_ENUM},
-                "N": _SOIL_PROPS["N"], "P": _SOIL_PROPS["P"], "K": _SOIL_PROPS["K"],
+                "N": _SOIL_PROPS["N"],
+                "P": _SOIL_PROPS["P"],
+                "K": _SOIL_PROPS["K"],
                 "area_ha": {"type": "number", "description": "Field area in hectares", "default": 1},
             },
             "required": ["crop", "N", "P", "K"],
@@ -87,7 +90,7 @@ TOOLS: list[dict] = [
     {
         "name": "search_knowledge",
         "description": "Search the agronomy knowledge base (soil testing, fertilizers, soil pH, seasons, "
-                       "crop guides, irrigation). Returns passages with a source id to cite.",
+        "crop guides, irrigation). Returns passages with a source id to cite.",
         "input_schema": {
             "type": "object",
             "properties": {"query": {"type": "string", "description": "What to look up"}},
@@ -130,13 +133,22 @@ def execute_tool(name: str, raw: Any, kb: KnowledgeBase) -> tuple[str, bool, lis
             hits = kb.search(_SearchInput.model_validate(raw).query, k=3)
             passages = [{"source": h.chunk.source, "title": h.chunk.title, "text": h.chunk.text} for h in hits]
             sources = [{"source": h.chunk.source, "title": h.chunk.title} for h in hits]
-            return json.dumps({"passages": passages} if passages else {"passages": [], "note": "no match"}), False, sources
+            return (
+                json.dumps({"passages": passages} if passages else {"passages": [], "note": "no match"}),
+                False,
+                sources,
+            )
         else:
             return json.dumps({"error": f"unknown tool {name}"}), True, []
     except ValidationError as exc:
         # Same handling as unparseable JSON: report it so Claude can retry with valid input.
-        return json.dumps({"INVALID_JSON": json.dumps(raw, default=str), "errors": exc.errors(include_url=False)},
-                          default=str), True, []
+        return (
+            json.dumps(
+                {"INVALID_JSON": json.dumps(raw, default=str), "errors": exc.errors(include_url=False)}, default=str
+            ),
+            True,
+            [],
+        )
     except KeyError as exc:
         return json.dumps({"error": f"unknown value {exc}"}), True, []
     return json.dumps(result), False, []
@@ -216,8 +228,12 @@ def close_pending_tools(state: AgentState, *, emit: Emit) -> dict:
     if state.get("iterations", 0) >= MAX_ITERATIONS:
         emit({"type": "notice", "text": "Stopped after several steps. Try a more specific question."})
     results = [
-        {"type": "tool_result", "tool_use_id": b["id"], "is_error": True,
-         "content": "Not run: the step limit for this question was reached or the request was cut off."}
+        {
+            "type": "tool_result",
+            "tool_use_id": b["id"],
+            "is_error": True,
+            "content": "Not run: the step limit for this question was reached or the request was cut off.",
+        }
         for b in _last_tool_uses(state)
     ]
     return {"messages": [{"role": "user", "content": results}]}

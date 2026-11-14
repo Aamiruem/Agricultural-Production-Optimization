@@ -13,7 +13,11 @@ export function CropPhoto({ crop, size = 48, className = "" }) {
 
   if (!src || failed === src) {
     return (
-      <span className={cx("grid shrink-0 place-items-center rounded-2xl bg-good-soft text-good", className)} style={style} aria-hidden>
+      <span
+        className={cx("grid shrink-0 place-items-center rounded-2xl bg-good-soft text-good", className)}
+        style={style}
+        aria-hidden
+      >
         <Icon name="grass" size={Math.round(size * 0.58)} />
       </span>
     );

@@ -1,7 +1,8 @@
 """Exploratory data analysis: summary statistics, correlations and plots.
 
-    python -m AIML.eda      # writes AIML/reports/eda_*.{json,png}
+python -m AIML.eda      # writes AIML/reports/eda_*.{json,png}
 """
+
 import json
 
 import matplotlib
@@ -54,8 +55,10 @@ def main() -> dict:
     plt.close(fig)
 
     strongest = np.unravel_index(np.abs(np.triu(corr, 1)).argmax(), corr.shape)
-    print(f"{len(df)} rows, {df[TARGET].nunique()} crops; strongest correlation: "
-          f"{FEATURES[strongest[0]]} vs {FEATURES[strongest[1]]} = {corr[strongest]:.2f}")
+    print(
+        f"{len(df)} rows, {df[TARGET].nunique()} crops; strongest correlation: "
+        f"{FEATURES[strongest[0]]} vs {FEATURES[strongest[1]]} = {corr[strongest]:.2f}"
+    )
     return summary
 
 

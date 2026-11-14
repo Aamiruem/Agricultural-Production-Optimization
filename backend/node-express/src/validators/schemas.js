@@ -51,7 +51,11 @@ export const createActivity = z.object({
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const presignPhoto = z.object({
   contentType: z.enum(IMAGE_TYPES),
-  size: z.number().int().positive().max(5 * 1024 * 1024, "Max 5 MB"),
+  size: z
+    .number()
+    .int()
+    .positive()
+    .max(5 * 1024 * 1024, "Max 5 MB"),
 });
 export const recordPhoto = z.object({ key: z.string().min(10).max(300) });
 

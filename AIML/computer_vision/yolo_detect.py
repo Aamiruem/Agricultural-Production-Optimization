@@ -9,6 +9,7 @@
     python -m AIML.computer_vision.yolo_detect detect field.jpg --model yolo11n.pt
     python -m AIML.computer_vision.yolo_detect train --data weeds/data.yaml --model yolo11n.pt --epochs 50
 """
+
 from __future__ import annotations
 
 import argparse

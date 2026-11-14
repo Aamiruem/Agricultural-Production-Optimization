@@ -1,0 +1,5 @@
+# Everything needed to run, test and format the whole project locally:
+#   python -m pip install -r requirements-dev.txt     (or: npm run setup)
+-r backend/python-fastapi/requirements.txt
+-r AIML/requirements.txt
+ruff>=0.8          # Python formatter + linter (npm run format / npm run lint)

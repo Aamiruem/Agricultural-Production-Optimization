@@ -7,6 +7,7 @@
 
     python -m AIML.machine_learning.clustering
 """
+
 from __future__ import annotations
 
 import json
@@ -40,11 +41,14 @@ def describe_clusters(df: pd.DataFrame, labels: np.ndarray) -> list[dict]:
     for c in sorted(set(labels)):
         part = df[labels == c]
         top = part["label"].value_counts(normalize=True).head(3)
-        out.append({
-            "cluster": int(c), "size": len(part),
-            "top_crops": {k: round(float(v), 2) for k, v in top.items()},
-            "profile": part[FEATURES].mean().round(1).to_dict(),
-        })
+        out.append(
+            {
+                "cluster": int(c),
+                "size": len(part),
+                "top_crops": {k: round(float(v), 2) for k, v in top.items()},
+                "profile": part[FEATURES].mean().round(1).to_dict(),
+            }
+        )
     return out
 
 

@@ -1,7 +1,8 @@
 """Hyperparameter tuning for XGBoost with Optuna; every trial is an MLflow run.
 
-    python -m AIML.tune --trials 30
+python -m AIML.tune --trials 30
 """
+
 import argparse
 import json
 
@@ -30,8 +31,9 @@ def main(trials: int = 30) -> dict:
             "min_child_weight": trial.suggest_float("min_child_weight", 1, 10),
             "reg_lambda": trial.suggest_float("reg_lambda", 1e-3, 10, log=True),
         }
-        model = XGBClassifier(**params, tree_method="hist", eval_metric="mlogloss",
-                              random_state=RANDOM_STATE, n_jobs=-1)
+        model = XGBClassifier(
+            **params, tree_method="hist", eval_metric="mlogloss", random_state=RANDOM_STATE, n_jobs=-1
+        )
         score = cross_val_score(model, split.X_train, split.y_train, cv=cv, scoring="f1_macro").mean()
         with mlflow.start_run(run_name=f"optuna-trial-{trial.number}", nested=True):
             mlflow.log_params(params)

@@ -17,6 +17,7 @@ LangGraph isn't installed).
 
     python -m AIML.agentic_ai.multi_agent "Soil N 20 P 10 K 40, rice on 2 ha: how much fertilizer?"
 """
+
 from __future__ import annotations
 
 import re
@@ -40,9 +41,16 @@ class State(TypedDict, total=False):
 
 # ---------------------------------------------------------------- parsing
 _NUM = r"(\d+(?:\.\d+)?)"
-PATTERNS = {"N": rf"\bN\s*[:=]?\s*{_NUM}", "P": rf"\bP\s*[:=]?\s*{_NUM}", "K": rf"\bK\s*[:=]?\s*{_NUM}",
-            "ph": rf"\bpH\s*[:=]?\s*{_NUM}", "area_ha": rf"{_NUM}\s*(?:ha|hectare)", "temperature": rf"{_NUM}\s*°?C\b",
-            "humidity": rf"{_NUM}\s*%\s*humid", "rainfall": rf"{_NUM}\s*mm"}
+PATTERNS = {
+    "N": rf"\bN\s*[:=]?\s*{_NUM}",
+    "P": rf"\bP\s*[:=]?\s*{_NUM}",
+    "K": rf"\bK\s*[:=]?\s*{_NUM}",
+    "ph": rf"\bpH\s*[:=]?\s*{_NUM}",
+    "area_ha": rf"{_NUM}\s*(?:ha|hectare)",
+    "temperature": rf"{_NUM}\s*°?C\b",
+    "humidity": rf"{_NUM}\s*%\s*humid",
+    "rainfall": rf"{_NUM}\s*mm",
+}
 CROPS = sorted(tools.NPK_TARGETS, key=len, reverse=True)
 
 
@@ -85,7 +93,10 @@ def nutrient_agent(state: State) -> State:
         return knowledge_agent(state)
     plan = tools.fertilizer_plan(n["crop"], n["N"], n["P"], n["K"], n.get("area_ha", 1.0))
     total = sum(plan["kg_total"].values())
-    return {"findings": state["findings"] + [{"agent": "nutrient", "result": plan}], "needs_approval": total > APPROVAL_KG}
+    return {
+        "findings": state["findings"] + [{"agent": "nutrient", "result": plan}],
+        "needs_approval": total > APPROVAL_KG,
+    }
 
 
 def weather_agent(state: State, latitude: float = 30.90, longitude: float = 75.85) -> State:
@@ -97,7 +108,9 @@ def weather_agent(state: State, latitude: float = 30.90, longitude: float = 75.8
 
 
 def knowledge_agent(state: State) -> State:
-    return {"findings": state["findings"] + [{"agent": "knowledge", "result": tools.search_knowledge(state["question"])}]}
+    return {
+        "findings": state["findings"] + [{"agent": "knowledge", "result": tools.search_knowledge(state["question"])}]
+    }
 
 
 def approval(state: State) -> State:
@@ -118,14 +131,18 @@ def writer(state: State) -> State:
             lines.append("Best crops: " + ", ".join(f"{t['crop']} ({t['probability']:.0%})" for t in r["top"]))
         elif f["agent"] == "nutrient":
             kg = r["kg_total"]
-            lines.append(f"For {r['crop']} on {r['area_ha']} ha apply DAP {kg['DAP']} kg, Urea {kg['Urea']} kg, MOP {kg['MOP']} kg.")
+            lines.append(
+                f"For {r['crop']} on {r['area_ha']} ha apply DAP {kg['DAP']} kg, Urea {kg['Urea']} kg, MOP {kg['MOP']} kg."
+            )
             if state.get("approved") is False:
                 lines.append("(Order not approved — nothing scheduled.)")
         elif f["agent"] == "weather":
             if "error" in r:
                 lines.append(r["error"])
             else:
-                lines.append("Next days rain (mm): " + ", ".join(f"{d}: {p}" for d, p in zip(r["time"], r["precipitation_sum"])))
+                lines.append(
+                    "Next days rain (mm): " + ", ".join(f"{d}: {p}" for d, p in zip(r["time"], r["precipitation_sum"]))
+                )
         else:
             lines += [f"[{p['source']}] {p['text']}" for p in r[:2]]
     return {"answer": "\n".join(lines)}

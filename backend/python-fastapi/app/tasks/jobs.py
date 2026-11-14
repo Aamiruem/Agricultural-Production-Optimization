@@ -1,4 +1,5 @@
 """Background tasks."""
+
 import logging
 import subprocess
 import sys
@@ -53,7 +54,10 @@ def retrain_model() -> dict:
     """Re-run the ML training pipeline, then hot-reload the served model."""
     proc = subprocess.run(
         [sys.executable, "-m", "AIML.machine_learning.crop_classifier", "--no-register"],
-        cwd=REPO_ROOT, capture_output=True, text=True, timeout=850,
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=850,
     )
     if proc.returncode != 0:
         raise RuntimeError(f"training failed: {proc.stderr[-1500:]}")

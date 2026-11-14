@@ -5,6 +5,7 @@ With REDIS_URL set, tasks go to Redis and run in a worker:
 Without Redis (local dev, tests) tasks run inline ("eager"), so the API
 behaves the same with no extra services.
 """
+
 from celery import Celery
 
 from app.core.config import get_settings

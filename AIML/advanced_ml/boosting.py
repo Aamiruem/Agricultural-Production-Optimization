@@ -5,6 +5,7 @@ stopping on a validation split carved from the training years.
 
     python -m AIML.advanced_ml.boosting
 """
+
 from __future__ import annotations
 
 import json
@@ -43,13 +44,37 @@ def main() -> dict:
     _align_categories(X_fit, X_val, X_te)
 
     models = {
-        "xgboost": XGBRegressor(n_estimators=2000, learning_rate=0.03, max_depth=7, subsample=0.9, colsample_bytree=0.8,
-                                enable_categorical=True, tree_method="hist", early_stopping_rounds=100,
-                                random_state=RANDOM_STATE, n_jobs=-1),
-        "lightgbm": LGBMRegressor(n_estimators=2000, learning_rate=0.03, num_leaves=63, subsample=0.9, subsample_freq=1,
-                                  colsample_bytree=0.8, random_state=RANDOM_STATE, verbose=-1),
-        "catboost": CatBoostRegressor(iterations=800, learning_rate=0.08, depth=6, random_seed=RANDOM_STATE,
-                                      cat_features=CATEGORICAL, verbose=0, early_stopping_rounds=100),
+        "xgboost": XGBRegressor(
+            n_estimators=2000,
+            learning_rate=0.03,
+            max_depth=7,
+            subsample=0.9,
+            colsample_bytree=0.8,
+            enable_categorical=True,
+            tree_method="hist",
+            early_stopping_rounds=100,
+            random_state=RANDOM_STATE,
+            n_jobs=-1,
+        ),
+        "lightgbm": LGBMRegressor(
+            n_estimators=2000,
+            learning_rate=0.03,
+            num_leaves=63,
+            subsample=0.9,
+            subsample_freq=1,
+            colsample_bytree=0.8,
+            random_state=RANDOM_STATE,
+            verbose=-1,
+        ),
+        "catboost": CatBoostRegressor(
+            iterations=800,
+            learning_rate=0.08,
+            depth=6,
+            random_seed=RANDOM_STATE,
+            cat_features=CATEGORICAL,
+            verbose=0,
+            early_stopping_rounds=100,
+        ),
     }
     results = {}
     for name, model in models.items():
@@ -57,10 +82,18 @@ def main() -> dict:
         if name == "xgboost":
             model.fit(X_fit, y_fit, eval_set=[(X_val, y_val)], verbose=False)
         elif name == "lightgbm":
-            model.fit(X_fit, y_fit, eval_set=[(X_val, y_val)], callbacks=[early_stopping(100, verbose=False), log_evaluation(0)])
+            model.fit(
+                X_fit,
+                y_fit,
+                eval_set=[(X_val, y_val)],
+                callbacks=[early_stopping(100, verbose=False), log_evaluation(0)],
+            )
         else:  # CatBoost wants string categories
-            model.fit(X_fit.astype({c: str for c in CATEGORICAL}), y_fit,
-                      eval_set=(X_val.astype({c: str for c in CATEGORICAL}), y_val))
+            model.fit(
+                X_fit.astype({c: str for c in CATEGORICAL}),
+                y_fit,
+                eval_set=(X_val.astype({c: str for c in CATEGORICAL}), y_val),
+            )
         X_eval = X_te.astype({c: str for c in CATEGORICAL}) if name == "catboost" else X_te
         pred = model.predict(X_eval)
         results[name] = {

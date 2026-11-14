@@ -32,7 +32,9 @@ export function ThemeProvider({ children }) {
   // palette (keyed on `resolved`) switch in the same frame.
   useLayoutEffect(() => {
     document.documentElement.dataset.theme = resolved;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolved === "dark" ? "#1f1f1f" : "#1a73e8");
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", resolved === "dark" ? "#1f1f1f" : "#1a73e8");
   }, [resolved]);
 
   const setPreference = useCallback((value) => {

@@ -9,9 +9,14 @@ import { CROP_PROFILES } from "@/data/cropProfiles";
 
 /** Crops, states and seasons the yield model has seen. */
 export const YIELD_DOMAIN = (() => {
-  const states = new Set(); const crops = new Set(); const seasons = new Set();
+  const states = new Set();
+  const crops = new Set();
+  const seasons = new Set();
   for (const key of Object.keys(yieldModel.groups)) {
-    const [s, c, se] = key.split("|"); states.add(s); crops.add(c); seasons.add(se);
+    const [s, c, se] = key.split("|");
+    states.add(s);
+    crops.add(c);
+    seasons.add(se);
   }
   return { states: [...states].sort(), crops: [...crops].sort(), seasons: [...seasons].sort() };
 })();
@@ -28,7 +33,9 @@ export function predictYieldLocal({ state, crop, season, year, area_ha, annual_r
   const c = yieldModel.crops[crop];
   if (!c) throw new Error(`No yield records for ${crop}.`);
   const group = yieldModel.groups[`${state}|${crop}|${season}`];
-  let base; let meanRain; let history = null;
+  let base;
+  let meanRain;
+  let history = null;
   if (group) {
     [base, meanRain] = group;
     history = { n: group[2], p25: group[3], median: group[4], p75: group[5] };
@@ -70,17 +77,27 @@ export function rainfallSensitivity(input) {
 export function recommendLocal(soil, k = 3) {
   const { features, classes, means, vars, priors } = recommendModel;
   const x = features.map((f) => Number(soil[f]));
-  const logp = classes.map((_, i) => Math.log(priors[i]) + x.reduce((sum, v, j) => {
-    const variance = vars[i][j] + 1e-9;
-    return sum - 0.5 * Math.log(2 * Math.PI * variance) - ((v - means[i][j]) ** 2) / (2 * variance);
-  }, 0));
+  const logp = classes.map(
+    (_, i) =>
+      Math.log(priors[i]) +
+      x.reduce((sum, v, j) => {
+        const variance = vars[i][j] + 1e-9;
+        return sum - 0.5 * Math.log(2 * Math.PI * variance) - (v - means[i][j]) ** 2 / (2 * variance);
+      }, 0),
+  );
   const max = Math.max(...logp);
   const exp = logp.map((l) => Math.exp(l - max));
   const total = exp.reduce((a, b) => a + b, 0);
   return {
     method: "ml-model",
     engine: "browser",
-    top: classes.map((crop, i) => ({ crop, confidence: exp[i] / total, season: CROP_PROFILES[crop]?.season ?? "kharif", category: CROP_PROFILES[crop]?.category ?? "crop" }))
+    top: classes
+      .map((crop, i) => ({
+        crop,
+        confidence: exp[i] / total,
+        season: CROP_PROFILES[crop]?.season ?? "kharif",
+        category: CROP_PROFILES[crop]?.category ?? "crop",
+      }))
       .sort((a, b) => b.confidence - a.confidence)
       .slice(0, k),
   };
@@ -93,20 +110,34 @@ export function fertilizerLocal({ crop, N, P, K, area_ha = 1 }) {
   const profile = CROP_PROFILES[crop?.toLowerCase()];
   if (!profile) throw new Error(`Unknown crop: ${crop}`);
   const gap = (nutrient, current, target) => ({
-    nutrient, current, target, deficit: round(Math.max(target - current, 0), 2),
+    nutrient,
+    current,
+    target,
+    deficit: round(Math.max(target - current, 0), 2),
     status: current < target * (1 - TOLERANCE) ? "low" : current > target * (1 + TOLERANCE) ? "high" : "ok",
   });
   const gaps = [gap("N", N, profile.N), gap("P", P, profile.P), gap("K", K, profile.K)];
   const [nDef, pDef, kDef] = gaps.map((g) => (g.status === "low" ? g.deficit : 0));
-  const dap = pDef / 0.46; const urea = Math.max(nDef - dap * 0.18, 0) / 0.46; const mop = kDef / 0.6;
-  const doses = [["DAP (18-46-0)", dap], ["Urea (46-0-0)", urea], ["MOP (0-0-60)", mop]]
-    .filter(([, kg]) => kg > 0).map(([product, kg]) => ({ product, kg_per_ha: round(kg, 1), total_kg: round(kg * area_ha, 1) }));
+  const dap = pDef / 0.46;
+  const urea = Math.max(nDef - dap * 0.18, 0) / 0.46;
+  const mop = kDef / 0.6;
+  const doses = [
+    ["DAP (18-46-0)", dap],
+    ["Urea (46-0-0)", urea],
+    ["MOP (0-0-60)", mop],
+  ]
+    .filter(([, kg]) => kg > 0)
+    .map(([product, kg]) => ({ product, kg_per_ha: round(kg, 1), total_kg: round(kg * area_ha, 1) }));
   const advice = [];
   if (!doses.length) advice.push("Soil N-P-K already meets the crop's needs; no fertilizer required.");
   if (urea > 0) advice.push("Split urea into 2-3 doses (basal, tillering/vegetative, flowering) to reduce losses.");
   if (dap > 0) advice.push("Apply DAP as a basal dose at sowing, placed near the root zone.");
   if (mop > 0) advice.push("Apply MOP as basal; on sandy soils split it into two doses.");
-  gaps.filter((g) => g.status === "high").forEach((g) => advice.push(`${g.nutrient} is above target; skip extra ${g.nutrient} to avoid wastage and runoff.`));
+  gaps
+    .filter((g) => g.status === "high")
+    .forEach((g) =>
+      advice.push(`${g.nutrient} is above target; skip extra ${g.nutrient} to avoid wastage and runoff.`),
+    );
   return { crop: profile.name, area_ha, gaps, doses, advice };
 }
 
@@ -137,26 +168,76 @@ export function soilHealth({ N, P, K, oc, ph, ec }) {
   const weights = { N: 0.2, P: 0.18, K: 0.17, oc: 0.2, ph: 0.15, ec: 0.1 };
   const total = Object.entries(parts).reduce((s, [k, v]) => s + v * weights[k], 0);
   const issues = [];
-  if (rateNutrient("N", N) === "low") issues.push({ key: "N", text: "Nitrogen is low: apply urea in splits, add FYM/compost or grow a legume green manure (dhaincha, sunhemp)." });
-  if (rateNutrient("P", P) === "low") issues.push({ key: "P", text: "Phosphorus is low: apply DAP/SSP as basal; use PSB biofertilizer with seed treatment." });
-  if (rateNutrient("K", K) === "low") issues.push({ key: "K", text: "Potassium is low: apply MOP as basal; recycle crop residues instead of burning." });
-  if (rateNutrient("oc", oc) === "low") issues.push({ key: "oc", text: "Organic carbon is low: add 5–10 t/ha FYM or vermicompost, mulch and avoid residue burning." });
-  if (ph < 5.5) issues.push({ key: "ph", text: "Soil is strongly acidic: apply agricultural lime (dose per lab test) 2–3 weeks before sowing." });
-  else if (ph < 6.5) issues.push({ key: "ph", text: "Soil is slightly acidic: suits rice, tea, potato; lime only for sensitive crops." });
-  else if (ph > 8.5) issues.push({ key: "ph", text: "Soil is sodic/alkaline: apply gypsum as per gypsum requirement and leach with good water." });
-  else if (ph > 7.5) issues.push({ key: "ph", text: "Soil is mildly alkaline: use acidifying fertilizers (ammonium sulphate) and organic matter." });
-  if (ec >= 1) issues.push({ key: "ec", text: "Salinity is elevated: improve drainage, leach salts and choose salt-tolerant crops (barley, cotton, mustard)." });
-  return { score: Math.round(total), parts, issues, grade: total >= 80 ? "excellent" : total >= 65 ? "good" : total >= 45 ? "average" : "poor" };
+  if (rateNutrient("N", N) === "low")
+    issues.push({
+      key: "N",
+      text: "Nitrogen is low: apply urea in splits, add FYM/compost or grow a legume green manure (dhaincha, sunhemp).",
+    });
+  if (rateNutrient("P", P) === "low")
+    issues.push({
+      key: "P",
+      text: "Phosphorus is low: apply DAP/SSP as basal; use PSB biofertilizer with seed treatment.",
+    });
+  if (rateNutrient("K", K) === "low")
+    issues.push({ key: "K", text: "Potassium is low: apply MOP as basal; recycle crop residues instead of burning." });
+  if (rateNutrient("oc", oc) === "low")
+    issues.push({
+      key: "oc",
+      text: "Organic carbon is low: add 5–10 t/ha FYM or vermicompost, mulch and avoid residue burning.",
+    });
+  if (ph < 5.5)
+    issues.push({
+      key: "ph",
+      text: "Soil is strongly acidic: apply agricultural lime (dose per lab test) 2–3 weeks before sowing.",
+    });
+  else if (ph < 6.5)
+    issues.push({
+      key: "ph",
+      text: "Soil is slightly acidic: suits rice, tea, potato; lime only for sensitive crops.",
+    });
+  else if (ph > 8.5)
+    issues.push({
+      key: "ph",
+      text: "Soil is sodic/alkaline: apply gypsum as per gypsum requirement and leach with good water.",
+    });
+  else if (ph > 7.5)
+    issues.push({
+      key: "ph",
+      text: "Soil is mildly alkaline: use acidifying fertilizers (ammonium sulphate) and organic matter.",
+    });
+  if (ec >= 1)
+    issues.push({
+      key: "ec",
+      text: "Salinity is elevated: improve drainage, leach salts and choose salt-tolerant crops (barley, cotton, mustard).",
+    });
+  return {
+    score: Math.round(total),
+    parts,
+    issues,
+    grade: total >= 80 ? "excellent" : total >= 65 ? "good" : total >= 45 ? "average" : "poor",
+  };
 }
 
 // ---------------------------------------------------------------- irrigation (FAO-56)
 
 // Crop coefficients Kc for [initial, development, mid-season, late] stages (FAO-56 Table 12).
 export const KC = {
-  Rice: [1.05, 1.1, 1.2, 0.9], Wheat: [0.4, 0.8, 1.15, 0.4], Maize: [0.3, 0.8, 1.2, 0.6], Sugarcane: [0.4, 0.9, 1.25, 0.75],
-  Cotton: [0.35, 0.8, 1.15, 0.7], Soybean: [0.4, 0.8, 1.15, 0.5], Groundnut: [0.4, 0.8, 1.15, 0.6], Chickpea: [0.4, 0.7, 1.0, 0.35],
-  Mustard: [0.35, 0.75, 1.1, 0.35], Potato: [0.5, 0.8, 1.15, 0.75], Onion: [0.7, 0.85, 1.05, 0.75], Tomato: [0.6, 0.85, 1.15, 0.8],
-  Banana: [0.5, 0.9, 1.1, 1.0], Bajra: [0.3, 0.7, 1.0, 0.3], "Pulses (moong/urad)": [0.4, 0.7, 1.05, 0.35], Vegetables: [0.6, 0.8, 1.05, 0.9],
+  Rice: [1.05, 1.1, 1.2, 0.9],
+  Wheat: [0.4, 0.8, 1.15, 0.4],
+  Maize: [0.3, 0.8, 1.2, 0.6],
+  Sugarcane: [0.4, 0.9, 1.25, 0.75],
+  Cotton: [0.35, 0.8, 1.15, 0.7],
+  Soybean: [0.4, 0.8, 1.15, 0.5],
+  Groundnut: [0.4, 0.8, 1.15, 0.6],
+  Chickpea: [0.4, 0.7, 1.0, 0.35],
+  Mustard: [0.35, 0.75, 1.1, 0.35],
+  Potato: [0.5, 0.8, 1.15, 0.75],
+  Onion: [0.7, 0.85, 1.05, 0.75],
+  Tomato: [0.6, 0.85, 1.15, 0.8],
+  Banana: [0.5, 0.9, 1.1, 1.0],
+  Bajra: [0.3, 0.7, 1.0, 0.3],
+  "Pulses (moong/urad)": [0.4, 0.7, 1.05, 0.35],
+  Vegetables: [0.6, 0.8, 1.05, 0.9],
   Orchard: [0.6, 0.75, 0.9, 0.75],
 };
 export const STAGES = ["Initial", "Development", "Mid-season", "Late"];
@@ -180,7 +261,12 @@ export function irrigationPlan({ crop, stage, et0, rain, areaHa, method }) {
   const efficiency = METHODS[method] ?? 0.7;
   const gross = net / efficiency;
   return {
-    kc, days, etcTotal: round(etcTotal, 1), effectiveRain: round(effTotal, 1), netMm: round(net, 1), grossMm: round(gross, 1),
+    kc,
+    days,
+    etcTotal: round(etcTotal, 1),
+    effectiveRain: round(effTotal, 1),
+    netMm: round(net, 1),
+    grossMm: round(gross, 1),
     volumeM3: Math.round(gross * areaHa * 10), // 1 mm over 1 ha = 10 m³
     byMethod: Object.entries(METHODS).map(([m, e]) => ({ method: m, m3: Math.round((net / e) * areaHa * 10) })),
   };
@@ -197,16 +283,27 @@ export function analyzeLeafPixels(data) {
   const counts = { healthy: 0, yellow: 0, brown: 0, dark: 0, white: 0 };
   let plant = 0;
   for (let i = 0; i < data.length; i += 4) {
-    const r = data[i]; const g = data[i + 1]; const b = data[i + 2];
-    const max = Math.max(r, g, b); const min = Math.min(r, g, b);
-    const l = (max + min) / 510; const s = max === min ? 0 : (max - min) / (255 - Math.abs(max + min - 255));
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 510;
+    const s = max === min ? 0 : (max - min) / (255 - Math.abs(max + min - 255));
     let h = 0;
     if (max !== min) {
-      if (max === r) h = ((g - b) / (max - min)) % 6; else if (max === g) h = (b - r) / (max - min) + 2; else h = (r - g) / (max - min) + 4;
-      h *= 60; if (h < 0) h += 360;
+      if (max === r) h = ((g - b) / (max - min)) % 6;
+      else if (max === g) h = (b - r) / (max - min) + 2;
+      else h = (r - g) / (max - min) + 4;
+      h *= 60;
+      if (h < 0) h += 360;
     }
     // Skip likely background: very low saturation mid-greys and blue sky/backdrops.
-    if (l > 0.82 && s < 0.25) { counts.white += 1; plant += 1; continue; }
+    if (l > 0.82 && s < 0.25) {
+      counts.white += 1;
+      plant += 1;
+      continue;
+    }
     if (s < 0.15 && l > 0.25) continue;
     if (h > 180 && h < 300) continue;
     plant += 1;

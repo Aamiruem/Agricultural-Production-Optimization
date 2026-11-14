@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from "react-router";
 import { describe, expect, it } from "vitest";
 
 import { translations } from "@/i18n/translations";
-import { buildSearchIndex, searchIndex } from "@/lib/search";
+import { buildSearchIndex, loadAgriData, searchIndex } from "@/lib/search";
 import { renderWithProviders } from "@/test/renderWithProviders";
 
 import { GlobalSearch } from "./GlobalSearch";
@@ -13,11 +13,19 @@ const t = (key) => key.split(".").reduce((n, p) => n?.[p], translations.en) ?? k
 
 function Where() {
   const loc = useLocation();
-  return <p data-testid="where">{loc.pathname}{loc.search}</p>;
+  return (
+    <p data-testid="where">
+      {loc.pathname}
+      {loc.search}
+    </p>
+  );
 }
 
-describe("search index", () => {
-  const index = buildSearchIndex(t, "en");
+describe("search index", async () => {
+  const index = buildSearchIndex(t, "en", await loadAgriData());
+  it("lists tools before the crop data has loaded", () => {
+    expect(searchIndex(buildSearchIndex(t, "en"), "yield").some((r) => r.to === "/yield-prediction")).toBe(true);
+  });
   it("finds crops, states and tools", () => {
     expect(searchIndex(index, "wheat")[0].label).toBe("Wheat");
     expect(searchIndex(index, "kerala").some((r) => r.kind === "state")).toBe(true);
@@ -32,11 +40,24 @@ describe("search index", () => {
 describe("GlobalSearch", () => {
   it("navigates to the highlighted result with the keyboard", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<Routes><Route path="*" element={<><GlobalSearch /><Where /></>} /></Routes>, { route: "/" });
+    renderWithProviders(
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <>
+              <GlobalSearch />
+              <Where />
+            </>
+          }
+        />
+      </Routes>,
+      { route: "/" },
+    );
     const box = screen.getByRole("combobox");
     await user.type(box, "mango");
     expect(screen.getByRole("listbox")).toBeInTheDocument();
-    expect(screen.getAllByRole("option")[0]).toHaveTextContent("Mango");
+    expect((await screen.findAllByRole("option"))[0]).toHaveTextContent("Mango");
     await user.keyboard("{Enter}");
     expect(screen.getByTestId("where")).toHaveTextContent("/crops?query=Mango");
     expect(box).toHaveValue("");
@@ -44,7 +65,12 @@ describe("GlobalSearch", () => {
 
   it("shows an empty state for no matches", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<Routes><Route path="*" element={<GlobalSearch />} /></Routes>, { route: "/" });
+    renderWithProviders(
+      <Routes>
+        <Route path="*" element={<GlobalSearch />} />
+      </Routes>,
+      { route: "/" },
+    );
     await user.type(screen.getByRole("combobox"), "zzzzqq");
     expect(screen.getByText("No results")).toBeInTheDocument();
   });

@@ -1,4 +1,5 @@
 """Load shedding, prediction caching, SHAP explanations and the platform status API."""
+
 import asyncio
 
 import joblib
@@ -25,8 +26,17 @@ def forest_bundle(tmp_path, monkeypatch):
     y = list(range(len(classes))) * 4
     model = Pipeline([("clf", RandomForestClassifier(n_estimators=25, random_state=0))]).fit(X, y)
     path = tmp_path / "forest.joblib"
-    joblib.dump({"model": model, "classes": classes, "features": FEATURES, "name": "random_forest",
-                 "metrics": {}, "trained_at": None}, path)
+    joblib.dump(
+        {
+            "model": model,
+            "classes": classes,
+            "features": FEATURES,
+            "name": "random_forest",
+            "metrics": {},
+            "trained_at": None,
+        },
+        path,
+    )
     monkeypatch.setattr(get_settings(), "model_path", path)
     recommender.reload_model()
     yield
@@ -69,7 +79,9 @@ def test_explain_returns_additive_shap_contributions(client, forest_bundle):
     assert best["crop"] == client.post("/api/recommend/crop", json=SOIL).json()["top"][0]["crop"]
     assert {c["feature"] for c in best["contributions"]} == set(FEATURES)
     if body["method"] == "TreeSHAP":
-        assert abs(best["base_value"] + sum(c["contribution"] for c in best["contributions"]) - best["probability"]) < 1e-3
+        assert (
+            abs(best["base_value"] + sum(c["contribution"] for c in best["contributions"]) - best["probability"]) < 1e-3
+        )
 
 
 def test_repeated_recommendations_are_served_from_cache(client):

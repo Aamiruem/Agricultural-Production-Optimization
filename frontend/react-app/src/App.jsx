@@ -91,7 +91,9 @@ export default function App() {
           <Route path="admin" element={<AdminPage />} />
         </Route>
 
-        {Object.entries(ROUTE_ALIASES).map(([from, to]) => <Route key={from} path={from} element={<Redirect to={to} />} />)}
+        {Object.entries(ROUTE_ALIASES).map(([from, to]) => (
+          <Route key={from} path={from} element={<Redirect to={to} />} />
+        ))}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 

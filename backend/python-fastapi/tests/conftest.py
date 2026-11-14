@@ -4,17 +4,19 @@ from pathlib import Path
 
 # Configure the app BEFORE it is imported: throwaway DB, no LLM, no trained model.
 _tmp = Path(tempfile.mkdtemp(prefix="agri-tests-"))
-os.environ.update({
-    "ENVIRONMENT": "test",
-    # SQLite by default; CI sets TEST_DATABASE_URL to a PostgreSQL service.
-    "DATABASE_URL": os.environ.get("TEST_DATABASE_URL", f"sqlite:///{(_tmp / 'test.db').as_posix()}"),
-    "ASSISTANT_LLM": "off",
-    "EMBEDDINGS": "tfidf",
-    "MODEL_PATH": str(_tmp / "no-model.joblib"),
-    "METRICS_PATH": str(_tmp / "no-metrics.json"),
-    "CELERY_EAGER": "true",
-    "WARMUP": "false",  # tests swap model paths; no background loader racing them
-})
+os.environ.update(
+    {
+        "ENVIRONMENT": "test",
+        # SQLite by default; CI sets TEST_DATABASE_URL to a PostgreSQL service.
+        "DATABASE_URL": os.environ.get("TEST_DATABASE_URL", f"sqlite:///{(_tmp / 'test.db').as_posix()}"),
+        "ASSISTANT_LLM": "off",
+        "EMBEDDINGS": "tfidf",
+        "MODEL_PATH": str(_tmp / "no-model.joblib"),
+        "METRICS_PATH": str(_tmp / "no-metrics.json"),
+        "CELERY_EAGER": "true",
+        "WARMUP": "false",  # tests swap model paths; no background loader racing them
+    }
+)
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402

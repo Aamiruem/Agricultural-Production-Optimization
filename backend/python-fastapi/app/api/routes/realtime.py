@@ -1,4 +1,5 @@
 """WebSocket: live crop recommendations as the user moves the sliders."""
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.concurrency import run_in_threadpool
 from pydantic import ValidationError

@@ -15,7 +15,12 @@ const STATUS = {
   runtime: { python: "3.12", platform: "Linux" },
   services: [
     { name: "api", status: "ok", latency_ms: 0, instance: "api-1:101", details: { database: "ok" } },
-    { name: "farm-service", status: "ok", latency_ms: 3.2, details: { instance: "farm-1:7", realtime: { adapter: "redis" } } },
+    {
+      name: "farm-service",
+      status: "ok",
+      latency_ms: 3.2,
+      details: { instance: "farm-1:7", realtime: { adapter: "redis" } },
+    },
     { name: "mcp", status: "down", latency_ms: 2000, error: "ConnectError" },
   ],
   models: {
@@ -30,11 +35,31 @@ const STATUS = {
 
 function routeFetch(url) {
   const u = String(url);
-  const ok = (body) => Promise.resolve(new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } }));
+  const ok = (body) =>
+    Promise.resolve(
+      new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } }),
+    );
   if (u.includes("/api/system/status")) return ok(STATUS);
-  if (u.includes("/api/system/metrics")) return ok({ ...STATUS.load, requests_total: 10, in_flight: 1, peak_in_flight: 3, rejected_total: 0, uptime_s: 60, status: { "2xx": 9, "4xx": 1 }, top_routes: [] });
-  if (u.includes("/api/yield/coverage")) return ok({ states: ["Punjab"], crops: ["Wheat"], seasons: ["Rabi"], state_crops: [["Punjab", "Wheat"]] });
-  if (u.includes("/api/yield/trend")) return ok({ points: [{ year: 2019, yield_t_ha: 4.8, production_t: 10, area_ha: 2, records: 1 }, { year: 2020, yield_t_ha: 5.1, production_t: 11, area_ha: 2, records: 1 }] });
+  if (u.includes("/api/system/metrics"))
+    return ok({
+      ...STATUS.load,
+      requests_total: 10,
+      in_flight: 1,
+      peak_in_flight: 3,
+      rejected_total: 0,
+      uptime_s: 60,
+      status: { "2xx": 9, "4xx": 1 },
+      top_routes: [],
+    });
+  if (u.includes("/api/yield/coverage"))
+    return ok({ states: ["Punjab"], crops: ["Wheat"], seasons: ["Rabi"], state_crops: [["Punjab", "Wheat"]] });
+  if (u.includes("/api/yield/trend"))
+    return ok({
+      points: [
+        { year: 2019, yield_t_ha: 4.8, production_t: 10, area_ha: 2, records: 1 },
+        { year: 2020, yield_t_ha: 5.1, production_t: 11, area_ha: 2, records: 1 },
+      ],
+    });
   return Promise.reject(new TypeError("Failed to fetch")); // every other service is "down"
 }
 
@@ -57,7 +82,16 @@ describe("console", () => {
   beforeEach(() => {
     resetBreakers();
     vi.stubGlobal("fetch", vi.fn(routeFetch));
-    vi.stubGlobal("WebSocket", class { constructor() { setTimeout(() => this.onclose?.(), 0); } close() {} send() {} });
+    vi.stubGlobal(
+      "WebSocket",
+      class {
+        constructor() {
+          setTimeout(() => this.onclose?.(), 0);
+        }
+        close() {}
+        send() {}
+      },
+    );
   });
   afterEach(() => vi.unstubAllGlobals());
 

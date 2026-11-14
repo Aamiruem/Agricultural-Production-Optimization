@@ -8,6 +8,7 @@
 
     python -m AIML.foundations.statistics
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -24,7 +25,9 @@ def load_yield() -> pd.DataFrame:
     return df[(df["Area"] > 0) & (df["Crop"] != "Coconut")]
 
 
-def bootstrap_ci(x: np.ndarray, stat=np.median, n: int = 2000, alpha: float = 0.05, seed: int = 0) -> tuple[float, float]:
+def bootstrap_ci(
+    x: np.ndarray, stat=np.median, n: int = 2000, alpha: float = 0.05, seed: int = 0
+) -> tuple[float, float]:
     rng = np.random.default_rng(seed)
     samples = [stat(rng.choice(x, size=len(x), replace=True)) for _ in range(n)]
     return float(np.quantile(samples, alpha / 2)), float(np.quantile(samples, 1 - alpha / 2))
@@ -34,8 +37,13 @@ def compare_two_groups(a: np.ndarray, b: np.ndarray) -> dict:
     """Welch's t-test (unequal variances) + Cohen's d effect size."""
     t, p = stats.ttest_ind(a, b, equal_var=False)
     pooled = np.sqrt((a.var(ddof=1) + b.var(ddof=1)) / 2)
-    return {"t": float(t), "p_value": float(p), "cohens_d": float((a.mean() - b.mean()) / pooled),
-            "mean_a": float(a.mean()), "mean_b": float(b.mean())}
+    return {
+        "t": float(t),
+        "p_value": float(p),
+        "cohens_d": float((a.mean() - b.mean()) / pooled),
+        "mean_a": float(a.mean()),
+        "mean_b": float(b.mean()),
+    }
 
 
 def analyse(df: pd.DataFrame) -> dict:

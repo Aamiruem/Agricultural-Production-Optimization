@@ -10,7 +10,10 @@ export function useSamples(value, stamp, max = 40) {
   useEffect(() => {
     if (value == null || stamp == null || stamp === lastStamp.current) return;
     lastStamp.current = stamp;
-    setSamples((prev) => [...prev.slice(-(max - 1)), { t: stamp, ...(typeof value === "object" ? value : { v: value }) }]);
+    setSamples((prev) => [
+      ...prev.slice(-(max - 1)),
+      { t: stamp, ...(typeof value === "object" ? value : { v: value }) },
+    ]);
   }, [value, stamp, max]);
   return samples;
 }

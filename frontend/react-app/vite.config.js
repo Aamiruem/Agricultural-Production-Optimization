@@ -11,10 +11,27 @@ const BROWSER_TARGETS = ["es2020", "chrome87", "edge88", "firefox78", "safari14"
 // Public routes listed in sitemap.xml (SEO).
 const SITEMAP_ROUTES = [
   ["/learn", "0.8", "monthly"],
-  ["/", "1.0", "weekly"], ["/dashboard", "0.9", "daily"], ["/data-dashboard", "0.9", "monthly"], ["/crop-recommendation", "0.9", "monthly"], ["/yield-prediction", "0.9", "monthly"],
-  ["/soil-analysis", "0.8", "monthly"], ["/weather", "0.8", "hourly"], ["/fertilizer", "0.8", "monthly"], ["/irrigation-optimization", "0.8", "monthly"],
-  ["/disease-detection", "0.8", "monthly"], ["/reports", "0.7", "monthly"], ["/crops", "0.8", "monthly"], ["/states", "0.8", "monthly"],
-  ["/soil-types", "0.7", "monthly"], ["/crop-gallery", "0.8", "monthly"], ["/seasonal-advisor", "0.8", "monthly"], ["/rotation-planner", "0.7", "monthly"], ["/assistant", "0.6", "monthly"], ["/planner", "0.5", "monthly"], ["/about", "0.5", "yearly"], ["/contact", "0.5", "yearly"],
+  ["/", "1.0", "weekly"],
+  ["/dashboard", "0.9", "daily"],
+  ["/data-dashboard", "0.9", "monthly"],
+  ["/crop-recommendation", "0.9", "monthly"],
+  ["/yield-prediction", "0.9", "monthly"],
+  ["/soil-analysis", "0.8", "monthly"],
+  ["/weather", "0.8", "hourly"],
+  ["/fertilizer", "0.8", "monthly"],
+  ["/irrigation-optimization", "0.8", "monthly"],
+  ["/disease-detection", "0.8", "monthly"],
+  ["/reports", "0.7", "monthly"],
+  ["/crops", "0.8", "monthly"],
+  ["/states", "0.8", "monthly"],
+  ["/soil-types", "0.7", "monthly"],
+  ["/crop-gallery", "0.8", "monthly"],
+  ["/seasonal-advisor", "0.8", "monthly"],
+  ["/rotation-planner", "0.7", "monthly"],
+  ["/assistant", "0.6", "monthly"],
+  ["/planner", "0.5", "monthly"],
+  ["/about", "0.5", "yearly"],
+  ["/contact", "0.5", "yearly"],
 ];
 
 /** Injects the Material Symbols URL, subset to the icons the app declares. */
@@ -28,19 +45,30 @@ function seoFiles(siteUrl) {
     name: "agrismart-seo-files",
     generateBundle() {
       const today = new Date().toISOString().slice(0, 10);
-      const urls = SITEMAP_ROUTES.map(([path, priority, freq]) => `  <url><loc>${siteUrl}${path}</loc><lastmod>${today}</lastmod><changefreq>${freq}</changefreq><priority>${priority}</priority></url>`).join("\n");
-      this.emitFile({ type: "asset", fileName: "sitemap.xml", source: `<?xml version="1.0" encoding="UTF-8"?>
+      const urls = SITEMAP_ROUTES.map(
+        ([path, priority, freq]) =>
+          `  <url><loc>${siteUrl}${path}</loc><lastmod>${today}</lastmod><changefreq>${freq}</changefreq><priority>${priority}</priority></url>`,
+      ).join("\n");
+      this.emitFile({
+        type: "asset",
+        fileName: "sitemap.xml",
+        source: `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls}
 </urlset>
-` });
-      this.emitFile({ type: "asset", fileName: "robots.txt", source: `User-agent: *
+`,
+      });
+      this.emitFile({
+        type: "asset",
+        fileName: "robots.txt",
+        source: `User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /farms
 
 Sitemap: ${siteUrl}/sitemap.xml
-` });
+`,
+      });
     },
   };
 }
@@ -49,7 +77,11 @@ Sitemap: ${siteUrl}/sitemap.xml
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   // Canonical site URL for SEO tags, sitemap and robots.txt (set VITE_SITE_URL in Vercel).
-  const siteUrl = (env.VITE_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` || "https://agrismart-india.vercel.app").replace(/\/$/, "");
+  const siteUrl = (
+    env.VITE_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
+    "https://agrismart-india.vercel.app"
+  ).replace(/\/$/, "");
   process.env.VITE_SITE_URL = siteUrl;
   // Dev proxy: the browser talks to one origin (localhost:5173) and Vite forwards
   // requests to the services, so no CORS setup is needed during development.

@@ -1,6 +1,11 @@
 RICE_LIKE_SOIL = {
-    "N": 85, "P": 45, "K": 40, "temperature": 23.5,
-    "humidity": 82, "ph": 6.5, "rainfall": 230,
+    "N": 85,
+    "P": 45,
+    "K": 40,
+    "temperature": 23.5,
+    "humidity": 82,
+    "ph": 6.5,
+    "rainfall": 230,
 }
 
 
@@ -38,8 +43,7 @@ def test_recommend_crop_ranks_rice_first_for_wet_paddy_conditions(client):
 
 
 def test_exact_profile_scores_one(client):
-    chickpea = {"N": 40, "P": 68, "K": 80, "temperature": 18.9,
-                "humidity": 16.9, "ph": 7.3, "rainfall": 80.1}
+    chickpea = {"N": 40, "P": 68, "K": 80, "temperature": 18.9, "humidity": 16.9, "ph": 7.3, "rainfall": 80.1}
     best = client.post("/api/recommend/crop", json=chickpea).json()["top"][0]
     assert best == {"crop": "chickpea", "confidence": 1.0, "season": "rabi", "category": "pulse"}
 

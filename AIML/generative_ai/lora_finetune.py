@@ -12,6 +12,7 @@ section). Needs a CUDA GPU for QLoRA; `--no-4bit` runs plain LoRA anywhere.
     pip install -r AIML/requirements-dl.txt
     python -m AIML.generative_ai.lora_finetune --model Qwen/Qwen2.5-0.5B-Instruct --epochs 3
 """
+
 from __future__ import annotations
 
 import argparse
@@ -31,8 +32,12 @@ def build_instructions(knowledge_dir: Path = KNOWLEDGE_DIR) -> list[dict]:
                 title = line[2:].strip()
             elif line.startswith("## "):
                 if section and lines:
-                    rows.append({"instruction": f"{title}: explain '{section}' for an Indian farmer.",
-                                 "response": " ".join(l.strip() for l in lines if l.strip())})
+                    rows.append(
+                        {
+                            "instruction": f"{title}: explain '{section}' for an Indian farmer.",
+                            "response": " ".join(l.strip() for l in lines if l.strip()),
+                        }
+                    )
                 section, lines = line[3:].strip(), []
             else:
                 lines.append(line)
@@ -47,8 +52,16 @@ def run(model_name: str, epochs: int, use_4bit: bool) -> str:
     from trl import SFTConfig, SFTTrainer
 
     tok = AutoTokenizer.from_pretrained(model_name)
-    quant = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
-                               bnb_4bit_compute_dtype=torch.bfloat16) if use_4bit else None
+    quant = (
+        BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+        if use_4bit
+        else None
+    )
     model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quant, device_map="auto")
     if use_4bit:
         model = prepare_model_for_kbit_training(model)
@@ -58,13 +71,30 @@ def run(model_name: str, epochs: int, use_4bit: bool) -> str:
         return {"text": tok.apply_chat_template(msgs, tokenize=False)}
 
     data = Dataset.from_list(build_instructions()).map(to_chat)
-    lora = LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, task_type="CAUSAL_LM",
-                      target_modules=["q_proj", "k_proj", "v_proj", "o_proj"])
+    lora = LoraConfig(
+        r=16,
+        lora_alpha=32,
+        lora_dropout=0.05,
+        task_type="CAUSAL_LM",
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+    )
     out = MODELS_DIR / "agri-lora"
-    trainer = SFTTrainer(model=model, train_dataset=data, peft_config=lora, processing_class=tok,
-                         args=SFTConfig(output_dir=str(out), num_train_epochs=epochs, per_device_train_batch_size=2,
-                                        gradient_accumulation_steps=4, learning_rate=2e-4, logging_steps=5,
-                                        dataset_text_field="text", report_to=[]))
+    trainer = SFTTrainer(
+        model=model,
+        train_dataset=data,
+        peft_config=lora,
+        processing_class=tok,
+        args=SFTConfig(
+            output_dir=str(out),
+            num_train_epochs=epochs,
+            per_device_train_batch_size=2,
+            gradient_accumulation_steps=4,
+            learning_rate=2e-4,
+            logging_steps=5,
+            dataset_text_field="text",
+            report_to=[],
+        ),
+    )
     trainer.model.print_trainable_parameters()
     trainer.train()
     trainer.save_model(str(out))  # saves only the adapter weights (a few MB)

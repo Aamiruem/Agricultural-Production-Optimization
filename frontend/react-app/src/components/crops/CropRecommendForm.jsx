@@ -51,7 +51,9 @@ export function CropRecommendForm() {
       <Col lg={6}>
         <Card>
           <Card.Body>
-            <Card.Title as="h2" className="h5">Soil &amp; climate readings</Card.Title>
+            <Card.Title as="h2" className="h5">
+              Soil &amp; climate readings
+            </Card.Title>
             <p className="small text-body-secondary">Use values from your soil health card, or try a sample.</p>
             <div className="d-flex flex-wrap gap-2 mb-3">
               {SAMPLE_SOILS.map((s) => (
@@ -86,7 +88,9 @@ export function CropRecommendForm() {
       <Col lg={6} aria-live="polite">
         <ErrorAlert error={mutation.error} />
         {mutation.data && <RecommendationResults result={mutation.data} />}
-        {mutation.isIdle && <EmptyState className="h-100 d-grid align-items-center">Your top three crops will appear here.</EmptyState>}
+        {mutation.isIdle && (
+          <EmptyState className="h-100 d-grid align-items-center">Your top three crops will appear here.</EmptyState>
+        )}
       </Col>
     </Row>
   );

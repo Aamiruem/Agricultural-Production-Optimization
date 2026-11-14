@@ -8,6 +8,7 @@ Usage (repo root):  python scripts/import_streamlit_assets.py <path-to-cloned-re
 * Writes frontend/react-app/src/data/generated/atlas.json with crop profiles,
   soil guide, crop-rotation guide and state climate/major-crop references.
 """
+
 from __future__ import annotations
 
 import csv
@@ -44,12 +45,20 @@ def main(src: Path) -> None:
     for r in rows(ref / "india_crop_catalog.csv"):
         image = Path(r["image_file"]).name
         shutil.copy2(src / r["image_file"], PUBLIC / "crops" / image)
-        crops.append({
-            "name": r["crop"], "hi": r["crop_hindi"], "group": r["crop_group"],
-            "seasons": split(r["typical_seasons"]), "soils": split(r["suitable_soils"]),
-            "yield": float(r["reference_yield_t_ha"]), "rain": float(r["optimum_rainfall_mm"]),
-            "temp": float(r["optimum_temperature_c"]), "water": r["water_need"], "image": f"/images/crops/{image}",
-        })
+        crops.append(
+            {
+                "name": r["crop"],
+                "hi": r["crop_hindi"],
+                "group": r["crop_group"],
+                "seasons": split(r["typical_seasons"]),
+                "soils": split(r["suitable_soils"]),
+                "yield": float(r["reference_yield_t_ha"]),
+                "rain": float(r["optimum_rainfall_mm"]),
+                "temp": float(r["optimum_temperature_c"]),
+                "water": r["water_need"],
+                "image": f"/images/crops/{image}",
+            }
+        )
 
     for name in ("india-agriculture-hero", "kharif-season", "rabi-season", "zaid-horticulture"):
         img = Image.open(src / "assets" / "images" / f"{name}.png").convert("RGB")
@@ -57,18 +66,49 @@ def main(src: Path) -> None:
             img = img.resize((1600, round(img.height * 1600 / img.width)), Image.LANCZOS)
         img.save(PUBLIC / f"{name}.webp", "WEBP", quality=78, method=6)
 
-    soils = [{"id": r["soil_type"], "hi": r["soil_type_hindi"], "texture": r["texture"], "strength": r["strength"], "focus": r["focus"]}
-             for r in rows(ref / "india_soil_guide.csv")]
-    rotation = [{"prev": r["previous_crop"], "next": r["recommended_crop"], "season": r["next_season"], "soil": r["preferred_soil"],
-                 "score": int(r["base_score"]), "reason": r["reason"]} for r in rows(ref / "crop_rotation_guide.csv")]
-    states = {STATE_NAMES.get(r["state"], r["state"]): {
-        "crops": split(r["major_crops"]), "soils": split(r["dominant_soils"]),
-        "rain": float(r["reference_annual_rainfall_mm"]), "temp": float(r["reference_mean_temperature_c"]),
-        "zone": r["agro_climate_zone"],
-    } for r in rows(ref / "india_states_and_uts.csv")}
+    soils = [
+        {
+            "id": r["soil_type"],
+            "hi": r["soil_type_hindi"],
+            "texture": r["texture"],
+            "strength": r["strength"],
+            "focus": r["focus"],
+        }
+        for r in rows(ref / "india_soil_guide.csv")
+    ]
+    rotation = [
+        {
+            "prev": r["previous_crop"],
+            "next": r["recommended_crop"],
+            "season": r["next_season"],
+            "soil": r["preferred_soil"],
+            "score": int(r["base_score"]),
+            "reason": r["reason"],
+        }
+        for r in rows(ref / "crop_rotation_guide.csv")
+    ]
+    states = {
+        STATE_NAMES.get(r["state"], r["state"]): {
+            "crops": split(r["major_crops"]),
+            "soils": split(r["dominant_soils"]),
+            "rain": float(r["reference_annual_rainfall_mm"]),
+            "temp": float(r["reference_mean_temperature_c"]),
+            "zone": r["agro_climate_zone"],
+        }
+        for r in rows(ref / "india_states_and_uts.csv")
+    }
 
-    OUT.write_text(json.dumps({"crops": crops, "soils": soils, "rotation": rotation, "states": states}, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    print(f"{len(crops)} crops, {len(soils)} soils, {len(rotation)} rotations, {len(states)} states -> {OUT.relative_to(ROOT)}")
+    OUT.write_text(
+        json.dumps(
+            {"crops": crops, "soils": soils, "rotation": rotation, "states": states},
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ),
+        encoding="utf-8",
+    )
+    print(
+        f"{len(crops)} crops, {len(soils)} soils, {len(rotation)} rotations, {len(states)} states -> {OUT.relative_to(ROOT)}"
+    )
 
 
 if __name__ == "__main__":

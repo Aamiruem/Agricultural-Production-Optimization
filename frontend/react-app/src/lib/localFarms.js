@@ -21,7 +21,10 @@ function save(db) {
     throw new Error("Could not save on this device (storage is full or blocked).");
   }
 }
-const id = () => (crypto.randomUUID?.() ?? `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`).replace(/-/g, "").slice(0, 24);
+const id = () =>
+  (crypto.randomUUID?.() ?? `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`)
+    .replace(/-/g, "")
+    .slice(0, 24);
 const now = () => new Date().toISOString();
 const fail = (status, detail) => Object.assign(new Error(detail), { status, response: { status, data: { detail } } });
 
@@ -46,11 +49,20 @@ export const localFarms = {
   createFarm({ name, location = {} }) {
     const db = load();
     const clean = name.trim();
-    if (db.farms.some((f) => f.name.toLowerCase() === clean.toLowerCase())) throw fail(409, "You already have a farm with this name");
+    if (db.farms.some((f) => f.name.toLowerCase() === clean.toLowerCase()))
+      throw fail(409, "You already have a farm with this name");
     const { state, district, village, lat, lng } = location;
     const farm = {
-      _id: id(), name: clean, createdAt: now(), updatedAt: now(),
-      location: { state, district, village, ...(lat !== undefined && lng !== undefined ? { point: { type: "Point", coordinates: [lng, lat] } } : {}) },
+      _id: id(),
+      name: clean,
+      createdAt: now(),
+      updatedAt: now(),
+      location: {
+        state,
+        district,
+        village,
+        ...(lat !== undefined && lng !== undefined ? { point: { type: "Point", coordinates: [lng, lat] } } : {}),
+      },
     };
     db.farms.push(farm);
     save(db);
@@ -71,19 +83,27 @@ export const localFarms = {
     const db = load();
     const farm = farmOrThrow(db, farmId);
     const fields = db.fields.filter((f) => f.farmId === farmId);
-    const byCrop = Object.values(fields.reduce((acc, f) => {
-      acc[f.crop] ??= { crop: f.crop, fields: 0, areaHa: 0 };
-      acc[f.crop].fields += 1;
-      acc[f.crop].areaHa += f.areaHa;
-      return acc;
-    }, {})).sort((a, b) => b.areaHa - a.areaHa);
+    const byCrop = Object.values(
+      fields.reduce((acc, f) => {
+        acc[f.crop] ??= { crop: f.crop, fields: 0, areaHa: 0 };
+        acc[f.crop].fields += 1;
+        acc[f.crop].areaHa += f.areaHa;
+        return acc;
+      }, {}),
+    ).sort((a, b) => b.areaHa - a.areaHa);
     const byStatus = fields.reduce((acc, f) => ({ ...acc, [f.status]: (acc[f.status] ?? 0) + 1 }), {});
     const recentActivities = db.activities
       .filter((a) => a.farmId === farmId)
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 10)
       .map((a) => ({ ...a, fieldName: db.fields.find((f) => f._id === a.fieldId)?.name ?? "Field" }));
-    return { farm, totals: { fields: fields.length, areaHa: fields.reduce((s, f) => s + f.areaHa, 0) }, byCrop, byStatus, recentActivities };
+    return {
+      farm,
+      totals: { fields: fields.length, areaHa: fields.reduce((s, f) => s + f.areaHa, 0) },
+      byCrop,
+      byStatus,
+      recentActivities,
+    };
   },
 
   listFields(farmId) {
@@ -95,7 +115,15 @@ export const localFarms = {
   createField(farmId, field) {
     const db = load();
     farmOrThrow(db, farmId);
-    const created = { _id: id(), farmId, status: "planned", photos: [], createdAt: now(), ...field, crop: field.crop.toLowerCase() };
+    const created = {
+      _id: id(),
+      farmId,
+      status: "planned",
+      photos: [],
+      createdAt: now(),
+      ...field,
+      crop: field.crop.toLowerCase(),
+    };
     db.fields.push(created);
     save(db);
     return created;
@@ -103,7 +131,11 @@ export const localFarms = {
 
   deleteField(fieldId) {
     const db = load();
-    save({ ...db, fields: db.fields.filter((f) => f._id !== fieldId), activities: db.activities.filter((a) => a.fieldId !== fieldId) });
+    save({
+      ...db,
+      fields: db.fields.filter((f) => f._id !== fieldId),
+      activities: db.activities.filter((a) => a.fieldId !== fieldId),
+    });
   },
 
   logActivity(fieldId, activity) {
@@ -123,7 +155,13 @@ export const localFarms = {
     const field = load().fields.find((f) => f._id === fieldId);
     if (!field) throw fail(404, "Field not found");
     if (field.soil?.N === undefined) throw fail(422, "Add soil N-P-K values to this field to get a fertilizer plan.");
-    return fertilizerLocal({ crop: field.crop, N: field.soil.N, P: field.soil.P ?? 0, K: field.soil.K ?? 0, area_ha: field.areaHa });
+    return fertilizerLocal({
+      crop: field.crop,
+      N: field.soil.N,
+      P: field.soil.P ?? 0,
+      K: field.soil.K ?? 0,
+      area_ha: field.areaHa,
+    });
   },
 
   /** Stores a small thumbnail (data URL) on the device. */

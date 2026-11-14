@@ -3,7 +3,15 @@ import { describe, expect, it } from "vitest";
 import { CROPS, STATES } from "@/data/indiaAgri";
 
 import { YIELD_DOMAIN } from "./agriModels";
-import { ATLAS_CROPS, ATLAS_STATES, advisorSeason, atlasCrop, cropImage, recommendRotation, recommendSeasonalCrops } from "./atlas";
+import {
+  ATLAS_CROPS,
+  ATLAS_STATES,
+  advisorSeason,
+  atlasCrop,
+  cropImage,
+  recommendRotation,
+  recommendSeasonalCrops,
+} from "./atlas";
 import { parseCsv, scoreRows } from "./yieldBatch";
 
 describe("crop photos", () => {
@@ -24,7 +32,32 @@ describe("crop photos", () => {
 
   it("gives photos to most yield-model and catalogue crops", () => {
     // Every major yield-model crop with a source photo resolves (aggregates like "Other Cereals" have none).
-    for (const c of ["Rice", "Wheat", "Maize", "Bajra", "Jowar", "Ragi", "Gram", "Arhar/Tur", "Urad", "Masoor", "Groundnut", "Soyabean", "Sesamum", "Sugarcane", "Cotton(lint)", "Jute", "Potato", "Onion", "Banana", "Coconut", "Turmeric", "Dry chillies", "Cashewnut", "Peas & beans (Pulses)"]) {
+    for (const c of [
+      "Rice",
+      "Wheat",
+      "Maize",
+      "Bajra",
+      "Jowar",
+      "Ragi",
+      "Gram",
+      "Arhar/Tur",
+      "Urad",
+      "Masoor",
+      "Groundnut",
+      "Soyabean",
+      "Sesamum",
+      "Sugarcane",
+      "Cotton(lint)",
+      "Jute",
+      "Potato",
+      "Onion",
+      "Banana",
+      "Coconut",
+      "Turmeric",
+      "Dry chillies",
+      "Cashewnut",
+      "Peas & beans (Pulses)",
+    ]) {
       expect(cropImage(c), c).toBeTruthy();
     }
     expect(YIELD_DOMAIN.crops.filter((c) => cropImage(c)).length).toBeGreaterThanOrEqual(33);
@@ -44,9 +77,13 @@ describe("seasonal advisor", () => {
   });
 
   it("ranks rice and wheat sensibly for Punjab", () => {
-    const kharif = recommendSeasonalCrops({ state: "Punjab", season: "Kharif", soil: "Alluvial", water: "High" }).map((c) => c.name);
+    const kharif = recommendSeasonalCrops({ state: "Punjab", season: "Kharif", soil: "Alluvial", water: "High" }).map(
+      (c) => c.name,
+    );
     expect(kharif.slice(0, 3)).toContain("Rice");
-    const rabi = recommendSeasonalCrops({ state: "Punjab", season: "Rabi", soil: "Alluvial", water: "Medium" }).map((c) => c.name);
+    const rabi = recommendSeasonalCrops({ state: "Punjab", season: "Rabi", soil: "Alluvial", water: "Medium" }).map(
+      (c) => c.name,
+    );
     expect(rabi.slice(0, 3)).toContain("Wheat");
     expect(rabi).not.toContain("Pearl Millet");
   });
@@ -78,7 +115,9 @@ describe("rotation planner", () => {
 
 describe("batch CSV", () => {
   it("parses, scores and flags bad rows", () => {
-    const rows = parseCsv("crop,state,season,year,area_ha,annual_rainfall\nWheat,Punjab,Rabi,2025,2,\nDragonfruit,Punjab,Rabi,2025,1,\n");
+    const rows = parseCsv(
+      "crop,state,season,year,area_ha,annual_rainfall\nWheat,Punjab,Rabi,2025,2,\nDragonfruit,Punjab,Rabi,2025,1,\n",
+    );
     const out = scoreRows(rows);
     expect(out[0].yield_t_ha).toBeGreaterThan(3.5);
     expect(out[0].production_t).toBeCloseTo(out[0].yield_t_ha * 2, 1);

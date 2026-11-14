@@ -5,6 +5,7 @@ requests (dashboards refreshing, a slider dragged back and forth, a crowd asking
 about the same field) are answered from memory. ``clear()`` runs when the model
 is reloaded so stale predictions are never served.
 """
+
 from __future__ import annotations
 
 import threading
@@ -48,8 +49,15 @@ class TTLCache:
         with self._lock:
             size = len(self._data)
         lookups = self.hits + self.misses
-        return {"name": self.name, "size": size, "maxsize": self.maxsize, "ttl_s": self.ttl, "hits": self.hits,
-                "misses": self.misses, "hit_rate": round(self.hits / lookups, 4) if lookups else 0.0}
+        return {
+            "name": self.name,
+            "size": size,
+            "maxsize": self.maxsize,
+            "ttl_s": self.ttl,
+            "hits": self.hits,
+            "misses": self.misses,
+            "hit_rate": round(self.hits / lookups, 4) if lookups else 0.0,
+        }
 
 
 def rounded_key(prefix: str, values: dict, ndigits: int = 3) -> tuple:
@@ -65,8 +73,11 @@ def get_cache(name: str, maxsize: int | None = None, ttl_s: float | None = None)
         from app.core.config import get_settings
 
         s = get_settings()
-        _registry[name] = TTLCache(name, maxsize if maxsize is not None else s.prediction_cache_size,
-                                   ttl_s if ttl_s is not None else s.prediction_cache_ttl_s)
+        _registry[name] = TTLCache(
+            name,
+            maxsize if maxsize is not None else s.prediction_cache_size,
+            ttl_s if ttl_s is not None else s.prediction_cache_ttl_s,
+        )
     return _registry[name]
 
 

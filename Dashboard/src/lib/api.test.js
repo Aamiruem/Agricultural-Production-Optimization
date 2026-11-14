@@ -1,6 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ApiError, backoffDelay, breakerState, createSseParser, mcpResultValue, requestRaw, resetBreakers } from "./api.js";
+import {
+  ApiError,
+  backoffDelay,
+  breakerState,
+  createSseParser,
+  mcpResultValue,
+  requestRaw,
+  resetBreakers,
+} from "./api.js";
 
 const json = (status, body, headers = {}) =>
   new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", ...headers } });
@@ -16,7 +24,8 @@ describe("requestRaw", () => {
   });
 
   it("retries a shed POST (503 + Retry-After) and then succeeds", async () => {
-    const fetchMock = vi.fn()
+    const fetchMock = vi
+      .fn()
       .mockResolvedValueOnce(json(503, { detail: "busy" }, { "retry-after": "1" }))
       .mockResolvedValueOnce(json(200, { top: [] }));
     vi.stubGlobal("fetch", fetchMock);
@@ -30,12 +39,18 @@ describe("requestRaw", () => {
   it("does not retry a POST that failed for a non-transient reason", async () => {
     const fetchMock = vi.fn().mockResolvedValue(json(422, { detail: [{ loc: ["body", "N"], msg: "too large" }] }));
     vi.stubGlobal("fetch", fetchMock);
-    await expect(requestRaw("/api/x", { method: "POST", body: {} })).rejects.toMatchObject({ status: 422, message: "N: too large" });
+    await expect(requestRaw("/api/x", { method: "POST", body: {} })).rejects.toMatchObject({
+      status: 422,
+      message: "N: too large",
+    });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("retries GETs on network errors with backoff", async () => {
-    const fetchMock = vi.fn().mockRejectedValueOnce(new TypeError("Failed to fetch")).mockResolvedValueOnce(json(200, { ok: true }));
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new TypeError("Failed to fetch"))
+      .mockResolvedValueOnce(json(200, { ok: true }));
     vi.stubGlobal("fetch", fetchMock);
     const pending = requestRaw("/api/health");
     await vi.advanceTimersByTimeAsync(1000);
@@ -92,7 +107,18 @@ describe("shared crop photos", async () => {
     const { existsSync } = await import("node:fs");
     const { join } = await import("node:path");
     const dir = join(__dirname, "..", "..", "..", "frontend", "react-app", "public");
-    for (const name of ["rice", "mungbean", "Arhar/Tur", "Bajra", "Jowar", "Ragi", "Soyabean", "Cotton(lint)", "Dry chillies", "Gram"]) {
+    for (const name of [
+      "rice",
+      "mungbean",
+      "Arhar/Tur",
+      "Bajra",
+      "Jowar",
+      "Ragi",
+      "Soyabean",
+      "Cotton(lint)",
+      "Dry chillies",
+      "Gram",
+    ]) {
       const url = cropPhotoUrl(name);
       expect(url, name).not.toBeNull();
       expect(existsSync(join(dir, url)), url).toBe(true);

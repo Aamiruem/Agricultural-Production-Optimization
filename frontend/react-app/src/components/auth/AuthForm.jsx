@@ -38,7 +38,12 @@ export function AuthForm({ mode }) {
   const fields = [
     ...(isRegister ? [{ name: "full_name", label: "Full name", type: "text", autoComplete: "name" }] : []),
     { name: "email", label: "Email", type: "email", autoComplete: "email" },
-    { name: "password", label: "Password", type: "password", autoComplete: isRegister ? "new-password" : "current-password" },
+    {
+      name: "password",
+      label: "Password",
+      type: "password",
+      autoComplete: isRegister ? "new-password" : "current-password",
+    },
   ];
 
   return (
@@ -46,15 +51,28 @@ export function AuthForm({ mode }) {
       <Card.Body className="p-4">
         <h1 className="h4">{isRegister ? "Create your account" : "Sign in"}</h1>
         <p className="small text-body-secondary">
-          {isRegister ? "Save recommendation history, manage farms and run batch jobs." : "Welcome back to your farms and history."}
+          {isRegister
+            ? "Save recommendation history, manage farms and run batch jobs."
+            : "Welcome back to your farms and history."}
         </p>
-        <form noValidate aria-label={isRegister ? "Register" : "Sign in"} onSubmit={handleSubmit((v) => mutation.mutate(v))}
-              className="d-grid gap-3">
+        <form
+          noValidate
+          aria-label={isRegister ? "Register" : "Sign in"}
+          onSubmit={handleSubmit((v) => mutation.mutate(v))}
+          className="d-grid gap-3"
+        >
           {fields.map((f) => (
             <Form.Group key={f.name} controlId={`auth-${f.name}`}>
               <Form.Label className="small fw-medium mb-1">{f.label}</Form.Label>
-              <Form.Control type={f.type} autoComplete={f.autoComplete} isInvalid={Boolean(errors[f.name])} {...register(f.name)} />
-              <Form.Control.Feedback type="invalid" role="alert">{errors[f.name]?.message}</Form.Control.Feedback>
+              <Form.Control
+                type={f.type}
+                autoComplete={f.autoComplete}
+                isInvalid={Boolean(errors[f.name])}
+                {...register(f.name)}
+              />
+              <Form.Control.Feedback type="invalid" role="alert">
+                {errors[f.name]?.message}
+              </Form.Control.Feedback>
             </Form.Group>
           ))}
           <ErrorAlert error={mutation.error} />

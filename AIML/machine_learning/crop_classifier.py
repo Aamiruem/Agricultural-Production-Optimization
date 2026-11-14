@@ -9,6 +9,7 @@ set) and a PyTorch MLP (test set). The best scikit-learn-compatible model by
 cross-validated macro-F1 is saved as a bundle the FastAPI backend serves, and
 registered in the MLflow model registry.
 """
+
 import argparse
 import json
 from datetime import datetime, timezone
@@ -61,20 +62,35 @@ SKOPS_TRUSTED_TYPES: dict[str, list[str] | None] = {
 def candidate_models() -> dict[str, Pipeline]:
     """Every candidate is a plain scikit-learn Pipeline so it pickles without custom code."""
     return {
-        "logistic_regression": Pipeline([
-            ("scale", StandardScaler()),
-            ("clf", LogisticRegression(max_iter=2000, C=10.0)),
-        ]),
-        "random_forest": Pipeline([
-            ("clf", RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1)),
-        ]),
-        "xgboost": Pipeline([
-            ("clf", XGBClassifier(
-                n_estimators=300, max_depth=6, learning_rate=0.1, subsample=0.9,
-                colsample_bytree=0.9, tree_method="hist", eval_metric="mlogloss",
-                random_state=RANDOM_STATE, n_jobs=-1,
-            )),
-        ]),
+        "logistic_regression": Pipeline(
+            [
+                ("scale", StandardScaler()),
+                ("clf", LogisticRegression(max_iter=2000, C=10.0)),
+            ]
+        ),
+        "random_forest": Pipeline(
+            [
+                ("clf", RandomForestClassifier(n_estimators=300, random_state=RANDOM_STATE, n_jobs=-1)),
+            ]
+        ),
+        "xgboost": Pipeline(
+            [
+                (
+                    "clf",
+                    XGBClassifier(
+                        n_estimators=300,
+                        max_depth=6,
+                        learning_rate=0.1,
+                        subsample=0.9,
+                        colsample_bytree=0.9,
+                        tree_method="hist",
+                        eval_metric="mlogloss",
+                        random_state=RANDOM_STATE,
+                        n_jobs=-1,
+                    ),
+                ),
+            ]
+        ),
     }
 
 
@@ -90,7 +106,10 @@ def test_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, float]:
 def evaluate_sklearn(name: str, model: Pipeline, split: Split, cv_folds: int) -> tuple[Pipeline, dict]:
     cv = StratifiedKFold(n_splits=cv_folds, shuffle=True, random_state=RANDOM_STATE)
     scores = cross_validate(
-        clone(model), split.X_train, split.y_train, cv=cv,
+        clone(model),
+        split.X_train,
+        split.y_train,
+        cv=cv,
         scoring={"accuracy": "accuracy", "f1_macro": "f1_macro"},
     )
     fitted = clone(model).fit(split.X_train, split.y_train)
@@ -100,10 +119,17 @@ def evaluate_sklearn(name: str, model: Pipeline, split: Split, cv_folds: int) ->
         "cv_f1_macro_std": float(scores["test_f1_macro"].std()),
         **test_metrics(split.y_test, fitted.predict(split.X_test)),
     }
-    mlflow.log_params({"model": name, "cv_folds": cv_folds, **{
-        k: v for k, v in fitted.named_steps["clf"].get_params().items()
-        if isinstance(v, (int, float, str, bool)) and v is not None
-    }})
+    mlflow.log_params(
+        {
+            "model": name,
+            "cv_folds": cv_folds,
+            **{
+                k: v
+                for k, v in fitted.named_steps["clf"].get_params().items()
+                if isinstance(v, (int, float, str, bool)) and v is not None
+            },
+        }
+    )
     mlflow.log_metrics(metrics)
     return fitted, metrics
 
@@ -123,8 +149,13 @@ def evaluate_torch(split: Split) -> dict:
     mlflow.log_metrics(metrics)
 
     torch.save(
-        {"state_dict": result.model.state_dict(), "mean": result.mean, "std": result.std,
-         "classes": split.classes, "features": FEATURES},
+        {
+            "state_dict": result.model.state_dict(),
+            "mean": result.mean,
+            "std": result.std,
+            "classes": split.classes,
+            "features": FEATURES,
+        },
         TORCH_MODEL_PATH,
     )
     return metrics
@@ -151,8 +182,10 @@ def main(cv_folds: int = 5, register: bool = True) -> dict:
             with mlflow.start_run(run_name=name, nested=True) as run:
                 fitted_models[name], leaderboard[name] = evaluate_sklearn(name, model, split, cv_folds)
                 run_ids[name] = run.info.run_id
-            print(f"{name:20s} cv_f1={leaderboard[name]['cv_f1_macro_mean']:.4f} "
-                  f"test_acc={leaderboard[name]['test_accuracy']:.4f}")
+            print(
+                f"{name:20s} cv_f1={leaderboard[name]['cv_f1_macro_mean']:.4f} "
+                f"test_acc={leaderboard[name]['test_accuracy']:.4f}"
+            )
 
         try:
             import torch  # noqa: F401
@@ -212,7 +245,8 @@ def main(cv_folds: int = 5, register: bool = True) -> dict:
             fmt = SKOPS_TRUSTED_TYPES.get(best_name)
             with mlflow.start_run(run_id=run_ids[best_name], nested=True):
                 mlflow.sklearn.log_model(
-                    best, name="model",
+                    best,
+                    name="model",
                     input_example=split.X_test.head(3),
                     registered_model_name=REGISTERED_MODEL_NAME,
                     **({"skops_trusted_types": fmt} if fmt is not None else {"serialization_format": "cloudpickle"}),

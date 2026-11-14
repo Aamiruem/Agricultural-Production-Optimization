@@ -6,6 +6,7 @@ Fits linear regression by minimising mean squared error with
 
     python -m AIML.foundations.optimization
 """
+
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -29,8 +30,16 @@ def numerical_grad(f: Callable[[np.ndarray], float], w: np.ndarray, eps: float =
     return g
 
 
-def optimise(X: np.ndarray, y: np.ndarray, method: str = "adam", lr: float = 0.05, steps: int = 2000,
-             beta1: float = 0.9, beta2: float = 0.999, eps: float = 1e-8) -> tuple[np.ndarray, list[float]]:
+def optimise(
+    X: np.ndarray,
+    y: np.ndarray,
+    method: str = "adam",
+    lr: float = 0.05,
+    steps: int = 2000,
+    beta1: float = 0.9,
+    beta2: float = 0.999,
+    eps: float = 1e-8,
+) -> tuple[np.ndarray, list[float]]:
     w = np.zeros(X.shape[1])
     m = np.zeros_like(w)  # 1st moment / velocity
     v = np.zeros_like(w)  # 2nd moment

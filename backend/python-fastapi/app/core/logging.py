@@ -1,4 +1,5 @@
 """Structured request logging with a per-request ID."""
+
 import logging
 import time
 import uuid
@@ -29,6 +30,10 @@ class RequestLogMiddleware(BaseHTTPMiddleware):
         response.headers["Referrer-Policy"] = "no-referrer"
         logger.info(
             "request id=%s method=%s path=%s status=%s ms=%.1f",
-            request_id, request.method, request.url.path, response.status_code, elapsed_ms,
+            request_id,
+            request.method,
+            request.url.path,
+            response.status_code,
+            elapsed_ms,
         )
         return response

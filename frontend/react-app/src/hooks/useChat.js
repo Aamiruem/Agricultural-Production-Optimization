@@ -49,10 +49,15 @@ export function useChat() {
 
       abortRef.current = new AbortController();
       try {
-        await streamChat({ message: text, threadId: threadRef.current }, (e) => update((t) => applyEvent(t, e)), abortRef.current.signal);
+        await streamChat(
+          { message: text, threadId: threadRef.current },
+          (e) => update((t) => applyEvent(t, e)),
+          abortRef.current.signal,
+        );
       } catch (err) {
         if (err.name !== "AbortError") {
-          const message = err instanceof TypeError ? "Cannot reach the assistant. Is the FastAPI backend running?" : err.message;
+          const message =
+            err instanceof TypeError ? "Cannot reach the assistant. Is the FastAPI backend running?" : err.message;
           update((t) => ({ ...t, error: message }));
         }
       } finally {

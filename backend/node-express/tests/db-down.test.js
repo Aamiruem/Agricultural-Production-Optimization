@@ -11,7 +11,9 @@ const { env } = await import("../src/config/env.js");
 
 const auth = {
   Authorization: `Bearer ${jwt.sign({ sub: "9", email: "x@example.com", role: "farmer" }, env.JWT_SECRET, {
-    issuer: env.JWT_ISSUER, audience: env.JWT_AUDIENCE, expiresIn: "5m",
+    issuer: env.JWT_ISSUER,
+    audience: env.JWT_AUDIENCE,
+    expiresIn: "5m",
   })}`,
 };
 

@@ -19,11 +19,15 @@ MAX_ROWS = 1000
 
 @router.get("/predictions", response_model=PredictionPage)
 def my_predictions(
-    user: CurrentUser, db: DbSession,
-    limit: int = Query(default=20, ge=1, le=100), offset: int = Query(default=0, ge=0),
+    user: CurrentUser,
+    db: DbSession,
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
 ):
     items, total = predictions_repo.list_for_user(db, user.id, limit=limit, offset=offset)
-    return PredictionPage(items=[PredictionOut.model_validate(p) for p in items], total=total, limit=limit, offset=offset)
+    return PredictionPage(
+        items=[PredictionOut.model_validate(p) for p in items], total=total, limit=limit, offset=offset
+    )
 
 
 @router.get("/predictions/stats", response_model=list[CropCount])

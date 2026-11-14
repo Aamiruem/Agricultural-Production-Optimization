@@ -20,7 +20,16 @@ export function Icon({ name, filled = false, size = 20, className = "", label })
   );
 }
 
-export function Card({ title, subtitle, icon, actions, children, className = "", bodyClassName = "", as: Tag = "section" }) {
+export function Card({
+  title,
+  subtitle,
+  icon,
+  actions,
+  children,
+  className = "",
+  bodyClassName = "",
+  as: Tag = "section",
+}) {
   return (
     <Tag className={cx("rounded-3xl border border-outline bg-surface", className)}>
       {(title || actions) && (
@@ -77,7 +86,10 @@ export function IconButton({ icon, label, className = "", ...props }) {
       type="button"
       aria-label={label}
       title={label}
-      className={cx("grid size-10 place-items-center rounded-full text-ink-2 transition hover:bg-surface-2 hover:text-ink", className)}
+      className={cx(
+        "grid size-10 place-items-center rounded-full text-ink-2 transition hover:bg-surface-2 hover:text-ink",
+        className,
+      )}
       {...props}
     >
       <Icon name={icon} size={22} />
@@ -96,7 +108,9 @@ const STATUS = {
 export function StatusPill({ status = "unknown", label, className = "" }) {
   const s = STATUS[status] ?? STATUS.unknown;
   return (
-    <span className={cx("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", s.tone, className)}>
+    <span
+      className={cx("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", s.tone, className)}
+    >
       <Icon name={s.icon} size={16} filled />
       {label ?? s.label}
     </span>
@@ -112,7 +126,9 @@ export function Chip({ children, icon, active = false, onClick, className = "" }
       aria-pressed={onClick ? active : undefined}
       className={cx(
         "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-medium transition",
-        active ? "border-transparent bg-primary-soft text-on-primary-soft" : "border-outline text-ink-2 hover:bg-surface-2",
+        active
+          ? "border-transparent bg-primary-soft text-on-primary-soft"
+          : "border-outline text-ink-2 hover:bg-surface-2",
         className,
       )}
     >
@@ -162,7 +178,11 @@ export function Select({ label, value, onChange, options, className = "", id }) 
       >
         {options.map((o) => {
           const opt = typeof o === "string" ? { value: o, label: o } : o;
-          return <option key={opt.value} value={opt.value}>{opt.label}</option>;
+          return (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          );
         })}
       </select>
     </label>
@@ -207,7 +227,15 @@ export function RangeField({ id, label, unit, value, min, max, step = 1, onChang
           {unit && <span className="w-10 text-xs text-ink-3">{unit}</span>}
         </div>
       </div>
-      <input id={id} type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
+      <input
+        id={id}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
     </div>
   );
 }
@@ -219,12 +247,19 @@ export function Skeleton({ className = "" }) {
 export function ErrorState({ error, onRetry, compact = false }) {
   const offline = error?.status === 0 || error?.status === 503;
   return (
-    <div role="alert" className={cx("flex flex-col items-center justify-center gap-2 text-center", compact ? "py-4" : "py-10")}>
+    <div
+      role="alert"
+      className={cx("flex flex-col items-center justify-center gap-2 text-center", compact ? "py-4" : "py-10")}
+    >
       <span className="grid size-11 place-items-center rounded-full bg-bad-soft text-bad">
         <Icon name={offline ? "cloud_off" : "error"} size={24} />
       </span>
       <p className="max-w-sm text-sm text-ink">{error?.message ?? "Something went wrong."}</p>
-      {onRetry && <Button variant="text" icon="refresh" size="sm" onClick={onRetry}>Try again</Button>}
+      {onRetry && (
+        <Button variant="text" icon="refresh" size="sm" onClick={onRetry}>
+          Try again
+        </Button>
+      )}
     </div>
   );
 }
@@ -287,6 +322,8 @@ export function KeyValue({ items, columns = 2 }) {
 
 export function Code({ children, className = "" }) {
   return (
-    <code className={cx("rounded-md bg-surface-2 px-1.5 py-0.5 font-mono text-[12.5px] text-ink", className)}>{children}</code>
+    <code className={cx("rounded-md bg-surface-2 px-1.5 py-0.5 font-mono text-[12.5px] text-ink", className)}>
+      {children}
+    </code>
   );
 }

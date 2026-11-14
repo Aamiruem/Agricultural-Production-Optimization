@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Hadoop Streaming REDUCER: sum production and area per key (input arrives sorted
 by key), output "state|crop<TAB>total_production<TAB>total_area<TAB>yield_t_ha"."""
+
 import sys
 
 

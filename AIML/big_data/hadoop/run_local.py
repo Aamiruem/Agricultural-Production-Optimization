@@ -10,6 +10,7 @@ On a real cluster (input already in HDFS):
       -mapper "python3 mapper.py" -reducer "python3 reducer.py" \\
       -input /data/crop_yield.csv -output /out/state_crop_yield
 """
+
 from __future__ import annotations
 
 import subprocess
@@ -27,11 +28,15 @@ def run(input_path: Path = YIELD_DATA_PATH, splits: int = 4) -> list[tuple[str, 
     size = -(-len(body) // splits)
     mapped: list[str] = []
     for i in range(splits):  # each split is mapped independently, like separate map tasks
-        chunk = header + "".join(body[i * size:(i + 1) * size])
-        out = subprocess.run([sys.executable, str(HERE / "mapper.py")], input=chunk, capture_output=True, text=True, check=True)
+        chunk = header + "".join(body[i * size : (i + 1) * size])
+        out = subprocess.run(
+            [sys.executable, str(HERE / "mapper.py")], input=chunk, capture_output=True, text=True, check=True
+        )
         mapped += out.stdout.splitlines(keepends=True)
     shuffled = "".join(sorted(mapped, key=lambda l: l.split("\t", 1)[0]))  # the shuffle/sort phase
-    reduced = subprocess.run([sys.executable, str(HERE / "reducer.py")], input=shuffled, capture_output=True, text=True, check=True)
+    reduced = subprocess.run(
+        [sys.executable, str(HERE / "reducer.py")], input=shuffled, capture_output=True, text=True, check=True
+    )
     rows = []
     for line in reduced.stdout.splitlines():
         key, prod, area, y = line.split("\t")

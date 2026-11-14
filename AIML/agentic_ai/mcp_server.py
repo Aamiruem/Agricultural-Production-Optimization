@@ -20,6 +20,7 @@ balancer with no sticky sessions (every request carries its full context)::
 
 ``GET /health`` answers load-balancer health checks on the HTTP transport.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -49,20 +50,25 @@ mcp = _Server("agrismart", instructions=INSTRUCTIONS)
 
 
 @mcp.tool()
-def recommend_crop(N: float, P: float, K: float, temperature: float, humidity: float, ph: float, rainfall: float) -> dict:
+def recommend_crop(
+    N: float, P: float, K: float, temperature: float, humidity: float, ph: float, rainfall: float
+) -> dict:
     """Rank the 3 best crops for soil N, P, K, pH, temperature (°C), humidity (%) and rainfall (mm)."""
     return tools.recommend_crop(N, P, K, temperature, humidity, ph, rainfall)
 
 
 @mcp.tool()
-def explain_crop(N: float, P: float, K: float, temperature: float, humidity: float, ph: float, rainfall: float,
-                 top: int = 3) -> dict:
+def explain_crop(
+    N: float, P: float, K: float, temperature: float, humidity: float, ph: float, rainfall: float, top: int = 3
+) -> dict:
     """Explain a crop recommendation: TreeSHAP contribution of each reading to each top crop's probability."""
     return tools.explain_crop(N, P, K, temperature, humidity, ph, rainfall, top=min(max(top, 1), 5))
 
 
 @mcp.tool()
-def predict_yield(crop: str, season: str, state: str, year: int, area_ha: float, annual_rainfall: float | None = None) -> dict:
+def predict_yield(
+    crop: str, season: str, state: str, year: int, area_ha: float, annual_rainfall: float | None = None
+) -> dict:
     """Predict yield (t/ha) and production for an Indian state, season and crop (e.g. 'Rice', 'Kharif', 'Punjab')."""
     return tools.predict_yield(crop, season, state, year, area_ha, annual_rainfall)
 
@@ -98,8 +104,16 @@ def knowledge_doc(name: str) -> str:
 async def health(_request):
     from starlette.responses import JSONResponse
 
-    return JSONResponse({"status": "ok", "service": "mcp", "transport": "streamable-http", "stateless": True,
-                         "pid": os.getpid(), "uptime_s": round(time.time() - _STARTED, 1)})
+    return JSONResponse(
+        {
+            "status": "ok",
+            "service": "mcp",
+            "transport": "streamable-http",
+            "stateless": True,
+            "pid": os.getpid(),
+            "uptime_s": round(time.time() - _STARTED, 1),
+        }
+    )
 
 
 def create_http_app():
@@ -128,8 +142,16 @@ def main(argv: list[str] | None = None) -> None:
     import uvicorn
 
     os.environ.setdefault("MCP_BIND_HOST", args.host)
-    uvicorn.run("AIML.agentic_ai.mcp_server:create_http_app", factory=True, host=args.host, port=args.port,
-                workers=args.workers, proxy_headers=True, forwarded_allow_ips="*", log_level="info")
+    uvicorn.run(
+        "AIML.agentic_ai.mcp_server:create_http_app",
+        factory=True,
+        host=args.host,
+        port=args.port,
+        workers=args.workers,
+        proxy_headers=True,
+        forwarded_allow_ips="*",
+        log_level="info",
+    )
 
 
 if __name__ == "__main__":

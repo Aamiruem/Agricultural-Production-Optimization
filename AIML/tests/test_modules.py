@@ -1,4 +1,5 @@
 """Fast unit tests for the AIML modules (no network, no GPU, small inputs)."""
+
 import asyncio
 import subprocess
 import sys
@@ -116,11 +117,20 @@ def test_sequence_windows():
 def test_yield_cleaning_drops_bad_rows_and_builds_features():
     from AIML.preprocessing.yield_features import clean
 
-    raw = pd.DataFrame({"Crop": ["Rice ", "Coconut ", "Wheat", "Rice"], "Crop_Year": [2000] * 4,
-                        "Season": ["Kharif  ", "Whole Year", "Rabi", "Kharif"], "State": ["Punjab"] * 4,
-                        "Area": [100.0, 50.0, 0.0, 10.0], "Production": [300, 1000, 0, 20],
-                        "Annual_Rainfall": [600.0] * 4, "Fertilizer": [15000.0, 0, 0, 1500.0],
-                        "Pesticide": [30.0, 0, 0, 3.0], "Yield": [3.0, 20.0, 0.0, 2.0]})
+    raw = pd.DataFrame(
+        {
+            "Crop": ["Rice ", "Coconut ", "Wheat", "Rice"],
+            "Crop_Year": [2000] * 4,
+            "Season": ["Kharif  ", "Whole Year", "Rabi", "Kharif"],
+            "State": ["Punjab"] * 4,
+            "Area": [100.0, 50.0, 0.0, 10.0],
+            "Production": [300, 1000, 0, 20],
+            "Annual_Rainfall": [600.0] * 4,
+            "Fertilizer": [15000.0, 0, 0, 1500.0],
+            "Pesticide": [30.0, 0, 0, 3.0],
+            "Yield": [3.0, 20.0, 0.0, 2.0],
+        }
+    )
     out = clean(raw)
     assert out["Crop"].tolist() == ["Rice", "Rice"] and out["Season"].iloc[0] == "Kharif"
     assert out["fertilizer_kg_ha"].iloc[0] == 150
@@ -129,8 +139,14 @@ def test_yield_cleaning_drops_bad_rows_and_builds_features():
 def test_polars_weather_transform():
     from AIML.data_engineering.etl import transform_weather
 
-    raw = pd.DataFrame({"date": pd.date_range("2024-01-30", periods=4), "precipitation_sum": [1.0, 2.0, 3.0, 4.0],
-                        "et0_fao_evapotranspiration": [1.0] * 4, "temperature_2m_max": [20.0, 41.0, 30.0, 42.0]})
+    raw = pd.DataFrame(
+        {
+            "date": pd.date_range("2024-01-30", periods=4),
+            "precipitation_sum": [1.0, 2.0, 3.0, 4.0],
+            "et0_fao_evapotranspiration": [1.0] * 4,
+            "temperature_2m_max": [20.0, 41.0, 30.0, 42.0],
+        }
+    )
     out = transform_weather(raw).rows(named=True)
     assert [(r["month"], r["rain_mm"], r["heat_days"]) for r in out] == [(1, 3.0, 1), (2, 7.0, 1)]
 
@@ -151,13 +167,19 @@ def test_intent_classifier_learns_seed_set():
     df = pd.read_csv(DATA)
     model = candidates()["logistic_regression"].fit(df["text"], df["intent"])
     assert model.predict(["aphids attacking my mustard crop", "MSP for wheat this year"]).tolist() == [
-        "pest_disease", "market_price"]
+        "pest_disease",
+        "market_price",
+    ]
 
 
 def test_word2vec_trains():
     from AIML.nlp.word2vec import Word2Vec
 
-    sents = [["urea", "nitrogen", "fertilizer"], ["dap", "phosphorus", "fertilizer"], ["urea", "dap", "fertilizer"]] * 20
+    sents = [
+        ["urea", "nitrogen", "fertilizer"],
+        ["dap", "phosphorus", "fertilizer"],
+        ["urea", "dap", "fertilizer"],
+    ] * 20
     model = Word2Vec(sents, dim=10, window=2, min_count=1)
     losses = model.train(epochs=5)
     assert losses[-1] < losses[0] and model.most_similar("urea")
@@ -179,18 +201,27 @@ def test_rag_chunkers_and_retrieval():
     hits = Retriever(chunks).search("How are sodic soils reclaimed?", k=3, rerank=True)
     assert hits[0].source == "soil-ph"
     assert rrf([np.array([3.0, 2, 1]), np.array([1.0, 2, 3])]).round(6).tolist() == [
-        round(1 / 61 + 1 / 63, 6), round(2 / 62, 6), round(1 / 63 + 1 / 61, 6)]
+        round(1 / 61 + 1 / 63, 6),
+        round(2 / 62, 6),
+        round(1 / 63 + 1 / 61, 6),
+    ]
 
 
 # ----------------------------------------------------------------- big data
 def test_hadoop_mapper_reducer_streaming():
     here = Path(__file__).parents[1] / "big_data" / "hadoop"
-    csv = ("Crop,Crop_Year,Season,State,Area,Production,Annual_Rainfall,Fertilizer,Pesticide,Yield\n"
-           "Wheat,2000,Rabi,Punjab,100,400,600,1,1,4\nWheat,2001,Rabi,Punjab,100,500,600,1,1,5\n"
-           "Coconut ,2000,Whole Year,Kerala,10,90000,3000,1,1,9000\nbad,line\n")
+    csv = (
+        "Crop,Crop_Year,Season,State,Area,Production,Annual_Rainfall,Fertilizer,Pesticide,Yield\n"
+        "Wheat,2000,Rabi,Punjab,100,400,600,1,1,4\nWheat,2001,Rabi,Punjab,100,500,600,1,1,5\n"
+        "Coconut ,2000,Whole Year,Kerala,10,90000,3000,1,1,9000\nbad,line\n"
+    )
     mapped = subprocess.run([sys.executable, here / "mapper.py"], input=csv, capture_output=True, text=True).stdout
-    out = subprocess.run([sys.executable, here / "reducer.py"], input="".join(sorted(mapped.splitlines(True))),
-                         capture_output=True, text=True).stdout
+    out = subprocess.run(
+        [sys.executable, here / "reducer.py"],
+        input="".join(sorted(mapped.splitlines(True))),
+        capture_output=True,
+        text=True,
+    ).stdout
     assert out.strip() == "Punjab|Wheat\t900\t200\t4.500"
 
 
@@ -226,8 +257,14 @@ def test_mcp_server_exposes_tools():
     from AIML.agentic_ai.mcp_server import mcp
 
     names = {t.name for t in asyncio.run(mcp.list_tools())}
-    assert names == {"recommend_crop", "explain_crop", "predict_yield", "fertilizer_plan", "weather_forecast",
-                     "search_knowledge"}
+    assert names == {
+        "recommend_crop",
+        "explain_crop",
+        "predict_yield",
+        "fertilizer_plan",
+        "weather_forecast",
+        "search_knowledge",
+    }
 
 
 MCP_HEADERS = {"Accept": "application/json, text/event-stream", "Content-Type": "application/json"}
@@ -245,9 +282,19 @@ def test_mcp_http_transport_is_stateless_and_serves_tools():
         listed = http.post("/mcp", headers=MCP_HEADERS, json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
         assert listed.status_code == 200 and "mcp-session-id" not in listed.headers
         assert {t["name"] for t in listed.json()["result"]["tools"]} >= {"recommend_crop", "explain_crop"}
-        call = http.post("/mcp", headers=MCP_HEADERS, json={
-            "jsonrpc": "2.0", "id": 2, "method": "tools/call",
-            "params": {"name": "fertilizer_plan", "arguments": {"crop": "rice", "N": 20, "P": 10, "K": 40, "area_ha": 2}}})
+        call = http.post(
+            "/mcp",
+            headers=MCP_HEADERS,
+            json={
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "fertilizer_plan",
+                    "arguments": {"crop": "rice", "N": 20, "P": 10, "K": 40, "area_ha": 2},
+                },
+            },
+        )
         assert call.status_code == 200 and "DAP" in call.text
 
 

@@ -4,6 +4,7 @@ Serves the model bundle written by `python -m AIML.machine_learning.crop_classif
 Regression / Random Forest / XGBoost). Until a model exists, falls back to
 similarity against the reference crop profiles so the API always works.
 """
+
 import json
 import math
 import threading
@@ -45,8 +46,15 @@ def _load_bundle(path: Path):
     if isinstance(obj, dict) and "model" in obj:
         return obj
     # Legacy: a bare estimator saved by an older train.py
-    return {"model": obj, "classes": [str(c) for c in obj.classes_], "features": list(FEATURES),
-            "name": type(obj).__name__, "metrics": {}, "trained_at": None, "encoded": False}
+    return {
+        "model": obj,
+        "classes": [str(c) for c in obj.classes_],
+        "features": list(FEATURES),
+        "name": type(obj).__name__,
+        "metrics": {},
+        "trained_at": None,
+        "encoded": False,
+    }
 
 
 def get_bundle():
@@ -119,10 +127,9 @@ def _recommend_by_similarity(soil: SoilConditions, k: int) -> CropRecommendation
     """
     scores: dict[str, float] = {}
     for name, profile in CROPS.items():
-        mean_sq = sum(
-            ((getattr(soil, f) - getattr(profile, f)) / FEATURE_SCALE[f]) ** 2
-            for f in FEATURES
-        ) / len(FEATURES)
+        mean_sq = sum(((getattr(soil, f) - getattr(profile, f)) / FEATURE_SCALE[f]) ** 2 for f in FEATURES) / len(
+            FEATURES
+        )
         scores[name] = math.exp(-mean_sq / 2)
 
     ranked = sorted(scores.items(), key=lambda p: p[1], reverse=True)[:k]

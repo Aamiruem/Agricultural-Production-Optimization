@@ -7,6 +7,7 @@ with metrics that stay honest under imbalance: PR-AUC, recall, F1 — not accura
 
     python -m AIML.advanced_ml.imbalanced
 """
+
 from __future__ import annotations
 
 import json
@@ -31,10 +32,12 @@ def label_low_yield(df: pd.DataFrame, q: float = 0.10) -> pd.Series:
 
 
 def make(strategy: str) -> ImbPipeline:
-    prep = ColumnTransformer([
-        ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=5, sparse_output=False), CATEGORICAL),
-        ("num", StandardScaler(), NUMERIC),
-    ])
+    prep = ColumnTransformer(
+        [
+            ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=5, sparse_output=False), CATEGORICAL),
+            ("num", StandardScaler(), NUMERIC),
+        ]
+    )
     steps = [("prep", prep)]
     if strategy == "smote":
         steps.append(("resample", SMOTE(random_state=RANDOM_STATE)))
@@ -49,7 +52,12 @@ def main() -> dict:
     df = load_yield()
     df["low_yield"] = label_low_yield(df)
     train, test = time_split(df)
-    X_tr, y_tr, X_te, y_te = train[CATEGORICAL + NUMERIC], train["low_yield"], test[CATEGORICAL + NUMERIC], test["low_yield"]
+    X_tr, y_tr, X_te, y_te = (
+        train[CATEGORICAL + NUMERIC],
+        train["low_yield"],
+        test[CATEGORICAL + NUMERIC],
+        test["low_yield"],
+    )
 
     results = {"positive_rate_train": float(y_tr.mean()), "positive_rate_test": float(y_te.mean())}
     for strategy in ("baseline", "class_weight", "undersample", "smote"):

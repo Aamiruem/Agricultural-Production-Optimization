@@ -9,7 +9,7 @@ import { Icon, Skeleton } from "./primitives.jsx";
  * point in the accent).
  */
 export function StatTile({ label, value, unit, icon, hint, delta, upIsGood = true, trend, loading = false }) {
-  const good = delta ? (delta.value >= 0) === upIsGood : null;
+  const good = delta ? delta.value >= 0 === upIsGood : null;
   return (
     <div className="flex min-w-0 flex-col gap-2 rounded-3xl border border-outline bg-surface p-5">
       <div className="flex items-center justify-between gap-2">

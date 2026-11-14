@@ -1,0 +1,23 @@
+# Dependencies, builds and generated files
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+package-lock.json
+**/src/data/generated/
+backend/.venv/
+.devlogs/
+.pytest_cache/
+
+# Python is formatted by Ruff; data and models are not source code
+backend/python-fastapi/
+AIML/
+*.md
+*.yml
+*.yaml
+*.tf
+*.hcl
+*.ini
+*.inc
+*.conf

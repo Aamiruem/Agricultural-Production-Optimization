@@ -4,6 +4,7 @@
 Hadoop feeds each input split to stdin; we emit key/value lines on stdout.
 The framework then sorts by key and sends each key's values to one reducer.
 """
+
 import csv
 import sys
 

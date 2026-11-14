@@ -11,6 +11,6 @@ export const NAV = [
 ];
 
 export function titleFor(pathname) {
-  const match = NAV.filter((n) => n.to === "/" ? pathname === "/" : pathname.startsWith(n.to)).pop();
+  const match = NAV.filter((n) => (n.to === "/" ? pathname === "/" : pathname.startsWith(n.to))).pop();
   return match?.label ?? (pathname.startsWith("/login") ? "Sign in" : "AgriSmart");
 }

@@ -37,7 +37,10 @@ export default function DiseaseDetectionPage() {
   const onFile = (file) => {
     setError("");
     if (!file) return;
-    if (!file.type.startsWith("image/")) { setError("Please choose an image file (JPG or PNG)."); return; }
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file (JPG or PNG).");
+      return;
+    }
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
@@ -48,7 +51,8 @@ export default function DiseaseDetectionPage() {
       const ctx = canvas.getContext("2d", { willReadFrequently: true });
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       const result = analyzeLeafPixels(ctx.getImageData(0, 0, canvas.width, canvas.height).data);
-      if (result.plantPixels < 500) setError("Very little plant tissue detected. Photograph a single leaf filling most of the frame, in daylight.");
+      if (result.plantPixels < 500)
+        setError("Very little plant tissue detected. Photograph a single leaf filling most of the frame, in daylight.");
       setScan(result);
       setImage(url);
     };
@@ -57,7 +61,11 @@ export default function DiseaseDetectionPage() {
   };
   const toggle = (id) => setSymptoms((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
   const ranked = symptoms.length || scan ? rankDiseases({ crop, symptoms, pct: scan?.pct, state, season }) : [];
-  const pie = scan ? Object.entries(scan.pct).filter(([, v]) => v > 0).map(([k, v]) => ({ name: CLASS[k].en, value: v, fill: CLASS[k].color })) : [];
+  const pie = scan
+    ? Object.entries(scan.pct)
+        .filter(([, v]) => v > 0)
+        .map(([k, v]) => ({ name: CLASS[k].en, value: v, fill: CLASS[k].color }))
+    : [];
   const maxScore = ranked[0]?.score || 1;
 
   return (
@@ -66,59 +74,166 @@ export default function DiseaseDetectionPage() {
       <div className="yield-layout">
         <section className="tool-card">
           <h2>{hi ? "1. फ़ोटो और फसल" : "1. Photo & crop"}</h2>
-          <label className="field-label"><span>{hi ? "फसल" : "Crop"}</span><select value={crop} onChange={(e) => setCrop(e.target.value)}>{DISEASE_CROPS.map((c) => <option key={c}>{c}</option>)}</select></label>
+          <label className="field-label">
+            <span>{hi ? "फसल" : "Crop"}</span>
+            <select value={crop} onChange={(e) => setCrop(e.target.value)}>
+              {DISEASE_CROPS.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
+          </label>
           <div className="field-row">
-            <label className="field-label"><span>{hi ? "राज्य (वैकल्पिक)" : "State (optional)"}</span>
+            <label className="field-label">
+              <span>{hi ? "राज्य (वैकल्पिक)" : "State (optional)"}</span>
               <select value={state} onChange={(e) => setState(e.target.value)}>
                 <option value="">{hi ? "पूरा भारत" : "All India"}</option>
-                {STATES.map((st) => <option key={st.name} value={st.name}>{hi ? st.hi : st.name}</option>)}
+                {STATES.map((st) => (
+                  <option key={st.name} value={st.name}>
+                    {hi ? st.hi : st.name}
+                  </option>
+                ))}
               </select>
             </label>
-            <label className="field-label"><span>{hi ? "मौसम" : "Season"}</span>
+            <label className="field-label">
+              <span>{hi ? "मौसम" : "Season"}</span>
               <select value={season} onChange={(e) => setSeason(e.target.value)}>
-                {SEASON_ORDER.filter((x) => x !== "Year-round").map((x) => <option key={x} value={x}>{hi ? seasonInfo(x).hi : x}</option>)}
+                {SEASON_ORDER.filter((x) => x !== "Year-round").map((x) => (
+                  <option key={x} value={x}>
+                    {hi ? seasonInfo(x).hi : x}
+                  </option>
+                ))}
               </select>
             </label>
           </div>
           <div
-            className={`dropzone${image ? " has-image" : ""}`} role="button" tabIndex={0}
-            onClick={() => inputRef.current?.click()} onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
-            onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); onFile(e.dataTransfer.files[0]); }}
+            className={`dropzone${image ? " has-image" : ""}`}
+            role="button"
+            tabIndex={0}
+            onClick={() => inputRef.current?.click()}
+            onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              onFile(e.dataTransfer.files[0]);
+            }}
           >
-            {image ? <img src={image} alt="Uploaded leaf" /> : <><Upload size={30} /><b>{hi ? "पत्ती की फ़ोटो अपलोड करें" : "Upload or drop a leaf photo"}</b><small>JPG / PNG · processed only in your browser</small></>}
-            <input ref={inputRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => onFile(e.target.files[0])} />
+            {image ? (
+              <img src={image} alt="Uploaded leaf" />
+            ) : (
+              <>
+                <Upload size={30} />
+                <b>{hi ? "पत्ती की फ़ोटो अपलोड करें" : "Upload or drop a leaf photo"}</b>
+                <small>JPG / PNG · processed only in your browser</small>
+              </>
+            )}
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              hidden
+              onChange={(e) => onFile(e.target.files[0])}
+            />
           </div>
-          <button className="btn btn-outline-success btn-sm mt-2" onClick={() => inputRef.current?.click()}><Camera size={16} /> {hi ? "कैमरा / गैलरी" : "Camera or gallery"}</button>
-          {error && <p className="text-danger small mt-2" role="alert">{error}</p>}
+          <button className="btn btn-outline-success btn-sm mt-2" onClick={() => inputRef.current?.click()}>
+            <Camera size={16} /> {hi ? "कैमरा / गैलरी" : "Camera or gallery"}
+          </button>
+          {error && (
+            <p className="text-danger small mt-2" role="alert">
+              {error}
+            </p>
+          )}
           <h2 className="mt-4">{hi ? "2. आप क्या देख रहे हैं?" : "2. What do you see?"}</h2>
-          <div className="chip-grid">{SYMPTOMS.map((s) => <button key={s.id} type="button" className={`chip${symptoms.includes(s.id) ? " on" : ""}`} aria-pressed={symptoms.includes(s.id)} onClick={() => toggle(s.id)}>{hi ? s.hi : s.en}</button>)}</div>
+          <div className="chip-grid">
+            {SYMPTOMS.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={`chip${symptoms.includes(s.id) ? " on" : ""}`}
+                aria-pressed={symptoms.includes(s.id)}
+                onClick={() => toggle(s.id)}
+              >
+                {hi ? s.hi : s.en}
+              </button>
+            ))}
+          </div>
         </section>
 
         <section className="tool-card">
           <h2>{hi ? "3. जाँच परिणाम" : "3. Screening result"}</h2>
-          {scan && <div className="scan-row">
-            <div className="donut-wrap small">
-              <ResponsiveContainer width="100%" height={170}>
-                <PieChart><Pie data={pie} dataKey="value" nameKey="name" innerRadius={50} outerRadius={75} paddingAngle={1.5} stroke="var(--bs-body-bg)" strokeWidth={2}>{pie.map((p) => <Cell key={p.name} fill={p.fill} />)}</Pie><Tooltip content={<ChartTooltip unit="%" />} /></PieChart>
-              </ResponsiveContainer>
-              <div className="donut-center"><b>{scan.healthIndex}</b><small>leaf health</small></div>
+          {scan && (
+            <div className="scan-row">
+              <div className="donut-wrap small">
+                <ResponsiveContainer width="100%" height={170}>
+                  <PieChart>
+                    <Pie
+                      data={pie}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={50}
+                      outerRadius={75}
+                      paddingAngle={1.5}
+                      stroke="var(--bs-body-bg)"
+                      strokeWidth={2}
+                    >
+                      {pie.map((p) => (
+                        <Cell key={p.name} fill={p.fill} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<ChartTooltip unit="%" />} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="donut-center">
+                  <b>{scan.healthIndex}</b>
+                  <small>leaf health</small>
+                </div>
+              </div>
+              <ul className="legend-list">
+                {pie.map((p) => (
+                  <li key={p.name}>
+                    <i style={{ background: p.fill }} />
+                    {p.name}
+                    <b>{p.value}%</b>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <ul className="legend-list">{pie.map((p) => <li key={p.name}><i style={{ background: p.fill }} />{p.name}<b>{p.value}%</b></li>)}</ul>
-          </div>}
-          {!ranked.length ? (
-            <div className="empty-panel"><ScanLine size={30} /><b>{hi ? "फ़ोटो अपलोड करें या लक्षण चुनें" : "Upload a photo or pick symptoms"}</b><span>{hi ? "संभावित समस्याएँ यहाँ दिखेंगी।" : "Likely problems and safe next steps will appear here."}</span></div>
-          ) : (
-            <ol className="disease-list">{ranked.map((d) => (
-              <li key={d.id}>
-                <div className="d-flex justify-content-between gap-2"><b>{hi ? d.hi : d.en}</b><span className="chip small">{d.type}</span></div>
-                <div className="match-bar"><i style={{ width: `${Math.round((d.score / maxScore) * 100)}%` }} /></div>
-                {state && d.states.includes(state) && <p className="hotspot-note">{hi ? "आपके राज्य में आम समस्या" : `Known hotspot in ${state}`}</p>}
-                <p className="result-signs">{d.signs}</p>
-                <ul>{d.care.map((c) => <li key={c}>{c}</li>)}</ul>
-              </li>
-            ))}</ol>
           )}
-          <p className="disclaimer"><ShieldAlert size={15} /> This is colour-based screening plus a symptom matcher, not a laboratory diagnosis. Many diseases look alike. Confirm with your KVK / plant clinic before spraying any pesticide. <Link to="/assistant">Ask the AI assistant →</Link></p>
+          {!ranked.length ? (
+            <div className="empty-panel">
+              <ScanLine size={30} />
+              <b>{hi ? "फ़ोटो अपलोड करें या लक्षण चुनें" : "Upload a photo or pick symptoms"}</b>
+              <span>{hi ? "संभावित समस्याएँ यहाँ दिखेंगी।" : "Likely problems and safe next steps will appear here."}</span>
+            </div>
+          ) : (
+            <ol className="disease-list">
+              {ranked.map((d) => (
+                <li key={d.id}>
+                  <div className="d-flex justify-content-between gap-2">
+                    <b>{hi ? d.hi : d.en}</b>
+                    <span className="chip small">{d.type}</span>
+                  </div>
+                  <div className="match-bar">
+                    <i style={{ width: `${Math.round((d.score / maxScore) * 100)}%` }} />
+                  </div>
+                  {state && d.states.includes(state) && (
+                    <p className="hotspot-note">{hi ? "आपके राज्य में आम समस्या" : `Known hotspot in ${state}`}</p>
+                  )}
+                  <p className="result-signs">{d.signs}</p>
+                  <ul>
+                    {d.care.map((c) => (
+                      <li key={c}>{c}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          )}
+          <p className="disclaimer">
+            <ShieldAlert size={15} /> This is colour-based screening plus a symptom matcher, not a laboratory diagnosis.
+            Many diseases look alike. Confirm with your KVK / plant clinic before spraying any pesticide.{" "}
+            <Link to="/assistant">Ask the AI assistant →</Link>
+          </p>
         </section>
       </div>
       <DiseaseLibrary hi={hi} />

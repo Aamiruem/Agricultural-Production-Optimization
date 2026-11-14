@@ -4,6 +4,7 @@ The assistant uses the official Anthropic SDK. If the SDK can't be loaded or
 no credentials are configured, the API still works and the assistant falls
 back to retrieval-only answers.
 """
+
 import logging
 import os
 from dataclasses import dataclass

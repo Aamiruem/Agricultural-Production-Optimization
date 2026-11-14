@@ -24,7 +24,9 @@ const { env } = await import("../src/config/env.js");
 
 const token = (sub, extra = {}) =>
   jwt.sign({ sub: String(sub), email: `${sub}@example.com`, role: "farmer", ...extra }, env.JWT_SECRET, {
-    issuer: env.JWT_ISSUER, audience: env.JWT_AUDIENCE, expiresIn: "5m",
+    issuer: env.JWT_ISSUER,
+    audience: env.JWT_AUDIENCE,
+    expiresIn: "5m",
   });
 const ALICE = { Authorization: `Bearer ${token(1)}` };
 const BOB = { Authorization: `Bearer ${token(2)}` };
@@ -48,11 +50,28 @@ describe("farm-service", { skip: !mongoAvailable && "MongoDB not reachable" }, (
   });
 
   const newFarm = async (headers = ALICE, name = "Green Acres") =>
-    (await request(app).post("/api/farms").set(headers).send({ name, location: { state: "Punjab", lat: 30.9, lng: 75.8 } }).expect(201)).body;
+    (
+      await request(app)
+        .post("/api/farms")
+        .set(headers)
+        .send({ name, location: { state: "Punjab", lat: 30.9, lng: 75.8 } })
+        .expect(201)
+    ).body;
   const newField = async (farmId, body = {}) =>
-    (await request(app).post(`/api/farms/${farmId}/fields`).set(ALICE)
-      .send({ name: "North plot", crop: "Rice", season: "kharif", areaHa: 2.5, soil: { N: 20, P: 10, K: 40 }, ...body })
-      .expect(201)).body;
+    (
+      await request(app)
+        .post(`/api/farms/${farmId}/fields`)
+        .set(ALICE)
+        .send({
+          name: "North plot",
+          crop: "Rice",
+          season: "kharif",
+          areaHa: 2.5,
+          soil: { N: 20, P: 10, K: 40 },
+          ...body,
+        })
+        .expect(201)
+    ).body;
 
   it("health reports the database", async () => {
     const res = await request(app).get("/health").expect(200);
@@ -92,7 +111,11 @@ describe("farm-service", { skip: !mongoAvailable && "MongoDB not reachable" }, (
     const f1 = await newField(farm._id);
     await newField(farm._id, { name: "South plot", crop: "chickpea", season: "rabi", areaHa: 1.5 });
     await newField(farm._id, { name: "East plot", crop: "rice", areaHa: 1 });
-    await request(app).post(`/api/fields/${f1._id}/activities`).set(ALICE).send({ type: "sowing", notes: "Pusa Basmati" }).expect(201);
+    await request(app)
+      .post(`/api/fields/${f1._id}/activities`)
+      .set(ALICE)
+      .send({ type: "sowing", notes: "Pusa Basmati" })
+      .expect(201);
 
     const [listed] = (await request(app).get("/api/farms").set(ALICE).expect(200)).body;
     assert.equal(listed.fields, 3);
@@ -107,7 +130,11 @@ describe("farm-service", { skip: !mongoAvailable && "MongoDB not reachable" }, (
 
   it("sowing and harvest activities advance the field status", async () => {
     const field = await newField((await newFarm())._id);
-    await request(app).post(`/api/fields/${field._id}/activities`).set(ALICE).send({ type: "harvest", quantity: 9.5, unit: "t" }).expect(201);
+    await request(app)
+      .post(`/api/fields/${field._id}/activities`)
+      .set(ALICE)
+      .send({ type: "harvest", quantity: 9.5, unit: "t" })
+      .expect(201);
     const activities = (await request(app).get(`/api/fields/${field._id}/activities`).set(ALICE).expect(200)).body;
     assert.equal(activities[0].quantity, 9.5);
     const [updated] = (await request(app).get(`/api/farms/${field.farmId}/fields`).set(ALICE).expect(200)).body;
@@ -129,7 +156,8 @@ describe("farm-service", { skip: !mongoAvailable && "MongoDB not reachable" }, (
     t.mock.method(globalThis, "fetch", async (url, init) => {
       calls.push({ url, body: JSON.parse(init.body) });
       return new Response(JSON.stringify({ crop: "rice", doses: [{ product: "DAP (18-46-0)", total_kg: 207.5 }] }), {
-        status: 200, headers: { "Content-Type": "application/json" },
+        status: 200,
+        headers: { "Content-Type": "application/json" },
       });
     });
     const res = await request(app).post(`/api/fields/${field._id}/fertilizer-plan`).set(ALICE).expect(200);
@@ -137,22 +165,39 @@ describe("farm-service", { skip: !mongoAvailable && "MongoDB not reachable" }, (
     assert.match(calls[0].url, /\/recommend\/fertilizer$/);
     assert.deepEqual(calls[0].body, { crop: "rice", N: 20, P: 10, K: 40, area_ha: 2.5 });
 
-    t.mock.method(globalThis, "fetch", async () => { throw new TypeError("fetch failed"); });
+    t.mock.method(globalThis, "fetch", async () => {
+      throw new TypeError("fetch failed");
+    });
     await request(app).post(`/api/fields/${field._id}/fertilizer-plan`).set(ALICE).expect(502);
   });
 
   it("issues S3 presigned upload URLs and records photo keys for the field only", async () => {
     const field = await newField((await newFarm())._id);
-    const presign = (await request(app).post(`/api/fields/${field._id}/photos/presign`).set(ALICE)
-      .send({ contentType: "image/jpeg", size: 120_000 }).expect(200)).body;
+    const presign = (
+      await request(app)
+        .post(`/api/fields/${field._id}/photos/presign`)
+        .set(ALICE)
+        .send({ contentType: "image/jpeg", size: 120_000 })
+        .expect(200)
+    ).body;
     assert.match(presign.key, new RegExp(`^fields/${field._id}/[0-9a-f-]+\\.jpg$`));
     const url = new URL(presign.uploadUrl);
     assert.equal(url.hostname, "agrioptima-test-bucket.s3.ap-south-1.amazonaws.com");
     assert.ok(url.searchParams.get("X-Amz-Signature"));
 
-    await request(app).post(`/api/fields/${field._id}/photos/presign`).set(ALICE).send({ contentType: "image/gif", size: 10 }).expect(422);
-    await request(app).post(`/api/fields/${field._id}/photos`).set(ALICE).send({ key: "fields/someone-else/x.jpg" }).expect(422);
-    const saved = (await request(app).post(`/api/fields/${field._id}/photos`).set(ALICE).send({ key: presign.key }).expect(201)).body;
+    await request(app)
+      .post(`/api/fields/${field._id}/photos/presign`)
+      .set(ALICE)
+      .send({ contentType: "image/gif", size: 10 })
+      .expect(422);
+    await request(app)
+      .post(`/api/fields/${field._id}/photos`)
+      .set(ALICE)
+      .send({ key: "fields/someone-else/x.jpg" })
+      .expect(422);
+    const saved = (
+      await request(app).post(`/api/fields/${field._id}/photos`).set(ALICE).send({ key: presign.key }).expect(201)
+    ).body;
     assert.equal(saved.photos[0].url, `https://agrioptima-test-bucket.s3.ap-south-1.amazonaws.com/${presign.key}`);
   });
 
@@ -171,11 +216,17 @@ describe("farm-service", { skip: !mongoAvailable && "MongoDB not reachable" }, (
       assert.equal(err.message, "unauthorized");
 
       let bobGotEvent = false;
-      bob.on("activity:created", () => { bobGotEvent = true; });
+      bob.on("activity:created", () => {
+        bobGotEvent = true;
+      });
       const received = new Promise((r) => alice.on("activity:created", r));
 
       const field = await newField((await newFarm())._id);
-      await request(server).post(`/api/fields/${field._id}/activities`).set(ALICE).send({ type: "irrigation", notes: "2 hours" }).expect(201);
+      await request(server)
+        .post(`/api/fields/${field._id}/activities`)
+        .set(ALICE)
+        .send({ type: "irrigation", notes: "2 hours" })
+        .expect(201);
       const event = await received;
       assert.equal(event.fieldName, "North plot");
       assert.equal(event.type, "irrigation");

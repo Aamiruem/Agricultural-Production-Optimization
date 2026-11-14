@@ -14,7 +14,9 @@ export default function PlannerPage() {
         description="Plan fields offline in this browser. Click a status badge to move it from planned → sown → harvested. For synced farms, use Farms."
       />
       <Row className="g-4">
-        <Col lg={4}><PlannerFieldForm /></Col>
+        <Col lg={4}>
+          <PlannerFieldForm />
+        </Col>
         <Col lg={8}>
           <PlannerSummary />
           <PlannerFieldList />

@@ -15,7 +15,7 @@ export async function parseFile(file) {
   if (name.endsWith(".xlsx")) {
     const { default: readXlsxFile } = await import("read-excel-file");
     const sheet = await readXlsxFile(file);
-    return fromMatrix(sheet.map((r) => r.map((v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v ?? ""))));
+    return fromMatrix(sheet.map((r) => r.map((v) => (v instanceof Date ? v.toISOString().slice(0, 10) : (v ?? "")))));
   }
   if (name.endsWith(".xls")) throw new Error("Old .xls files are not supported. Save as .xlsx or CSV and try again.");
   const text = await file.text();
@@ -24,7 +24,11 @@ export async function parseFile(file) {
 }
 
 export function parseText(text) {
-  const res = Papa.parse(text.replace(/^\uFEFF/, ""), { header: false, skipEmptyLines: "greedy", delimitersToGuess: [",", "\t", ";", "|"] });
+  const res = Papa.parse(text.replace(/^\uFEFF/, ""), {
+    header: false,
+    skipEmptyLines: "greedy",
+    delimitersToGuess: [",", "\t", ";", "|"],
+  });
   if (!res.data.length) throw new Error("The file is empty.");
   return fromMatrix(res.data);
 }
@@ -32,7 +36,8 @@ export function parseText(text) {
 function fromJson(text) {
   let data = JSON.parse(text);
   if (!Array.isArray(data)) data = Array.isArray(data?.data) ? data.data : Object.values(data).find(Array.isArray);
-  if (!Array.isArray(data) || !data.length || typeof data[0] !== "object") throw new Error("JSON must be an array of records.");
+  if (!Array.isArray(data) || !data.length || typeof data[0] !== "object")
+    throw new Error("JSON must be an array of records.");
   const cols = [...new Set(data.slice(0, 1000).flatMap((r) => Object.keys(r)))];
   return fromMatrix([cols, ...data.map((r) => cols.map((c) => r[c]))]);
 }
@@ -43,11 +48,14 @@ function fromMatrix(matrix) {
   const seen = {};
   const columns = head.map((h, i) => {
     let name = String(h ?? "").trim() || `Column ${i + 1}`;
-    if (seen[name]) name = `${name} (${++seen[name]})`; else seen[name] = 1;
+    if (seen[name]) name = `${name} (${++seen[name]})`;
+    else seen[name] = 1;
     return name;
   });
   if (!body.length) throw new Error("The file has a header but no data rows.");
-  const rows = body.slice(0, MAX_ROWS).map((r) => Object.fromEntries(columns.map((c, i) => [c, r[i] == null ? "" : String(r[i]).trim()])));
+  const rows = body
+    .slice(0, MAX_ROWS)
+    .map((r) => Object.fromEntries(columns.map((c, i) => [c, r[i] == null ? "" : String(r[i]).trim()])));
   return { columns, rows, truncated: body.length > MAX_ROWS, totalRows: body.length };
 }
 
@@ -72,7 +80,10 @@ function toDate(v) {
   if (!DATE_RE.test(s)) return null;
   let d;
   const dmy = s.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})$/);
-  if (dmy) { const y = dmy[3].length === 2 ? 2000 + Number(dmy[3]) : Number(dmy[3]); d = new Date(Date.UTC(y, Number(dmy[2]) - 1, Number(dmy[1]))); } // Indian day-first
+  if (dmy) {
+    const y = dmy[3].length === 2 ? 2000 + Number(dmy[3]) : Number(dmy[3]);
+    d = new Date(Date.UTC(y, Number(dmy[2]) - 1, Number(dmy[1])));
+  } // Indian day-first
   else d = new Date(s.length <= 10 ? `${s}T00:00:00Z` : s);
   return Number.isNaN(d.getTime()) ? null : d;
 }
@@ -107,10 +118,29 @@ const ROLE_RULES = [
 ];
 
 export const ROLE_LABELS = {
-  crop: "Crop", state: "State", district: "District", season: "Season", soil: "Soil type", year: "Year", date: "Date",
-  area: "Area", production: "Production", yield: "Yield", rainfall: "Rainfall", temperature: "Temperature", humidity: "Humidity",
-  nitrogen: "Nitrogen (N)", phosphorus: "Phosphorus (P)", potassium: "Potassium (K)", ph: "Soil pH", fertilizer: "Fertilizer",
-  pesticide: "Pesticide", price: "Price", revenue: "Revenue", cost: "Cost", profit: "Profit",
+  crop: "Crop",
+  state: "State",
+  district: "District",
+  season: "Season",
+  soil: "Soil type",
+  year: "Year",
+  date: "Date",
+  area: "Area",
+  production: "Production",
+  yield: "Yield",
+  rainfall: "Rainfall",
+  temperature: "Temperature",
+  humidity: "Humidity",
+  nitrogen: "Nitrogen (N)",
+  phosphorus: "Phosphorus (P)",
+  potassium: "Potassium (K)",
+  ph: "Soil pH",
+  fertilizer: "Fertilizer",
+  pesticide: "Pesticide",
+  price: "Price",
+  revenue: "Revenue",
+  cost: "Cost",
+  profit: "Profit",
 };
 
 /** Column profiles: type, missing share, distinct values and summary stats. */
@@ -125,7 +155,10 @@ export function profileColumns(columns, rows) {
     let type = "category";
     if (present.length && nums.length / present.length >= 0.95) {
       const ints = nums.every((n) => Number.isInteger(n));
-      type = ints && nums.every((n) => n >= 1900 && n <= 2100) && (/year|yr/.test(key(name)) || distinct <= 60) ? "year" : "numeric";
+      type =
+        ints && nums.every((n) => n >= 1900 && n <= 2100) && (/year|yr/.test(key(name)) || distinct <= 60)
+          ? "year"
+          : "numeric";
     } else if (present.length && dates.length / Math.min(present.length, 500) >= 0.9) type = "date";
     if (type === "category" && distinct > Math.max(50, present.length * 0.9) && present.length > 50) type = "text"; // ids / free text
     const missing = 1 - present.length / Math.max(vals.length, 1);
@@ -139,12 +172,28 @@ export function detectRoles(profiles) {
   const roles = {};
   const used = new Set();
   for (const [role, test, type] of ROLE_RULES) {
-    const col = profiles.find((p) => !used.has(p.name) && test(key(p.name)) && (p.type === type || (type === "numeric" && p.type === "year" && role !== "year") || (type === "date" && p.type === "date")));
-    if (col) { roles[role] = col.name; used.add(col.name); }
+    const col = profiles.find(
+      (p) =>
+        !used.has(p.name) &&
+        test(key(p.name)) &&
+        (p.type === type ||
+          (type === "numeric" && p.type === "year" && role !== "year") ||
+          (type === "date" && p.type === "date")),
+    );
+    if (col) {
+      roles[role] = col.name;
+      used.add(col.name);
+    }
   }
   // A lone year-typed column is the year even without "year" in its name.
-  if (!roles.year) { const y = profiles.find((p) => p.type === "year" && !used.has(p.name)); if (y) roles.year = y.name; }
-  if (!roles.date) { const d = profiles.find((p) => p.type === "date" && !used.has(p.name)); if (d) roles.date = d.name; }
+  if (!roles.year) {
+    const y = profiles.find((p) => p.type === "year" && !used.has(p.name));
+    if (y) roles.year = y.name;
+  }
+  if (!roles.date) {
+    const d = profiles.find((p) => p.type === "date" && !used.has(p.name));
+    if (d) roles.date = d.name;
+  }
   return roles;
 }
 
@@ -167,13 +216,17 @@ export function buildDataset(rows, profiles, roles) {
       else o[p.name] = isNull(v) ? null : String(v).trim();
     }
     if (canDerive) {
-      const prod = o[roles.production]; const area = o[roles.area];
+      const prod = o[roles.production];
+      const area = o[roles.area];
       o["Yield (derived)"] = prod != null && area ? prod / area : null;
     }
     return o;
   });
   const effectiveRoles = { ...roles, ...(canDerive ? { yield: "Yield (derived)" } : {}) };
-  const numeric = [...profiles.filter((p) => p.type === "numeric").map((p) => p.name), ...(canDerive ? ["Yield (derived)"] : [])];
+  const numeric = [
+    ...profiles.filter((p) => p.type === "numeric").map((p) => p.name),
+    ...(canDerive ? ["Yield (derived)"] : []),
+  ];
   const categories = profiles.filter((p) => p.type === "category").map((p) => p.name);
   return { records, numeric, categories, roles: effectiveRoles, derived };
 }
@@ -194,7 +247,11 @@ export function applyFilters(records, filters, roles) {
 export function summary(nums) {
   const v = nums.filter((n) => n != null && Number.isFinite(n)).sort((a, b) => a - b);
   if (!v.length) return null;
-  const q = (p) => { const i = (v.length - 1) * p; const lo = Math.floor(i); return v[lo] + (v[Math.ceil(i)] - v[lo]) * (i - lo); };
+  const q = (p) => {
+    const i = (v.length - 1) * p;
+    const lo = Math.floor(i);
+    return v[lo] + (v[Math.ceil(i)] - v[lo]) * (i - lo);
+  };
   const sum = v.reduce((a, b) => a + b, 0);
   const mean = sum / v.length;
   const sd = Math.sqrt(v.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(v.length - 1, 1));
@@ -205,12 +262,21 @@ export function summary(nums) {
 }
 
 export function pearson(xs, ys) {
-  const pairs = xs.map((x, i) => [x, ys[i]]).filter(([x, y]) => x != null && y != null && Number.isFinite(x) && Number.isFinite(y));
+  const pairs = xs
+    .map((x, i) => [x, ys[i]])
+    .filter(([x, y]) => x != null && y != null && Number.isFinite(x) && Number.isFinite(y));
   const n = pairs.length;
   if (n < 5) return null;
-  const mx = pairs.reduce((s, p) => s + p[0], 0) / n; const my = pairs.reduce((s, p) => s + p[1], 0) / n;
-  let sxy = 0; let sxx = 0; let syy = 0;
-  for (const [x, y] of pairs) { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; }
+  const mx = pairs.reduce((s, p) => s + p[0], 0) / n;
+  const my = pairs.reduce((s, p) => s + p[1], 0) / n;
+  let sxy = 0;
+  let sxx = 0;
+  let syy = 0;
+  for (const [x, y] of pairs) {
+    sxy += (x - mx) * (y - my);
+    sxx += (x - mx) ** 2;
+    syy += (y - my) ** 2;
+  }
   return sxx && syy ? sxy / Math.sqrt(sxx * syy) : null;
 }
 
@@ -232,25 +298,57 @@ export function groupBy(records, by, metric, roles, { mode } = {}) {
     const a = acc.get(k) ?? { key: k, sum: 0, n: 0, prod: 0, area: 0, count: 0 };
     a.count += 1;
     const v = r[metric];
-    if (v != null && Number.isFinite(v)) { a.sum += v; a.n += 1; }
-    if (how === "weighted") { const p = r[roles.production]; const ar = r[roles.area]; if (p != null && ar) { a.prod += p; a.area += ar; } }
+    if (v != null && Number.isFinite(v)) {
+      a.sum += v;
+      a.n += 1;
+    }
+    if (how === "weighted") {
+      const p = r[roles.production];
+      const ar = r[roles.area];
+      if (p != null && ar) {
+        a.prod += p;
+        a.area += ar;
+      }
+    }
     acc.set(k, a);
   }
-  const out = [...acc.values()].map((a) => ({
-    key: a.key, count: a.count,
-    value: how === "sum" ? a.sum : how === "count" ? a.count : how === "weighted" ? (a.area ? a.prod / a.area : a.n ? a.sum / a.n : null) : a.n ? a.sum / a.n : null,
-  })).filter((d) => d.value != null);
+  const out = [...acc.values()]
+    .map((a) => ({
+      key: a.key,
+      count: a.count,
+      value:
+        how === "sum"
+          ? a.sum
+          : how === "count"
+            ? a.count
+            : how === "weighted"
+              ? a.area
+                ? a.prod / a.area
+                : a.n
+                  ? a.sum / a.n
+                  : null
+              : a.n
+                ? a.sum / a.n
+                : null,
+    }))
+    .filter((d) => d.value != null);
   return { mode: how, data: out };
 }
 
 export function metricMode(metric, roles) {
   if (!metric) return "count";
   if (metric === roles.yield && roles.production && roles.area) return "weighted";
-  if ([roles.production, roles.area, roles.revenue, roles.cost, roles.profit, roles.fertilizer, roles.pesticide].includes(metric)) return "sum";
+  if (
+    [roles.production, roles.area, roles.revenue, roles.cost, roles.profit, roles.fertilizer, roles.pesticide].includes(
+      metric,
+    )
+  )
+    return "sum";
   return "mean";
 }
 
-const monthKey = (d) => (d instanceof Date ? `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}` : null);
+const monthKey = (d) =>
+  d instanceof Date ? `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}` : null;
 
 /** Ordered time series of a metric by year (or month when there is a date column). */
 export function timeSeries(records, metric, roles) {
@@ -259,7 +357,9 @@ export function timeSeries(records, metric, roles) {
     return { mode, unit: "year", data: data.sort((a, b) => a.key - b.key) };
   }
   if (roles.date) {
-    const { data, mode } = groupBy(records, "__month", metric, roles, { mode: metricMode(metric, roles) === "sum" ? "sum" : "mean" });
+    const { data, mode } = groupBy(records, "__month", metric, roles, {
+      mode: metricMode(metric, roles) === "sum" ? "sum" : "mean",
+    });
     return { mode, unit: "month", data: data.sort((a, b) => String(a.key).localeCompare(String(b.key))) };
   }
   return null;
@@ -281,29 +381,41 @@ export function trendOf(ts) {
     for (const d of pts) {
       const y = Number(String(d.key).slice(0, 4));
       const a = byYear.get(y) ?? { key: y, sum: 0, n: 0, months: 0 };
-      a.sum += d.value; a.n += 1; a.months += 1;
+      a.sum += d.value;
+      a.n += 1;
+      a.months += 1;
       byYear.set(y, a);
     }
     const years = [...byYear.values()].sort((x, y) => x.key - y.key);
     const full = years.filter((y) => y.months >= 10); // ignore partial years
     const yearly = full.length >= 3 ? full : years;
     // Under 3 years of monthly data: keep the months and only report the change.
-    if (yearly.length >= 3) pts = yearly.map((y) => ({ key: y.key, value: ts.mode === "sum" ? y.sum : y.sum / y.n, count: y.n }));
+    if (yearly.length >= 3)
+      pts = yearly.map((y) => ({ key: y.key, value: ts.mode === "sum" ? y.sum : y.sum / y.n, count: y.n }));
     else shortMonthly = true;
   }
   pts = pts.filter((d) => d.value > 0);
   if (pts.length < 2) return null;
-  const first = pts[0]; const last = pts.at(-1);
+  const first = pts[0];
+  const last = pts.at(-1);
   const peak = pts.reduce((x, y) => (y.value > x.value ? y : x));
   const counts = pts.map((d) => d.count);
   const uneven = ts.mode === "sum" && Math.max(...counts) / Math.max(Math.min(...counts), 1) > 1.5;
   if (pts.length < 3 || shortMonthly) {
     return { kind: "change", change: last.value / first.value - 1, first, last, peak, uneven, unit: ts.unit };
   }
-  const xs = pts.map((d) => Number(d.key)); const ys = pts.map((d) => Math.log(d.value));
-  const mx = xs.reduce((a2, b2) => a2 + b2, 0) / xs.length; const my = ys.reduce((a2, b2) => a2 + b2, 0) / ys.length;
-  let sxy = 0; let sxx = 0; let syy = 0;
-  xs.forEach((x, i) => { sxy += (x - mx) * (ys[i] - my); sxx += (x - mx) ** 2; syy += (ys[i] - my) ** 2; });
+  const xs = pts.map((d) => Number(d.key));
+  const ys = pts.map((d) => Math.log(d.value));
+  const mx = xs.reduce((a2, b2) => a2 + b2, 0) / xs.length;
+  const my = ys.reduce((a2, b2) => a2 + b2, 0) / ys.length;
+  let sxy = 0;
+  let sxx = 0;
+  let syy = 0;
+  xs.forEach((x, i) => {
+    sxy += (x - mx) * (ys[i] - my);
+    sxx += (x - mx) ** 2;
+    syy += (ys[i] - my) ** 2;
+  });
   const slope = sxx ? sxy / sxx : 0;
   const r2 = sxx && syy ? (sxy * sxy) / (sxx * syy) : 0;
   return { kind: "trend", pct: Math.exp(slope) - 1, r2, first, last, peak, uneven, unit: "year" };
@@ -317,7 +429,12 @@ export function growthRate(ts) {
 
 // ---------------------------------------------------------------- insights
 
-const fmt = (v) => (Math.abs(v) >= 1e5 ? Intl.NumberFormat("en-IN", { notation: "compact", maximumFractionDigits: 1 }).format(v) : Math.abs(v) >= 100 ? Math.round(v).toLocaleString("en-IN") : Math.round(v * 100) / 100);
+const fmt = (v) =>
+  Math.abs(v) >= 1e5
+    ? Intl.NumberFormat("en-IN", { notation: "compact", maximumFractionDigits: 1 }).format(v)
+    : Math.abs(v) >= 100
+      ? Math.round(v).toLocaleString("en-IN")
+      : Math.round(v * 100) / 100;
 
 /** Plain-language findings, most useful first. Each: { kind, text }. */
 export function generateInsights(ds, records, profiles, primary) {
@@ -332,76 +449,157 @@ export function generateInsights(ds, records, profiles, primary) {
     const span = `${tr.first.key}–${tr.last.key}`;
     const peak = `peak ${fmt(tr.peak.value)} in ${tr.peak.key}`;
     if (tr.kind === "change") {
-      out.push({ kind: tr.change >= 0 ? "up" : "down", text: `${label(primary)} ${tr.change >= 0 ? "rose" : "fell"} ${Math.abs(tr.change * 100).toFixed(0)}% over ${span} (${peak}). The period is too short for a yearly trend.` });
+      out.push({
+        kind: tr.change >= 0 ? "up" : "down",
+        text: `${label(primary)} ${tr.change >= 0 ? "rose" : "fell"} ${Math.abs(tr.change * 100).toFixed(0)}% over ${span} (${peak}). The period is too short for a yearly trend.`,
+      });
     } else if (tr.r2 < 0.25 || Math.abs(tr.pct) < 0.005) {
-      out.push({ kind: "info", text: `${label(primary)} shows no steady trend over ${span} (it varies year to year; ${peak}).` });
+      out.push({
+        kind: "info",
+        text: `${label(primary)} shows no steady trend over ${span} (it varies year to year; ${peak}).`,
+      });
     } else {
-      out.push({ kind: tr.pct >= 0 ? "up" : "down", text: `${label(primary)} ${tr.pct >= 0 ? "rose" : "fell"} about ${Math.abs(tr.pct * 100).toFixed(1)}% per year over ${span} (trend fit R² ${tr.r2.toFixed(2)}; ${peak}).` });
+      out.push({
+        kind: tr.pct >= 0 ? "up" : "down",
+        text: `${label(primary)} ${tr.pct >= 0 ? "rose" : "fell"} about ${Math.abs(tr.pct * 100).toFixed(1)}% per year over ${span} (trend fit R² ${tr.r2.toFixed(2)}; ${peak}).`,
+      });
     }
-    if (tr.uneven) out.push({ kind: "warn", text: `The number of rows per ${ts.unit} varies a lot, so yearly totals partly reflect data coverage. Compare averages or filter to a single crop and state.` });
+    if (tr.uneven)
+      out.push({
+        kind: "warn",
+        text: `The number of rows per ${ts.unit} varies a lot, so yearly totals partly reflect data coverage. Compare averages or filter to a single crop and state.`,
+      });
   }
   const topBy = (col, metric) => {
     const { data, mode } = groupBy(records, col, metric, roles);
     if (data.length < 2) return null;
     const sorted = data.sort((a, b) => b.value - a.value);
     const total = sorted.reduce((s, d) => s + d.value, 0);
-    return { first: sorted[0], last: sorted.at(-1), share: mode === "sum" && total ? sorted[0].value / total : null, n: sorted.length, mode };
+    return {
+      first: sorted[0],
+      last: sorted.at(-1),
+      share: mode === "sum" && total ? sorted[0].value / total : null,
+      n: sorted.length,
+      mode,
+    };
   };
   if (roles.crop && primary) {
     const t = topBy(roles.crop, primary);
     if (t) {
-      out.push({ kind: "top", text: t.share
-        ? `${t.first.key} leads ${label(primary).toLowerCase()} among ${t.n} crops with ${(t.share * 100).toFixed(0)}% of the total.`
-        : `${t.first.key} has the highest average ${label(primary).toLowerCase()} among ${t.n} crops (${fmt(t.first.value)}); ${t.last.key} the lowest (${fmt(t.last.value)}).` });
+      out.push({
+        kind: "top",
+        text: t.share
+          ? `${t.first.key} leads ${label(primary).toLowerCase()} among ${t.n} crops with ${(t.share * 100).toFixed(0)}% of the total.`
+          : `${t.first.key} has the highest average ${label(primary).toLowerCase()} among ${t.n} crops (${fmt(t.first.value)}); ${t.last.key} the lowest (${fmt(t.last.value)}).`,
+      });
       // One crop dwarfing all others usually means mixed units (e.g. coconut counted in nuts, not tonnes).
-      if (t.share && t.share > 0.8 && t.n >= 5) out.push({ kind: "warn", text: `${t.first.key} is ${(t.share * 100).toFixed(0)}% of all ${label(primary).toLowerCase()}. Check that every crop uses the same unit — some datasets count crops like coconut in nuts or cotton in bales. Filter it out to compare the rest.` });
+      if (t.share && t.share > 0.8 && t.n >= 5)
+        out.push({
+          kind: "warn",
+          text: `${t.first.key} is ${(t.share * 100).toFixed(0)}% of all ${label(primary).toLowerCase()}. Check that every crop uses the same unit — some datasets count crops like coconut in nuts or cotton in bales. Filter it out to compare the rest.`,
+        });
     }
   }
   if (roles.yield && roles.crop && roles.yield !== primary) {
     const t = topBy(roles.crop, roles.yield);
-    if (t) out.push({ kind: "top", text: `Highest average yield: ${t.first.key} (${fmt(t.first.value)} per unit area); lowest: ${t.last.key} (${fmt(t.last.value)}).` });
+    if (t)
+      out.push({
+        kind: "top",
+        text: `Highest average yield: ${t.first.key} (${fmt(t.first.value)} per unit area); lowest: ${t.last.key} (${fmt(t.last.value)}).`,
+      });
   }
   if (roles.state && primary) {
     const t = topBy(roles.state, roles.yield ?? primary);
-    if (t) out.push({ kind: "geo", text: `${t.first.key} has the highest ${label(roles.yield ?? primary).toLowerCase()} of ${t.n} states/regions (${fmt(t.first.value)}); ${t.last.key} is lowest (${fmt(t.last.value)}).` });
+    if (t)
+      out.push({
+        kind: "geo",
+        text: `${t.first.key} has the highest ${label(roles.yield ?? primary).toLowerCase()} of ${t.n} states/regions (${fmt(t.first.value)}); ${t.last.key} is lowest (${fmt(t.last.value)}).`,
+      });
   }
   if (roles.season && primary) {
     const t = topBy(roles.season, primary);
-    if (t?.share) out.push({ kind: "season", text: `${t.first.key} season accounts for ${(t.share * 100).toFixed(0)}% of ${label(primary).toLowerCase()}.` });
+    if (t?.share)
+      out.push({
+        kind: "season",
+        text: `${t.first.key} season accounts for ${(t.share * 100).toFixed(0)}% of ${label(primary).toLowerCase()}.`,
+      });
   }
   // Strongest driver of the target (yield if present, else primary).
   const target = roles.yield ?? primary;
   if (target) {
-    const drivers = ds.numeric.filter((c) => c !== target && c !== roles.production && c !== roles.area)
-      .map((c) => ({ c, r: pearson(records.map((x) => x[c]), records.map((x) => x[target])) }))
-      .filter((d) => d.r !== null && Math.abs(d.r) >= 0.2).sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
+    const drivers = ds.numeric
+      .filter((c) => c !== target && c !== roles.production && c !== roles.area)
+      .map((c) => ({
+        c,
+        r: pearson(
+          records.map((x) => x[c]),
+          records.map((x) => x[target]),
+        ),
+      }))
+      .filter((d) => d.r !== null && Math.abs(d.r) >= 0.2)
+      .sort((a, b) => Math.abs(b.r) - Math.abs(a.r));
     if (drivers[0]) {
       const d = drivers[0];
       const strength = Math.abs(d.r) >= 0.6 ? "strong" : Math.abs(d.r) >= 0.4 ? "moderate" : "weak";
-      out.push({ kind: "corr", text: `${label(d.c)} has the strongest link with ${label(target).toLowerCase()}: a ${strength} ${d.r > 0 ? "positive" : "negative"} relationship (r = ${d.r.toFixed(2)}). Correlation is not causation.` });
+      out.push({
+        kind: "corr",
+        text: `${label(d.c)} has the strongest link with ${label(target).toLowerCase()}: a ${strength} ${d.r > 0 ? "positive" : "negative"} relationship (r = ${d.r.toFixed(2)}). Correlation is not causation.`,
+      });
     }
   }
   if (roles.nitrogen && roles.phosphorus && roles.potassium && roles.crop) {
-    const n = topBy(roles.crop, roles.nitrogen); const k = topBy(roles.crop, roles.potassium);
-    if (n && k) out.push({ kind: "soil", text: `${n.first.key} needs the most nitrogen (avg ${fmt(n.first.value)}); ${k.first.key} the most potassium (avg ${fmt(k.first.value)}).` });
+    const n = topBy(roles.crop, roles.nitrogen);
+    const k = topBy(roles.crop, roles.potassium);
+    if (n && k)
+      out.push({
+        kind: "soil",
+        text: `${n.first.key} needs the most nitrogen (avg ${fmt(n.first.value)}); ${k.first.key} the most potassium (avg ${fmt(k.first.value)}).`,
+      });
   }
   if (roles.rainfall && !roles.year && roles.date) {
     const s = summary(records.map((r) => r[roles.rainfall]));
     const wet = records.filter((r) => (r[roles.rainfall] ?? 0) >= 2.5).length;
-    if (s) out.push({ kind: "weather", text: `${wet.toLocaleString("en-IN")} of ${records.length.toLocaleString("en-IN")} days were rainy (≥ 2.5 mm); total rainfall ${fmt(s.sum)} mm.` });
+    if (s)
+      out.push({
+        kind: "weather",
+        text: `${wet.toLocaleString("en-IN")} of ${records.length.toLocaleString("en-IN")} days were rainy (≥ 2.5 mm); total rainfall ${fmt(s.sum)} mm.`,
+      });
   }
   const missingCols = profiles.filter((p) => p.missing > 0.05);
-  if (missingCols.length) out.push({ kind: "warn", text: `${missingCols.length} column${missingCols.length > 1 ? "s have" : " has"} more than 5% missing values (${missingCols.slice(0, 3).map((p) => `${p.name} ${(p.missing * 100).toFixed(0)}%`).join(", ")}). Results use available values only.` });
+  if (missingCols.length)
+    out.push({
+      kind: "warn",
+      text: `${missingCols.length} column${missingCols.length > 1 ? "s have" : " has"} more than 5% missing values (${missingCols
+        .slice(0, 3)
+        .map((p) => `${p.name} ${(p.missing * 100).toFixed(0)}%`)
+        .join(", ")}). Results use available values only.`,
+    });
   const outlierCols = profiles.filter((p) => p.stats?.outliers > p.stats?.n * 0.05);
-  if (outlierCols.length) out.push({ kind: "warn", text: `Unusual values (outside 1.5× IQR) in ${outlierCols.slice(0, 3).map((p) => `${p.name} (${p.stats.outliers})`).join(", ")} — check units and data entry.` });
-  if (ds.derived.includes("yield")) out.push({ kind: "info", text: `Yield was derived as ${roles.production} ÷ ${roles.area}; use the same units throughout for meaningful comparisons.` });
+  if (outlierCols.length)
+    out.push({
+      kind: "warn",
+      text: `Unusual values (outside 1.5× IQR) in ${outlierCols
+        .slice(0, 3)
+        .map((p) => `${p.name} (${p.stats.outliers})`)
+        .join(", ")} — check units and data entry.`,
+    });
+  if (ds.derived.includes("yield"))
+    out.push({
+      kind: "info",
+      text: `Yield was derived as ${roles.production} ÷ ${roles.area}; use the same units throughout for meaningful comparisons.`,
+    });
   return out;
 }
 
 /** Duplicate rows (exact matches on all columns). */
 export function countDuplicates(rows, columns) {
-  const seen = new Set(); let dup = 0;
-  for (const r of rows) { const k = columns.map((c) => r[c]).join("\u0001"); if (seen.has(k)) dup += 1; else seen.add(k); }
+  const seen = new Set();
+  let dup = 0;
+  for (const r of rows) {
+    const k = columns.map((c) => r[c]).join("\u0001");
+    if (seen.has(k)) dup += 1;
+    else seen.add(k);
+  }
   return dup;
 }
 

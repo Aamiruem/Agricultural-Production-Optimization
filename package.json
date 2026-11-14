@@ -1,0 +1,21 @@
+{
+  "name": "agrismart",
+  "private": true,
+  "description": "AgriSmart monorepo: FastAPI + AIML, Express farm service, React web app, operations Dashboard, MCP server and gateway",
+  "scripts": {
+    "setup": "node scripts/tasks.mjs setup",
+    "dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev.ps1",
+    "stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stop-dev.ps1",
+    "docker": "docker compose up --build",
+    "test": "node scripts/tasks.mjs test",
+    "lint": "node scripts/tasks.mjs lint",
+    "format": "node scripts/tasks.mjs format",
+    "format:check": "node scripts/tasks.mjs format:check"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
+  }
+}

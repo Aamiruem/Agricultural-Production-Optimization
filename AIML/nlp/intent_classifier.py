@@ -7,6 +7,7 @@ tool: pest doctor, fertilizer calculator, weather, ...).
 
     python -m AIML.nlp.intent_classifier
 """
+
 from __future__ import annotations
 
 import json
@@ -33,10 +34,12 @@ def features() -> FeatureUnion:
     # Word-level (stemmed, Hinglish-normalised) + character n-grams (robust to spelling variants).
     from AIML.nlp.preprocess import analyzer
 
-    return FeatureUnion([
-        ("words", TfidfVectorizer(analyzer=analyzer, sublinear_tf=True)),
-        ("chars", TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5), sublinear_tf=True, min_df=2)),
-    ])
+    return FeatureUnion(
+        [
+            ("words", TfidfVectorizer(analyzer=analyzer, sublinear_tf=True)),
+            ("chars", TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5), sublinear_tf=True, min_df=2)),
+        ]
+    )
 
 
 def candidates() -> dict[str, Pipeline]:
@@ -53,18 +56,30 @@ def main() -> dict:
     results = {}
     for name, pipe in candidates().items():
         pred = cross_val_predict(pipe, df["text"], df["intent"], cv=cv)
-        results[name] = {"macro_f1": float(f1_score(df["intent"], pred, average="macro")),
-                         "accuracy": float(np.mean(pred == df["intent"]))}
+        results[name] = {
+            "macro_f1": float(f1_score(df["intent"], pred, average="macro")),
+            "accuracy": float(np.mean(pred == df["intent"])),
+        }
         print(f"{name:20s} macro-F1={results[name]['macro_f1']:.3f}")
     best = max(results, key=lambda n: results[n]["macro_f1"])
     model = candidates()[best].fit(df["text"], df["intent"])
-    report = classification_report(df["intent"], cross_val_predict(candidates()[best], df["text"], df["intent"], cv=cv),
-                                   output_dict=True, zero_division=0)
+    report = classification_report(
+        df["intent"],
+        cross_val_predict(candidates()[best], df["text"], df["intent"], cv=cv),
+        output_dict=True,
+        zero_division=0,
+    )
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
-    joblib.dump({"model": model, "name": best, "labels": sorted(df["intent"].unique()), "cv": results[best]},
-                INTENT_MODEL_PATH)
-    return {"best": best, "results": results, "per_class_f1": {k: round(v["f1-score"], 3)
-                                                               for k, v in report.items() if isinstance(v, dict) and k in set(df["intent"])}}
+    joblib.dump(
+        {"model": model, "name": best, "labels": sorted(df["intent"].unique()), "cv": results[best]}, INTENT_MODEL_PATH
+    )
+    return {
+        "best": best,
+        "results": results,
+        "per_class_f1": {
+            k: round(v["f1-score"], 3) for k, v in report.items() if isinstance(v, dict) and k in set(df["intent"])
+        },
+    }
 
 
 def predict(texts: list[str], bundle: dict | None = None) -> list[dict]:

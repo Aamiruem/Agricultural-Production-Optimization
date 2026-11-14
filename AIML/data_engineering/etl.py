@@ -8,6 +8,7 @@ Load      SQLite star schema (dim_crop, dim_state, fact_yield, fact_weather) wit
     python -m AIML.data_engineering.etl                     # SQLite in AIML/datasets/
     python -m AIML.data_engineering.etl --db postgresql+psycopg://user:pw@host/db
 """
+
 from __future__ import annotations
 
 import argparse
@@ -49,8 +50,20 @@ def quality_checks(raw: pd.DataFrame, cleaned: pd.DataFrame) -> QualityReport:
 
 
 def transform_yield(raw: pd.DataFrame) -> pd.DataFrame:
-    return clean(raw)[["Crop", "Crop_Year", "Season", "State", "Area", "Production",
-                       "Annual_Rainfall", "fertilizer_kg_ha", "pesticide_kg_ha", "Yield"]]
+    return clean(raw)[
+        [
+            "Crop",
+            "Crop_Year",
+            "Season",
+            "State",
+            "Area",
+            "Production",
+            "Annual_Rainfall",
+            "fertilizer_kg_ha",
+            "pesticide_kg_ha",
+            "Yield",
+        ]
+    ]
 
 
 def transform_weather(raw: pd.DataFrame) -> pl.DataFrame:
@@ -109,11 +122,34 @@ def load(yield_df: pd.DataFrame, weather_month: pl.DataFrame, db_url: str) -> No
         crops.to_sql("dim_crop", conn, if_exists="append", index=False)
         states.to_sql("dim_state", conn, if_exists="append", index=False)
 
-        fact = (yield_df.merge(crops, left_on="Crop", right_on="crop").merge(states, left_on="State", right_on="state")
-                .rename(columns={"Season": "season", "Crop_Year": "year", "Area": "area_ha", "Production": "production_t",
-                                 "Annual_Rainfall": "rainfall_mm", "Yield": "yield_t_ha"}))
-        fact[["crop_id", "state_id", "season", "year", "area_ha", "production_t", "rainfall_mm",
-              "fertilizer_kg_ha", "pesticide_kg_ha", "yield_t_ha"]].to_sql("fact_yield", conn, if_exists="append", index=False)
+        fact = (
+            yield_df.merge(crops, left_on="Crop", right_on="crop")
+            .merge(states, left_on="State", right_on="state")
+            .rename(
+                columns={
+                    "Season": "season",
+                    "Crop_Year": "year",
+                    "Area": "area_ha",
+                    "Production": "production_t",
+                    "Annual_Rainfall": "rainfall_mm",
+                    "Yield": "yield_t_ha",
+                }
+            )
+        )
+        fact[
+            [
+                "crop_id",
+                "state_id",
+                "season",
+                "year",
+                "area_ha",
+                "production_t",
+                "rainfall_mm",
+                "fertilizer_kg_ha",
+                "pesticide_kg_ha",
+                "yield_t_ha",
+            ]
+        ].to_sql("fact_yield", conn, if_exists="append", index=False)
         # rows(named=True) avoids a pyarrow dependency for Polars → pandas.
         pd.DataFrame(weather_month.rows(named=True)).to_sql("fact_weather_month", conn, if_exists="append", index=False)
 

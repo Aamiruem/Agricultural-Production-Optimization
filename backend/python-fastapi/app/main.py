@@ -5,6 +5,7 @@ Start it from backend/python-fastapi (recommended):
 or from anywhere, including inside this folder:
     python main.py
 """
+
 import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -23,7 +24,16 @@ from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 
 from app.api.routes import (  # noqa: E402
-    assistant, auth, crops, health, history, ml, realtime, system, yield_analytics, yield_prediction,
+    assistant,
+    auth,
+    crops,
+    health,
+    history,
+    ml,
+    realtime,
+    system,
+    yield_analytics,
+    yield_prediction,
 )
 from app.core.config import get_settings  # noqa: E402
 from app.core.logging import RequestLogMiddleware, configure_logging  # noqa: E402
@@ -50,7 +60,7 @@ def create_app() -> FastAPI:
         title=settings.app_name,
         version="1.1.0",
         description="Crop & fertilizer recommendations, ML model serving and explanations (SHAP), auth, "
-                    "batch jobs, an AI assistant and platform status.",
+        "batch jobs, an AI assistant and platform status.",
         lifespan=lifespan,
     )
     # Added innermost first. Request order: CORS -> load shedding -> logging -> gzip -> routes,

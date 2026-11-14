@@ -28,8 +28,17 @@ def test_serves_trained_model_bundle(client, tmp_path, monkeypatch):
     X = pd.DataFrame([CROPS[c].features() for c in classes], columns=FEATURES)
     model = Pipeline([("clf", LogisticRegression(max_iter=5000))]).fit(X, range(len(classes)))
     path = tmp_path / "bundle.joblib"
-    joblib.dump({"model": model, "classes": classes, "features": FEATURES, "name": "logistic_regression",
-                 "metrics": {"test_accuracy": 1.0}, "trained_at": "2026-11-13T00:00:00+00:00"}, path)
+    joblib.dump(
+        {
+            "model": model,
+            "classes": classes,
+            "features": FEATURES,
+            "name": "logistic_regression",
+            "metrics": {"test_accuracy": 1.0},
+            "trained_at": "2026-11-13T00:00:00+00:00",
+        },
+        path,
+    )
 
     monkeypatch.setattr(get_settings(), "model_path", path)
     try:

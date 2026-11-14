@@ -11,6 +11,7 @@ your account; the examples are short.
 
     python -m AIML.generative_ai.prompting
 """
+
 from __future__ import annotations
 
 from pydantic import BaseModel, Field
@@ -49,14 +50,22 @@ def client():
 
 def zero_shot(question: str) -> str:
     r = client().beta.messages.create(
-        model=MODEL, max_tokens=2000, system=SYSTEM, output_config={"effort": "low"},
-        messages=[{"role": "user", "content": question}], **FALLBACK)
+        model=MODEL,
+        max_tokens=2000,
+        system=SYSTEM,
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": question}],
+        **FALLBACK,
+    )
     return _text(r)
 
 
 FEW_SHOT = [
     {"role": "user", "content": "Crop: wheat. Region: Punjab."},
-    {"role": "assistant", "content": "Sow: 1-15 Nov · Seed: 100 kg/ha · First irrigation: 20-25 days (crown root) · Harvest: April"},
+    {
+        "role": "assistant",
+        "content": "Sow: 1-15 Nov · Seed: 100 kg/ha · First irrigation: 20-25 days (crown root) · Harvest: April",
+    },
     {"role": "user", "content": "Crop: mustard. Region: Rajasthan."},
     {"role": "assistant", "content": "Sow: 5-25 Oct · Seed: 5 kg/ha · First irrigation: 30-35 days · Harvest: Feb-Mar"},
 ]
@@ -64,17 +73,25 @@ FEW_SHOT = [
 
 def few_shot(crop: str, region: str) -> str:
     r = client().beta.messages.create(
-        model=MODEL, max_tokens=500, system=SYSTEM + " Reply in exactly the one-line format shown.",
+        model=MODEL,
+        max_tokens=500,
+        system=SYSTEM + " Reply in exactly the one-line format shown.",
         output_config={"effort": "low"},
-        messages=[*FEW_SHOT, {"role": "user", "content": f"Crop: {crop}. Region: {region}."}], **FALLBACK)
+        messages=[*FEW_SHOT, {"role": "user", "content": f"Crop: {crop}. Region: {region}."}],
+        **FALLBACK,
+    )
     return _text(r)
 
 
 def extract_soil_test(text: str) -> SoilTest:
     r = client().beta.messages.parse(
-        model=MODEL, max_tokens=2000, output_format=SoilTest, output_config={"effort": "low"},
+        model=MODEL,
+        max_tokens=2000,
+        output_format=SoilTest,
+        output_config={"effort": "low"},
         messages=[{"role": "user", "content": f"Extract the soil test values from this report:\n\n{text}"}],
-        **FALLBACK)
+        **FALLBACK,
+    )
     if r.stop_reason == "refusal" or r.parsed_output is None:
         raise RuntimeError("the model did not return a soil test")
     return r.parsed_output
@@ -83,8 +100,12 @@ def extract_soil_test(text: str) -> SoilTest:
 def stream_answer(question: str) -> str:
     chunks = []
     with client().beta.messages.stream(
-        model=MODEL, max_tokens=4000, system=SYSTEM, output_config={"effort": "low"},
-        messages=[{"role": "user", "content": question}], **FALLBACK,
+        model=MODEL,
+        max_tokens=4000,
+        system=SYSTEM,
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": question}],
+        **FALLBACK,
     ) as stream:
         for text in stream.text_stream:
             print(text, end="", flush=True)
@@ -96,4 +117,6 @@ def stream_answer(question: str) -> str:
 if __name__ == "__main__":
     print(zero_shot("My paddy leaves are turning yellow from the tips. What should I check first?"))
     print(few_shot("chickpea", "Madhya Pradesh"))
-    print(extract_soil_test("Soil Health Card — N 212 kg/ha (low), P 18.5 kg/ha, K 290 kg/ha, pH 7.9, OC 0.42%, EC 0.6"))
+    print(
+        extract_soil_test("Soil Health Card — N 212 kg/ha (low), P 18.5 kg/ha, K 290 kg/ha, pH 7.9, OC 0.42%, EC 0.6")
+    )

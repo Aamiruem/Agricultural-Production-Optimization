@@ -10,6 +10,7 @@ with the three most common fertilizers in India:
 This is a planning estimate, not a substitute for a soil-test-based
 recommendation from a local Krishi Vigyan Kendra.
 """
+
 from app.data.crops import CROPS
 from app.schemas import (
     FertilizerDose,
@@ -59,9 +60,7 @@ def recommend_fertilizer(req: FertilizerRequest) -> FertilizerRecommendation:
     mop = k_def / MOP_K
 
     doses = [
-        FertilizerDose(
-            product=name, kg_per_ha=round(kg, 1), total_kg=round(kg * req.area_ha, 1)
-        )
+        FertilizerDose(product=name, kg_per_ha=round(kg, 1), total_kg=round(kg * req.area_ha, 1))
         for name, kg in (("DAP (18-46-0)", dap), ("Urea (46-0-0)", urea), ("MOP (0-0-60)", mop))
         if kg > 0
     ]
@@ -79,6 +78,4 @@ def recommend_fertilizer(req: FertilizerRequest) -> FertilizerRecommendation:
         if g.status == "high":
             advice.append(f"{g.nutrient} is above target; skip extra {g.nutrient} to avoid wastage and runoff.")
 
-    return FertilizerRecommendation(
-        crop=crop.name, area_ha=req.area_ha, gaps=gaps, doses=doses, advice=advice
-    )
+    return FertilizerRecommendation(crop=crop.name, area_ha=req.area_ha, gaps=gaps, doses=doses, advice=advice)

@@ -57,7 +57,8 @@ export const farmSchema = z
     village: z.string().trim().max(80).optional(),
   })
   .refine((v) => v.district !== "__other" || (v.districtOther?.length ?? 0) >= 2, {
-    message: "Type the district name", path: ["districtOther"],
+    message: "Type the district name",
+    path: ["districtOther"],
   });
 
 const optionalNum = (label, max) =>

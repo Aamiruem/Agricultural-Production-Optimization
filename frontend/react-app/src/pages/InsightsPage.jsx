@@ -16,17 +16,23 @@ export default function InsightsPage() {
         description="How the crop model was chosen, which soil and climate features matter most, and your own history."
       />
       <section aria-labelledby="model-title" className="mb-5">
-        <h2 id="model-title" className="h5 mb-3">Model comparison</h2>
+        <h2 id="model-title" className="h5 mb-3">
+          Model comparison
+        </h2>
         <ModelInsights />
       </section>
       <section aria-labelledby="history-title">
-        <h2 id="history-title" className="h5 mb-3">Your history</h2>
+        <h2 id="history-title" className="h5 mb-3">
+          Your history
+        </h2>
         {user ? (
           <MyHistory />
         ) : (
           <EmptyState>
             <p className="mb-2">Sign in to see your saved recommendations and run batch jobs.</p>
-            <Button as={Link} to="/login?next=/insights" size="sm">Sign in</Button>
+            <Button as={Link} to="/login?next=/insights" size="sm">
+              Sign in
+            </Button>
           </EmptyState>
         )}
       </section>

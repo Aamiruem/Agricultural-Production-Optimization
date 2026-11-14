@@ -29,31 +29,44 @@ export function AuthProvider({ children }) {
     retry: false,
   });
 
-  const signIn = useCallback(async (email, password) => {
-    const form = new URLSearchParams({ username: email, password });
-    const res = await api.post("/api/auth/token", undefined, { form, auth: false, retries: 0 });
-    setToken(res.access_token);
-    qc.setQueryData([...keys.me, res.access_token], res.user);
-  }, [qc]);
+  const signIn = useCallback(
+    async (email, password) => {
+      const form = new URLSearchParams({ username: email, password });
+      const res = await api.post("/api/auth/token", undefined, { form, auth: false, retries: 0 });
+      setToken(res.access_token);
+      qc.setQueryData([...keys.me, res.access_token], res.user);
+    },
+    [qc],
+  );
 
-  const register = useCallback(async ({ email, password, fullName }) => {
-    const res = await api.post("/api/auth/register", { email, password, full_name: fullName }, { auth: false, retries: 0 });
-    setToken(res.access_token);
-    qc.setQueryData([...keys.me, res.access_token], res.user);
-  }, [qc]);
+  const register = useCallback(
+    async ({ email, password, fullName }) => {
+      const res = await api.post(
+        "/api/auth/register",
+        { email, password, full_name: fullName },
+        { auth: false, retries: 0 },
+      );
+      setToken(res.access_token);
+      qc.setQueryData([...keys.me, res.access_token], res.user);
+    },
+    [qc],
+  );
 
   const signOut = useCallback(() => {
     setToken(null);
     qc.removeQueries({ queryKey: keys.farms });
   }, [qc]);
 
-  const value = useMemo(() => ({
-    user: token ? me.data ?? null : null,
-    loading: Boolean(token) && me.isLoading,
-    signIn,
-    register,
-    signOut,
-  }), [token, me.data, me.isLoading, signIn, register, signOut]);
+  const value = useMemo(
+    () => ({
+      user: token ? (me.data ?? null) : null,
+      loading: Boolean(token) && me.isLoading,
+      signIn,
+      register,
+      signOut,
+    }),
+    [token, me.data, me.isLoading, signIn, register, signOut],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

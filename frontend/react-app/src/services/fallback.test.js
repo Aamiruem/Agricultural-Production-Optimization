@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import { isApiUnavailable, withFallback } from "./apiClient";
 
-const httpError = (status) => new AxiosError("fail", "ERR", { baseURL: "/api" }, null, status ? { status, data: {} } : undefined);
+const httpError = (status) =>
+  new AxiosError("fail", "ERR", { baseURL: "/api" }, null, status ? { status, data: {} } : undefined);
 
 describe("API fallback", () => {
   it("treats network errors, 404/405 and gateway errors as 'API unavailable'", () => {
@@ -20,13 +21,28 @@ describe("API fallback", () => {
   });
 
   it("runs the browser model and labels it when the API is missing", async () => {
-    await expect(withFallback(() => Promise.reject(httpError(405)), () => ({ y: 2 }))).resolves.toEqual({ engine: "browser", y: 2 });
+    await expect(
+      withFallback(
+        () => Promise.reject(httpError(405)),
+        () => ({ y: 2 }),
+      ),
+    ).resolves.toEqual({ engine: "browser", y: 2 });
     // A static host answering /api with the SPA shell (HTML string) also falls back.
-    await expect(withFallback(async () => "<!doctype html>", () => ({ y: 3 }))).resolves.toEqual({ engine: "browser", y: 3 });
+    await expect(
+      withFallback(
+        async () => "<!doctype html>",
+        () => ({ y: 3 }),
+      ),
+    ).resolves.toEqual({ engine: "browser", y: 3 });
   });
 
   it("keeps validation errors from the API instead of hiding them", async () => {
     const err = httpError(422);
-    await expect(withFallback(() => Promise.reject(err), () => ({}))).rejects.toBe(err);
+    await expect(
+      withFallback(
+        () => Promise.reject(err),
+        () => ({}),
+      ),
+    ).rejects.toBe(err);
   });
 });

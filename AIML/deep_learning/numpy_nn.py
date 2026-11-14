@@ -6,6 +6,7 @@ gradient is derived with the chain rule below, and `gradient_check` verifies the
 
     python -m AIML.deep_learning.numpy_nn
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -91,15 +92,26 @@ def gradient_check(model: MLP, X: np.ndarray, y: np.ndarray, eps: float = 1e-5, 
     return worst
 
 
-def train(model: MLP, X: np.ndarray, y: np.ndarray, X_val: np.ndarray, y_val: np.ndarray, *, epochs: int = 300,
-          lr: float = 0.05, momentum: float = 0.9, batch: int = 64, patience: int = 20) -> list[dict]:
+def train(
+    model: MLP,
+    X: np.ndarray,
+    y: np.ndarray,
+    X_val: np.ndarray,
+    y_val: np.ndarray,
+    *,
+    epochs: int = 300,
+    lr: float = 0.05,
+    momentum: float = 0.9,
+    batch: int = 64,
+    patience: int = 20,
+) -> list[dict]:
     rng = np.random.default_rng(model.seed)
     velocity = {k: np.zeros_like(v) for k, v in model.params.items()}
     best, best_params, waited, history = np.inf, None, 0, []
     for epoch in range(epochs):
         order = rng.permutation(len(X))
         for start in range(0, len(X), batch):
-            idx = order[start:start + batch]
+            idx = order[start : start + batch]
             for k, g in model.backward(X[idx], y[idx]).items():
                 velocity[k] = momentum * velocity[k] - lr * g
                 model.params[k] += velocity[k]

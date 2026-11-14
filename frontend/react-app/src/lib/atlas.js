@@ -13,23 +13,50 @@ export const ADVISOR_SEASONS = ["Kharif", "Rabi", "Zaid"];
 export const WATER_LEVELS = ["Low", "Medium", "High"];
 
 const BY_NAME = new Map(atlas.crops.map((c) => [c.name.toLowerCase(), c]));
-const norm = (s) => s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z]/g, "");
+const norm = (s) =>
+  s
+    .toLowerCase()
+    .replace(/\(.*?\)/g, "")
+    .replace(/[^a-z]/g, "");
 const BY_NORM = new Map(atlas.crops.map((c) => [norm(c.name), c]));
 
 // Names used elsewhere in the app (India catalogue ids, yield-dataset names, ML ids) → atlas crop.
 const ALIASES = {
-  bajra: "Pearl Millet", jowar: "Sorghum", ragi: "Finger Millet", arhar: "Pigeon Pea", arhartur: "Pigeon Pea", pigeonpeas: "Pigeon Pea",
-  moong: "Green Gram", moonggreengram: "Green Gram", mungbean: "Green Gram", urad: "Black Gram", blackgram: "Black Gram",
-  masoor: "Lentil", gram: "Chickpea", peasbeans: "Peas", citrus: "Orange", greenchilli: "Chilli", drychilli: "Chilli",
-  drychillies: "Chilli", blackpepper: "Black Pepper", cashewnut: "Cashew", cottonlint: "Cotton", rapeseedmustard: "Mustard",
-  soyabean: "Soybean", sesamum: "Sesame", fingermillet: "Finger Millet", pearlmillet: "Pearl Millet",
+  bajra: "Pearl Millet",
+  jowar: "Sorghum",
+  ragi: "Finger Millet",
+  arhar: "Pigeon Pea",
+  arhartur: "Pigeon Pea",
+  pigeonpeas: "Pigeon Pea",
+  moong: "Green Gram",
+  moonggreengram: "Green Gram",
+  mungbean: "Green Gram",
+  urad: "Black Gram",
+  blackgram: "Black Gram",
+  masoor: "Lentil",
+  gram: "Chickpea",
+  peasbeans: "Peas",
+  citrus: "Orange",
+  greenchilli: "Chilli",
+  drychilli: "Chilli",
+  drychillies: "Chilli",
+  blackpepper: "Black Pepper",
+  cashewnut: "Cashew",
+  cottonlint: "Cotton",
+  rapeseedmustard: "Mustard",
+  soyabean: "Soybean",
+  sesamum: "Sesame",
+  fingermillet: "Finger Millet",
+  pearlmillet: "Pearl Millet",
 };
 
 /** Atlas profile (with photo) for any crop name or id used in the app, else undefined. */
 export function atlasCrop(nameOrId) {
   if (!nameOrId) return undefined;
   const key = norm(nameOrId);
-  return BY_NAME.get(nameOrId.toLowerCase()) ?? BY_NORM.get(key) ?? (ALIASES[key] && BY_NAME.get(ALIASES[key].toLowerCase()));
+  return (
+    BY_NAME.get(nameOrId.toLowerCase()) ?? BY_NORM.get(key) ?? (ALIASES[key] && BY_NAME.get(ALIASES[key].toLowerCase()))
+  );
 }
 
 export const cropImage = (nameOrId) => atlasCrop(nameOrId)?.image;
@@ -54,16 +81,27 @@ export function recommendSeasonalCrops({ state, season, soil, water, temperature
   return atlas.crops
     .map((c) => {
       const stateMatch = Boolean(sp?.crops.includes(c.name));
-      const seasonMatch = c.seasons.includes(season) || c.seasons.includes("Whole Year") || c.seasons.includes("Perennial");
+      const seasonMatch =
+        c.seasons.includes(season) || c.seasons.includes("Whole Year") || c.seasons.includes("Perennial");
       const soilMatch = c.soils.includes(soil);
       const waterGap = Math.abs(WATER[water] - WATER[c.water]);
       const tempGap = Math.abs(temp - c.temp);
       const rainRatio = Math.abs(rain - c.rain) / Math.max(c.rain, 1);
       const parts = {
-        state: 18 * stateMatch, season: 30 * seasonMatch, soil: 24 * soilMatch,
-        water: Math.max(0, 14 - 7 * waterGap), temperature: Math.max(0, 9 - 1.5 * tempGap), rainfall: Math.max(0, 5 - 5 * rainRatio),
+        state: 18 * stateMatch,
+        season: 30 * seasonMatch,
+        soil: 24 * soilMatch,
+        water: Math.max(0, 14 - 7 * waterGap),
+        temperature: Math.max(0, 9 - 1.5 * tempGap),
+        rainfall: Math.max(0, 5 - 5 * rainRatio),
       };
-      const score = Math.min(100, Math.max(0, Object.values(parts).reduce((a, b) => a + b, 0)));
+      const score = Math.min(
+        100,
+        Math.max(
+          0,
+          Object.values(parts).reduce((a, b) => a + b, 0),
+        ),
+      );
       const why = [];
       if (stateMatch) why.push("representative state crop");
       if (seasonMatch) why.push(`fits ${season}`);
@@ -83,13 +121,21 @@ export function recommendRotation({ previous, season, soil, topN = 3 }) {
   let candidates = ROTATION_GUIDE.filter((r) => r.prev === previous).map((r) => ({ ...r, fallback: false }));
   if (new Set(candidates.map((c) => c.next)).size < topN) {
     const existing = new Set([...candidates.map((c) => c.next), previous]);
-    candidates = candidates.concat(ROTATION_GUIDE.filter((r) => !existing.has(r.next))
-      .map((r) => ({ ...r, prev: previous, score: r.score - 18, reason: `General fallback: ${r.reason.charAt(0).toLowerCase()}${r.reason.slice(1)}`, fallback: true })));
+    candidates = candidates.concat(
+      ROTATION_GUIDE.filter((r) => !existing.has(r.next)).map((r) => ({
+        ...r,
+        prev: previous,
+        score: r.score - 18,
+        reason: `General fallback: ${r.reason.charAt(0).toLowerCase()}${r.reason.slice(1)}`,
+        fallback: true,
+      })),
+    );
   }
   const seen = new Set();
   return candidates
     .map((c) => {
-      const seasonMatch = c.season === season; const soilMatch = c.soil === soil;
+      const seasonMatch = c.season === season;
+      const soilMatch = c.soil === soil;
       return { ...c, seasonMatch, soilMatch, total: Math.min(100, c.score + 6 * seasonMatch + 4 * soilMatch) };
     })
     .sort((a, b) => b.total - a.total || b.seasonMatch - a.seasonMatch || b.soilMatch - a.soilMatch)

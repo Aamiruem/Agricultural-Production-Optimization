@@ -1,8 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  YIELD_DOMAIN, analyzeLeafPixels, fertilizerLocal, irrigationPlan, predictYieldLocal, rainfallSensitivity,
-  recommendLocal, seasonsFor, soilHealth,
+  YIELD_DOMAIN,
+  analyzeLeafPixels,
+  fertilizerLocal,
+  irrigationPlan,
+  predictYieldLocal,
+  rainfallSensitivity,
+  recommendLocal,
+  seasonsFor,
+  soilHealth,
 } from "./agriModels";
 
 const pixels = (rgb, n = 400) => {
@@ -34,12 +41,20 @@ describe("yield model (browser)", () => {
   it("only offers seasons with records and rejects unknown crops", () => {
     expect(seasonsFor("Punjab", "Wheat")).toContain("Rabi");
     expect(seasonsFor("Punjab", "Wheat")).not.toContain("Kharif");
-    expect(() => predictYieldLocal({ state: "Punjab", crop: "Dragonfruit", season: "Rabi", year: 2020, area_ha: 1 })).toThrow();
+    expect(() =>
+      predictYieldLocal({ state: "Punjab", crop: "Dragonfruit", season: "Rabi", year: 2020, area_ha: 1 }),
+    ).toThrow();
     expect(YIELD_DOMAIN.states.length).toBeGreaterThanOrEqual(30);
   });
 
   it("produces a monotonic rainfall response", () => {
-    const curve = rainfallSensitivity({ state: "Madhya Pradesh", crop: "Wheat", season: "Rabi", year: 2020, area_ha: 1 });
+    const curve = rainfallSensitivity({
+      state: "Madhya Pradesh",
+      crop: "Wheat",
+      season: "Rabi",
+      year: 2020,
+      area_ha: 1,
+    });
     expect(curve).toHaveLength(9);
     const ys = curve.map((p) => p.yield);
     const rising = ys.every((y, i) => i === 0 || y >= ys[i - 1]);
@@ -58,7 +73,9 @@ describe("crop recommendation (browser Naive Bayes)", () => {
   });
 
   it("ranks chickpea first for a dry rabi profile", () => {
-    expect(recommendLocal({ N: 40, P: 65, K: 78, temperature: 19, humidity: 18, ph: 7.2, rainfall: 80 }).top[0].crop).toBe("chickpea");
+    expect(
+      recommendLocal({ N: 40, P: 65, K: 78, temperature: 19, humidity: 18, ph: 7.2, rainfall: 80 }).top[0].crop,
+    ).toBe("chickpea");
   });
 });
 
@@ -92,7 +109,14 @@ describe("soil health", () => {
 
 describe("irrigation (FAO-56)", () => {
   it("converts mm over hectares to cubic metres and credits effective rain", () => {
-    const plan = irrigationPlan({ crop: "Wheat", stage: "Mid-season", method: "Drip", areaHa: 1, et0: [5, 5], rain: [0, 10] });
+    const plan = irrigationPlan({
+      crop: "Wheat",
+      stage: "Mid-season",
+      method: "Drip",
+      areaHa: 1,
+      et0: [5, 5],
+      rain: [0, 10],
+    });
     expect(plan.kc).toBe(1.15);
     expect(plan.etcTotal).toBeCloseTo(11.5, 1);
     expect(plan.effectiveRain).toBe(8); // 80% of 10 mm
@@ -114,7 +138,9 @@ describe("leaf image screening", () => {
   it("ignores blue background and lowers the health index for lesions", () => {
     expect(analyzeLeafPixels(pixels([40, 90, 220])).plantPixels).toBe(0);
     const healthy = analyzeLeafPixels(pixels([40, 150, 50])).healthIndex;
-    const sick = analyzeLeafPixels(new Uint8ClampedArray([...pixels([40, 150, 50], 200), ...pixels([120, 60, 20], 200)])).healthIndex;
+    const sick = analyzeLeafPixels(
+      new Uint8ClampedArray([...pixels([40, 150, 50], 200), ...pixels([120, 60, 20], 200)]),
+    ).healthIndex;
     expect(healthy).toBe(100);
     expect(sick).toBeLessThan(40);
   });

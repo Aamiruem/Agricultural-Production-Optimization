@@ -5,6 +5,7 @@ romanised Hindi.
     pip install -r AIML/requirements-dl.txt
     python -m AIML.nlp.bert_finetune --epochs 8
 """
+
 from __future__ import annotations
 
 import argparse
@@ -22,8 +23,13 @@ MODEL_NAME = "distilbert-base-multilingual-cased"
 def run(epochs: int = 8, model_name: str = MODEL_NAME) -> dict:
     from datasets import Dataset
     from sklearn.model_selection import train_test_split
-    from transformers import (AutoModelForSequenceClassification, AutoTokenizer, DataCollatorWithPadding, Trainer,
-                              TrainingArguments)
+    from transformers import (
+        AutoModelForSequenceClassification,
+        AutoTokenizer,
+        DataCollatorWithPadding,
+        Trainer,
+        TrainingArguments,
+    )
 
     df = pd.read_csv(DATA)
     labels = sorted(df["intent"].unique())
@@ -37,7 +43,8 @@ def run(epochs: int = 8, model_name: str = MODEL_NAME) -> dict:
     test_ds = Dataset.from_pandas(test_df[["text", "label"]]).map(enc, batched=True)
 
     model = AutoModelForSequenceClassification.from_pretrained(
-        model_name, num_labels=len(labels), id2label=dict(enumerate(labels)), label2id=label2id)
+        model_name, num_labels=len(labels), id2label=dict(enumerate(labels)), label2id=label2id
+    )
 
     def metrics(pred):
         acc = float((np.argmax(pred.predictions, -1) == pred.label_ids).mean())
@@ -46,9 +53,19 @@ def run(epochs: int = 8, model_name: str = MODEL_NAME) -> dict:
     out_dir = MODELS_DIR / "bert-intent"
     trainer = Trainer(
         model=model,
-        args=TrainingArguments(out_dir, num_train_epochs=epochs, learning_rate=5e-5, per_device_train_batch_size=16,
-                               eval_strategy="epoch", save_strategy="no", seed=RANDOM_STATE, report_to=[]),
-        train_dataset=train_ds, eval_dataset=test_ds, data_collator=DataCollatorWithPadding(tok),
+        args=TrainingArguments(
+            out_dir,
+            num_train_epochs=epochs,
+            learning_rate=5e-5,
+            per_device_train_batch_size=16,
+            eval_strategy="epoch",
+            save_strategy="no",
+            seed=RANDOM_STATE,
+            report_to=[],
+        ),
+        train_dataset=train_ds,
+        eval_dataset=test_ds,
+        data_collator=DataCollatorWithPadding(tok),
         compute_metrics=metrics,
     )
     trainer.train()

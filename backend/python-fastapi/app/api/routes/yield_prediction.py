@@ -1,4 +1,5 @@
 """Yield predictions served by the trained AIML regression bundle."""
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 

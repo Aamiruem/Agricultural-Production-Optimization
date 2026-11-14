@@ -8,6 +8,7 @@ forecast should be.
 
     python -m AIML.deep_learning.sequence_models     # needs torch
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -15,16 +16,21 @@ import pandas as pd
 
 from AIML.config import WEATHER_DATA_PATH
 
-FEATURES = ["temperature_2m_max", "temperature_2m_min", "precipitation_sum", "et0_fao_evapotranspiration",
-            "relative_humidity_2m_mean"]
+FEATURES = [
+    "temperature_2m_max",
+    "temperature_2m_min",
+    "precipitation_sum",
+    "et0_fao_evapotranspiration",
+    "relative_humidity_2m_mean",
+]
 TARGET = "et0_fao_evapotranspiration"
 
 
 def make_windows(values: np.ndarray, target_idx: int, window: int, horizon: int) -> tuple[np.ndarray, np.ndarray]:
     """Sliding windows: X[i] = values[i:i+window], y[i] = target[i+window : i+window+horizon]."""
     n = len(values) - window - horizon + 1
-    X = np.stack([values[i:i + window] for i in range(n)])
-    y = np.stack([values[i + window:i + window + horizon, target_idx] for i in range(n)])
+    X = np.stack([values[i : i + window] for i in range(n)])
+    y = np.stack([values[i + window : i + window + horizon, target_idx] for i in range(n)])
     return X.astype(np.float32), y.astype(np.float32)
 
 
@@ -37,15 +43,21 @@ def load_weather_windows(window: int = 30, horizon: int = 7, test_from: str = "2
     t = FEATURES.index(TARGET)
     split = int(train_mask.sum())
     X_tr, y_tr = make_windows(scaled[:split], t, window, horizon)
-    X_te, y_te = make_windows(scaled[split - window:], t, window, horizon)
-    return {"X_train": X_tr, "y_train": y_tr, "X_test": X_te, "y_test": y_te,
-            "target_mean": float(mu[TARGET]), "target_std": float(sd[TARGET])}
+    X_te, y_te = make_windows(scaled[split - window :], t, window, horizon)
+    return {
+        "X_train": X_tr,
+        "y_train": y_tr,
+        "X_test": X_te,
+        "y_test": y_te,
+        "target_mean": float(mu[TARGET]),
+        "target_std": float(sd[TARGET]),
+    }
 
 
 def seasonal_naive_mae(data: dict) -> float:
     """Baseline: next 7 days = the last 7 observed days."""
     t = FEATURES.index(TARGET)
-    pred = data["X_test"][:, -data["y_test"].shape[1]:, t]
+    pred = data["X_test"][:, -data["y_test"].shape[1] :, t]
     return float(np.abs(pred - data["y_test"]).mean() * data["target_std"])
 
 

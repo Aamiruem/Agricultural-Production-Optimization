@@ -34,11 +34,19 @@ export function RecommendationResults({ result }) {
                   {formatPercent(item.confidence)} <span className="text-body-secondary">match</span>
                 </span>
               </div>
-              <ProgressBar now={item.confidence * 100} className="my-2" style={{ height: 8 }}
-                           aria-label={`${formatCropName(item.crop)} match`} />
+              <ProgressBar
+                now={item.confidence * 100}
+                className="my-2"
+                style={{ height: 8 }}
+                aria-label={`${formatCropName(item.crop)} match`}
+              />
               <div className="d-flex gap-2">
-                <Badge bg="success-subtle" text="success-emphasis">{seasonLabel(item.season)}</Badge>
-                <Badge bg="secondary-subtle" text="secondary-emphasis" className="text-capitalize">{item.category}</Badge>
+                <Badge bg="success-subtle" text="success-emphasis">
+                  {seasonLabel(item.season)}
+                </Badge>
+                <Badge bg="secondary-subtle" text="secondary-emphasis" className="text-capitalize">
+                  {item.category}
+                </Badge>
               </div>
             </motion.li>
           ))}

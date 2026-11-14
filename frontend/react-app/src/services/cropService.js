@@ -24,11 +24,17 @@ export function fetchCrop(name) {
 }
 
 export function recommendCrop(soil) {
-  return withFallback(async () => (await api.post("/recommend/crop", soil)).data, () => recommendLocal(soil));
+  return withFallback(
+    async () => (await api.post("/recommend/crop", soil)).data,
+    () => recommendLocal(soil),
+  );
 }
 
 export function recommendFertilizer(request) {
-  return withFallback(async () => (await api.post("/recommend/fertilizer", request)).data, () => fertilizerLocal(request));
+  return withFallback(
+    async () => (await api.post("/recommend/fertilizer", request)).data,
+    () => fertilizerLocal(request),
+  );
 }
 
 // Saved history & background jobs (signed-in users)

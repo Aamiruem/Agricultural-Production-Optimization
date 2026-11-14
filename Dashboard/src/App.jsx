@@ -40,7 +40,9 @@ class PageBoundary extends Component {
 function PageFallback() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-busy="true" aria-label="Loading">
-      {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-36" />)}
+      {[1, 2, 3, 4].map((i) => (
+        <Skeleton key={i} className="h-36" />
+      ))}
       <Skeleton className="h-80 sm:col-span-2 xl:col-span-4" />
     </div>
   );
@@ -57,7 +59,15 @@ function Page({ children }) {
 
 function NotFound() {
   return (
-    <EmptyState icon="info" title="Page not found" action={<Link to="/"><Button variant="tonal">Back to overview</Button></Link>}>
+    <EmptyState
+      icon="info"
+      title="Page not found"
+      action={
+        <Link to="/">
+          <Button variant="tonal">Back to overview</Button>
+        </Link>
+      }
+    >
       The page you asked for doesn&apos;t exist in the console.
     </EmptyState>
   );
@@ -67,15 +77,78 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Shell />}>
-        <Route index element={<Page><OverviewPage /></Page>} />
-        <Route path="studio" element={<Page><StudioPage /></Page>} />
-        <Route path="yield" element={<Page><YieldPage /></Page>} />
-        <Route path="models" element={<Page><ModelsPage /></Page>} />
-        <Route path="farms" element={<Page><FarmsPage /></Page>} />
-        <Route path="assistant" element={<Page><AssistantPage /></Page>} />
-        <Route path="mcp-tools" element={<Page><McpPage /></Page>} />
-        <Route path="system" element={<Page><SystemPage /></Page>} />
-        <Route path="login" element={<Page><LoginPage /></Page>} />
+        <Route
+          index
+          element={
+            <Page>
+              <OverviewPage />
+            </Page>
+          }
+        />
+        <Route
+          path="studio"
+          element={
+            <Page>
+              <StudioPage />
+            </Page>
+          }
+        />
+        <Route
+          path="yield"
+          element={
+            <Page>
+              <YieldPage />
+            </Page>
+          }
+        />
+        <Route
+          path="models"
+          element={
+            <Page>
+              <ModelsPage />
+            </Page>
+          }
+        />
+        <Route
+          path="farms"
+          element={
+            <Page>
+              <FarmsPage />
+            </Page>
+          }
+        />
+        <Route
+          path="assistant"
+          element={
+            <Page>
+              <AssistantPage />
+            </Page>
+          }
+        />
+        <Route
+          path="mcp-tools"
+          element={
+            <Page>
+              <McpPage />
+            </Page>
+          }
+        />
+        <Route
+          path="system"
+          element={
+            <Page>
+              <SystemPage />
+            </Page>
+          }
+        />
+        <Route
+          path="login"
+          element={
+            <Page>
+              <LoginPage />
+            </Page>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

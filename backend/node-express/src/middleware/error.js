@@ -26,8 +26,10 @@ export function errorHandler(err, req, res, _next) {
   } else if (err?.code === 11000) {
     status = 409;
     message = "A record with these values already exists";
-  } else if (["MongooseServerSelectionError", "MongoNetworkError", "MongoServerSelectionError"].includes(err?.name)
-    || /buffering timed out|before initial connection/i.test(err?.message ?? "")) {
+  } else if (
+    ["MongooseServerSelectionError", "MongoNetworkError", "MongoServerSelectionError"].includes(err?.name) ||
+    /buffering timed out|before initial connection/i.test(err?.message ?? "")
+  ) {
     status = 503;
     message = DB_DOWN;
   } else if (err?.type === "entity.parse.failed") {

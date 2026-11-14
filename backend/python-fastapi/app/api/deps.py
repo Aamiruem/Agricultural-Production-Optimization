@@ -1,4 +1,5 @@
 """Shared FastAPI dependencies: DB session, current user, role checks (RBAC)."""
+
 from typing import Annotated
 
 import jwt

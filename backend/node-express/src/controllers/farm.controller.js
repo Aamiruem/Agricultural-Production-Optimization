@@ -34,7 +34,13 @@ export async function listFarms(req, res) {
     ]),
   ]);
   const byFarm = new Map(counts.map((c) => [String(c._id), c]));
-  res.json(farms.map((f) => ({ ...f, fields: byFarm.get(String(f._id))?.fields ?? 0, areaHa: byFarm.get(String(f._id))?.areaHa ?? 0 })));
+  res.json(
+    farms.map((f) => ({
+      ...f,
+      fields: byFarm.get(String(f._id))?.fields ?? 0,
+      areaHa: byFarm.get(String(f._id))?.areaHa ?? 0,
+    })),
+  );
 }
 
 export async function createFarm(req, res) {
@@ -99,7 +105,9 @@ export async function farmSummary(req, res) {
 
   res.json({
     farm,
-    totals: stats.totals[0] ? { fields: stats.totals[0].fields, areaHa: stats.totals[0].areaHa } : { fields: 0, areaHa: 0 },
+    totals: stats.totals[0]
+      ? { fields: stats.totals[0].fields, areaHa: stats.totals[0].areaHa }
+      : { fields: 0, areaHa: 0 },
     byCrop: stats.byCrop.map((c) => ({ crop: c._id, fields: c.fields, areaHa: c.areaHa })),
     byStatus: Object.fromEntries(stats.byStatus.map((s) => [s._id, s.count])),
     recentActivities: recent,

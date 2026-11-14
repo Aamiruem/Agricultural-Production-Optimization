@@ -11,6 +11,7 @@
 Pure ASGI (no BaseHTTPMiddleware) so it adds no per-request task overhead and
 never buffers streaming responses (Server-Sent Events).
 """
+
 from __future__ import annotations
 
 import json
@@ -63,8 +64,12 @@ class Metrics:
             "peak_in_flight": self.peak_in_flight,
             "rejected_total": self.rejected,
             "status": dict(self.status),
-            "latency_ms": {"p50": self._pct(lat, 0.5), "p95": self._pct(lat, 0.95), "p99": self._pct(lat, 0.99),
-                           "samples": len(lat)},
+            "latency_ms": {
+                "p50": self._pct(lat, 0.5),
+                "p95": self._pct(lat, 0.95),
+                "p99": self._pct(lat, 0.99),
+                "samples": len(lat),
+            },
             "top_routes": [{"route": r, "count": c} for r, c in self.routes.most_common(12)],
         }
 
@@ -139,15 +144,22 @@ class LoadShedMiddleware:
             if template and path.startswith("/api/") and not template.startswith("/api"):
                 template = "/api" + template  # routers are included with prefix="/api"
             label = template or ("unmatched" if status_holder["code"] == 404 else path[:64])
-            m.record(f"{scope.get('method', 'GET')} {label}", status_holder["code"],
-                     (time.perf_counter() - start) * 1000)
+            m.record(
+                f"{scope.get('method', 'GET')} {label}", status_holder["code"], (time.perf_counter() - start) * 1000
+            )
 
     async def _reject(self, send) -> None:
         body = json.dumps({"detail": "Server is busy, please retry shortly.", "retry_after_s": int(self.retry_after)})
-        await send({"type": "http.response.start", "status": 503, "headers": [
-            (b"content-type", b"application/json"),
-            (b"retry-after", self.retry_after.encode()),
-            (b"x-served-by", INSTANCE_ID.encode()),
-            (b"cache-control", b"no-store"),
-        ]})
+        await send(
+            {
+                "type": "http.response.start",
+                "status": 503,
+                "headers": [
+                    (b"content-type", b"application/json"),
+                    (b"retry-after", self.retry_after.encode()),
+                    (b"x-served-by", INSTANCE_ID.encode()),
+                    (b"cache-control", b"no-store"),
+                ],
+            }
+        )
         await send({"type": "http.response.body", "body": body.encode()})

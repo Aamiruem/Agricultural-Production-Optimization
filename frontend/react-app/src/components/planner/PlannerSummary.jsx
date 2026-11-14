@@ -10,7 +10,10 @@ export function PlannerSummary() {
   const total = useSelector(selectTotalArea);
   const bySeason = useSelector(selectAreaBySeason);
   const counts = useSelector(selectStatusCounts);
-  const tiles = [{ label: "Total area", value: total }, ...SEASONS.map((s) => ({ label: s.label, value: bySeason[s.value] ?? 0 }))];
+  const tiles = [
+    { label: "Total area", value: total },
+    ...SEASONS.map((s) => ({ label: s.label, value: bySeason[s.value] ?? 0 })),
+  ];
 
   return (
     <section aria-label="Planner summary" className="mb-4">

@@ -4,6 +4,7 @@ Yield = Production / Area in tonnes per hectare for all crops except coconut
 (counted in nuts), which is excluded. Production is never used as a feature
 because yield is computed from it (target leakage).
 """
+
 from __future__ import annotations
 
 import numpy as np

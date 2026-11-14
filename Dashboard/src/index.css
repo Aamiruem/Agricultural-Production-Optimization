@@ -152,11 +152,19 @@
   white-space: nowrap;
   direction: ltr;
   -webkit-font-smoothing: antialiased;
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
   user-select: none;
 }
 .material-symbols-rounded.filled {
-  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }
 
 /* Recharts: tabular numbers on axes, no focus box around the SVG. */
@@ -169,12 +177,21 @@
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 .animate-pulse-dot {
   animation: pulse-dot 1.6s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-pulse-dot, .animate-spin, .animate-pulse { animation: none; }
+  .animate-pulse-dot,
+  .animate-spin,
+  .animate-pulse {
+    animation: none;
+  }
 }

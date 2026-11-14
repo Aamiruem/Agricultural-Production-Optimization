@@ -4,17 +4,51 @@ transformer model for higher accuracy.
 
     python -m AIML.nlp.sentiment "the new seeds gave very good yield"
 """
+
 from __future__ import annotations
 
 import sys
 
 from AIML.nlp.preprocess import tokenize
 
-POSITIVE = {"good": 1, "great": 2, "excellent": 2, "healthy": 1, "increase": 1, "increased": 1, "profit": 1,
-            "happy": 1, "best": 2, "improved": 1, "helpful": 1, "useful": 1, "fresh": 1, "green": 0.5, "accha": 1}
-NEGATIVE = {"bad": -1, "poor": -1, "loss": -2, "damage": -2, "damaged": -2, "disease": -1, "pest": -1, "dry": -1,
-            "dried": -1, "failed": -2, "fail": -2, "low": -1, "worst": -2, "expensive": -1, "late": -1,
-            "useless": -2, "drought": -2, "flood": -2, "kharab": -1}
+POSITIVE = {
+    "good": 1,
+    "great": 2,
+    "excellent": 2,
+    "healthy": 1,
+    "increase": 1,
+    "increased": 1,
+    "profit": 1,
+    "happy": 1,
+    "best": 2,
+    "improved": 1,
+    "helpful": 1,
+    "useful": 1,
+    "fresh": 1,
+    "green": 0.5,
+    "accha": 1,
+}
+NEGATIVE = {
+    "bad": -1,
+    "poor": -1,
+    "loss": -2,
+    "damage": -2,
+    "damaged": -2,
+    "disease": -1,
+    "pest": -1,
+    "dry": -1,
+    "dried": -1,
+    "failed": -2,
+    "fail": -2,
+    "low": -1,
+    "worst": -2,
+    "expensive": -1,
+    "late": -1,
+    "useless": -2,
+    "drought": -2,
+    "flood": -2,
+    "kharab": -1,
+}
 NEGATORS = {"not", "no", "never", "nahi", "na", "without"}
 INTENSIFIERS = {"very": 1.5, "extremely": 2.0, "bahut": 1.5, "really": 1.3, "slightly": 0.5}
 
@@ -26,7 +60,7 @@ def lexicon_sentiment(text: str) -> dict:
         value = POSITIVE.get(tok) or NEGATIVE.get(tok)
         if value is None:
             continue
-        window = tokens[max(0, i - 3):i]
+        window = tokens[max(0, i - 3) : i]
         if any(w in NEGATORS for w in window):
             value = -value * 0.8  # "not good" is negative, a bit weaker than "bad"
         for w in window:

@@ -1,4 +1,5 @@
 """Application settings, read from environment variables (and backend/.env)."""
+
 from functools import lru_cache
 from pathlib import Path
 
@@ -28,7 +29,9 @@ class Settings(BaseSettings):
     jwt_audience: str = "agrioptima"
     access_token_minutes: int = 60
 
-    cors_origins: str = "http://localhost:3000,http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:8080"
+    cors_origins: str = (
+        "http://localhost:3000,http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:8080"
+    )
 
     # Background jobs: Celery with Redis; without Redis tasks run inline (eager).
     redis_url: str | None = None

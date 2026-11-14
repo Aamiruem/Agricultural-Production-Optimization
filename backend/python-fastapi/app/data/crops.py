@@ -6,6 +6,7 @@ relative humidity in %; soil pH; rainfall in mm). They are used as the
 fallback recommender when no trained ML model is available, and as the
 nutrient targets for fertilizer recommendations.
 """
+
 from dataclasses import asdict, dataclass
 
 FEATURES = ("N", "P", "K", "temperature", "humidity", "ph", "rainfall")

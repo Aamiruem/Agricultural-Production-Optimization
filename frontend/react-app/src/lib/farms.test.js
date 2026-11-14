@@ -50,7 +50,11 @@ describe("farm intelligence", () => {
     expect(nearestState(12.97, 77.6)).toBe("Karnataka"); // Bengaluru
     expect(nearestState(26.9, 75.8)).toBe("Rajasthan"); // Jaipur
     expect(farmCoords({ state: "Kerala" })).toMatchObject({ precise: false });
-    expect(farmCoords({ state: "Kerala", point: { coordinates: [76.2, 10.5] } })).toMatchObject({ lat: 10.5, lon: 76.2, precise: true });
+    expect(farmCoords({ state: "Kerala", point: { coordinates: [76.2, 10.5] } })).toMatchObject({
+      lat: 10.5,
+      lon: 76.2,
+      precise: true,
+    });
   });
 });
 
@@ -58,15 +62,28 @@ describe("on-device farm store", () => {
   beforeEach(() => localFarms.clear());
 
   it("creates farms with location and rejects duplicate names", () => {
-    const farm = localFarms.createFarm({ name: "Green Acres", location: { state: "Punjab", district: "Ludhiana", lat: 30.9, lng: 75.85 } });
-    expect(farm.location).toMatchObject({ state: "Punjab", district: "Ludhiana", point: { coordinates: [75.85, 30.9] } });
+    const farm = localFarms.createFarm({
+      name: "Green Acres",
+      location: { state: "Punjab", district: "Ludhiana", lat: 30.9, lng: 75.85 },
+    });
+    expect(farm.location).toMatchObject({
+      state: "Punjab",
+      district: "Ludhiana",
+      point: { coordinates: [75.85, 30.9] },
+    });
     expect(() => localFarms.createFarm({ name: "green acres" })).toThrow(/already/);
     expect(localFarms.listFarms()).toHaveLength(1);
   });
 
   it("tracks fields, totals, activities and status like the server", () => {
     const farm = localFarms.createFarm({ name: "Plot A", location: { state: "Bihar" } });
-    const f1 = localFarms.createField(farm._id, { name: "North", crop: "Rice", season: "kharif", areaHa: 2, soil: { N: 30, P: 20, K: 20 } });
+    const f1 = localFarms.createField(farm._id, {
+      name: "North",
+      crop: "Rice",
+      season: "kharif",
+      areaHa: 2,
+      soil: { N: 30, P: 20, K: 20 },
+    });
     localFarms.createField(farm._id, { name: "South", crop: "maize", season: "kharif", areaHa: 1.5 });
     expect(f1.crop).toBe("rice");
     localFarms.logActivity(f1._id, { type: "sowing", notes: "IR-64" });
@@ -80,7 +97,13 @@ describe("on-device farm store", () => {
 
   it("computes a fertilizer plan from field soil and cascades deletes", () => {
     const farm = localFarms.createFarm({ name: "Plot B" });
-    const field = localFarms.createField(farm._id, { name: "East", crop: "rice", season: "kharif", areaHa: 2, soil: { N: 20, P: 20, K: 10 } });
+    const field = localFarms.createField(farm._id, {
+      name: "East",
+      crop: "rice",
+      season: "kharif",
+      areaHa: 2,
+      soil: { N: 20, P: 20, K: 10 },
+    });
     const plan = localFarms.fertilizerPlan(field._id);
     expect(plan.area_ha).toBe(2);
     expect(plan.doses.length).toBe(3);

@@ -18,14 +18,16 @@ def test_register_returns_token_and_first_user_is_admin(client):
 
 def test_duplicate_email_conflicts_case_insensitively(client):
     register(client, "Dup@Example.com")
-    res = client.post("/api/auth/register",
-                      json={"email": "dup@example.com", "password": "green123", "full_name": "Again"})
+    res = client.post(
+        "/api/auth/register", json={"email": "dup@example.com", "password": "green123", "full_name": "Again"}
+    )
     assert res.status_code == 409
 
 
 def test_weak_password_rejected(client):
-    res = client.post("/api/auth/register",
-                      json={"email": "w@example.com", "password": "12345678", "full_name": "Weak"})
+    res = client.post(
+        "/api/auth/register", json={"email": "w@example.com", "password": "12345678", "full_name": "Weak"}
+    )
     assert res.status_code == 422
 
 
@@ -39,21 +41,31 @@ def test_login_with_oauth2_password_form_and_me(client):
 
 def test_wrong_password_and_bad_tokens_are_401(client):
     register(client)
-    assert client.post("/api/auth/token", data={"username": "farmer@example.com", "password": "nope1234"}).status_code == 401
-    assert client.post("/api/auth/token", data={"username": "ghost@example.com", "password": "nope1234"}).status_code == 401
+    assert (
+        client.post("/api/auth/token", data={"username": "farmer@example.com", "password": "nope1234"}).status_code
+        == 401
+    )
+    assert (
+        client.post("/api/auth/token", data={"username": "ghost@example.com", "password": "nope1234"}).status_code
+        == 401
+    )
     assert client.get("/api/auth/me").status_code == 401
     assert client.get("/api/auth/me", headers={"Authorization": "Bearer not-a-jwt"}).status_code == 401
 
-    forged = jwt.encode({"sub": "1", "iss": "agrioptima-api", "aud": "agrioptima", "exp": 9999999999},
-                        "wrong-secret", algorithm="HS256")
+    forged = jwt.encode(
+        {"sub": "1", "iss": "agrioptima-api", "aud": "agrioptima", "exp": 9999999999}, "wrong-secret", algorithm="HS256"
+    )
     assert client.get("/api/auth/me", headers={"Authorization": f"Bearer {forged}"}).status_code == 401
 
 
 def test_rbac_admin_only_endpoints(client):
     admin = register(client, "admin@example.com")
     farmer = register(client, "farmer@example.com")
-    client.post("/api/recommend/crop", headers=auth_header(farmer),
-                json={"N": 85, "P": 45, "K": 40, "temperature": 23.5, "humidity": 82, "ph": 6.5, "rainfall": 230})
+    client.post(
+        "/api/recommend/crop",
+        headers=auth_header(farmer),
+        json={"N": 85, "P": 45, "K": 40, "temperature": 23.5, "humidity": 82, "ph": 6.5, "rainfall": 230},
+    )
 
     assert client.get("/api/admin/users", headers=auth_header(farmer)).status_code == 403
     res = client.get("/api/admin/users", headers=auth_header(admin))

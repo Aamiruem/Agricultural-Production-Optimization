@@ -33,7 +33,9 @@ export default function AssistantPage() {
       />
       {s && (
         <p className="small text-body-secondary d-flex flex-wrap align-items-center gap-2">
-          <Badge bg={s.llm_available ? "success" : "secondary"}>{s.llm_available ? `Claude · ${s.model}` : "Knowledge base only"}</Badge>
+          <Badge bg={s.llm_available ? "success" : "secondary"}>
+            {s.llm_available ? `Claude · ${s.model}` : "Knowledge base only"}
+          </Badge>
           {s.agent_runtime} agent · {s.documents} passages · {s.vector_store} vectors · {s.embedder}
           {!s.llm_available && <span>({s.llm_reason})</span>}
         </p>
@@ -42,9 +44,16 @@ export default function AssistantPage() {
         <Card.Body className="d-grid gap-3" style={{ minHeight: 320 }} aria-live="polite" aria-busy={busy}>
           {turns.length === 0 && (
             <div className="d-grid gap-2">
-              <p className="small text-body-secondary mb-1">Ask about crops, soil, fertilizers or irrigation. Try one of these:</p>
+              <p className="small text-body-secondary mb-1">
+                Ask about crops, soil, fertilizers or irrigation. Try one of these:
+              </p>
               {SUGGESTIONS.map((q) => (
-                <button key={q} type="button" className="btn btn-outline-secondary btn-sm text-start" onClick={() => send(q)}>
+                <button
+                  key={q}
+                  type="button"
+                  className="btn btn-outline-secondary btn-sm text-start"
+                  onClick={() => send(q)}
+                >
                   {q}
                 </button>
               ))}

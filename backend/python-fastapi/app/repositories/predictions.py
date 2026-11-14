@@ -1,4 +1,5 @@
 """Data access for predictions."""
+
 from collections.abc import Iterable
 
 from sqlalchemy import func, select
@@ -11,8 +12,12 @@ from app.schemas import CropRecommendation, SoilConditions
 def build(soil: SoilConditions, rec: CropRecommendation, *, user_id: int | None, source: str = "api") -> Prediction:
     best = rec.top[0]
     return Prediction(
-        user_id=user_id, **soil.model_dump(),
-        top_crop=best.crop, confidence=best.confidence, method=rec.method, source=source,
+        user_id=user_id,
+        **soil.model_dump(),
+        top_crop=best.crop,
+        confidence=best.confidence,
+        method=rec.method,
+        source=source,
     )
 
 

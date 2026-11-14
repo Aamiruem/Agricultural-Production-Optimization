@@ -4,7 +4,16 @@ import { Link } from "react-router";
 import { MIcon } from "@/components/common/MIcon";
 import { PageHeader } from "@/components/common/PageHeader";
 import {
-  CROP_SEASONS, FARMING_SYSTEMS, FORMULAS, GLOSSARY, ML_APPLICATIONS, ML_STATUS, NUTRIENTS, PIPELINE, PRACTICES, YIELD_FACTORS,
+  CROP_SEASONS,
+  FARMING_SYSTEMS,
+  FORMULAS,
+  GLOSSARY,
+  ML_APPLICATIONS,
+  ML_STATUS,
+  NUTRIENTS,
+  PIPELINE,
+  PRACTICES,
+  YIELD_FACTORS,
 } from "@/data/agronomy";
 import { seasonInfo } from "@/data/indiaAgri";
 import { useT } from "@/i18n/useT";
@@ -27,7 +36,9 @@ function Section({ id, hi, children }) {
   const meta = SECTIONS.find((s) => s.id === id);
   return (
     <section id={id} className="kb-section" aria-labelledby={`${id}-title`}>
-      <h2 id={`${id}-title`}><MIcon name={meta.icon} size={24} fill /> {hi ? meta.hi : meta.en}</h2>
+      <h2 id={`${id}-title`}>
+        <MIcon name={meta.icon} size={24} fill /> {hi ? meta.hi : meta.en}
+      </h2>
       {children}
     </section>
   );
@@ -43,10 +54,18 @@ function Calculator({ formula }) {
       {formula.inputs.map((i) => (
         <label key={i.key} className="field-label">
           <span>{i.label}</span>
-          <input type="number" min="0" step={i.step ?? "any"} value={values[i.key]} onChange={(e) => setValues((v) => ({ ...v, [i.key]: e.target.value }))} />
+          <input
+            type="number"
+            min="0"
+            step={i.step ?? "any"}
+            value={values[i.key]}
+            onChange={(e) => setValues((v) => ({ ...v, [i.key]: e.target.value }))}
+          />
         </label>
       ))}
-      <p className="kb-result" aria-live="polite">{result == null ? "—" : `${result.toLocaleString("en-IN")} ${formula.unit}`}</p>
+      <p className="kb-result" aria-live="polite">
+        {result == null ? "—" : `${result.toLocaleString("en-IN")} ${formula.unit}`}
+      </p>
     </div>
   );
 }
@@ -60,11 +79,19 @@ export default function KnowledgePage() {
     <>
       <PageHeader page="learn" icon="menu_book" color={G.green} />
       <nav className="kb-toc" aria-label={hi ? "इस पृष्ठ पर" : "On this page"}>
-        {SECTIONS.map((s) => <a key={s.id} href={`#${s.id}`} className="chip"><MIcon name={s.icon} size={18} /> {hi ? s.hi : s.en}</a>)}
+        {SECTIONS.map((s) => (
+          <a key={s.id} href={`#${s.id}`} className="chip">
+            <MIcon name={s.icon} size={18} /> {hi ? s.hi : s.en}
+          </a>
+        ))}
       </nav>
 
       <Section id="pipeline" hi={hi}>
-        <p className="muted">{hi ? "यह परियोजना कच्चे डेटा से किसान की सलाह तक कैसे पहुँचती है।" : "How this project goes from raw data to advice a farmer can act on."}</p>
+        <p className="muted">
+          {hi
+            ? "यह परियोजना कच्चे डेटा से किसान की सलाह तक कैसे पहुँचती है।"
+            : "How this project goes from raw data to advice a farmer can act on."}
+        </p>
         <ol className="kb-pipeline">
           {PIPELINE.map((p, i) => (
             <li key={p.title}>
@@ -72,7 +99,13 @@ export default function KnowledgePage() {
               <MIcon name={p.icon} size={26} fill className="kb-step-icon" />
               <b>{hi ? p.hi : p.title}</b>
               <small>{p.text}</small>
-              {p.link ? <Link to={p.link.to} className="text-link">{p.link.label} →</Link> : <code>{p.code}</code>}
+              {p.link ? (
+                <Link to={p.link.to} className="text-link">
+                  {p.link.label} →
+                </Link>
+              ) : (
+                <code>{p.code}</code>
+              )}
             </li>
           ))}
         </ol>
@@ -82,11 +115,21 @@ export default function KnowledgePage() {
         <dl className="kb-glossary">
           {GLOSSARY.map((g) => (
             <div key={g.term}>
-              <dt>{g.term} <span className="muted">· {g.hi}</span></dt>
+              <dt>
+                {g.term} <span className="muted">· {g.hi}</span>
+              </dt>
               <dd>
                 {g.text}
-                {g.example && <small>{hi ? "उदाहरण" : "Example"}: {g.example}</small>}
-                {g.link && <Link to={g.link} className="text-link">{hi ? "उपकरण खोलें" : "Open tool"} →</Link>}
+                {g.example && (
+                  <small>
+                    {hi ? "उदाहरण" : "Example"}: {g.example}
+                  </small>
+                )}
+                {g.link && (
+                  <Link to={g.link} className="text-link">
+                    {hi ? "उपकरण खोलें" : "Open tool"} →
+                  </Link>
+                )}
               </dd>
             </div>
           ))}
@@ -96,10 +139,24 @@ export default function KnowledgePage() {
       <Section id="systems" hi={hi}>
         <div className="table-responsive">
           <table className="table data-table">
-            <thead><tr><th scope="col">{hi ? "प्रणाली" : "System"}</th><th scope="col">{hi ? "मुख्य विशेषता" : "Key feature"}</th><th scope="col">{hi ? "भारत में उदाहरण" : "Example in India"}</th></tr></thead>
+            <thead>
+              <tr>
+                <th scope="col">{hi ? "प्रणाली" : "System"}</th>
+                <th scope="col">{hi ? "मुख्य विशेषता" : "Key feature"}</th>
+                <th scope="col">{hi ? "भारत में उदाहरण" : "Example in India"}</th>
+              </tr>
+            </thead>
             <tbody>
               {FARMING_SYSTEMS.map((s) => (
-                <tr key={s.name}><th scope="row">{s.name}<br /><small className="muted">{s.hi}</small></th><td>{s.feature}</td><td>{s.example}</td></tr>
+                <tr key={s.name}>
+                  <th scope="row">
+                    {s.name}
+                    <br />
+                    <small className="muted">{s.hi}</small>
+                  </th>
+                  <td>{s.feature}</td>
+                  <td>{s.example}</td>
+                </tr>
               ))}
             </tbody>
           </table>
@@ -114,16 +171,28 @@ export default function KnowledgePage() {
               <article key={s.season} className="kb-season" style={{ "--c": info.color }}>
                 <img src={s.image} alt={`${s.season} season fields`} loading="lazy" width="640" height="320" />
                 <div className="kb-season-body">
-                  <h3>{s.season} <span className="muted">· {info.hi}</span></h3>
+                  <h3>
+                    {s.season} <span className="muted">· {info.hi}</span>
+                  </h3>
                   <p className="muted">{s.note}</p>
                   <dl className="crop-facts">
-                    <div><dt>{hi ? "बुवाई" : "Sowing"}</dt><dd>{s.sowing}</dd></div>
-                    <div><dt>{hi ? "कटाई" : "Harvest"}</dt><dd>{s.harvest}</dd></div>
+                    <div>
+                      <dt>{hi ? "बुवाई" : "Sowing"}</dt>
+                      <dd>{s.sowing}</dd>
+                    </div>
+                    <div>
+                      <dt>{hi ? "कटाई" : "Harvest"}</dt>
+                      <dd>{s.harvest}</dd>
+                    </div>
                   </dl>
                   <ul className="kb-crop-row">
                     {s.crops.map((c) => (
                       <li key={c}>
-                        {cropImage(c) ? <img src={cropImage(c)} alt="" width="56" height="56" loading="lazy" /> : <MIcon name="eco" size={28} fill />}
+                        {cropImage(c) ? (
+                          <img src={cropImage(c)} alt="" width="56" height="56" loading="lazy" />
+                        ) : (
+                          <MIcon name="eco" size={28} fill />
+                        )}
                         <span>{c}</span>
                       </li>
                     ))}
@@ -133,35 +202,59 @@ export default function KnowledgePage() {
             );
           })}
         </div>
-        <p className="disclaimer">{hi ? "समय क्षेत्र और स्थानीय जलवायु के अनुसार बदलता है।" : "Periods vary by region and local climate."}</p>
+        <p className="disclaimer">
+          {hi ? "समय क्षेत्र और स्थानीय जलवायु के अनुसार बदलता है।" : "Periods vary by region and local climate."}
+        </p>
       </Section>
 
       <Section id="nutrients" hi={hi}>
-        <p className="muted">{hi ? "NPK = नाइट्रोजन + फॉस्फोरस + पोटैशियम" : "NPK = Nitrogen + Phosphorus + Potassium — the primary nutrients."}</p>
+        <p className="muted">
+          {hi
+            ? "NPK = नाइट्रोजन + फॉस्फोरस + पोटैशियम"
+            : "NPK = Nitrogen + Phosphorus + Potassium — the primary nutrients."}
+        </p>
         <div className="kb-nutrients">
           {NUTRIENTS.map((n) => (
             <article key={n.symbol} className="kb-nutrient">
               <span className={`kb-symbol is-${n.group.toLowerCase()}`}>{n.symbol}</span>
               <div>
-                <h3>{n.name} <span className="muted">· {n.hi}</span></h3>
+                <h3>
+                  {n.name} <span className="muted">· {n.hi}</span>
+                </h3>
                 <small className="muted">{n.group}</small>
                 <p>{n.role}</p>
-                <p><b>{hi ? "कमी के लक्षण:" : "Deficiency:"}</b> {n.deficiency}</p>
-                <p><b>{hi ? "स्रोत:" : "Sources:"}</b> {n.sources}</p>
+                <p>
+                  <b>{hi ? "कमी के लक्षण:" : "Deficiency:"}</b> {n.deficiency}
+                </p>
+                <p>
+                  <b>{hi ? "स्रोत:" : "Sources:"}</b> {n.sources}
+                </p>
               </div>
             </article>
           ))}
         </div>
-        <Link to="/soil-analysis" className="btn btn-tonal btn-sm"><MIcon name="science" size={18} /> {hi ? "मृदा स्वास्थ्य जाँचें" : "Check your soil health"}</Link>
+        <Link to="/soil-analysis" className="btn btn-tonal btn-sm">
+          <MIcon name="science" size={18} /> {hi ? "मृदा स्वास्थ्य जाँचें" : "Check your soil health"}
+        </Link>
       </Section>
 
       <Section id="factors" hi={hi}>
         <div className="kb-factors">
           {YIELD_FACTORS.map((f) => (
             <article key={f.group} className="kb-factor">
-              <h3><MIcon name={f.icon} size={22} fill /> {f.group}</h3>
-              <ul>{f.items.map((i) => <li key={i}>{i}</li>)}</ul>
-              {f.link && <Link to={f.link} className="text-link">{hi ? "संबंधित उपकरण" : "Related tool"} →</Link>}
+              <h3>
+                <MIcon name={f.icon} size={22} fill /> {f.group}
+              </h3>
+              <ul>
+                {f.items.map((i) => (
+                  <li key={i}>{i}</li>
+                ))}
+              </ul>
+              {f.link && (
+                <Link to={f.link} className="text-link">
+                  {hi ? "संबंधित उपकरण" : "Related tool"} →
+                </Link>
+              )}
             </article>
           ))}
         </div>
@@ -173,7 +266,11 @@ export default function KnowledgePage() {
             <li key={p.step}>
               <b>{p.step}</b>
               <span>{p.tip}</span>
-              {p.link && <Link to={p.link} className="text-link">{hi ? "उपकरण" : "Tool"} →</Link>}
+              {p.link && (
+                <Link to={p.link} className="text-link">
+                  {hi ? "उपकरण" : "Tool"} →
+                </Link>
+              )}
             </li>
           ))}
         </ol>
@@ -181,7 +278,11 @@ export default function KnowledgePage() {
 
       <Section id="formulas" hi={hi}>
         <p className="muted">{hi ? "मान बदलें — परिणाम तुरंत दिखेगा।" : "Change the values — results update instantly."}</p>
-        <div className="kb-calcs">{FORMULAS.map((f) => <Calculator key={f.id} formula={f} />)}</div>
+        <div className="kb-calcs">
+          {FORMULAS.map((f) => (
+            <Calculator key={f.id} formula={f} />
+          ))}
+        </div>
       </Section>
 
       <Section id="ai" hi={hi}>
@@ -201,7 +302,9 @@ export default function KnowledgePage() {
                   <tr key={a.task}>
                     <th scope="row">{a.link ? <Link to={a.link}>{a.task}</Link> : a.task}</th>
                     <td>{a.methods}</td>
-                    <td><span className={`ml-status is-${status.tone}`}>{hi ? status.hi : status.label}</span> {a.here}</td>
+                    <td>
+                      <span className={`ml-status is-${status.tone}`}>{hi ? status.hi : status.label}</span> {a.here}
+                    </td>
                   </tr>
                 );
               })}

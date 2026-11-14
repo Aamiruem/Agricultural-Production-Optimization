@@ -8,6 +8,7 @@
 * Search: hybrid score = 0.75 × vector cosine + 0.25 × keyword overlap,
   which reranks results so exact agronomy terms (e.g. "DAP") are not missed.
 """
+
 import logging
 import re
 import threading
@@ -147,10 +148,13 @@ class QdrantVectorStore:
         self._client.create_collection(
             self._collection, vectors_config=VectorParams(size=vectors.shape[1], distance=Distance.COSINE)
         )
-        self._client.upsert(self._collection, points=[
-            PointStruct(id=i, vector=v.tolist(), payload=c.__dict__)
-            for i, (c, v) in enumerate(zip(chunks, vectors))
-        ])
+        self._client.upsert(
+            self._collection,
+            points=[
+                PointStruct(id=i, vector=v.tolist(), payload=c.__dict__)
+                for i, (c, v) in enumerate(zip(chunks, vectors))
+            ],
+        )
 
     def search(self, vector: np.ndarray, limit: int) -> list[tuple[Chunk, float]]:
         res = self._client.query_points(self._collection, query=vector.tolist(), limit=limit)
@@ -199,6 +203,7 @@ def get_knowledge_base() -> KnowledgeBase:
                 except Exception as exc:
                     logger.warning("Qdrant unavailable (%s); using in-memory vector store", exc)
             _kb = KnowledgeBase(load_chunks(), make_embedder(s.embeddings), store)
-            logger.info("Knowledge base: %d chunks, embedder=%s, store=%s",
-                        len(_kb.chunks), _kb.embedder.name, _kb.store.name)
+            logger.info(
+                "Knowledge base: %d chunks, embedder=%s, store=%s", len(_kb.chunks), _kb.embedder.name, _kb.store.name
+            )
         return _kb

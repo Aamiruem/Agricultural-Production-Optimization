@@ -26,7 +26,9 @@ export async function callAgriApi(path, body, { retries = 2, timeoutMs = 5000 } 
     }
     if (RETRYABLE.has(res.status) && attempt < retries) {
       const retryAfter = Number(res.headers.get("retry-after"));
-      await sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 2000) : 150 * 2 ** attempt);
+      await sleep(
+        Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter * 1000, 2000) : 150 * 2 ** attempt,
+      );
       continue;
     }
     return res;

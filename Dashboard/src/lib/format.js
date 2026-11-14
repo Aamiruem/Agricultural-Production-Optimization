@@ -35,7 +35,9 @@ export function fmtDuration(seconds) {
 }
 
 export function titleCase(text = "") {
-  return String(text).replace(/[_-]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  return String(text)
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /** Signed probability-point change, e.g. +12.4 pts. */
@@ -54,4 +56,12 @@ export const FEATURE_LABELS = {
   rainfall: "Rainfall",
 };
 
-export const FEATURE_UNITS = { N: "kg/ha", P: "kg/ha", K: "kg/ha", temperature: "°C", humidity: "%", ph: "", rainfall: "mm" };
+export const FEATURE_UNITS = {
+  N: "kg/ha",
+  P: "kg/ha",
+  K: "kg/ha",
+  temperature: "°C",
+  humidity: "%",
+  ph: "",
+  rainfall: "mm",
+};

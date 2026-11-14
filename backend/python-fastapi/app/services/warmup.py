@@ -6,6 +6,7 @@ means the first real user request doesn't pay that cost, while the worker still
 answers health checks immediately (so the load balancer isn't kept waiting).
 Each step is independent and best-effort: a failure is recorded, never raised.
 """
+
 from __future__ import annotations
 
 import logging
@@ -30,7 +31,9 @@ def _explainer():
         return False
     from AIML.advanced_ml.attribution import explain_crop
 
-    explain_crop(bundle, {"N": 90, "P": 42, "K": 43, "temperature": 20.8, "humidity": 82, "ph": 6.5, "rainfall": 202}, top=1)
+    explain_crop(
+        bundle, {"N": 90, "P": 42, "K": 43, "temperature": 20.8, "humidity": 82, "ph": 6.5, "rainfall": 202}, top=1
+    )
     return True
 
 

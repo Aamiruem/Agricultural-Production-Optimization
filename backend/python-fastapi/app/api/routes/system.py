@@ -8,6 +8,7 @@
 Behind the gateway each call can land on a different replica/worker; responses
 carry ``instance`` (and the ``X-Served-By`` header) so the load balancing is visible.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -37,11 +38,23 @@ async def _probe(client: httpx.AsyncClient, name: str, url: str) -> dict:
         latency = round((time.perf_counter() - start) * 1000, 1)
         body = res.json() if res.headers.get("content-type", "").startswith("application/json") else {}
         state = "ok" if res.status_code == 200 and body.get("status", "ok") == "ok" else "degraded"
-        return {"name": name, "url": url, "status": state, "http_status": res.status_code, "latency_ms": latency,
-                "details": body}
+        return {
+            "name": name,
+            "url": url,
+            "status": state,
+            "http_status": res.status_code,
+            "latency_ms": latency,
+            "details": body,
+        }
     except (httpx.HTTPError, ValueError) as exc:
-        return {"name": name, "url": url, "status": "down", "http_status": None,
-                "latency_ms": round((time.perf_counter() - start) * 1000, 1), "error": type(exc).__name__}
+        return {
+            "name": name,
+            "url": url,
+            "status": "down",
+            "http_status": None,
+            "latency_ms": round((time.perf_counter() - start) * 1000, 1),
+            "error": type(exc).__name__,
+        }
 
 
 def _assistant() -> dict:
@@ -88,11 +101,17 @@ async def system_status(db: DbSession):
             _probe(client, "farm-service", f"{s.farm_service_url.rstrip('/')}/health"),
             _probe(client, "mcp", f"{s.mcp_url.rstrip('/')}/health"),
         )
-    api = {"name": "api", "status": "ok" if database == "ok" else "degraded", "instance": INSTANCE_ID,
-           "latency_ms": 0.0, "details": {"database": database}}
+    api = {
+        "name": "api",
+        "status": "ok" if database == "ok" else "degraded",
+        "instance": INSTANCE_ID,
+        "latency_ms": 0.0,
+        "details": {"database": database},
+    }
     services = [api, farm, mcp]
-    overall = "ok" if all(x["status"] == "ok" for x in services) else (
-        "degraded" if api["status"] != "down" else "down")
+    overall = (
+        "ok" if all(x["status"] == "ok" for x in services) else ("degraded" if api["status"] != "down" else "down")
+    )
     return {
         "status": overall,
         "checked_at": time.time(),

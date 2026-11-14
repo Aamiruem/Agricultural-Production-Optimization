@@ -12,6 +12,7 @@ Unlike ``AIML.advanced_ml.explain`` (global importance + plots, offline), this
 module has no plotting dependency and imports SHAP lazily, so it is safe to call
 from a web request.
 """
+
 from __future__ import annotations
 
 import threading
@@ -67,7 +68,11 @@ def _tree_explainer(estimator):
 def _shap_matrix(model, row: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     """SHAP values as (n_features, n_classes) plus the per-class base value."""
     estimator, pre = _final_estimator(model)
-    if not hasattr(estimator, "estimators_") and not hasattr(estimator, "get_booster") and not hasattr(estimator, "booster_"):
+    if (
+        not hasattr(estimator, "estimators_")
+        and not hasattr(estimator, "get_booster")
+        and not hasattr(estimator, "booster_")
+    ):
         raise TypeError("not a tree model")
     x = pre.transform(row) if pre is not None else row
     explainer = _tree_explainer(estimator)
@@ -114,10 +119,12 @@ def explain_crop(bundle: dict, soil: dict, top: int = 3) -> dict:
             for fi, f in enumerate(features)
         ]
         contribs.sort(key=lambda c: -abs(c["contribution"]))
-        explanations.append({
-            "crop": names[ci],
-            "probability": round(float(probs[ci]), 4),
-            "base_value": round(float(base[ci] if ci < len(base) else base[0]), 5),
-            "contributions": contribs,
-        })
+        explanations.append(
+            {
+                "crop": names[ci],
+                "probability": round(float(probs[ci]), 4),
+                "base_value": round(float(base[ci] if ci < len(base) else base[0]), 5),
+                "contributions": contribs,
+            }
+        )
     return {"method": method, "model": bundle.get("name", type(model).__name__), "explanations": explanations}

@@ -1,4 +1,5 @@
 """Password hashing (Argon2) and JWT access tokens."""
+
 from datetime import datetime, timedelta, timezone
 
 import jwt

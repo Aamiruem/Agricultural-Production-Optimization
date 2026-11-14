@@ -1,6 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-const user = { id: 1, email: "ravi@example.com", full_name: "Ravi Kumar", role: "farmer", created_at: "2026-11-13T00:00:00Z" };
+const user = {
+  id: 1,
+  email: "ravi@example.com",
+  full_name: "Ravi Kumar",
+  role: "farmer",
+  created_at: "2026-11-13T00:00:00Z",
+};
 
 test("home page links to every tool and the theme toggle remembers dark mode", async ({ page }) => {
   await page.goto("/");
@@ -71,7 +77,13 @@ test("protected farms page: sign in, then see farms from the Node service", asyn
   await page.route("**/farm-api/farms/f1/**", (route) =>
     route.fulfill({
       json: route.request().url().endsWith("/summary")
-        ? { farm: { _id: "f1", name: "Green Acres" }, totals: { fields: 0, areaHa: 0 }, byCrop: [], byStatus: {}, recentActivities: [] }
+        ? {
+            farm: { _id: "f1", name: "Green Acres" },
+            totals: { fields: 0, areaHa: 0 },
+            byCrop: [],
+            byStatus: {},
+            recentActivities: [],
+          }
         : [],
     }),
   );
@@ -89,7 +101,17 @@ test("protected farms page: sign in, then see farms from the Node service", asyn
 
 test("assistant streams tokens, tool steps and sources", async ({ page }) => {
   await page.route("**/api/assistant/status", (route) =>
-    route.fulfill({ json: { llm_available: true, llm_reason: "ok", model: "claude-opus-5-5", agent_runtime: "langgraph", vector_store: "qdrant", embedder: "tfidf", documents: 24 } }),
+    route.fulfill({
+      json: {
+        llm_available: true,
+        llm_reason: "ok",
+        model: "claude-opus-5-5",
+        agent_runtime: "langgraph",
+        vector_store: "qdrant",
+        embedder: "tfidf",
+        documents: 24,
+      },
+    }),
   );
   await page.route("**/api/assistant/chat", (route) => {
     const events = [

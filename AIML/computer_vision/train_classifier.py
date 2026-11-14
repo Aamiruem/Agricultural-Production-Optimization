@@ -11,6 +11,7 @@ Get it from https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset
 
     python -m AIML.computer_vision.train_classifier --data data/plantvillage --arch resnet18 --epochs 5
 """
+
 from __future__ import annotations
 
 import argparse
@@ -48,9 +49,15 @@ def loaders(data_dir: Path, batch: int = 32):
     from torchvision import datasets, transforms
 
     norm = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    train_tf = transforms.Compose([  # data augmentation
-        transforms.RandomResizedCrop(224, scale=(0.7, 1.0)), transforms.RandomHorizontalFlip(),
-        transforms.ColorJitter(0.2, 0.2, 0.2), transforms.ToTensor(), norm])
+    train_tf = transforms.Compose(
+        [  # data augmentation
+            transforms.RandomResizedCrop(224, scale=(0.7, 1.0)),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(0.2, 0.2, 0.2),
+            transforms.ToTensor(),
+            norm,
+        ]
+    )
     eval_tf = transforms.Compose([transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor(), norm])
     train = datasets.ImageFolder(data_dir / "train", train_tf)
     val = datasets.ImageFolder(data_dir / "val", eval_tf)

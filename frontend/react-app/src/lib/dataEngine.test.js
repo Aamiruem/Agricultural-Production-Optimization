@@ -4,8 +4,20 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import {
-  applyFilters, buildDataset, correlationMatrix, countDuplicates, detectRoles, generateInsights, groupBy, histogram,
-  parseText, pearson, profileColumns, timeSeries, toNumber, trendOf,
+  applyFilters,
+  buildDataset,
+  correlationMatrix,
+  countDuplicates,
+  detectRoles,
+  generateInsights,
+  groupBy,
+  histogram,
+  parseText,
+  pearson,
+  profileColumns,
+  timeSeries,
+  toNumber,
+  trendOf,
 } from "./dataEngine";
 
 // Tests run from the react-app root (vitest cwd).
@@ -27,13 +39,17 @@ describe("parsing & typing", () => {
   });
 
   it("handles quotes, semicolons, BOM and duplicate headers", () => {
-    const { columns, rows } = parseText("\uFEFFCrop;Area;Area\n\"Rice, basmati\";1,5;2\nWheat;3;4\n");
+    const { columns, rows } = parseText('\uFEFFCrop;Area;Area\n"Rice, basmati";1,5;2\nWheat;3;4\n');
     expect(columns).toEqual(["Crop", "Area", "Area (2)"]);
     expect(rows[0].Crop).toBe("Rice, basmati");
   });
 
   it("detects year, date, numeric and category columns", () => {
-    const p = profileColumns(["Year", "Day", "Rain", "Crop"], parseText("Year,Day,Rain,Crop\n2019,2019-06-01,12,Rice\n2020,2019-06-02,0,Wheat\n2021,2019-06-03,5.5,Rice\n").rows);
+    const p = profileColumns(
+      ["Year", "Day", "Rain", "Crop"],
+      parseText("Year,Day,Rain,Crop\n2019,2019-06-01,12,Rice\n2020,2019-06-02,0,Wheat\n2021,2019-06-03,5.5,Rice\n")
+        .rows,
+    );
     expect(p.map((x) => x.type)).toEqual(["year", "date", "numeric", "category"]);
   });
 });
@@ -42,14 +58,30 @@ describe("crop-yield sample (state records)", () => {
   const { ds, profiles, roles } = load(sample("india-crop-yield-sample.csv"));
 
   it("maps agricultural roles", () => {
-    expect(roles).toMatchObject({ crop: "Crop", state: "State", season: "Season", year: "Crop_Year", area: "Area", production: "Production", yield: "Yield", rainfall: "Annual_Rainfall", fertilizer: "Fertilizer", pesticide: "Pesticide" });
+    expect(roles).toMatchObject({
+      crop: "Crop",
+      state: "State",
+      season: "Season",
+      year: "Crop_Year",
+      area: "Area",
+      production: "Production",
+      yield: "Yield",
+      rainfall: "Annual_Rainfall",
+      fertilizer: "Fertilizer",
+      pesticide: "Pesticide",
+    });
     expect(ds.records.length).toBeGreaterThan(3000);
   });
 
   it("aggregates production as a sum and yield area-weighted", () => {
     const byCrop = groupBy(ds.records, roles.crop, roles.production, ds.roles);
     expect(byCrop.mode).toBe("sum");
-    const wheat = groupBy(ds.records.filter((r) => r.Crop === "Wheat"), roles.state, roles.yield, ds.roles);
+    const wheat = groupBy(
+      ds.records.filter((r) => r.Crop === "Wheat"),
+      roles.state,
+      roles.yield,
+      ds.roles,
+    );
     expect(wheat.mode).toBe("weighted");
     const punjab = wheat.data.find((d) => d.key === "Punjab");
     if (punjab) expect(punjab.value).toBeGreaterThan(3.5); // Punjab wheat ≈ 4.5 t/ha
@@ -70,7 +102,16 @@ describe("crop-yield sample (state records)", () => {
 describe("soil-nutrient sample (crop recommendation data)", () => {
   const { ds, roles, profiles } = load(sample("soil-nutrients-crop.csv"));
   it("finds N-P-K, climate and the crop label", () => {
-    expect(roles).toMatchObject({ nitrogen: "N", phosphorus: "P", potassium: "K", temperature: "temperature", humidity: "humidity", ph: "ph", rainfall: "rainfall", crop: "label" });
+    expect(roles).toMatchObject({
+      nitrogen: "N",
+      phosphorus: "P",
+      potassium: "K",
+      temperature: "temperature",
+      humidity: "humidity",
+      ph: "ph",
+      rainfall: "rainfall",
+      crop: "label",
+    });
     const ins = generateInsights(ds, ds.records, profiles, roles.rainfall);
     expect(ins.some((i) => i.kind === "soil")).toBe(true);
   });
@@ -100,7 +141,12 @@ describe("derived yield, stats and quality", () => {
     const { ds } = load("District,Crop,Area_ha,Production_t\nA,Rice,2,8\nB,Rice,1,3\nC,Wheat,4,12\n");
     expect(ds.derived).toEqual(["yield"]);
     expect(ds.records[0]["Yield (derived)"]).toBe(4);
-    const rice = groupBy(ds.records.filter((r) => r.Crop === "Rice"), "Crop", ds.roles.yield, ds.roles).data[0];
+    const rice = groupBy(
+      ds.records.filter((r) => r.Crop === "Rice"),
+      "Crop",
+      ds.roles.yield,
+      ds.roles,
+    ).data[0];
     expect(rice.value).toBeCloseTo(11 / 3, 5); // area-weighted, not the mean of 4 and 3
   });
 
@@ -114,7 +160,15 @@ describe("derived yield, stats and quality", () => {
 });
 
 describe("trend method", () => {
-  const series = (unit, values, start = 2010) => ({ unit, mode: "sum", data: values.map((v, i) => ({ key: unit === "year" ? start + i : `${start + Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`, value: v, count: 1 })) });
+  const series = (unit, values, start = 2010) => ({
+    unit,
+    mode: "sum",
+    data: values.map((v, i) => ({
+      key: unit === "year" ? start + i : `${start + Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`,
+      value: v,
+      count: 1,
+    })),
+  });
 
   it("fits a steady growth rate across all years, not just the endpoints", () => {
     const t = trendOf(series("year", [100, 110, 121, 133.1, 146.41]));
@@ -143,7 +197,10 @@ describe("trend method", () => {
   });
 
   it("flags uneven row coverage for summed metrics", () => {
-    const s2 = series("year", [10, 20, 30]); s2.data[0].count = 1; s2.data[1].count = 5; s2.data[2].count = 2;
+    const s2 = series("year", [10, 20, 30]);
+    s2.data[0].count = 1;
+    s2.data[1].count = 5;
+    s2.data[2].count = 2;
     expect(trendOf(s2).uneven).toBe(true);
   });
 });

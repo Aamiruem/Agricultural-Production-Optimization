@@ -44,7 +44,10 @@ export function LiveWhatIf() {
           Live what-if
           <Badge bg={offline ? "info" : "success"}>{offline ? "Browser model" : "Live"}</Badge>
         </Card.Title>
-        <p className="small text-body-secondary">Move a slider and the ranking updates instantly (WebSocket to the server model, or the in-browser model when offline).</p>
+        <p className="small text-body-secondary">
+          Move a slider and the ranking updates instantly (WebSocket to the server model, or the in-browser model when
+          offline).
+        </p>
         <Row className="g-4">
           <Col md={8}>
             <Row xs={1} sm={2} className="g-3">
@@ -52,10 +55,19 @@ export function LiveWhatIf() {
                 <Col key={s.key}>
                   <Form.Label htmlFor={`wi-${s.key}`} className="d-flex justify-content-between small mb-0">
                     <span>{s.label}</span>
-                    <span className="tabular text-body-secondary">{soil[s.key]}{s.unit}</span>
+                    <span className="tabular text-body-secondary">
+                      {soil[s.key]}
+                      {s.unit}
+                    </span>
                   </Form.Label>
-                  <Form.Range id={`wi-${s.key}`} min={s.min} max={s.max} step={s.step} value={soil[s.key]}
-                              onChange={(e) => update(s.key, Number(e.target.value))} />
+                  <Form.Range
+                    id={`wi-${s.key}`}
+                    min={s.min}
+                    max={s.max}
+                    step={s.step}
+                    value={soil[s.key]}
+                    onChange={(e) => update(s.key, Number(e.target.value))}
+                  />
                 </Col>
               ))}
             </Row>
@@ -64,7 +76,10 @@ export function LiveWhatIf() {
             <ol className="list-unstyled d-grid gap-2 mb-0" aria-label="Live ranking" aria-live="polite">
               {result?.top.map((t, i) => (
                 <li key={t.crop} className="d-flex justify-content-between border rounded px-3 py-2 small">
-                  <span><span className="text-body-secondary">#{i + 1} </span>{formatCropName(t.crop)}</span>
+                  <span>
+                    <span className="text-body-secondary">#{i + 1} </span>
+                    {formatCropName(t.crop)}
+                  </span>
                   <span className="tabular">{formatPercent(t.confidence)}</span>
                 </li>
               ))}

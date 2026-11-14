@@ -11,10 +11,28 @@ export function currentSeason(month = new Date().getMonth()) {
 
 // ML model crop ids → India catalogue ids.
 const ML_TO_CATALOGUE = {
-  rice: "rice", maize: "maize", chickpea: "chickpea", kidneybeans: "rajma", pigeonpeas: "arhar", mothbeans: "moth",
-  mungbean: "moong", blackgram: "urad", lentil: "masoor", pomegranate: "pomegranate", banana: "banana", mango: "mango",
-  grapes: "grapes", watermelon: "watermelon", muskmelon: "muskmelon", apple: "apple", orange: "citrus", papaya: "papaya",
-  coconut: "coconut", cotton: "cotton", jute: "jute", coffee: "coffee",
+  rice: "rice",
+  maize: "maize",
+  chickpea: "chickpea",
+  kidneybeans: "rajma",
+  pigeonpeas: "arhar",
+  mothbeans: "moth",
+  mungbean: "moong",
+  blackgram: "urad",
+  lentil: "masoor",
+  pomegranate: "pomegranate",
+  banana: "banana",
+  mango: "mango",
+  grapes: "grapes",
+  watermelon: "watermelon",
+  muskmelon: "muskmelon",
+  apple: "apple",
+  orange: "citrus",
+  papaya: "papaya",
+  coconut: "coconut",
+  cotton: "cotton",
+  jute: "jute",
+  coffee: "coffee",
 };
 
 // How ML crops appear in a state's own kharif/rabi lists ("Sali rice", "Bengal gram", "Tur"...).
@@ -59,8 +77,17 @@ export function recommendedFieldCrops(stateName, season = currentSeason()) {
       // The state's own calendar wins: Punjab grows rice only in kharif, so no rice in Punjab's rabi.
       const fit = stateSeasonFit(ml, stateName, season);
       const stateBonus = fit === "this" ? 2 : fit === "other" ? -3 : 0;
-      const score = (local ? 2 : 0) + (inSeason ? 2 : 0) + (primary ? 1 : 0) + (perennial && local ? 1 : 0) + stateBonus;
-      return { crop: ml, label: cat?.en ?? ml, labelHi: cat?.hi ?? cat?.en ?? ml, emoji: cat?.emoji ?? "🌱", local, inSeason, score };
+      const score =
+        (local ? 2 : 0) + (inSeason ? 2 : 0) + (primary ? 1 : 0) + (perennial && local ? 1 : 0) + stateBonus;
+      return {
+        crop: ml,
+        label: cat?.en ?? ml,
+        labelHi: cat?.hi ?? cat?.en ?? ml,
+        emoji: cat?.emoji ?? "🌱",
+        local,
+        inSeason,
+        score,
+      };
     })
     .filter((c) => c.score >= 3)
     .sort((a, b) => b.score - a.score || a.label.localeCompare(b.label));
@@ -68,7 +95,9 @@ export function recommendedFieldCrops(stateName, season = currentSeason()) {
 
 /** All catalogue crops grown in the state this season (wider than the ML list). */
 export function seasonalCropsFor(stateName, season = currentSeason()) {
-  return CROPS.filter((c) => c.states.includes(stateName) && (c.seasons.includes(season) || c.seasons.includes("perennial")));
+  return CROPS.filter(
+    (c) => c.states.includes(stateName) && (c.seasons.includes(season) || c.seasons.includes("perennial")),
+  );
 }
 
 /** Nearest state/UT capital to a GPS point — a starting guess the user can change. */
@@ -84,7 +113,8 @@ export function nearestState(lat, lng) {
 /** Coordinates for weather: the farm's own GPS point, else its state capital. */
 export function farmCoords(location) {
   const pt = location?.point?.coordinates;
-  if (pt?.length === 2) return { lat: pt[1], lon: pt[0], label: location.village || location.district || "Farm location", precise: true };
+  if (pt?.length === 2)
+    return { lat: pt[1], lon: pt[0], label: location.village || location.district || "Farm location", precise: true };
   const s = STATE_BY_NAME[location?.state];
   return s ? { lat: s.lat, lon: s.lon, label: `${s.capital} (state capital)`, precise: false } : null;
 }

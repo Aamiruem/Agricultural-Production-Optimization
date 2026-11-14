@@ -4,7 +4,18 @@
 // per-mark tooltip on every chart, and a table view on every ChartCard.
 import { useId, useState } from "react";
 import {
-  Area, Bar, BarChart, CartesianGrid, ComposedChart, LabelList, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Area,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ComposedChart,
+  LabelList,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 
 import { cx } from "@/lib/cx.js";
@@ -73,12 +84,30 @@ export function ChartCard({ title, subtitle, icon, legend, actions, table, child
       label={`${title} view`}
       value={view}
       onChange={setView}
-      options={[{ value: "chart", label: "Chart", icon: "bar_chart" }, { value: "table", label: "Table", icon: "table_chart" }]}
+      options={[
+        { value: "chart", label: "Chart", icon: "bar_chart" },
+        { value: "table", label: "Table", icon: "table_chart" },
+      ]}
     />
   );
   return (
-    <Card title={title} subtitle={subtitle} icon={icon} className={className} actions={<>{actions}{toggle}</>}>
-      {legend && view === "chart" && <div className="mb-3"><Legend items={legend} /></div>}
+    <Card
+      title={title}
+      subtitle={subtitle}
+      icon={icon}
+      className={className}
+      actions={
+        <>
+          {actions}
+          {toggle}
+        </>
+      }
+    >
+      {legend && view === "chart" && (
+        <div className="mb-3">
+          <Legend items={legend} />
+        </div>
+      )}
       {view === "chart" || !table ? children : <DataTable {...table} />}
     </Card>
   );
@@ -91,7 +120,11 @@ export function DataTable({ columns, rows, maxHeight = 320 }) {
         <thead className="sticky top-0 bg-surface-2">
           <tr>
             {columns.map((c) => (
-              <th key={c.key} scope="col" className={cx("px-3 py-2 font-medium text-ink-2", c.align === "right" && "text-right")}>
+              <th
+                key={c.key}
+                scope="col"
+                className={cx("px-3 py-2 font-medium text-ink-2", c.align === "right" && "text-right")}
+              >
                 {c.label}
               </th>
             ))}
@@ -114,7 +147,16 @@ export function DataTable({ columns, rows, maxHeight = 320 }) {
 }
 
 /** Line chart (one y-axis). series: [{ key, label, slot? }]. Area wash optional for a single series. */
-export function TrendChart({ data, xKey, series, height = 260, yFormat = (v) => fmtNumber(v), xFormat, area = false, endLabel = true }) {
+export function TrendChart({
+  data,
+  xKey,
+  series,
+  height = 260,
+  yFormat = (v) => fmtNumber(v),
+  xFormat,
+  area = false,
+  endLabel = true,
+}) {
   const c = useChartColors();
   const gradientId = useId().replace(/:/g, "");
   const Chart = area ? ComposedChart : LineChart;
@@ -132,13 +174,35 @@ export function TrendChart({ data, xKey, series, height = 260, yFormat = (v) => 
             </defs>
           )}
           <CartesianGrid vertical={false} stroke={c.grid} strokeWidth={1} />
-          <XAxis dataKey={xKey} tick={{ ...AXIS_TICK, fill: c["ink-3"] }} tickLine={false} axisLine={{ stroke: c.outline }}
-            tickFormatter={xFormat} minTickGap={24} />
-          <YAxis tick={{ ...AXIS_TICK, fill: c["ink-3"] }} tickLine={false} axisLine={false} tickFormatter={yFormat} width={52} />
-          <Tooltip content={rechartsTooltip(series, c, yFormat, xFormat)} cursor={{ stroke: c["ink-3"], strokeWidth: 1 }} />
+          <XAxis
+            dataKey={xKey}
+            tick={{ ...AXIS_TICK, fill: c["ink-3"] }}
+            tickLine={false}
+            axisLine={{ stroke: c.outline }}
+            tickFormatter={xFormat}
+            minTickGap={24}
+          />
+          <YAxis
+            tick={{ ...AXIS_TICK, fill: c["ink-3"] }}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={yFormat}
+            width={52}
+          />
+          <Tooltip
+            content={rechartsTooltip(series, c, yFormat, xFormat)}
+            cursor={{ stroke: c["ink-3"], strokeWidth: 1 }}
+          />
           {area && (
-            <Area type="monotone" dataKey={series[0].key} stroke="none" fill={`url(#${gradientId})`} isAnimationActive={false}
-              tooltipType="none" activeDot={false} />
+            <Area
+              type="monotone"
+              dataKey={series[0].key}
+              stroke="none"
+              fill={`url(#${gradientId})`}
+              isAnimationActive={false}
+              tooltipType="none"
+              activeDot={false}
+            />
           )}
           {series.map((s, i) => (
             <Line
@@ -162,9 +226,12 @@ export function TrendChart({ data, xKey, series, height = 260, yFormat = (v) => 
                     index === last && value != null ? (
                       <g>
                         <circle cx={x} cy={y} r={4} fill={c.series[s.slot ?? i]} stroke={c.surface} strokeWidth={2} />
-                        <text x={x + 9} y={y + 4} fontSize={12} fill={c.ink} fontWeight={500}>{yFormat(value)}</text>
+                        <text x={x + 9} y={y + 4} fontSize={12} fill={c.ink} fontWeight={500}>
+                          {yFormat(value)}
+                        </text>
                       </g>
-                    ) : null}
+                    ) : null
+                  }
                 />
               )}
             </Line>
@@ -176,21 +243,60 @@ export function TrendChart({ data, xKey, series, height = 260, yFormat = (v) => 
 }
 
 /** Vertical columns from one baseline: <=24px, 4px rounded data-end, value on the cap optional. */
-export function ColumnChart({ data, xKey, series, height = 220, yFormat = (v) => fmtNumber(v), xFormat, capLabels = false }) {
+export function ColumnChart({
+  data,
+  xKey,
+  series,
+  height = 220,
+  yFormat = (v) => fmtNumber(v),
+  xFormat,
+  capLabels = false,
+}) {
   const c = useChartColors();
   return (
     <div style={{ height }} className="w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: capLabels ? 18 : 8, right: 12, bottom: 0, left: 0 }} barCategoryGap="20%" barGap={2}>
+        <BarChart
+          data={data}
+          margin={{ top: capLabels ? 18 : 8, right: 12, bottom: 0, left: 0 }}
+          barCategoryGap="20%"
+          barGap={2}
+        >
           <CartesianGrid vertical={false} stroke={c.grid} strokeWidth={1} />
-          <XAxis dataKey={xKey} tick={{ ...AXIS_TICK, fill: c["ink-3"] }} tickLine={false} axisLine={{ stroke: c.outline }}
-            tickFormatter={xFormat} minTickGap={12} />
-          <YAxis tick={{ ...AXIS_TICK, fill: c["ink-3"] }} tickLine={false} axisLine={false} tickFormatter={yFormat} width={52} />
+          <XAxis
+            dataKey={xKey}
+            tick={{ ...AXIS_TICK, fill: c["ink-3"] }}
+            tickLine={false}
+            axisLine={{ stroke: c.outline }}
+            tickFormatter={xFormat}
+            minTickGap={12}
+          />
+          <YAxis
+            tick={{ ...AXIS_TICK, fill: c["ink-3"] }}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={yFormat}
+            width={52}
+          />
           <Tooltip content={rechartsTooltip(series, c, yFormat, xFormat)} cursor={{ fill: c["surface-2"] }} />
           {series.map((s, i) => (
-            <Bar key={s.key} dataKey={s.key} name={s.label} fill={c.series[s.slot ?? i]} radius={[4, 4, 0, 0]} maxBarSize={24}
-              isAnimationActive={false}>
-              {capLabels && <LabelList dataKey={s.key} position="top" formatter={yFormat} style={{ fontSize: 11, fill: c["ink-2"] }} />}
+            <Bar
+              key={s.key}
+              dataKey={s.key}
+              name={s.label}
+              fill={c.series[s.slot ?? i]}
+              radius={[4, 4, 0, 0]}
+              maxBarSize={24}
+              isAnimationActive={false}
+            >
+              {capLabels && (
+                <LabelList
+                  dataKey={s.key}
+                  position="top"
+                  formatter={yFormat}
+                  style={{ fontSize: 11, fill: c["ink-2"] }}
+                />
+              )}
             </Bar>
           ))}
         </BarChart>
@@ -209,10 +315,28 @@ export function Sparkline({ values, height = 36, accent }) {
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 4, right: 6, bottom: 4, left: 2 }}>
           <YAxis hide domain={["dataMin", "dataMax"]} />
-          <Line type="monotone" dataKey="v" stroke={c["ink-3"]} strokeWidth={1.5} isAnimationActive={false}
-            dot={(p) => (p.index === data.length - 1
-              ? <circle key="end" cx={p.cx} cy={p.cy} r={3.5} fill={accent ?? c.primary} stroke={c.surface} strokeWidth={2} />
-              : <g key={p.index} />)} />
+          <Line
+            type="monotone"
+            dataKey="v"
+            stroke={c["ink-3"]}
+            strokeWidth={1.5}
+            isAnimationActive={false}
+            dot={(p) =>
+              p.index === data.length - 1 ? (
+                <circle
+                  key="end"
+                  cx={p.cx}
+                  cy={p.cy}
+                  r={3.5}
+                  fill={accent ?? c.primary}
+                  stroke={c.surface}
+                  strokeWidth={2}
+                />
+              ) : (
+                <g key={p.index} />
+              )
+            }
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -242,17 +366,27 @@ export function BarList({ items, format = (v) => fmtNumber(v), max, slot = 0, hi
             onBlur={() => setHover(null)}
             tabIndex={it.detail ? 0 : undefined}
           >
-            <span className={cx("truncate text-[13px]", highlight === it.label ? "font-medium text-ink" : "text-ink-2")} title={it.label}>
+            <span
+              className={cx("truncate text-[13px]", highlight === it.label ? "font-medium text-ink" : "text-ink-2")}
+              title={it.label}
+            >
               {it.label}
             </span>
             <div className="flex min-w-0 items-center gap-2">
               <div className="h-5 min-w-0 flex-1">
                 <div
                   className="h-full rounded-r-sm transition-[width] duration-500"
-                  style={{ width: `${pct}%`, background: c.series[slot], opacity: hover && !active ? 0.55 : 1, minWidth: it.value > 0 ? 2 : 0 }}
+                  style={{
+                    width: `${pct}%`,
+                    background: c.series[slot],
+                    opacity: hover && !active ? 0.55 : 1,
+                    minWidth: it.value > 0 ? 2 : 0,
+                  }}
                 />
               </div>
-              <span className="w-16 shrink-0 text-right text-[13px] font-medium tabular-nums text-ink">{format(it.value)}</span>
+              <span className="w-16 shrink-0 text-right text-[13px] font-medium tabular-nums text-ink">
+                {format(it.value)}
+              </span>
             </div>
             {active && it.detail && (
               <div className="pointer-events-none absolute right-0 bottom-full z-10 mb-1">
@@ -276,7 +410,12 @@ export function DivergingBars({ items, format, posLabel = "Raises", negLabel = "
   const extent = Math.max(...items.map((i) => Math.abs(i.value)), 1e-9);
   return (
     <div className="flex flex-col gap-3">
-      <Legend items={[{ label: posLabel, color: c["diverge-pos"] }, { label: negLabel, color: c["diverge-neg"] }]} />
+      <Legend
+        items={[
+          { label: posLabel, color: c["diverge-pos"] },
+          { label: negLabel, color: c["diverge-neg"] },
+        ]}
+      />
       <ul className="flex flex-col gap-2">
         {items.map((it) => {
           // Longest bar takes 36% of the track per side, leaving room for its value label.
@@ -292,7 +431,9 @@ export function DivergingBars({ items, format, posLabel = "Raises", negLabel = "
               onFocus={() => setHover(it.label)}
               onBlur={() => setHover(null)}
             >
-              <span className="truncate text-[13px] text-ink-2" title={it.label}>{it.label}</span>
+              <span className="truncate text-[13px] text-ink-2" title={it.label}>
+                {it.label}
+              </span>
               <div className="relative h-6">
                 <div className="absolute inset-y-0 left-1/2 w-px" style={{ background: c["ink-3"] }} aria-hidden />
                 <div
@@ -331,9 +472,15 @@ export function SegmentedBar({ parts }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex h-3 gap-0.5 overflow-hidden rounded-full">
-        {parts.filter((p) => p.value > 0).map((p) => (
-          <div key={p.label} title={`${p.label}: ${fmtNumber(p.value)}`} style={{ width: `${(p.value / total) * 100}%`, background: p.color }} />
-        ))}
+        {parts
+          .filter((p) => p.value > 0)
+          .map((p) => (
+            <div
+              key={p.label}
+              title={`${p.label}: ${fmtNumber(p.value)}`}
+              style={{ width: `${(p.value / total) * 100}%`, background: p.color }}
+            />
+          ))}
       </div>
       <Legend items={parts.map((p) => ({ label: `${p.label} · ${fmtNumber(p.value)}`, color: p.color }))} />
     </div>

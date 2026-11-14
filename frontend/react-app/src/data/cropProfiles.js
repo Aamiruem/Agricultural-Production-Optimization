@@ -25,6 +25,9 @@ const ROWS = [
   ["coffee", "perennial", "plantation", 101, 29, 30, 25.5, 58.9, 6.8, 158.1],
 ];
 
-export const CROP_PROFILES = Object.fromEntries(ROWS.map(([name, season, category, N, P, K, temperature, humidity, ph, rainfall]) => [
-  name, { name, season, category, N, P, K, temperature, humidity, ph, rainfall },
-]));
+export const CROP_PROFILES = Object.fromEntries(
+  ROWS.map(([name, season, category, N, P, K, temperature, humidity, ph, rainfall]) => [
+    name,
+    { name, season, category, N, P, K, temperature, humidity, ph, rainfall },
+  ]),
+);

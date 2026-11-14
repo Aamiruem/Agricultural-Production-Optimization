@@ -3,6 +3,7 @@
 The source file contains annual state/crop/season observations from 1997–2020.
 These summaries are historical context; they are not current-season forecasts.
 """
+
 import csv
 from functools import lru_cache
 
@@ -21,14 +22,16 @@ def _records() -> tuple[dict, ...]:
         rows = []
         for row in csv.DictReader(handle):
             try:
-                rows.append({
-                    "crop": row["Crop"].strip(),
-                    "season": row["Season"].strip(),
-                    "state": row["State"].strip(),
-                    "year": int(row["Crop_Year"]),
-                    "area_ha": float(row["Area"]),
-                    "production_t": float(row["Production"]),
-                })
+                rows.append(
+                    {
+                        "crop": row["Crop"].strip(),
+                        "season": row["Season"].strip(),
+                        "state": row["State"].strip(),
+                        "year": int(row["Crop_Year"]),
+                        "area_ha": float(row["Area"]),
+                        "production_t": float(row["Production"]),
+                    }
+                )
             except (KeyError, TypeError, ValueError):
                 continue
     return tuple(rows)
@@ -74,14 +77,20 @@ def yield_trend(
         point["production_t"] += row["production_t"]
         point["records"] += 1
     points = [
-        {"year": year, "production_t": round(item["production_t"], 2),
-         "area_ha": round(item["area_ha"], 2),
-         "yield_t_ha": round(item["production_t"] / item["area_ha"], 3) if item["area_ha"] else 0,
-         "records": item["records"]}
+        {
+            "year": year,
+            "production_t": round(item["production_t"], 2),
+            "area_ha": round(item["area_ha"], 2),
+            "yield_t_ha": round(item["production_t"] / item["area_ha"], 3) if item["area_ha"] else 0,
+            "records": item["records"],
+        }
         for year, item in sorted(yearly.items())
     ]
     return {
-        "state": state, "crop": crop, "season": season, "points": points,
+        "state": state,
+        "crop": crop,
+        "season": season,
+        "points": points,
         "source_years": {"first": min(yearly), "last": max(yearly)},
         "source": "Indian crop-yield dataset bundled with AgriSmart (historical records)",
         "source_url": "https://github.com/Aswins10/Agricultural-Crop-Yield-in-Indian-States-Dataset",

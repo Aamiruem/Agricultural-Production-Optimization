@@ -3,6 +3,7 @@
 Trained with mini-batch Adam, cross-entropy loss and early stopping on a
 validation split. Used as the deep-learning baseline in the model comparison.
 """
+
 from dataclasses import dataclass
 
 import numpy as np

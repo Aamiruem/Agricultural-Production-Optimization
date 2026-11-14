@@ -7,7 +7,11 @@ import { MIcon } from "./MIcon";
 export function IconBadge({ icon, color = "#188038", size = 22, className = "", box }) {
   const Icon = icon;
   return (
-    <span className={`icon-badge ${className}`} style={{ "--c": color, ...(box ? { width: box, height: box } : null) }} aria-hidden="true">
+    <span
+      className={`icon-badge ${className}`}
+      style={{ "--c": color, ...(box ? { width: box, height: box } : null) }}
+      aria-hidden="true"
+    >
       {typeof icon === "string" ? <MIcon name={icon} size={size} fill /> : <Icon size={size - 2} strokeWidth={2.2} />}
     </span>
   );

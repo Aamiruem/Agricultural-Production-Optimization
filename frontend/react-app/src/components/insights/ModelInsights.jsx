@@ -23,7 +23,8 @@ export function ModelInsights() {
   if (!report) {
     return (
       <EmptyState>
-        No trained model yet — recommendations use profile matching. Train one with <code>python -m AIML.machine_learning.crop_classifier</code>.
+        No trained model yet — recommendations use profile matching. Train one with{" "}
+        <code>python -m AIML.machine_learning.crop_classifier</code>.
       </EmptyState>
     );
   }
@@ -56,9 +57,15 @@ export function ModelInsights() {
             <tr key={name} className={name === report.best_model ? "table-success" : ""}>
               <td>
                 {MODEL_NAMES[name] ?? name}
-                {name === report.best_model && <Badge bg="success" className="ms-2">best</Badge>}
+                {name === report.best_model && (
+                  <Badge bg="success" className="ms-2">
+                    best
+                  </Badge>
+                )}
               </td>
-              <td className="text-end">{m.cv_f1_macro_mean === undefined ? "—" : `${pct(m.cv_f1_macro_mean)} ± ${pct(m.cv_f1_macro_std)}`}</td>
+              <td className="text-end">
+                {m.cv_f1_macro_mean === undefined ? "—" : `${pct(m.cv_f1_macro_mean)} ± ${pct(m.cv_f1_macro_std)}`}
+              </td>
               <td className="text-end">{pct(m.test_accuracy)}</td>
               <td className="text-end">{pct(m.test_f1_macro)}</td>
               <td className="text-end">{pct(m.test_precision_macro)}</td>
@@ -69,7 +76,10 @@ export function ModelInsights() {
       </Table>
       {importances.length > 0 && (
         <div style={{ maxWidth: 560 }}>
-          <HBarChart caption={`Feature importance (${MODEL_NAMES[report.best_model] ?? report.best_model})`} data={importances} />
+          <HBarChart
+            caption={`Feature importance (${MODEL_NAMES[report.best_model] ?? report.best_model})`}
+            data={importances}
+          />
         </div>
       )}
     </div>

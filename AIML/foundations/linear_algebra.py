@@ -7,6 +7,7 @@
 
     python -m AIML.foundations.linear_algebra
 """
+
 from __future__ import annotations
 
 import numpy as np

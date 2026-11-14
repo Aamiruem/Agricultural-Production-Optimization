@@ -12,7 +12,13 @@ export function AuthLayout() {
       <Container className="auth-container">
         <Link to="/" className="auth-brand d-flex align-items-center justify-content-center gap-3 mb-4 text-body">
           <img src={logo} alt="" width="48" height="48" />
-          <span className="brand-wordmark"><span><b>Agri</b><b>Smart</b></span><small>Precision farming for a better tomorrow</small></span>
+          <span className="brand-wordmark">
+            <span>
+              <b>Agri</b>
+              <b>Smart</b>
+            </span>
+            <small>Precision farming for a better tomorrow</small>
+          </span>
         </Link>
         <Suspense fallback={<Loader />}>
           <Outlet />

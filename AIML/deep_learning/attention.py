@@ -8,6 +8,7 @@
 
     python -m AIML.deep_learning.attention          # trains the PyTorch model (needs torch)
 """
+
 from __future__ import annotations
 
 import math
@@ -21,8 +22,9 @@ def softmax(x: np.ndarray, axis: int = -1) -> np.ndarray:
     return e / e.sum(axis=axis, keepdims=True)
 
 
-def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
-                                 mask: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
+def scaled_dot_product_attention(
+    Q: np.ndarray, K: np.ndarray, V: np.ndarray, mask: np.ndarray | None = None
+) -> tuple[np.ndarray, np.ndarray]:
     """Q: (..., Tq, d)  K: (..., Tk, d)  V: (..., Tk, dv). mask True = blocked."""
     scores = Q @ np.swapaxes(K, -1, -2) / math.sqrt(Q.shape[-1])
     if mask is not None:
@@ -36,8 +38,15 @@ def causal_mask(t: int) -> np.ndarray:
     return np.triu(np.ones((t, t), dtype=bool), k=1)
 
 
-def multi_head_attention(X: np.ndarray, Wq: np.ndarray, Wk: np.ndarray, Wv: np.ndarray, Wo: np.ndarray,
-                         heads: int, mask: np.ndarray | None = None) -> np.ndarray:
+def multi_head_attention(
+    X: np.ndarray,
+    Wq: np.ndarray,
+    Wk: np.ndarray,
+    Wv: np.ndarray,
+    Wo: np.ndarray,
+    heads: int,
+    mask: np.ndarray | None = None,
+) -> np.ndarray:
     """Self-attention over X (T, d_model) split into `heads` subspaces."""
     T, d = X.shape
     dh = d // heads
@@ -71,7 +80,9 @@ def build_torch_model(n_features: int, horizon: int, d_model: int = 32, heads: i
             super().__init__()
             self.inp = nn.Linear(n_features, d_model)
             self.pos = PositionalEncoding(d_model)
-            layer = nn.TransformerEncoderLayer(d_model, heads, dim_feedforward=4 * d_model, dropout=0.1, batch_first=True)
+            layer = nn.TransformerEncoderLayer(
+                d_model, heads, dim_feedforward=4 * d_model, dropout=0.1, batch_first=True
+            )
             self.encoder = nn.TransformerEncoder(layer, layers)
             self.head = nn.Linear(d_model, horizon)
 

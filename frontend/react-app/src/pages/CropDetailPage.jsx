@@ -35,7 +35,13 @@ export default function CropDetailPage() {
 
   return (
     <>
-      <Button as={Link} to="/crops" variant="link" size="sm" className="ps-0 mb-3 d-inline-flex align-items-center gap-1">
+      <Button
+        as={Link}
+        to="/crops"
+        variant="link"
+        size="sm"
+        className="ps-0 mb-3 d-inline-flex align-items-center gap-1"
+      >
         <ArrowLeft size={14} /> All crops
       </Button>
       <PageHeader
@@ -48,11 +54,15 @@ export default function CropDetailPage() {
         <>
           <div className="d-flex gap-2 mb-3">
             <Badge bg="success">{seasonLabel(c.season)}</Badge>
-            <Badge bg="secondary-subtle" text="secondary-emphasis" className="text-capitalize">{c.category}</Badge>
+            <Badge bg="secondary-subtle" text="secondary-emphasis" className="text-capitalize">
+              {c.category}
+            </Badge>
           </div>
           <Card className="mb-3">
             <Card.Body>
-              <Card.Title as="h2" className="h6">Ideal growing conditions</Card.Title>
+              <Card.Title as="h2" className="h6">
+                Ideal growing conditions
+              </Card.Title>
               <Row as="dl" xs={2} md={4} className="g-3 mb-0">
                 {stats.map((s) => (
                   <Col key={s.label}>
@@ -63,7 +73,9 @@ export default function CropDetailPage() {
               </Row>
             </Card.Body>
           </Card>
-          <Button as={Link} to="/fertilizer">Plan fertilizer for {formatCropName(c.name).toLowerCase()}</Button>
+          <Button as={Link} to="/fertilizer">
+            Plan fertilizer for {formatCropName(c.name).toLowerCase()}
+          </Button>
         </>
       )}
     </>

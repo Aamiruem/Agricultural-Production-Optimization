@@ -16,8 +16,12 @@ router = APIRouter(prefix="/assistant", tags=["assistant"])
 def status():
     llm, kb = get_llm(), get_knowledge_base()
     return AssistantStatus(
-        llm_available=llm.available, llm_reason=llm.reason, model=get_settings().anthropic_model,
-        agent_runtime=runtime_name(), vector_store=kb.store.name, embedder=kb.embedder.name,
+        llm_available=llm.available,
+        llm_reason=llm.reason,
+        model=get_settings().anthropic_model,
+        agent_runtime=runtime_name(),
+        vector_store=kb.store.name,
+        embedder=kb.embedder.name,
         documents=len(kb.chunks),
     )
 

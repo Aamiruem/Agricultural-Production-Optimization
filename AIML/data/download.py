@@ -11,6 +11,7 @@
 Downloaded files are validated before being written, so a changed or tampered
 upstream file is rejected instead of silently training on different data.
 """
+
 import argparse
 import hashlib
 import io

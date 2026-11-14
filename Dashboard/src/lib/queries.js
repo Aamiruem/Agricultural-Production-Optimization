@@ -39,10 +39,18 @@ export const useModel = () =>
   useQuery({ queryKey: keys.model, queryFn: ({ signal }) => api.get("/api/ml/model", { signal }), staleTime: 60_000 });
 
 export const useYieldModel = () =>
-  useQuery({ queryKey: keys.yieldModel, queryFn: ({ signal }) => api.get("/api/ml/yield-model", { signal }), staleTime: 300_000 });
+  useQuery({
+    queryKey: keys.yieldModel,
+    queryFn: ({ signal }) => api.get("/api/ml/yield-model", { signal }),
+    staleTime: 300_000,
+  });
 
 export const useCoverage = () =>
-  useQuery({ queryKey: keys.coverage, queryFn: ({ signal }) => api.get("/api/yield/coverage", { signal }), staleTime: Infinity });
+  useQuery({
+    queryKey: keys.coverage,
+    queryFn: ({ signal }) => api.get("/api/yield/coverage", { signal }),
+    staleTime: Infinity,
+  });
 
 export const useTrend = (state, crop, season = "All seasons") =>
   useQuery({
@@ -54,7 +62,11 @@ export const useTrend = (state, crop, season = "All seasons") =>
   });
 
 export const useAssistantStatus = () =>
-  useQuery({ queryKey: keys.assistant, queryFn: ({ signal }) => api.get("/api/assistant/status", { signal }), staleTime: 60_000 });
+  useQuery({
+    queryKey: keys.assistant,
+    queryFn: ({ signal }) => api.get("/api/assistant/status", { signal }),
+    staleTime: 60_000,
+  });
 
 export const useCrops = () =>
   useQuery({ queryKey: keys.crops, queryFn: ({ signal }) => api.get("/api/crops", { signal }), staleTime: Infinity });
@@ -75,11 +87,9 @@ export const useRecommend = () =>
 export const useExplain = () =>
   useMutation({ mutationFn: ({ soil, top = 3 }) => api.post(`/api/ml/explain?top=${top}`, soil) });
 
-export const useFertilizer = () =>
-  useMutation({ mutationFn: (body) => api.post("/api/recommend/fertilizer", body) });
+export const useFertilizer = () => useMutation({ mutationFn: (body) => api.post("/api/recommend/fertilizer", body) });
 
-export const useYieldPredict = () =>
-  useMutation({ mutationFn: (body) => api.post("/api/yield/predict", body) });
+export const useYieldPredict = () => useMutation({ mutationFn: (body) => api.post("/api/yield/predict", body) });
 
 export const useReloadModel = () => {
   const qc = useQueryClient();

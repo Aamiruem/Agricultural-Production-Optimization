@@ -1,4 +1,5 @@
 """Loading, validation and splitting of the crop dataset."""
+
 from dataclasses import dataclass
 
 import numpy as np
@@ -42,9 +43,7 @@ def validate_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 def load_dataset(path=DATA_PATH) -> pd.DataFrame:
     if not path.exists():
-        raise FileNotFoundError(
-            f"{path} not found. Run `python -m AIML.data.download` first."
-        )
+        raise FileNotFoundError(f"{path} not found. Run `python -m AIML.data.download` first.")
     df = pd.read_csv(path)
     df[TARGET] = df[TARGET].str.strip().str.lower()
     return validate_dataframe(df.drop_duplicates())

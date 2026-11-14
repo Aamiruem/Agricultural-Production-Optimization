@@ -1,4 +1,5 @@
 """Relational schema (3NF): users 1—N predictions, users 1—N batch_jobs."""
+
 from datetime import datetime, timezone
 
 from sqlalchemy import JSON, DateTime, Float, ForeignKey, Index, Integer, String, Text

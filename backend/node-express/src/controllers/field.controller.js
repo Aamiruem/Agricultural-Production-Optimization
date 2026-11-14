@@ -49,7 +49,10 @@ export async function listActivities(req, res) {
 export async function createActivity(req, res) {
   const field = await findOwnedField(req.valid.params.id, req.user.id);
   const activity = await Activity.create({
-    ...req.valid.body, fieldId: field._id, farmId: field.farmId, ownerId: req.user.id,
+    ...req.valid.body,
+    fieldId: field._id,
+    farmId: field.farmId,
+    ownerId: req.user.id,
   });
   // Recording sowing/harvest also moves the field's status forward.
   const nextStatus = { sowing: "sown", harvest: "harvested" }[activity.type];

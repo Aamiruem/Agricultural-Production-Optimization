@@ -1,4 +1,5 @@
 """Data access for users (repository layer: SQL lives here, not in routes)."""
+
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 

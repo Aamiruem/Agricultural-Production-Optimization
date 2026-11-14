@@ -12,8 +12,11 @@ def synthetic(n_per_class: int = 30) -> pd.DataFrame:
     rng = np.random.default_rng(0)
     rows = []
     for label, center in {"rice": [80, 45, 40, 24, 82, 6.4, 230], "chickpea": [40, 68, 80, 19, 17, 7.3, 80]}.items():
-        rows.append(pd.DataFrame(rng.normal(center, [3, 3, 3, 1, 2, 0.1, 5], (n_per_class, 7)), columns=FEATURES)
-                    .assign(label=label))
+        rows.append(
+            pd.DataFrame(rng.normal(center, [3, 3, 3, 1, 2, 0.1, 5], (n_per_class, 7)), columns=FEATURES).assign(
+                label=label
+            )
+        )
     return pd.concat(rows, ignore_index=True)
 
 

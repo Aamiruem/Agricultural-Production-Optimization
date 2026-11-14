@@ -21,9 +21,11 @@ def get_model():
     report = training_report()
     return {
         "serving": model_info(),
-        "report": None if report is None else {
-            k: report.get(k) for k in
-            ("best_model", "trained_at", "rows", "classes", "features", "leaderboard", "feature_importances")
+        "report": None
+        if report is None
+        else {
+            k: report.get(k)
+            for k in ("best_model", "trained_at", "rows", "classes", "features", "leaderboard", "feature_importances")
         },
     }
 
@@ -52,7 +54,8 @@ async def explain(soil: SoilConditions, top: int = Query(default=3, ge=1, le=5))
 
     key = rounded_key(f"explain:{id(bundle)}:top={top}", soil.model_dump())
     return await run_in_threadpool(
-        get_cache("crop_explanation").get_or_compute, key, lambda: explain_crop(bundle, soil.model_dump(), top=top))
+        get_cache("crop_explanation").get_or_compute, key, lambda: explain_crop(bundle, soil.model_dump(), top=top)
+    )
 
 
 @router.post("/ml/reload")

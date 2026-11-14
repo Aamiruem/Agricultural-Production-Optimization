@@ -1,4 +1,5 @@
 """Authentication use-cases (service layer)."""
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -23,8 +24,11 @@ def register(db: Session, req: RegisterRequest) -> User:
     role = "admin" if users_repo.count(db) == 0 else "farmer"
     try:
         return users_repo.create(
-            db, email=req.email, full_name=req.full_name,
-            hashed_password=hash_password(req.password), role=role,
+            db,
+            email=req.email,
+            full_name=req.full_name,
+            hashed_password=hash_password(req.password),
+            role=role,
         )
     except IntegrityError as exc:  # race: same email registered concurrently
         db.rollback()
@@ -41,7 +45,5 @@ def authenticate(db: Session, email: str, password: str) -> User:
 
 
 def issue_token(user: User) -> TokenResponse:
-    token, expires_in = create_access_token(
-        user_id=user.id, email=user.email, name=user.full_name, role=user.role
-    )
+    token, expires_in = create_access_token(user_id=user.id, email=user.email, name=user.full_name, role=user.role)
     return TokenResponse(access_token=token, expires_in=expires_in, user=UserOut.model_validate(user))

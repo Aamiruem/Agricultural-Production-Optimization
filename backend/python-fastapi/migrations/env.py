@@ -1,8 +1,9 @@
 """Alembic environment: uses the app's DATABASE_URL and SQLAlchemy models.
 
-    alembic upgrade head                              # apply migrations
-    alembic revision --autogenerate -m "add column"   # after changing app/db/models.py
+alembic upgrade head                              # apply migrations
+alembic revision --autogenerate -m "add column"   # after changing app/db/models.py
 """
+
 from logging.config import fileConfig
 
 from alembic import context

@@ -11,6 +11,7 @@ percentiles as `AIML/models/yield_model.joblib`, served by FastAPI
 
     python -m AIML.machine_learning.yield_regression
 """
+
 from __future__ import annotations
 
 import argparse
@@ -45,10 +46,12 @@ def preprocessor(poly: bool = False) -> ColumnTransformer:
     numeric_steps = [("scale", StandardScaler())]
     if poly:
         numeric_steps.insert(0, ("poly", PolynomialFeatures(degree=2, include_bias=False)))
-    return ColumnTransformer([
-        ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=5), CATEGORICAL),
-        ("num", Pipeline(numeric_steps), NUMERIC),
-    ])
+    return ColumnTransformer(
+        [
+            ("cat", OneHotEncoder(handle_unknown="ignore", min_frequency=5), CATEGORICAL),
+            ("num", Pipeline(numeric_steps), NUMERIC),
+        ]
+    )
 
 
 def candidates() -> dict:
@@ -58,17 +61,34 @@ def candidates() -> dict:
         "lasso": (Lasso(alpha=0.001, max_iter=5000), False),
         "elastic_net": (ElasticNet(alpha=0.001, l1_ratio=0.5, max_iter=5000), False),
         "polynomial_ridge": (Ridge(alpha=3.0), True),
-        "random_forest": (RandomForestRegressor(n_estimators=300, min_samples_leaf=2, n_jobs=-1, random_state=RANDOM_STATE), False),
-        "gradient_boosting": (GradientBoostingRegressor(n_estimators=400, max_depth=4, learning_rate=0.05, random_state=RANDOM_STATE), False),
-        "xgboost": (XGBRegressor(n_estimators=600, max_depth=7, learning_rate=0.05, subsample=0.9,
-                                 colsample_bytree=0.8, random_state=RANDOM_STATE, n_jobs=-1), False),
+        "random_forest": (
+            RandomForestRegressor(n_estimators=300, min_samples_leaf=2, n_jobs=-1, random_state=RANDOM_STATE),
+            False,
+        ),
+        "gradient_boosting": (
+            GradientBoostingRegressor(n_estimators=400, max_depth=4, learning_rate=0.05, random_state=RANDOM_STATE),
+            False,
+        ),
+        "xgboost": (
+            XGBRegressor(
+                n_estimators=600,
+                max_depth=7,
+                learning_rate=0.05,
+                subsample=0.9,
+                colsample_bytree=0.8,
+                random_state=RANDOM_STATE,
+                n_jobs=-1,
+            ),
+            False,
+        ),
     }
 
 
 def build(regressor, poly: bool) -> TransformedTargetRegressor:
     return TransformedTargetRegressor(
         regressor=Pipeline([("prep", preprocessor(poly)), ("model", regressor)]),
-        func=np.log1p, inverse_func=np.expm1,
+        func=np.log1p,
+        inverse_func=np.expm1,
     )
 
 
@@ -94,7 +114,9 @@ def main(only: list[str] | None = None) -> dict:
 
     leaderboard, fitted = {}, {}
     with mlflow.start_run(run_name=f"yield-{datetime.now():%Y%m%d-%H%M%S}"):
-        mlflow.log_params({"train_rows": len(train), "test_rows": len(test), "test_from_year": int(test["Crop_Year"].min())})
+        mlflow.log_params(
+            {"train_rows": len(train), "test_rows": len(test), "test_from_year": int(test["Crop_Year"].min())}
+        )
         for name, (reg, poly) in candidates().items():
             if only and name not in only:
                 continue
@@ -128,8 +150,13 @@ def main(only: list[str] | None = None) -> dict:
     }
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     joblib.dump(bundle, YIELD_MODEL_PATH, compress=3)
-    report = {"best_model": best, "leaderboard": leaderboard, "trained_at": bundle["trained_at"],
-              "rows": len(df), "split": f"train < {int(test['Crop_Year'].min())} <= test"}
+    report = {
+        "best_model": best,
+        "leaderboard": leaderboard,
+        "trained_at": bundle["trained_at"],
+        "rows": len(df),
+        "split": f"train < {int(test['Crop_Year'].min())} <= test",
+    }
     YIELD_METRICS_PATH.write_text(json.dumps(report, indent=2))
     print(f"\nBest: {best} -> {YIELD_MODEL_PATH}")
     return report

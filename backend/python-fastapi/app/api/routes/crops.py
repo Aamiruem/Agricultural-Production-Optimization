@@ -33,9 +33,7 @@ def get_crop(name: str):
 
 
 @router.post("/recommend/crop", response_model=CropRecommendation)
-def recommend_crop(
-    soil: SoilConditions, db: DbSession, user: OptionalUser, top: int = Query(default=3, ge=1, le=10)
-):
+def recommend_crop(soil: SoilConditions, db: DbSession, user: OptionalUser, top: int = Query(default=3, ge=1, le=10)):
     """Public endpoint; signed-in users also get the result saved to their history."""
     rec = recommend_crops(soil, k=top)
     if user is not None:

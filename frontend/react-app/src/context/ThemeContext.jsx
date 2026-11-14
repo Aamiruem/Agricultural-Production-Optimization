@@ -7,8 +7,7 @@ import { ThemeContext } from "./themeContext";
 
 const STORAGE_KEY = "agri-theme";
 
-const currentMode = () =>
-  document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light";
+const currentMode = () => (document.documentElement.getAttribute("data-bs-theme") === "dark" ? "dark" : "light");
 
 export function ThemeProvider({ children }) {
   const [mode, setModeState] = useState(currentMode);

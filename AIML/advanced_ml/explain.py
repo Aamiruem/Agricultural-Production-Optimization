@@ -6,6 +6,7 @@ Uses SHAP (mean |SHAP value| per feature). If SHAP can't be loaded, falls
 back to scikit-learn permutation importance (drop in macro-F1 when a
 feature is shuffled). Writes AIML/reports/feature_importance.{json,png}.
 """
+
 import json
 
 import joblib
@@ -58,7 +59,8 @@ def main(sample: int = 300) -> dict:
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     (REPORTS_DIR / "feature_importance.json").write_text(
-        json.dumps({"model": bundle["name"], "method": method, "importance": result}, indent=2))
+        json.dumps({"model": bundle["name"], "method": method, "importance": result}, indent=2)
+    )
     fig, ax = plt.subplots(figsize=(6, 3.5))
     ax.barh(list(result)[::-1], list(result.values())[::-1], color="#2e7d32")
     ax.set_xlabel(method)

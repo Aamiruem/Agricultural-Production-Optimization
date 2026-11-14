@@ -4,22 +4,42 @@ import { describe, expect, it } from "vitest";
 
 import { ALL_LINKS } from "@/layouts/navigation";
 
-import { CROP_SEASONS, FORMULAS, GLOSSARY, ML_APPLICATIONS, ML_STATUS, PIPELINE, PRACTICES, YIELD_FACTORS } from "./agronomy";
+import {
+  CROP_SEASONS,
+  FORMULAS,
+  GLOSSARY,
+  ML_APPLICATIONS,
+  ML_STATUS,
+  PIPELINE,
+  PRACTICES,
+  YIELD_FACTORS,
+} from "./agronomy";
 import { DISEASES, SEASON_ORDER, filterDiseases, rankDiseases } from "./diseases";
 import { STATES } from "./indiaAgri";
 
 const PUBLIC = join(__dirname, "..", "..", "public");
-const APP_ROUTES = new Set([...ALL_LINKS.map((l) => l.to), ...readFileSync(join(__dirname, "..", "App.jsx"), "utf8")
-  .matchAll(/path="([^"*:]+)"/g)].map((m) => (typeof m === "string" ? m : `/${m[1]}`)));
+const APP_ROUTES = new Set(
+  [
+    ...ALL_LINKS.map((l) => l.to),
+    ...readFileSync(join(__dirname, "..", "App.jsx"), "utf8").matchAll(/path="([^"*:]+)"/g),
+  ].map((m) => (typeof m === "string" ? m : `/${m[1]}`)),
+);
 
 describe("regional disease library", () => {
   const stateNames = new Set(STATES.map((s) => s.name));
 
   it("uses real state names, seasons and complete descriptions", () => {
     for (const d of DISEASES) {
-      expect(d.states.every((s) => s === "*" || stateNames.has(s)), `${d.id} states`).toBe(true);
-      expect(d.seasons.every((s) => SEASON_ORDER.includes(s)), `${d.id} seasons`).toBe(true);
-      for (const field of ["pathogen", "conditions", "signs", "spread"]) expect(d[field], `${d.id}.${field}`).toBeTruthy();
+      expect(
+        d.states.every((s) => s === "*" || stateNames.has(s)),
+        `${d.id} states`,
+      ).toBe(true);
+      expect(
+        d.seasons.every((s) => SEASON_ORDER.includes(s)),
+        `${d.id} seasons`,
+      ).toBe(true);
+      for (const field of ["pathogen", "conditions", "signs", "spread"])
+        expect(d[field], `${d.id}.${field}`).toBeTruthy();
     }
     expect(new Set(DISEASES.map((d) => d.id)).size).toBe(DISEASES.length);
   });
@@ -60,8 +80,13 @@ describe("knowledge hub", () => {
 
   it("every image exists and every in-app link points at a real page", () => {
     for (const s of CROP_SEASONS) expect(existsSync(join(PUBLIC, s.image)), s.image).toBe(true);
-    const links = [...PIPELINE.map((p) => p.link?.to), ...GLOSSARY.map((g) => g.link), ...PRACTICES.map((p) => p.link),
-      ...YIELD_FACTORS.map((f) => f.link), ...ML_APPLICATIONS.map((a) => a.link)].filter(Boolean);
+    const links = [
+      ...PIPELINE.map((p) => p.link?.to),
+      ...GLOSSARY.map((g) => g.link),
+      ...PRACTICES.map((p) => p.link),
+      ...YIELD_FACTORS.map((f) => f.link),
+      ...ML_APPLICATIONS.map((a) => a.link),
+    ].filter(Boolean);
     for (const to of links) expect(APP_ROUTES.has(to), to).toBe(true);
     for (const a of ML_APPLICATIONS) expect(ML_STATUS[a.status], a.task).toBeDefined();
   });

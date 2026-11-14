@@ -3,6 +3,7 @@ iterators, context managers, dataclasses, type hints and async I/O.
 
     python -m AIML.pyadvanced.toolkit
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -132,14 +133,27 @@ def _get_json(url: str) -> dict:
 
 
 async def fetch_forecast(loc: Location, days: int = 3) -> list[DailyWeather]:
-    params = urllib.parse.urlencode({
-        "latitude": loc.latitude, "longitude": loc.longitude, "forecast_days": days, "timezone": "auto",
-        "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration",
-    })
+    params = urllib.parse.urlencode(
+        {
+            "latitude": loc.latitude,
+            "longitude": loc.longitude,
+            "forecast_days": days,
+            "timezone": "auto",
+            "daily": "temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration",
+        }
+    )
     data = await asyncio.to_thread(_get_json, f"https://api.open-meteo.com/v1/forecast?{params}")
     d = data["daily"]
-    return [DailyWeather(*row) for row in zip(d["time"], d["temperature_2m_max"], d["temperature_2m_min"],
-                                              d["precipitation_sum"], d["et0_fao_evapotranspiration"])]
+    return [
+        DailyWeather(*row)
+        for row in zip(
+            d["time"],
+            d["temperature_2m_max"],
+            d["temperature_2m_min"],
+            d["precipitation_sum"],
+            d["et0_fao_evapotranspiration"],
+        )
+    ]
 
 
 async def fetch_many(locations: list[Location]) -> dict[str, list[DailyWeather]]:

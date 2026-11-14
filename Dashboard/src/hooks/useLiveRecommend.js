@@ -81,7 +81,8 @@ export function useLiveRecommend(soil) {
     if (transport !== "rest") return undefined;
     const controller = new AbortController();
     const started = performance.now();
-    api.post("/api/recommend/crop?top=3", JSON.parse(key), { signal: controller.signal })
+    api
+      .post("/api/recommend/crop?top=3", JSON.parse(key), { signal: controller.signal })
       .then((res) => setState((s) => ({ ...s, result: { ...res, ms: performance.now() - started }, error: null })))
       .catch((error) => !controller.signal.aborted && setState((s) => ({ ...s, error: error.message })));
     return () => controller.abort();

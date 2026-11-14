@@ -7,6 +7,7 @@ for each (centre, context) pair, push their vectors together and push k random
 
     python -m AIML.nlp.word2vec
 """
+
 from __future__ import annotations
 
 from collections import Counter
@@ -22,8 +23,15 @@ def build_corpus(texts: list[str]) -> list[list[str]]:
 
 
 class Word2Vec:
-    def __init__(self, sentences: list[list[str]], dim: int = 50, window: int = 3, negatives: int = 5,
-                 min_count: int = 2, seed: int = 0):
+    def __init__(
+        self,
+        sentences: list[list[str]],
+        dim: int = 50,
+        window: int = 3,
+        negatives: int = 5,
+        min_count: int = 2,
+        seed: int = 0,
+    ):
         counts = Counter(w for s in sentences for w in s)
         self.vocab = [w for w, c in counts.most_common() if c >= min_count]
         self.index = {w: i for i, w in enumerate(self.vocab)}
@@ -68,7 +76,7 @@ class Word2Vec:
             return []
         E = self.W_in / (np.linalg.norm(self.W_in, axis=1, keepdims=True) + 1e-9)
         sims = E @ E[self.index[word]]
-        best = np.argsort(-sims)[1:k + 1]
+        best = np.argsort(-sims)[1 : k + 1]
         return [(self.vocab[i], round(float(sims[i]), 3)) for i in best]
 
 

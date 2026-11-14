@@ -92,10 +92,14 @@ export function resetBreakers() {
 const sleep = (ms, signal) =>
   new Promise((resolve, reject) => {
     const t = setTimeout(resolve, ms);
-    signal?.addEventListener("abort", () => {
-      clearTimeout(t);
-      reject(signal.reason ?? new DOMException("Aborted", "AbortError"));
-    }, { once: true });
+    signal?.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(t);
+        reject(signal.reason ?? new DOMException("Aborted", "AbortError"));
+      },
+      { once: true },
+    );
   });
 
 export function backoffDelay(attempt, retryAfterS) {
@@ -112,7 +116,7 @@ function parseRetryAfter(res) {
 }
 
 function errorMessage(status, body, service) {
-  const detail = body && typeof body === "object" ? body.detail ?? body.message ?? body.error : null;
+  const detail = body && typeof body === "object" ? (body.detail ?? body.message ?? body.error) : null;
   if (typeof detail === "string") return detail;
   if (Array.isArray(detail) && detail[0]?.msg) return `${detail[0].loc?.slice(-1)[0] ?? "input"}: ${detail[0].msg}`;
   if (status === 429) return "Too many requests — slowing down.";
@@ -136,11 +140,22 @@ async function readBody(res) {
  */
 export async function requestRaw(path, opts = {}) {
   const {
-    method = "GET", body, form, headers = {}, service = "api", timeoutMs = 12_000,
-    auth = true, signal, retries = method === "GET" ? 2 : 1,
+    method = "GET",
+    body,
+    form,
+    headers = {},
+    service = "api",
+    timeoutMs = 12_000,
+    auth = true,
+    signal,
+    retries = method === "GET" ? 2 : 1,
   } = opts;
   if (breakerState(service) === "open") {
-    throw new ApiError(503, `${service === "api" ? "The API" : service} is temporarily unavailable. Retrying automatically.`, { service });
+    throw new ApiError(
+      503,
+      `${service === "api" ? "The API" : service} is temporarily unavailable. Retrying automatically.`,
+      { service },
+    );
   }
 
   const idempotent = method === "GET" || method === "HEAD";
@@ -171,7 +186,11 @@ export async function requestRaw(path, opts = {}) {
         return { data, status: res.status, headers: res.headers, ms };
       }
       const retryAfter = parseRetryAfter(res);
-      const err = new ApiError(res.status, errorMessage(res.status, data, service), { retryAfter, body: data, service });
+      const err = new ApiError(res.status, errorMessage(res.status, data, service), {
+        retryAfter,
+        body: data,
+        service,
+      });
       if (res.status === 401 && token) {
         setToken(null);
         window.dispatchEvent(new CustomEvent("auth:expired"));
@@ -190,7 +209,11 @@ export async function requestRaw(path, opts = {}) {
       if (signal?.aborted) throw error;
       const timedOut = controller.signal.reason?.name === "TimeoutError";
       recordFailure(service);
-      lastError = new ApiError(0, timedOut ? "The request timed out." : "Can't reach the server. Check that the services are running.", { service });
+      lastError = new ApiError(
+        0,
+        timedOut ? "The request timed out." : "Can't reach the server. Check that the services are running.",
+        { service },
+      );
       if (attempt < retries && idempotent) {
         await sleep(backoffDelay(attempt), signal);
         continue;
@@ -252,7 +275,10 @@ export async function streamSse(path, body, onEvent, { signal } = {}) {
   const res = await fetch(`${BASE}${path}`, { method: "POST", headers, body: JSON.stringify(body), signal });
   if (!res.ok || !res.body) {
     const data = await readBody(res);
-    throw new ApiError(res.status, errorMessage(res.status, data, "assistant"), { retryAfter: parseRetryAfter(res), body: data });
+    throw new ApiError(res.status, errorMessage(res.status, data, "assistant"), {
+      retryAfter: parseRetryAfter(res),
+      body: data,
+    });
   }
   const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
   const feed = createSseParser(onEvent);

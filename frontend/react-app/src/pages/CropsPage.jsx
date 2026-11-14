@@ -18,18 +18,25 @@ export default function CropsPage() {
   // Filters live in the URL so a filtered view can be shared or bookmarked.
   const [params, setParams] = useSearchParams();
   const filters = Object.fromEntries(KEYS.map((k) => [k, params.get(k) ?? ""]));
-  const onChange = (key, value) => setParams((p) => {
-    const next = new URLSearchParams(p);
-    if (value) next.set(key, value); else next.delete(key);
-    return next;
-  }, { replace: true });
+  const onChange = (key, value) =>
+    setParams(
+      (p) => {
+        const next = new URLSearchParams(p);
+        if (value) next.set(key, value);
+        else next.delete(key);
+        return next;
+      },
+      { replace: true },
+    );
   const crops = useQuery({ queryKey: ["crops"], queryFn: () => fetchCrops() });
 
   return (
     <>
       <PageHeader page="crops" icon="nutrition" color={G.red} />
       <CropExplorer filters={filters} onChange={onChange} />
-      <h2 className="h4 mt-5">{lang === "hi" ? "ML सुझाव मॉडल द्वारा समर्थित 22 फसलें" : "22 crops supported by the ML recommendation model"}</h2>
+      <h2 className="h4 mt-5">
+        {lang === "hi" ? "ML सुझाव मॉडल द्वारा समर्थित 22 फसलें" : "22 crops supported by the ML recommendation model"}
+      </h2>
       {crops.isLoading && <Loader label="Loading crops" />}
       <ErrorAlert error={crops.error} />
       {crops.data && <CropTable crops={crops.data} />}

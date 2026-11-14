@@ -13,7 +13,10 @@ function tokens(selector) {
 }
 
 describe("chart palette", () => {
-  it.each([["light", ":root"], ["dark", ':root[data-theme="dark"]']])("matches the %s CSS tokens", (theme, selector) => {
+  it.each([
+    ["light", ":root"],
+    ["dark", ':root[data-theme="dark"]'],
+  ])("matches the %s CSS tokens", (theme, selector) => {
     const defined = tokens(selector);
     for (const [name, hex] of Object.entries(CHART_PALETTE[theme])) {
       expect(defined[name], `--${name} in ${selector}`).toBe(hex);
