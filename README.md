@@ -18,7 +18,7 @@ flowchart LR
   A --> PG[(PostgreSQL)]
   A --> R[(Redis)] --> C2[worker<br/>Celery]
   A -->|Claude API| L[LLM]
-  A --> ML[[AIML models<br/>Random Forest · XGB[Browser<br/>React app · Dashboard]ost · TreeSHAP]]
+  A --> ML[[AIML models<br/>Random Forest · XGBoost · TreeSHAP]]
   M --> ML
   F --> MG[(MongoDB)]
   F -->|Socket.IO adapter| R
@@ -31,10 +31,10 @@ flowchart LR
 | Folder | What it is | Stack |
 |---|---|---|
 | [Dashboard](Dashboard) | **Operations console**: AI Studio (live recommendations + SHAP), yield analytics, models, farms, assistant, MCP tools, live system health and a load probe | React 19, Vite, Tailwind CSS v4, TanStack Query, React Router, Recharts, Google Sans, Material Symbols |
-| [frontend/react-app](frontend/react-app) | Public web app in plain **JavaScript (JSX)** | React 19, Vite, React Router, B[Browser<br/>React app · Dashboard]otstrap 5 + Sass, Redux Toolkit, Zustand, TanStack Query, Axios, Framer Motion, Socket.IO client, Vitest, Playwright |
+| [frontend/react-app](frontend/react-app) | Public web app in plain **JavaScript (JSX)** | React 19, Vite, React Router, Bootstrap 5 + Sass, Redux Toolkit, Zustand, TanStack Query, Axios, Framer Motion, Socket.IO client, Vitest, Playwright |
 | [backend/python-fastapi](backend/python-fastapi) | AI/ML API | FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL/SQLite, JWT + RBAC, WebSockets, SSE, Celery + Redis, Anthropic SDK, LangGraph, Qdrant, load shedding, prediction caches, Prometheus metrics |
-| [backend/node-express](backend/node-express) | Farm management API | Express 5, MongoDB[Browser<br/>React app · Dashboard]+ Mongoose, Zod, JWT, Socket.IO (+ Redis adapter), AWS S3, helmet, rate limiting, pino |
-| [AIML](AIML) | Models, explainability, RAG, agents and the **MCP server** | pandas, scikit-learn, XGB[Browser<br/>React app · Dashboard]ost, LightGBM, CatB[Browser<br/>React app · Dashboard]ost, PyTorch, SHAP, Optuna, MLflow, MCP |
+| [backend/node-express](backend/node-express) | Farm management API | Express 5, MongoDB + Mongoose, Zod, JWT, Socket.IO (+ Redis adapter), AWS S3, helmet, rate limiting, pino |
+| [AIML](AIML) | Models, explainability, RAG, agents and the **MCP server** | pandas, scikit-learn, XGBoost, LightGBM, CatBoost, PyTorch, SHAP, Optuna, MLflow, MCP |
 | [infra](infra) | DevOps | Nginx gateway (load balancer), Docker Compose, Terraform (AWS: VPC, ECS Fargate, ALB, RDS, ElastiCache, S3, CloudFront) |
 | [docs](docs) | Documentation | [architecture](docs/architecture.md) · [AWS deployment](docs/deploy-aws.md) · [syllabus coverage](docs/syllabus-coverage.md) |
 
@@ -42,23 +42,27 @@ flowchart LR
 
 | From → to | How |
 |---|---|
-| B[Browser<br/>React app · Dashboard]owser → every service | One origin: the gateway (Docker) or the Vite dev proxy (local) routes `/api`, `/farm-api`, `/socket.io`, `/mcp` |
+| Browser → every service | One origin: the gateway (Docker) or the Vite dev proxy (local) routes `/api`, `/farm-api`, `/socket.io`, `/mcp` |
 | FastAPI → AIML | Imports the `AIML` package: crop & yield model bundles, TreeSHAP attribution (`AIML/advanced_ml/attribution.py`), agent tools |
 | MCP server → AIML | The same `AIML.agentic_ai.tools` functions, exposed as MCP tools |
 | Express → FastAPI | Fertilizer plans via `callAgriApi` with retries + `Retry-After` handling |
 | FastAPI → Express / MCP | Health probes for `GET /api/system/status` (the dashboard's service map) |
 | Auth | FastAPI issues JWTs; Express and the dashboard use the same token |
 
-## Run the complete local stack
+## Quick start — everything with one command
 
-Python 3.12+, Node 20+. MongoDB[Browser<br/>React app · Dashboard]on `127.0.0.1:27017` is optional — without it
-everything runs and the farm pages report the database as unavailable.
+Python 3.12+ and Node 20+. Run these from the repository root:
 
-```powershell
-.\scripts\dev.ps1
-```
+| Command | What it does |
+|---|---|
+| `npm run setup` | Creates `backend/.venv` and installs **every** Python and Node dependency (first time only) |
+| `npm run dev` | Starts FastAPI + AIML, the MCP server, Express, the React app and the Dashboard together (Windows) |
+| `npm run stop` | Stops everything `npm run dev` started |
+| `npm run docker` | The whole load-balanced stack in Docker (any OS) |
+| `npm test` | Every test suite: FastAPI, AIML, Express, React app, Dashboard |
+| `npm run lint` · `npm run format` | ESLint everywhere · Prettier (JS/CSS) + Ruff (Python) |
 
-| Service | URL |
+| Service (`npm run dev`) | URL |
 |---|---|
 | Operations dashboard | http://localhost:5180 |
 | React web app | http://localhost:5175 |
@@ -66,16 +70,11 @@ everything runs and the farm pages report the database as unavailable.
 | MCP server (2 workers) | http://localhost:8100/mcp |
 | Express health | http://localhost:4100/health |
 
-Logs go to `.devlogs/`; `.\scripts\stop-dev.ps1` stops everything the script
-started. First-time setup:
+MongoDB on `127.0.0.1:27017` is optional — without it everything runs and the farm
+pages report the database as unavailable. Logs go to `.devlogs/`.
 
-```powershell
-python -m venv backend/.venv
-backend/.venv/Scripts/python.exe -m pip install -r backend/python-fastapi/requirements.txt
-npm --prefix backend/node-express ci
-npm --prefix frontend/react-app ci
-npm --prefix Dashboard ci
-```
+Crop photos live once, in `frontend/react-app/public/images`; the Dashboard shows
+them through its dev proxy and the gateway (`/images/*`), so there is no second copy.
 
 Set `ANTHROPIC_API_KEY` in `backend/python-fastapi/.env` for Claude-backed assistant
 answers; without it the assistant uses the local knowledge base and models.
@@ -133,13 +132,15 @@ Tools: `recommend_crop`, `explain_crop` (TreeSHAP), `predict_yield`,
 
 ## Tests
 
+`npm test` at the repository root runs all of these and prints a summary.
+
 | Where | Command | What |
 |---|---|---|
 | backend/python-fastapi | `pytest` | 44 API tests: auth/JWT/RBAC, history, Celery jobs, WebSocket, model serving, RAG, agent loop, SHAP explanations, caching, load shedding, system status, warm-up |
 | repository root | `pytest AIML/tests` | Algorithms, models, RAG, Hadoop, CV, agents, MCP tools over stdio and stateless HTTP, SHAP additivity |
-| backend/node-express | `npm test` | Integration tests on real MongoDB[Browser<br/>React app · Dashboard](skipped without it) + DB-down behaviour |
+| backend/node-express | `npm test` | Integration tests on real MongoDB (skipped without it) + DB-down behaviour |
 | Dashboard | `npm test` | API client resilience (retry, Retry-After, circuit breaker), SSE parsing, every route renders with services down, icon subset, palette/CSS sync |
-| frontend/react-app | `npm test` · `npm run test:e2e` | Vitest + Playwright |
+| frontend/react-app | `npm test` · `npm run test:e2e` | Vitest (navigation, regional disease data, formulas, search, stores) + Playwright |
 
 CI ([ci.yml](.github/workflows/ci.yml)) runs all of them, applies the migrations to
 PostgreSQL, smoke-tests the MCP server over HTTP, validates the Compose file and

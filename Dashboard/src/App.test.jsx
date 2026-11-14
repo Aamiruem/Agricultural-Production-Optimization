@@ -97,9 +97,9 @@ describe("console", () => {
 
   it("renders the overview with live status and model KPIs", async () => {
     renderAt("/");
-    expect(await screen.findByText("99.3%", {}, { timeout: 5000 })).toBeInTheDocument();
+    expect(await screen.findByText("99.3%", {}, { timeout: 15000 })).toBeInTheDocument();
     expect(screen.getByText("0.900")).toBeInTheDocument();
-    expect(await screen.findByText("Partially degraded", {}, { timeout: 5000 })).toBeInTheDocument();
+    expect(await screen.findByText("Partially degraded", {}, { timeout: 15000 })).toBeInTheDocument();
     expect(screen.getAllByText("Down").length).toBeGreaterThan(0); // the MCP probe
   });
 
@@ -107,9 +107,9 @@ describe("console", () => {
     "%s renders without crashing when services are down",
     async (path) => {
       renderAt(path);
-      expect(await screen.findByRole("main", {}, { timeout: 5000 })).toBeInTheDocument();
+      expect(await screen.findByRole("main", {}, { timeout: 15000 })).toBeInTheDocument();
       // wait for the lazy page chunk to replace the skeleton, then let its requests settle
-      await waitFor(() => expect(screen.queryByLabelText("Loading")).not.toBeInTheDocument(), { timeout: 5000 });
+      await waitFor(() => expect(screen.queryByLabelText("Loading")).not.toBeInTheDocument(), { timeout: 15000 });
       await new Promise((r) => setTimeout(r, 50));
       expect(screen.queryByText(/unexpected error/i)).not.toBeInTheDocument();
     },
@@ -117,6 +117,6 @@ describe("console", () => {
 
   it("asks for sign-in on the farms page", async () => {
     renderAt("/farms");
-    expect(await screen.findByText("Sign in to see your farms", {}, { timeout: 5000 })).toBeInTheDocument();
+    expect(await screen.findByText("Sign in to see your farms", {}, { timeout: 15000 })).toBeInTheDocument();
   });
 });

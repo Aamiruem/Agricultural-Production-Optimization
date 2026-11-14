@@ -58,6 +58,7 @@ export default defineConfig(({ mode }) => {
       setupFiles: ["./src/test/setup.js"],
       include: ["src/**/*.test.{js,jsx}"],
       css: false,
+      testTimeout: 20_000, // route smoke tests compile lazy pages; leave headroom on busy machines
     },
   };
 });
