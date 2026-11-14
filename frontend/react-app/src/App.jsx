@@ -34,6 +34,7 @@ const ContactPage = lazy(() => import("@/pages/ContactPage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const RegisterPage = lazy(() => import("@/pages/RegisterPage"));
+const KnowledgePage = lazy(() => import("@/pages/KnowledgePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 /** Old short URL -> canonical page, keeping any ?query and #hash. */
@@ -76,6 +77,7 @@ export default function App() {
         <Route path="crop-gallery" element={<CropGalleryPage />} />
         <Route path="states" element={<StatesPage />} />
         <Route path="soil-types" element={<SoilTypesPage />} />
+        <Route path="learn" element={<KnowledgePage />} />
 
         {/* My farm — works signed out (saved on the device); signed-in users sync to the farm-service. */}
         <Route path="farms" element={<FarmsPage />} />

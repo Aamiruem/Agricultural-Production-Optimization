@@ -193,6 +193,13 @@ export const CROPS = RAW_CROPS.map(([id, en, hi, category, seasons, soils, state
   id, en, hi, category, seasons, soils, states, emoji, water, duration,
 }));
 
+/** Season record for any season label used across the app ("Kharif", "Whole Year", "Year-round", …). */
+export function seasonInfo(label) {
+  const key = String(label).toLowerCase();
+  const id = ["whole year", "year-round", "perennial"].includes(key) ? "perennial" : key;
+  return SEASONS.find((s) => s.id === id) ?? { id: key, en: label, hi: label, color: "#5f6368" };
+}
+
 export const CATEGORY_BY_ID = Object.fromEntries(CATEGORIES.map((c) => [c.id, c]));
 export const SEASON_BY_ID = Object.fromEntries(SEASONS.map((s) => [s.id, s]));
 export const SOIL_BY_ID = Object.fromEntries(SOIL_TYPES.map((s) => [s.id, s]));

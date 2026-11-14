@@ -7,6 +7,7 @@ export const ICON_NAMES = [
   "notifications", "nutrition", "partly_cloudy_day", "photo_library", "pest_control", "potted_plant", "psychology", "query_stats", "rainy", "rocket_launch",
   "savings", "science", "search", "smart_toy", "space_dashboard", "support_agent", "table_chart", "tips_and_updates", "translate", "trending_up", "upload_file",
   "verified_user", "visibility", "water_drop", "wb_sunny",
+  "tune", "menu_book", "calculate", "eco",
 ];
 
 /** Google's product palette, used to tint icons (each icon keeps a fixed colour). */

@@ -53,6 +53,7 @@ export const NAV_GROUPS = [
       { to: "/crop-gallery", key: "side.gallery", icon: "photo_library", color: G.pink },
       { to: "/states", key: "side.stateGuide", icon: "map", color: G.teal },
       { to: "/soil-types", key: "side.soilTypes", icon: "landscape", color: G.brown },
+      { to: "/learn", key: "side.knowledge", icon: "menu_book", color: G.green },
     ],
   },
   {

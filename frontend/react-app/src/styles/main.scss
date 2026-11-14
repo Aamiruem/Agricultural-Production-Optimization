@@ -834,3 +834,102 @@ li.active .farm-text small { color: inherit; opacity: 0.85; }
   .app-bar, .announcement-bar, .side-nav, .sidebar-backdrop, .site-footer, .no-print, .tools-toolbar, .bottom-nav, .fab { display: none !important; }
   body { background: #fff; padding: 0; } .page-shell { padding: 0; } .tool-card { break-inside: avoid; }
 }
+
+
+// ---------------------------------------------------------------- shared panels
+.panel-head { margin: 2.5rem 0 1rem; h2 { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.25rem; font-size: 1.4rem; font-weight: 500; .msi { color: var(--md-primary); } } p { margin: 0; } }
+.field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0 0.75rem; }
+
+// ---------------------------------------------------------------- disease library
+.hotspot-note { margin: 0.4rem 0 0; color: var(--md-primary); font-size: 0.8rem; font-weight: 500; }
+.result-signs { margin: 0.4rem 0 0; font-size: 0.84rem; color: var(--md-on-surface); }
+.disease-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1rem; }
+.disease-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--md-outline-variant); border-radius: 24px; background: var(--md-surface); }
+.disease-photo { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: var(--md-surface-container); color: var(--md-on-surface-variant);
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+.disease-type, .disease-hotspot { position: absolute; left: 0.75rem; display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.15rem 0.6rem; border-radius: 8px; font-size: 0.72rem; font-weight: 500; }
+.disease-type { top: 0.75rem; background: rgba(255, 255, 255, 0.92); color: #1f1f1f; }
+.disease-hotspot { bottom: 0.75rem; background: var(--md-primary-container); color: var(--md-on-primary-container); }
+.disease-body { display: grid; gap: 0.35rem; padding: 0.9rem 1.1rem 1.1rem;
+  h3 { margin: 0; font-size: 1.05rem; font-weight: 500; }
+  .season-tags { margin: 0.1rem 0; }
+  details { font-size: 0.84rem; color: var(--md-on-surface-variant);
+    summary { cursor: pointer; color: var(--md-primary); font-weight: 500; }
+    p { margin: 0.4rem 0; } ul { margin: 0.25rem 0 0; padding-left: 1.1rem; }
+  }
+}
+.disease-sub { margin: 0; font-size: 0.8rem; color: var(--md-on-surface-variant); }
+.disease-signs { margin: 0; font-size: 0.86rem; b { font-weight: 500; } }
+.disease-facts { display: grid; gap: 0.3rem; margin: 0.2rem 0; font-size: 0.82rem;
+  div { display: grid; grid-template-columns: 4rem 1fr; gap: 0.5rem; }
+  dt { color: var(--md-on-surface-variant); font-weight: 500; } dd { margin: 0; }
+}
+.region-list { display: flex; flex-wrap: wrap; gap: 0.25rem;
+  span { padding: 0 0.45rem; border-radius: 6px; background: var(--md-surface-container); font-size: 0.75rem; }
+  .is-here { background: var(--md-primary-container); color: var(--md-on-primary-container); font-weight: 500; }
+}
+
+// ---------------------------------------------------------------- knowledge hub
+.kb-toc { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; padding: 0.25rem 0 0.5rem; overflow-x: auto;
+  .chip { flex: none; text-decoration: none; }
+}
+.kb-section { scroll-margin-top: 96px; margin-bottom: 2.75rem;
+  > h2 { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; font-size: 1.4rem; font-weight: 500; .msi { color: var(--md-primary); } }
+  h3 { margin: 0; font-size: 1rem; font-weight: 500; }
+}
+.kb-pipeline { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none;
+  li { position: relative; display: grid; align-content: start; gap: 0.35rem; padding: 1rem 1.1rem 1.1rem; border-radius: 20px; background: var(--md-surface-container); }
+  small { color: var(--md-on-surface-variant); line-height: 1.45; }
+  code { font-size: 0.75rem; }
+}
+.kb-step-no { position: absolute; top: 0.9rem; right: 1rem; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--md-primary); color: var(--md-on-primary); font-size: 0.8rem; font-weight: 600; }
+.kb-step-icon { color: var(--md-primary); }
+.kb-glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; margin: 0;
+  > div { padding: 0.9rem 1rem; border: 1px solid var(--md-outline-variant); border-radius: 16px; }
+  dt { font-weight: 500; }
+  dd { display: grid; gap: 0.3rem; margin: 0.3rem 0 0; font-size: 0.88rem; small { color: var(--md-on-surface-variant); } }
+}
+.kb-seasons { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.kb-season { overflow: hidden; border: 1px solid var(--md-outline-variant); border-top: 4px solid var(--c); border-radius: 24px; background: var(--md-surface);
+  > img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; }
+}
+.kb-season-body { display: grid; gap: 0.6rem; padding: 1rem 1.1rem 1.2rem; p { margin: 0; } }
+.kb-crop-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; padding: 0; list-style: none;
+  li { display: grid; justify-items: center; gap: 0.2rem; width: 64px; font-size: 0.72rem; text-align: center; }
+  img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+  > li > .msi { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--md-surface-container); color: #188038; }
+}
+.kb-nutrients { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.kb-nutrient { display: grid; grid-template-columns: auto 1fr; gap: 0.9rem; padding: 1rem; border: 1px solid var(--md-outline-variant); border-radius: 16px;
+  p { margin: 0.3rem 0 0; font-size: 0.85rem; b { font-weight: 500; } }
+}
+.kb-symbol { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; color: #fff; font-size: 1.1rem; font-weight: 600;
+  &.is-primary { background: #188038; } &.is-secondary { background: #1a73e8; } &.is-micronutrient { background: #c26401; }
+}
+.kb-factors { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem;
+  ul { margin: 0.5rem 0; padding-left: 1.1rem; font-size: 0.88rem; }
+}
+.kb-factor { padding: 1rem; border-radius: 16px; background: var(--md-surface-container);
+  h3 { display: flex; align-items: center; gap: 0.4rem; .msi { color: var(--md-primary); } }
+}
+.kb-practices { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.6rem; margin: 0; padding: 0; list-style: none; counter-reset: practice;
+  li { position: relative; counter-increment: practice; display: grid; gap: 0.2rem; padding: 0.8rem 1rem 0.8rem 3.1rem; border: 1px solid var(--md-outline-variant); border-radius: 16px; font-size: 0.86rem;
+    &::before { content: counter(practice); position: absolute; top: 0.8rem; left: 0.9rem; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 0.8rem; font-weight: 600; }
+    b { font-weight: 500; } span { color: var(--md-on-surface-variant); }
+  }
+}
+.kb-calcs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.kb-calc { display: grid; align-content: start; gap: 0.2rem; padding: 1rem 1.1rem; border: 1px solid var(--md-outline-variant); border-radius: 20px;
+  code { display: block; margin-bottom: 0.25rem; color: var(--md-on-surface-variant); font-size: 0.75rem; white-space: normal; }
+  .field-label { margin: 0.35rem 0; }
+}
+.kb-result { margin: 0.5rem 0 0; padding: 0.6rem 0.8rem; border-radius: 12px; background: var(--md-primary-container); color: var(--md-on-primary-container); font-size: 1.15rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ml-status { display: inline-block; margin-right: 0.35rem; padding: 0.05rem 0.5rem; border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+  &.is-good { background: #e6f4ea; color: #137333; } &.is-info { background: #e8f0fe; color: #1967d2; }
+  &.is-warn { background: #fef7e0; color: #b06000; } &.is-muted { background: var(--md-surface-container); color: var(--md-on-surface-variant); }
+}
+[data-bs-theme="dark"] .ml-status {
+  &.is-good { background: rgb(129 201 149 / 0.16); color: #81c995; } &.is-info { background: rgb(138 180 248 / 0.16); color: #8ab4f8; }
+  &.is-warn { background: rgb(253 214 99 / 0.16); color: #fdd663; }
+}

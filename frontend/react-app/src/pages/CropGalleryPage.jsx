@@ -3,12 +3,11 @@ import { Link } from "react-router";
 
 import { MIcon } from "@/components/common/MIcon";
 import { PageHeader } from "@/components/common/PageHeader";
+import { seasonInfo } from "@/data/indiaAgri";
 import { useT } from "@/i18n/useT";
 import { ADVISOR_SEASONS, ATLAS_CROPS, CROP_GROUPS } from "@/lib/atlas";
 import { G } from "@/lib/icons";
 
-const SEASON_HI = { Kharif: "खरीफ", Rabi: "रबी", Zaid: "ज़ायद", "Whole Year": "पूरे वर्ष", Perennial: "बारहमासी" };
-const SEASON_COLOR = { Kharif: "#188038", Rabi: "#1a73e8", Zaid: "#e8710a", "Whole Year": "#9334e6", Perennial: "#9334e6" };
 const WATER_HI = { Low: "कम", Medium: "मध्यम", High: "अधिक" };
 
 /** Photo library of 45 Indian crops with bilingual names and growing guidance. */
@@ -45,7 +44,7 @@ export default function CropGalleryPage() {
         </select>
         <select aria-label="Season" value={season} onChange={(e) => setSeason(e.target.value)}>
           <option value="">{hi ? "सभी मौसम" : "All seasons"}</option>
-          {[...ADVISOR_SEASONS, "Whole Year", "Perennial"].map((s) => <option key={s} value={s}>{hi ? SEASON_HI[s] : s}</option>)}
+          {[...ADVISOR_SEASONS, "Whole Year", "Perennial"].map((s) => <option key={s} value={s}>{hi ? seasonInfo(s).hi : s}</option>)}
         </select>
         <span className="crop-count">{list.length} {hi ? "फसलें" : "crops"}</span>
       </div>
@@ -59,7 +58,7 @@ export default function CropGalleryPage() {
             <span className="gallery-body">
               <b>{hi ? c.hi : c.name}</b>
               <small>{hi ? c.name : c.hi}</small>
-              <span className="season-tags">{c.seasons.map((s) => <span key={s} style={{ "--c": SEASON_COLOR[s] }}>{hi ? SEASON_HI[s] : s}</span>)}</span>
+              <span className="season-tags">{c.seasons.map((s) => <span key={s} style={{ "--c": seasonInfo(s).color }}>{hi ? seasonInfo(s).hi : s}</span>)}</span>
             </span>
           </button>
         ))}
@@ -75,7 +74,7 @@ export default function CropGalleryPage() {
                 <button type="button" className="icon-btn" onClick={() => setOpen(null)} aria-label="Close"><MIcon name="close" /></button>
               </div>
               <dl className="crop-facts">
-                <div><dt>{hi ? "मौसम" : "Seasons"}</dt><dd>{open.seasons.map((s) => (hi ? SEASON_HI[s] : s)).join(", ")}</dd></div>
+                <div><dt>{hi ? "मौसम" : "Seasons"}</dt><dd>{open.seasons.map((s) => (hi ? seasonInfo(s).hi : s)).join(", ")}</dd></div>
                 <div><dt>{hi ? "उपयुक्त मिट्टी" : "Suitable soils"}</dt><dd>{open.soils.join(", ")}</dd></div>
                 <div><dt>{hi ? "पानी की ज़रूरत" : "Water need"}</dt><dd>{hi ? WATER_HI[open.water] : open.water}</dd></div>
                 <div><dt>{hi ? "उत्तम तापमान" : "Optimum temperature"}</dt><dd>{open.temp} °C</dd></div>

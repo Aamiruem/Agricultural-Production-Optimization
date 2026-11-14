@@ -6,9 +6,12 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartTooltip } from "@/components/charts/ChartTooltip";
 import { G } from "@/lib/icons";
 import { PageHeader } from "@/components/common/PageHeader";
-import { DISEASE_CROPS, SYMPTOMS, rankDiseases } from "@/data/diseases";
+import { DiseaseLibrary } from "@/components/disease/DiseaseLibrary";
+import { DISEASE_CROPS, SEASON_ORDER, SYMPTOMS, rankDiseases } from "@/data/diseases";
+import { STATES, seasonInfo } from "@/data/indiaAgri";
 import { useT } from "@/i18n/useT";
 import { analyzeLeafPixels } from "@/lib/agriModels";
+import { advisorSeason } from "@/lib/atlas";
 
 // Fixed colours for the pixel classes (they describe what the pixels look like).
 const CLASS = {
@@ -23,6 +26,8 @@ export default function DiseaseDetectionPage() {
   const { lang } = useT();
   const hi = lang === "hi";
   const [crop, setCrop] = useState("Tomato");
+  const [state, setState] = useState("");
+  const [season, setSeason] = useState(advisorSeason);
   const [symptoms, setSymptoms] = useState([]);
   const [image, setImage] = useState(null);
   const [scan, setScan] = useState(null);
@@ -51,7 +56,7 @@ export default function DiseaseDetectionPage() {
     img.src = url;
   };
   const toggle = (id) => setSymptoms((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
-  const ranked = symptoms.length || scan ? rankDiseases({ crop, symptoms, pct: scan?.pct }) : [];
+  const ranked = symptoms.length || scan ? rankDiseases({ crop, symptoms, pct: scan?.pct, state, season }) : [];
   const pie = scan ? Object.entries(scan.pct).filter(([, v]) => v > 0).map(([k, v]) => ({ name: CLASS[k].en, value: v, fill: CLASS[k].color })) : [];
   const maxScore = ranked[0]?.score || 1;
 
@@ -62,6 +67,19 @@ export default function DiseaseDetectionPage() {
         <section className="tool-card">
           <h2>{hi ? "1. फ़ोटो और फसल" : "1. Photo & crop"}</h2>
           <label className="field-label"><span>{hi ? "फसल" : "Crop"}</span><select value={crop} onChange={(e) => setCrop(e.target.value)}>{DISEASE_CROPS.map((c) => <option key={c}>{c}</option>)}</select></label>
+          <div className="field-row">
+            <label className="field-label"><span>{hi ? "राज्य (वैकल्पिक)" : "State (optional)"}</span>
+              <select value={state} onChange={(e) => setState(e.target.value)}>
+                <option value="">{hi ? "पूरा भारत" : "All India"}</option>
+                {STATES.map((st) => <option key={st.name} value={st.name}>{hi ? st.hi : st.name}</option>)}
+              </select>
+            </label>
+            <label className="field-label"><span>{hi ? "मौसम" : "Season"}</span>
+              <select value={season} onChange={(e) => setSeason(e.target.value)}>
+                {SEASON_ORDER.filter((x) => x !== "Year-round").map((x) => <option key={x} value={x}>{hi ? seasonInfo(x).hi : x}</option>)}
+              </select>
+            </label>
+          </div>
           <div
             className={`dropzone${image ? " has-image" : ""}`} role="button" tabIndex={0}
             onClick={() => inputRef.current?.click()} onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
@@ -94,6 +112,8 @@ export default function DiseaseDetectionPage() {
               <li key={d.id}>
                 <div className="d-flex justify-content-between gap-2"><b>{hi ? d.hi : d.en}</b><span className="chip small">{d.type}</span></div>
                 <div className="match-bar"><i style={{ width: `${Math.round((d.score / maxScore) * 100)}%` }} /></div>
+                {state && d.states.includes(state) && <p className="hotspot-note">{hi ? "आपके राज्य में आम समस्या" : `Known hotspot in ${state}`}</p>}
+                <p className="result-signs">{d.signs}</p>
                 <ul>{d.care.map((c) => <li key={c}>{c}</li>)}</ul>
               </li>
             ))}</ol>
@@ -101,6 +121,7 @@ export default function DiseaseDetectionPage() {
           <p className="disclaimer"><ShieldAlert size={15} /> This is colour-based screening plus a symptom matcher, not a laboratory diagnosis. Many diseases look alike. Confirm with your KVK / plant clinic before spraying any pesticide. <Link to="/assistant">Ask the AI assistant →</Link></p>
         </section>
       </div>
+      <DiseaseLibrary hi={hi} />
     </>
   );
 }
