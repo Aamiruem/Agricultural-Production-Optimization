@@ -1,14 +1,14 @@
 # Container platform: ECR repositories, an ECS Fargate cluster, one service per
 # container, and an Application Load Balancer routing by path:
 #   /api/*  -> api (FastAPI)      /farm-api/*, /socket.io/* -> farm-service (Node)
-#   /*      -> web (Next.js)      worker (Celery) has no inbound traffic
+#   /*      -> web (React app)    worker (Celery) has no inbound traffic
 
 locals {
   apps = {
     api          = { port = 8000, cpu = 512, memory = 1024, health = "/api/health", public = true }
     worker       = { port = 0, cpu = 512, memory = 2048, health = "", public = false }
-    farm-service = { port = 4000, cpu = 256, memory = 512, health = "/health", public = true }
-    web          = { port = 3000, cpu = 256, memory = 512, health = "/", public = true }
+    farm-service = { port = 4100, cpu = 256, memory = 512, health = "/health", public = true }
+    web          = { port = 80, cpu = 256, memory = 512, health = "/", public = true }
   }
   public_apps = { for k, v in local.apps : k => v if v.public }
 
@@ -29,7 +29,7 @@ locals {
       S3_BUCKET          = aws_s3_bucket.photos.bucket
       S3_PUBLIC_BASE_URL = "https://${aws_cloudfront_distribution.photos.domain_name}"
     }
-    web = { API_URL = "${var.site_url}/api" }
+    web = {} # static files; the ALB routes /api and /farm-api
   }
   python_secrets = concat(["JWT_SECRET", "DATABASE_URL"], local.has_anthropic_key ? ["ANTHROPIC_API_KEY"] : [])
   app_secrets = {

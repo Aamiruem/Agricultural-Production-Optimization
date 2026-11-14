@@ -1,0 +1,96 @@
+{
+  "description": "Hand-computed cases for the dataset-vs-local matching score. Both frontend/react-app/src/features/local/matching.js and backend/python-fastapi/app/services/local/matching.py must reproduce these. Default weights; tolerances as documented in docs/local-intelligence.md.",
+  "cases": [
+    {
+      "name": "state-level dataset vs Punjab point",
+      "profile": {
+        "state": "Punjab",
+        "district": null,
+        "lat": null,
+        "lon": null,
+        "soil_type": null,
+        "ph": 7.5,
+        "N": null,
+        "P": null,
+        "K": null,
+        "oc": null,
+        "rainfall": 600,
+        "temperature": 24,
+        "humidity": 60,
+        "area": null,
+        "crops": ["Wheat", "Rice"],
+        "seasons": ["Rabi"],
+        "latestYear": 2020
+      },
+      "local": {
+        "lat": 30.8,
+        "lon": 75.7,
+        "state": "Punjab",
+        "district": "Ludhiana",
+        "soilClasses": ["Alluvial"],
+        "texture": "Loam",
+        "ph": 8.0,
+        "N": null,
+        "P": null,
+        "K": null,
+        "nutrientBasis": null,
+        "oc": null,
+        "rainfall": 750,
+        "temperature": 24.5,
+        "humidity": 55,
+        "crops": ["Wheat", "Rice", "Cotton"],
+        "season": "Rabi",
+        "area": null,
+        "levels": {}
+      },
+      "now": "2026-11-14",
+      "expected": {
+        "score": 63.4,
+        "coverage": 70.0,
+        "status": {
+          "location": "partial",
+          "soil_type": "missing",
+          "ph": "partial",
+          "N": "missing",
+          "P": "missing",
+          "K": "missing",
+          "oc": "missing",
+          "temperature": "match",
+          "humidity": "partial",
+          "rainfall": "mismatch",
+          "area": "missing",
+          "crop": "match",
+          "season": "match"
+        },
+        "similarity": { "location": 0.6, "ph": 0.5, "temperature": 0.875, "humidity": 0.667, "rainfall": 0.2, "crop": 1, "season": 1 },
+        "temporal": "medium"
+      }
+    },
+    {
+      "name": "nutrients on a different basis are not comparable",
+      "profile": { "state": "Bihar", "N": 90, "P": 40, "K": 40, "ph": 6.5, "crops": [], "seasons": [], "latestYear": 2024 },
+      "local": { "state": "Bihar", "N": 1.2, "P": null, "K": null, "nutrientBasis": "total-g-kg", "ph": 6.5, "crops": [], "season": "Kharif", "levels": {} },
+      "now": "2026-11-14",
+      "expected": {
+        "score": 73.3,
+        "coverage": 30.0,
+        "status": { "location": "partial", "ph": "match", "N": "not comparable", "P": "missing", "K": "missing" },
+        "similarity": { "location": 0.6, "ph": 1 },
+        "temporal": "high"
+      }
+    },
+    {
+      "name": "coordinates 10 km apart",
+      "profile": { "lat": 25.0, "lon": 80.0, "crops": [], "seasons": [], "latestYear": 2010 },
+      "local": { "lat": 25.0899322, "lon": 80.0, "state": "Uttar Pradesh", "crops": [], "season": "Kharif", "levels": {} },
+      "now": "2026-11-14",
+      "expected": {
+        "score": 80.0,
+        "coverage": 20.0,
+        "status": { "location": "match" },
+        "similarity": { "location": 0.8 },
+        "temporal": "low"
+      }
+    }
+  ]
+}

@@ -35,9 +35,7 @@ export default fieldsSlice.reducer;
 // Memoized selectors
 export const selectFields = (state) => state.fields.items;
 
-export const selectTotalArea = createSelector([selectFields], (fields) =>
-  fields.reduce((sum, f) => sum + f.areaHa, 0),
-);
+export const selectTotalArea = createSelector([selectFields], (fields) => fields.reduce((sum, f) => sum + f.areaHa, 0));
 
 export const selectAreaBySeason = createSelector([selectFields], (fields) =>
   fields.reduce((acc, f) => ({ ...acc, [f.season]: (acc[f.season] ?? 0) + f.areaHa }), {}),

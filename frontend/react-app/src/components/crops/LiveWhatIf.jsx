@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
 import { useLiveRecommend } from "@/hooks/useLiveRecommend";
+import { recommendLocal } from "@/lib/agriModels";
 import { formatCropName } from "@/utils/crops";
 import { formatPercent } from "@/utils/format";
 
@@ -21,10 +22,14 @@ const SLIDERS = [
 
 const START = { N: 80, P: 45, K: 40, temperature: 24, humidity: 80, ph: 6.5, rainfall: 200 };
 
-/** Move a slider → the ranking updates instantly over a WebSocket. */
+/** Move a slider → the ranking updates instantly (WebSocket to the server model, or the in-browser model when offline). */
 export function LiveWhatIf() {
   const [soil, setSoil] = useState(START);
-  const { result, status, send } = useLiveRecommend(START);
+  const live = useLiveRecommend(START);
+  const { status, send } = live;
+  // Without the API socket (e.g. static hosting), rank instantly with the browser model.
+  const offline = status !== "open";
+  const result = offline ? recommendLocal(soil) : live.result;
 
   const update = (key, value) => {
     const next = { ...soil, [key]: value };
@@ -37,9 +42,12 @@ export function LiveWhatIf() {
       <Card.Body>
         <Card.Title as="h2" className="h5 d-flex align-items-center gap-2">
           Live what-if
-          <Badge bg={status === "open" ? "success" : "secondary"}>{status === "open" ? "Live" : status}</Badge>
+          <Badge bg={offline ? "info" : "success"}>{offline ? "Browser model" : "Live"}</Badge>
         </Card.Title>
-        <p className="small text-body-secondary">Move a slider and the ranking updates instantly over a WebSocket.</p>
+        <p className="small text-body-secondary">
+          Move a slider and the ranking updates instantly (WebSocket to the server model, or the in-browser model when
+          offline).
+        </p>
         <Row className="g-4">
           <Col md={8}>
             <Row xs={1} sm={2} className="g-3">
@@ -47,10 +55,19 @@ export function LiveWhatIf() {
                 <Col key={s.key}>
                   <Form.Label htmlFor={`wi-${s.key}`} className="d-flex justify-content-between small mb-0">
                     <span>{s.label}</span>
-                    <span className="tabular text-body-secondary">{soil[s.key]}{s.unit}</span>
+                    <span className="tabular text-body-secondary">
+                      {soil[s.key]}
+                      {s.unit}
+                    </span>
                   </Form.Label>
-                  <Form.Range id={`wi-${s.key}`} min={s.min} max={s.max} step={s.step} value={soil[s.key]}
-                              onChange={(e) => update(s.key, Number(e.target.value))} />
+                  <Form.Range
+                    id={`wi-${s.key}`}
+                    min={s.min}
+                    max={s.max}
+                    step={s.step}
+                    value={soil[s.key]}
+                    onChange={(e) => update(s.key, Number(e.target.value))}
+                  />
                 </Col>
               ))}
             </Row>
@@ -59,7 +76,10 @@ export function LiveWhatIf() {
             <ol className="list-unstyled d-grid gap-2 mb-0" aria-label="Live ranking" aria-live="polite">
               {result?.top.map((t, i) => (
                 <li key={t.crop} className="d-flex justify-content-between border rounded px-3 py-2 small">
-                  <span><span className="text-body-secondary">#{i + 1} </span>{formatCropName(t.crop)}</span>
+                  <span>
+                    <span className="text-body-secondary">#{i + 1} </span>
+                    {formatCropName(t.crop)}
+                  </span>
                   <span className="tabular">{formatPercent(t.confidence)}</span>
                 </li>
               ))}

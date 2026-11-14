@@ -14,11 +14,16 @@ export function ChatInput({ busy, onSend, onReset }) {
   };
 
   return (
-    <form className="d-flex gap-2" onSubmit={(e) => {
-      e.preventDefault();
-      submit();
-    }}>
-      <Form.Label htmlFor="chat-input" visuallyHidden>Message</Form.Label>
+    <form
+      className="d-flex gap-2"
+      onSubmit={(e) => {
+        e.preventDefault();
+        submit();
+      }}
+    >
+      <Form.Label htmlFor="chat-input" visuallyHidden>
+        Message
+      </Form.Label>
       <Form.Control
         as="textarea"
         id="chat-input"

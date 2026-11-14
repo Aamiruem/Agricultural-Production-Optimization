@@ -1,0 +1,82 @@
+{
+    "systems": {
+        "crop-production-systems": "File:Women at work, Gujarat (cropped).jpg",
+        "subsistence-farming": "File:L'agriculture de subsistance en Casamance.jpg",
+        "commercial-farming": "File:Sugarcane harvest Piracicaba 05 2009 5783.JPG",
+        "intensive-farming": "File:Polyhouse cultivation,village Dhaar,district Solan, Himachal Pradesh.jpg",
+        "extensive-farming": "File:Grazing cattle on a pasture in eastern New Mexico.jpg",
+        "organic-farming": "File:Farming Gods Way.jpg",
+        "integrated-farming": "File:Duck farming Candaba4.jpg",
+        "mixed-farming": "File:Bullock ploughing sowing groundnut blackeyed peas Raichur Karnataka India.jp.jpg",
+        "precision-agriculture": "File:20220831-OSEC-LSC-0224A.jpg",
+        "sustainable-agriculture": "File:Sustainable Agriculture Practice, Rangunia, Chittagong 01.JPG",
+        "irrigation-systems": "File:Button dripper.JPG",
+        "soil-management": "File:Red soil of a ploughed field - geograph.org.uk - 6515863.jpg",
+        "fertilizer-management": "File:Spreading the natural fertilizer - geograph.org.uk - 4871235.jpg",
+        "pest-disease-management": "File:Yellow sticker trap.jpg",
+        "crop-rotation": "File:Plodozmian.jpg",
+        "intercropping": "File:Intercropping coconut n Tagetes erecta.jpg"
+    },
+    "machines": {
+        "smart-tractor": "File:Tractor ploughing field 2.jpg",
+        "combine-harvester": "File:Combine in wheat field.jpg",
+        "agricultural-drone": "File:IRRI BBM rice drone demo 2.jpg",
+        "seed-drill": "File:John Deere Planter with Case IH Tractor.JPG",
+        "spraying-machine": "File:Crop sprayer, Oxpens Farm - geograph.org.uk - 4429399.jpg",
+        "smart-irrigation": "File:Center-pivot irrigation system - 2.jpg",
+        "soil-testing-equipment": "File:IRTC Laboratory Soil Test.jpg",
+        "agricultural-robot": "File:XAG sprayer robot, Agritechnica 2023, Hanover (P1160327).jpg",
+        "weeding-machine": "File:Titan FT35 FarmWise3.jpg",
+        "crop-sensors": "File:272 soilmoisture.JPG",
+        "greenhouse-automation": "File:Hydroponic Greenhouse in Armenia 1.jpg",
+        "grain-processing": "File:Rice mill in Laos.jpg"
+    },
+    "ai": {
+        "satellite-monitoring": "File:Agricultural Fields Near Rome (50586672117).jpg",
+        "plant-disease": "File:Sweet potato plant with leaf miner damage.jpg",
+        "weather-forecasting": "File:Logia Home Weather Station.jpg",
+        "market-prices": "File:Market Hyderabad.jpg",
+        "soil-analysis": "File:Soil fertility analysis 7 Samples for Zn Mn & Cu by AA.jpg"
+    },
+    "food": {
+        "rice-field": "File:Paddy Field Stubble Balamuri Coorg Feb24 A7C 09450.jpg",
+        "wheat-field": "File:Wheat field in Punjab -1.jpg",
+        "fresh-vegetables": "File:Vegetables arranged at a roadside stall in India.jpg",
+        "fruits": "File:Fruit Stall in Barcelona Market.jpg",
+        "organic-food": "File:Organic food at the street fair of Redenção, Porto Alegre- Brazil 1.jpg",
+        "harvesting": "File:Farmer manually harvesting rice in Raichur, Karnataka.jpg",
+        "food-storage": "File:CWC Godown, Bamanheri operated by Food Corporation of India for stocking foodgrains.jpg",
+        "food-processing": "File:Rice processing mill 102.jpg",
+        "supply-chain": "File:Potato transportation to cold storage in India (2).jpg",
+        "silos": "File:Adani Food Processing Plant Bandel.jpg"
+    },
+    "health": {
+        "doctor-consultation": "File:Doctor examines patient with stethoscope (2).jpg",
+        "healthcare-clinic": "File:Front View of Primary Health Centre Addakal Mahabubnagar Telanagana India.jpg",
+        "rural-healthcare": "File:Mobile Medical Unit Project.jpg",
+        "awareness-campaign": "File:Vaccination drive for COVID prevention in Bhopal, India 02.jpg",
+        "community-health-worker": "File:Community health worker gives a vaccination in Odisha state, India (8380317750).jpg",
+        "farm-safety": "File:US Navy 050309-N-8796S-031 Chief Hospital Corpsman Alberto Redublo, left, helps Hospital Corpsman 2nd Class Richard Cabatit as he dons his personal protective equipment for spraying pesticides.jpg",
+        "clean-water": "File:A child pumping water.jpg",
+        "first-aid": "File:Erste Hilfe 003 2026 02 17.jpg"
+    },
+    "nutrition": {
+        "healthy-fruits": "File:DFC 2197 A colorful assortment of fresh fruits and vegetables - apples mango dragon fruit kiwis limes bananas and more - arranged on a wooden crate.jpg",
+        "fresh-vegetables": "File:Vegetables-1212845.jpg",
+        "organic-food": "File:Napa Farmers Market - April 2023 - Sarah Stierch.jpg",
+        "cereals-grains": "File:Cereal Seller 3.jpg",
+        "pulses-legumes": "File:Pulses Red Chillies Ooty Market Nilgiris Aug25 A7CR 07122.jpg",
+        "dairy-products": "File:DairyProductsGermany.jpg",
+        "balanced-diet": "File:Darjeeling, India, Indian Thali meal.jpg",
+        "nutritional-benefits": "File:Nuts on Spice Bazaar in Istanbul 01.jpg"
+    },
+    "education": {
+        "modern-farming": "File:Training to farmers on Co-composting, Devanahalli, Bengaluru.jpg",
+        "seed-selection": "File:Ponni paddy seed.JPG",
+        "crop-protection": "File:SPRAYING PESTICIDES - NARA - 544246 (cropped).jpg",
+        "agri-economics": "File:USAID Firms Project's Agriculture Marketing Reforms.jpg",
+        "sustainable-development": "File:SOLAR POWER IRRIGATION RICE FARMING.jpg",
+        "government-schemes": "File:Baramati, Maharashtra, India. 10 Krishi Vigyan Kendra (agriculture promotion) bus.jpg",
+        "farmers-in-field": "File:Indian farmers.jpg"
+    }
+}

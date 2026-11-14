@@ -2,6 +2,7 @@
 node_modules/
 dist/
 *.log
+.devlogs/
 
 # Python
 __pycache__/
@@ -20,14 +21,10 @@ venv/
 *.db-shm
 *.db-wal
 
-# ML artifacts (reproduce with `python -m ml.data.download_dataset && python -m ml.train`)
-ml/datasets/*.csv
-ml/models/*.joblib
-ml/models/*.pkl
-ml/models/*.pt
-ml/models/metrics.json
-ml/mlruns/
-ml/mlflow.db
+# ML training by-products. Models and datasets in AIML/ are committed on purpose:
+# the API and the Docker image serve them. (*.db above covers MLflow/warehouse DBs.)
+catboost_info/
+AIML/mlruns/
 .ipynb_checkpoints/
 
 # Terraform

@@ -26,18 +26,31 @@ export function BatchUpload() {
   return (
     <Card className="h-100">
       <Card.Body>
-        <Card.Title as="h3" className="h6">Batch recommendations (CSV)</Card.Title>
+        <Card.Title as="h3" className="h6">
+          Batch recommendations (CSV)
+        </Card.Title>
         <p className="small text-body-secondary">
           Columns <code>N,P,K,temperature,humidity,ph,rainfall</code>, up to 1,000 rows. Processed as a background job.
         </p>
-        <input ref={fileRef} type="file" accept=".csv,text/csv" hidden aria-label="CSV file"
-               onChange={(e) => {
-                 const file = e.target.files?.[0];
-                 if (file) batch.mutate(file);
-                 e.target.value = "";
-               }} />
-        <Button size="sm" variant="outline-primary" disabled={batch.isPending} onClick={() => fileRef.current?.click()}
-                className="d-inline-flex align-items-center gap-1">
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".csv,text/csv"
+          hidden
+          aria-label="CSV file"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) batch.mutate(file);
+            e.target.value = "";
+          }}
+        />
+        <Button
+          size="sm"
+          variant="outline-primary"
+          disabled={batch.isPending}
+          onClick={() => fileRef.current?.click()}
+          className="d-inline-flex align-items-center gap-1"
+        >
           {batch.isPending ? <Spinner size="sm" /> : <Upload size={14} />} Upload CSV
         </Button>
         <ErrorAlert error={batch.error} className="mt-2" />

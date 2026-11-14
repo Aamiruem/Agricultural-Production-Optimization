@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { API_URL } from "@/services/apiClient";
+import { getValidToken } from "@/store/authStore";
 
 function wsUrl() {
   const base = new URL(API_URL, window.location.origin); // works for "/api" and absolute URLs
   base.protocol = base.protocol === "https:" ? "wss:" : "ws:";
-  return `${base.href.replace(/\/$/, "")}/ws/recommend`;
+  // Browsers cannot set headers on a WebSocket, so the JWT travels in the query string.
+  const token = getValidToken();
+  return `${base.href.replace(/\/$/, "")}/ws/recommend${token ? `?token=${encodeURIComponent(token)}` : ""}`;
 }
 
 /**
@@ -21,11 +24,15 @@ export function useLiveRecommend(initialSoil) {
   useEffect(() => {
     let retry;
     let closedByUs = false;
+    let failures = 0; // consecutive attempts that never opened
 
     function connect() {
       const ws = new WebSocket(wsUrl());
       wsRef.current = ws;
+      let opened = false;
       ws.onopen = () => {
+        opened = true;
+        failures = 0;
         setStatus("open");
         ws.send(JSON.stringify(latest.current));
       };
@@ -35,7 +42,9 @@ export function useLiveRecommend(initialSoil) {
       };
       ws.onclose = () => {
         setStatus("closed");
-        if (!closedByUs) retry = setTimeout(connect, 3000);
+        if (!opened) failures += 1;
+        // No server socket (e.g. static hosting): stop after 3 tries; the UI uses the browser model.
+        if (!closedByUs && failures < 3) retry = setTimeout(connect, 3000 * (failures + 1));
       };
     }
     connect();

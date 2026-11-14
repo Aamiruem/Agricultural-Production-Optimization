@@ -1,0 +1,109 @@
+text,intent
+"White flies on my cotton leaves, what spray should I use",pest_disease
+"Brown spots spreading on tomato leaves",pest_disease
+"Pink bollworm found in cotton bolls how to control",pest_disease
+"Yellow mosaic virus in moong crop",pest_disease
+"Stem borer attack in paddy field",pest_disease
+"Leaves of my wheat have orange rust powder",pest_disease
+"Aphids on mustard flowers",pest_disease
+"Fall armyworm eating maize leaves",pest_disease
+"Fungus on chilli plants, leaves curling",pest_disease
+"Termites damaging sugarcane roots",pest_disease
+"Blast disease symptoms in rice how to treat",pest_disease
+"Wilt in chickpea plants drying suddenly",pest_disease
+"keede lag gaye hai baingan mein kya dawai daalein",pest_disease
+"Fruit fly attack on mango",pest_disease
+"Powdery mildew on grapes vine",pest_disease
+"Late blight on potato after rain",pest_disease
+"Thrips on onion leaves silvery patches",pest_disease
+"How much urea should I apply for wheat per acre",fertilizer
+"When to apply DAP in paddy",fertilizer
+"Soil test shows low potassium what fertilizer to use",fertilizer
+"Dose of NPK 10 26 26 for groundnut",fertilizer
+"Can I mix urea and potash together",fertilizer
+"Zinc deficiency in rice, khaira disease, which fertilizer",fertilizer
+"Organic manure quantity for vegetable garden",fertilizer
+"Is neem coated urea better",fertilizer
+"Second top dressing of nitrogen in maize when",fertilizer
+"gehu mein kitna yuria daalna chahiye",fertilizer
+"Single super phosphate vs DAP for mustard",fertilizer
+"How to make vermicompost at home",fertilizer
+"Gypsum application for groundnut pegging",fertilizer
+"Micronutrient spray for citrus yellow leaves",fertilizer
+"Fertilizer schedule for sugarcane ratoon",fertilizer
+"Biofertilizer rhizobium for pulses how to use",fertilizer
+"How many days interval to irrigate wheat",irrigation
+"Drip irrigation subsidy and setup for vegetables",irrigation
+"Critical irrigation stages in wheat crop",irrigation
+"How much water does paddy need per week",irrigation
+"Sprinkler or drip which is better for groundnut",irrigation
+"My borewell water is salty can I irrigate",irrigation
+"Alternate wetting and drying in rice explained",irrigation
+"paani kab dena hai sarso mein",irrigation
+"Should I irrigate before or after urea application",irrigation
+"Water logging in my maize field what to do",irrigation
+"Mulching to save water in summer crops",irrigation
+"Irrigation scheduling using evapotranspiration",irrigation
+"How to irrigate banana with drip daily litres",irrigation
+"Furrow irrigation for cotton spacing",irrigation
+"Is it okay to irrigate at night",irrigation
+"Rainwater harvesting farm pond size",irrigation
+"Will it rain this week in Ludhiana",weather
+"Frost forecast for tonight, protect potato",weather
+"Heat wave coming, what to do for wheat",weather
+"Is the monsoon delayed this year",weather
+"Best time to spray pesticide considering wind",weather
+"Hailstorm alert in my district",weather
+"Kal barish hogi kya",weather
+"Temperature forecast for sowing rabi crops",weather
+"Cyclone warning for coastal farmers",weather
+"Humidity high, will disease increase",weather
+"Weekly weather advisory for farmers",weather
+"Dry spell expected, should I delay sowing",weather
+"Fog for many days affecting mustard",weather
+"When will winter rains come",weather
+"Strong winds forecast, should I harvest early",weather
+"What is today's onion price in Lasalgaon mandi",market_price
+"MSP of wheat this year",market_price
+"Where can I sell my cotton at better rate",market_price
+"Tomato prices falling should I store",market_price
+"Current soybean rate in Indore",market_price
+"How to register on eNAM to sell",market_price
+"Paddy procurement price government",market_price
+"aaj mandi mein tamatar ka bhav kya hai",market_price
+"Is it a good time to sell turmeric",market_price
+"Cold storage charges for potatoes",market_price
+"Price trend of chana next month",market_price
+"Export demand for basmati rice",market_price
+"Minimum support price for moong",market_price
+"Best mandi near me for maize",market_price
+"Which wheat variety is best for late sowing",seeds_varieties
+"High yielding paddy variety for Punjab",seeds_varieties
+"Bt cotton seed which brand is genuine",seeds_varieties
+"Seed rate for chickpea per hectare",seeds_varieties
+"Drought tolerant maize hybrid",seeds_varieties
+"Where to buy certified seeds",seeds_varieties
+"Seed treatment before sowing soybean",seeds_varieties
+"acha beej kaunsa hai dhan ka",seeds_varieties
+"Short duration mustard variety",seeds_varieties
+"Disease resistant tomato hybrid",seeds_varieties
+"How to store seeds for next season",seeds_varieties
+"Pusa basmati 1121 sowing time",seeds_varieties
+"Spacing and seed rate for maize",seeds_varieties
+"Is HD 3086 good for my area",seeds_varieties
+"Germination test of seeds at home",seeds_varieties
+"How to apply for PM Kisan installment",government_scheme
+"Crop insurance claim under PMFBY",government_scheme
+"Kisan credit card loan interest",government_scheme
+"Subsidy on tractor purchase",government_scheme
+"Soil health card how to get",government_scheme
+"PM Kisan payment not received",government_scheme
+"Solar pump scheme for farmers",government_scheme
+"kisan credit card kaise banwaye",government_scheme
+"Insurance for crop damage due to hail",government_scheme
+"Subsidy for polyhouse construction",government_scheme
+"Farm machinery bank scheme",government_scheme
+"How to check PMFBY claim status",government_scheme
+"Loan waiver for small farmers",government_scheme
+"Training programs at Krishi Vigyan Kendra",government_scheme
+"Subsidy for drip irrigation under PMKSY",government_scheme

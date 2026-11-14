@@ -22,9 +22,9 @@ describe("formatting", () => {
 
   it("only allows same-site redirects after login", () => {
     expect(safeRedirect("/insights")).toBe("/insights");
-    expect(safeRedirect("//evil.example")).toBe("/farms");
-    expect(safeRedirect("https://evil.example")).toBe("/farms");
-    expect(safeRedirect(null)).toBe("/farms");
+    expect(safeRedirect("//evil.example")).toBe("/dashboard");
+    expect(safeRedirect("https://evil.example")).toBe("/dashboard");
+    expect(safeRedirect(null)).toBe("/dashboard");
   });
 });
 

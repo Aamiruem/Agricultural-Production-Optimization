@@ -1,4 +1,3 @@
-import Alert from "react-bootstrap/Alert";
 import { Navigate, Outlet, useLocation } from "react-router";
 
 import { useSession } from "@/store/authStore";
@@ -7,7 +6,15 @@ import { useSession } from "@/store/authStore";
 export function AdminRoute() {
   const { user, isAdmin } = useSession();
   const location = useLocation();
-  if (!user) return <Navigate to={`/login?next=${encodeURIComponent(location.pathname)}`} replace />;
-  if (!isAdmin) return <Alert variant="warning">This page is for administrators only.</Alert>;
+  if (!user)
+    return (
+      <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`} replace />
+    );
+  if (!isAdmin)
+    return (
+      <div className="alert alert-warning m-4" role="alert">
+        This page is for administrators only.
+      </div>
+    );
   return <Outlet />;
 }

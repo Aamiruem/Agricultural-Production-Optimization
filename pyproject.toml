@@ -1,0 +1,8 @@
+# Shared Python tooling configuration (the services themselves use requirements.txt).
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = [".venv", "AIML/mlruns", "backend/python-fastapi/migrations/versions"]
+
+[tool.ruff.format]
+quote-style = "double"

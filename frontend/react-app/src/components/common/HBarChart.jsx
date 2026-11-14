@@ -26,7 +26,10 @@ export function HBarChart({ caption, data }) {
             <span className="hbar-track" aria-hidden>
               <span
                 className="hbar-fill d-block"
-                style={{ width: `${Math.max((d.value / max) * 100, 1)}%`, opacity: hover && hover !== d.label ? 0.4 : 1 }}
+                style={{
+                  width: `${Math.max((d.value / max) * 100, 1)}%`,
+                  opacity: hover && hover !== d.label ? 0.4 : 1,
+                }}
               />
             </span>
             <span className="text-end tabular">{d.display}</span>

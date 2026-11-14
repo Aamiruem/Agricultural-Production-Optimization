@@ -1,0 +1,999 @@
+{
+  "crops": [
+    {
+      "name": "Sugarcane",
+      "hi": "गन्ना",
+      "group": "Cash crop",
+      "seasons": ["Whole Year"],
+      "soils": ["Alluvial", "Loamy", "Black"],
+      "yield": 71.0,
+      "rain": 1350.0,
+      "temp": 28.0,
+      "water": "High",
+      "image": "/images/crops/sugarcane.webp"
+    },
+    {
+      "name": "Tobacco",
+      "hi": "तंबाकू",
+      "group": "Cash crop",
+      "seasons": ["Rabi", "Whole Year"],
+      "soils": ["Sandy", "Loamy", "Black"],
+      "yield": 1.8,
+      "rain": 650.0,
+      "temp": 24.0,
+      "water": "Medium",
+      "image": "/images/crops/tobacco.webp"
+    },
+    {
+      "name": "Barley",
+      "hi": "जौ",
+      "group": "Cereal",
+      "seasons": ["Rabi"],
+      "soils": ["Loamy", "Alluvial", "Sandy", "Mountain"],
+      "yield": 2.8,
+      "rain": 450.0,
+      "temp": 18.0,
+      "water": "Low",
+      "image": "/images/crops/barley.webp"
+    },
+    {
+      "name": "Maize",
+      "hi": "मक्का",
+      "group": "Cereal",
+      "seasons": ["Kharif", "Rabi", "Zaid"],
+      "soils": ["Loamy", "Alluvial", "Black", "Red"],
+      "yield": 3.2,
+      "rain": 800.0,
+      "temp": 25.0,
+      "water": "Medium",
+      "image": "/images/crops/maize.webp"
+    },
+    {
+      "name": "Rice",
+      "hi": "धान",
+      "group": "Cereal",
+      "seasons": ["Kharif", "Rabi"],
+      "soils": ["Alluvial", "Clay", "Loamy"],
+      "yield": 3.8,
+      "rain": 1250.0,
+      "temp": 27.0,
+      "water": "High",
+      "image": "/images/crops/rice.webp"
+    },
+    {
+      "name": "Wheat",
+      "hi": "गेहूँ",
+      "group": "Cereal",
+      "seasons": ["Rabi"],
+      "soils": ["Alluvial", "Loamy", "Clay"],
+      "yield": 3.5,
+      "rain": 650.0,
+      "temp": 21.0,
+      "water": "Medium",
+      "image": "/images/crops/wheat.webp"
+    },
+    {
+      "name": "Cotton",
+      "hi": "कपास",
+      "group": "Fibre",
+      "seasons": ["Kharif"],
+      "soils": ["Black", "Alluvial", "Red"],
+      "yield": 1.9,
+      "rain": 850.0,
+      "temp": 27.0,
+      "water": "Medium",
+      "image": "/images/crops/cotton.webp"
+    },
+    {
+      "name": "Jute",
+      "hi": "जूट / पटसन",
+      "group": "Fibre",
+      "seasons": ["Kharif"],
+      "soils": ["Alluvial", "Clay", "Loamy"],
+      "yield": 2.5,
+      "rain": 1600.0,
+      "temp": 27.0,
+      "water": "High",
+      "image": "/images/crops/jute.webp"
+    },
+    {
+      "name": "Apple",
+      "hi": "सेब",
+      "group": "Fruit",
+      "seasons": ["Perennial"],
+      "soils": ["Mountain", "Loamy", "Sandy"],
+      "yield": 8.0,
+      "rain": 1000.0,
+      "temp": 15.0,
+      "water": "Medium",
+      "image": "/images/crops/apple.webp"
+    },
+    {
+      "name": "Banana",
+      "hi": "केला",
+      "group": "Fruit",
+      "seasons": ["Whole Year", "Perennial"],
+      "soils": ["Loamy", "Alluvial", "Laterite"],
+      "yield": 32.0,
+      "rain": 1700.0,
+      "temp": 27.0,
+      "water": "High",
+      "image": "/images/crops/banana.webp"
+    },
+    {
+      "name": "Mango",
+      "hi": "आम",
+      "group": "Fruit",
+      "seasons": ["Perennial"],
+      "soils": ["Loamy", "Alluvial", "Red", "Laterite"],
+      "yield": 10.0,
+      "rain": 900.0,
+      "temp": 27.0,
+      "water": "Medium",
+      "image": "/images/crops/mango.webp"
+    },
+    {
+      "name": "Orange",
+      "hi": "संतरा",
+      "group": "Fruit",
+      "seasons": ["Perennial"],
+      "soils": ["Loamy", "Red", "Laterite"],
+      "yield": 12.0,
+      "rain": 1100.0,
+      "temp": 24.0,
+      "water": "Medium",
+      "image": "/images/crops/orange.webp"
+    },
+    {
+      "name": "Pineapple",
+      "hi": "अनानास",
+      "group": "Fruit",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Loamy", "Red"],
+      "yield": 40.0,
+      "rain": 1800.0,
+      "temp": 25.0,
+      "water": "High",
+      "image": "/images/crops/pineapple.webp"
+    },
+    {
+      "name": "Watermelon",
+      "hi": "तरबूज",
+      "group": "Fruit",
+      "seasons": ["Zaid"],
+      "soils": ["Sandy", "Loamy", "Alluvial"],
+      "yield": 25.0,
+      "rain": 450.0,
+      "temp": 29.0,
+      "water": "Medium",
+      "image": "/images/crops/watermelon.webp"
+    },
+    {
+      "name": "Finger Millet",
+      "hi": "रागी / मंडुआ",
+      "group": "Millet",
+      "seasons": ["Kharif"],
+      "soils": ["Red", "Laterite", "Mountain", "Loamy"],
+      "yield": 1.8,
+      "rain": 750.0,
+      "temp": 24.0,
+      "water": "Low",
+      "image": "/images/crops/finger-millet.webp"
+    },
+    {
+      "name": "Pearl Millet",
+      "hi": "बाजरा",
+      "group": "Millet",
+      "seasons": ["Kharif"],
+      "soils": ["Sandy", "Desert", "Loamy"],
+      "yield": 2.0,
+      "rain": 420.0,
+      "temp": 28.0,
+      "water": "Low",
+      "image": "/images/crops/pearl-millet.webp"
+    },
+    {
+      "name": "Sorghum",
+      "hi": "ज्वार",
+      "group": "Millet",
+      "seasons": ["Kharif", "Rabi"],
+      "soils": ["Black", "Red", "Loamy"],
+      "yield": 2.2,
+      "rain": 550.0,
+      "temp": 27.0,
+      "water": "Low",
+      "image": "/images/crops/sorghum.webp"
+    },
+    {
+      "name": "Cashew",
+      "hi": "काजू",
+      "group": "Nut",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Sandy", "Red"],
+      "yield": 0.9,
+      "rain": 1200.0,
+      "temp": 27.0,
+      "water": "Low",
+      "image": "/images/crops/cashew.webp"
+    },
+    {
+      "name": "Groundnut",
+      "hi": "मूंगफली",
+      "group": "Oilseed",
+      "seasons": ["Kharif", "Zaid"],
+      "soils": ["Sandy", "Loamy", "Red", "Black"],
+      "yield": 2.1,
+      "rain": 750.0,
+      "temp": 26.0,
+      "water": "Medium",
+      "image": "/images/crops/groundnut.webp"
+    },
+    {
+      "name": "Mustard",
+      "hi": "सरसों",
+      "group": "Oilseed",
+      "seasons": ["Rabi"],
+      "soils": ["Alluvial", "Loamy", "Sandy"],
+      "yield": 1.6,
+      "rain": 500.0,
+      "temp": 20.0,
+      "water": "Low",
+      "image": "/images/crops/mustard.webp"
+    },
+    {
+      "name": "Sesame",
+      "hi": "तिल",
+      "group": "Oilseed",
+      "seasons": ["Kharif", "Zaid"],
+      "soils": ["Sandy", "Loamy", "Red"],
+      "yield": 0.75,
+      "rain": 550.0,
+      "temp": 27.0,
+      "water": "Low",
+      "image": "/images/crops/sesame.webp"
+    },
+    {
+      "name": "Soybean",
+      "hi": "सोयाबीन",
+      "group": "Oilseed",
+      "seasons": ["Kharif"],
+      "soils": ["Black", "Loamy", "Red"],
+      "yield": 1.8,
+      "rain": 900.0,
+      "temp": 25.0,
+      "water": "Medium",
+      "image": "/images/crops/soybean.webp"
+    },
+    {
+      "name": "Sunflower",
+      "hi": "सूरजमुखी",
+      "group": "Oilseed",
+      "seasons": ["Kharif", "Rabi", "Zaid"],
+      "soils": ["Black", "Loamy", "Alluvial"],
+      "yield": 1.6,
+      "rain": 600.0,
+      "temp": 25.0,
+      "water": "Low",
+      "image": "/images/crops/sunflower.webp"
+    },
+    {
+      "name": "Arecanut",
+      "hi": "सुपारी",
+      "group": "Plantation",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Loamy", "Alluvial"],
+      "yield": 2.0,
+      "rain": 2000.0,
+      "temp": 26.0,
+      "water": "High",
+      "image": "/images/crops/arecanut.webp"
+    },
+    {
+      "name": "Coconut",
+      "hi": "नारियल",
+      "group": "Plantation",
+      "seasons": ["Perennial"],
+      "soils": ["Sandy", "Laterite", "Alluvial"],
+      "yield": 9.0,
+      "rain": 1800.0,
+      "temp": 27.0,
+      "water": "High",
+      "image": "/images/crops/coconut.webp"
+    },
+    {
+      "name": "Coffee",
+      "hi": "कॉफी",
+      "group": "Plantation",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Mountain", "Loamy"],
+      "yield": 1.05,
+      "rain": 1800.0,
+      "temp": 21.0,
+      "water": "High",
+      "image": "/images/crops/coffee.webp"
+    },
+    {
+      "name": "Rubber",
+      "hi": "रबर",
+      "group": "Plantation",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Loamy", "Red"],
+      "yield": 1.65,
+      "rain": 2200.0,
+      "temp": 27.0,
+      "water": "High",
+      "image": "/images/crops/rubber.webp"
+    },
+    {
+      "name": "Tea",
+      "hi": "चाय",
+      "group": "Plantation",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Mountain", "Loamy"],
+      "yield": 2.2,
+      "rain": 2000.0,
+      "temp": 21.0,
+      "water": "High",
+      "image": "/images/crops/tea.webp"
+    },
+    {
+      "name": "Black Gram",
+      "hi": "उड़द",
+      "group": "Pulse",
+      "seasons": ["Kharif", "Zaid"],
+      "soils": ["Loamy", "Black", "Alluvial"],
+      "yield": 0.9,
+      "rain": 700.0,
+      "temp": 27.0,
+      "water": "Low",
+      "image": "/images/crops/black-gram.webp"
+    },
+    {
+      "name": "Chickpea",
+      "hi": "चना",
+      "group": "Pulse",
+      "seasons": ["Rabi"],
+      "soils": ["Loamy", "Black", "Alluvial"],
+      "yield": 1.5,
+      "rain": 480.0,
+      "temp": 21.0,
+      "water": "Low",
+      "image": "/images/crops/chickpea.webp"
+    },
+    {
+      "name": "Green Gram",
+      "hi": "मूंग",
+      "group": "Pulse",
+      "seasons": ["Kharif", "Zaid"],
+      "soils": ["Loamy", "Alluvial", "Red"],
+      "yield": 0.85,
+      "rain": 650.0,
+      "temp": 27.0,
+      "water": "Low",
+      "image": "/images/crops/green-gram.webp"
+    },
+    {
+      "name": "Lentil",
+      "hi": "मसूर",
+      "group": "Pulse",
+      "seasons": ["Rabi"],
+      "soils": ["Loamy", "Alluvial", "Clay"],
+      "yield": 1.25,
+      "rain": 420.0,
+      "temp": 19.0,
+      "water": "Low",
+      "image": "/images/crops/lentil.webp"
+    },
+    {
+      "name": "Pigeon Pea",
+      "hi": "अरहर / तूर",
+      "group": "Pulse",
+      "seasons": ["Kharif"],
+      "soils": ["Loamy", "Black", "Red"],
+      "yield": 1.35,
+      "rain": 700.0,
+      "temp": 26.0,
+      "water": "Low",
+      "image": "/images/crops/pigeon-pea.webp"
+    },
+    {
+      "name": "Black Pepper",
+      "hi": "काली मिर्च",
+      "group": "Spice",
+      "seasons": ["Perennial"],
+      "soils": ["Laterite", "Loamy", "Mountain"],
+      "yield": 0.8,
+      "rain": 2000.0,
+      "temp": 25.0,
+      "water": "High",
+      "image": "/images/crops/black-pepper.webp"
+    },
+    {
+      "name": "Cardamom",
+      "hi": "इलायची",
+      "group": "Spice",
+      "seasons": ["Perennial"],
+      "soils": ["Mountain", "Laterite", "Loamy"],
+      "yield": 0.25,
+      "rain": 2200.0,
+      "temp": 20.0,
+      "water": "High",
+      "image": "/images/crops/cardamom.webp"
+    },
+    {
+      "name": "Chilli",
+      "hi": "मिर्च",
+      "group": "Spice",
+      "seasons": ["Kharif", "Rabi"],
+      "soils": ["Black", "Red", "Loamy"],
+      "yield": 2.2,
+      "rain": 800.0,
+      "temp": 25.0,
+      "water": "Medium",
+      "image": "/images/crops/chilli.webp"
+    },
+    {
+      "name": "Ginger",
+      "hi": "अदरक",
+      "group": "Spice",
+      "seasons": ["Kharif"],
+      "soils": ["Loamy", "Laterite", "Mountain"],
+      "yield": 11.0,
+      "rain": 1500.0,
+      "temp": 24.0,
+      "water": "High",
+      "image": "/images/crops/ginger.webp"
+    },
+    {
+      "name": "Saffron",
+      "hi": "केसर",
+      "group": "Spice",
+      "seasons": ["Rabi"],
+      "soils": ["Mountain", "Loamy", "Sandy"],
+      "yield": 0.005,
+      "rain": 450.0,
+      "temp": 14.0,
+      "water": "Low",
+      "image": "/images/crops/saffron.webp"
+    },
+    {
+      "name": "Turmeric",
+      "hi": "हल्दी",
+      "group": "Spice",
+      "seasons": ["Kharif"],
+      "soils": ["Loamy", "Red", "Laterite"],
+      "yield": 5.5,
+      "rain": 1500.0,
+      "temp": 26.0,
+      "water": "High",
+      "image": "/images/crops/turmeric.webp"
+    },
+    {
+      "name": "Tapioca",
+      "hi": "कसावा / टैपिओका",
+      "group": "Tuber",
+      "seasons": ["Whole Year"],
+      "soils": ["Laterite", "Red", "Sandy"],
+      "yield": 25.0,
+      "rain": 1200.0,
+      "temp": 26.0,
+      "water": "Medium",
+      "image": "/images/crops/tapioca.webp"
+    },
+    {
+      "name": "Cucumber",
+      "hi": "खीरा",
+      "group": "Vegetable",
+      "seasons": ["Zaid", "Kharif"],
+      "soils": ["Sandy", "Loamy", "Alluvial"],
+      "yield": 15.0,
+      "rain": 500.0,
+      "temp": 27.0,
+      "water": "Medium",
+      "image": "/images/crops/cucumber.webp"
+    },
+    {
+      "name": "Onion",
+      "hi": "प्याज",
+      "group": "Vegetable",
+      "seasons": ["Kharif", "Rabi", "Zaid"],
+      "soils": ["Loamy", "Alluvial", "Black"],
+      "yield": 18.0,
+      "rain": 600.0,
+      "temp": 22.0,
+      "water": "Medium",
+      "image": "/images/crops/onion.webp"
+    },
+    {
+      "name": "Peas",
+      "hi": "मटर",
+      "group": "Vegetable",
+      "seasons": ["Rabi"],
+      "soils": ["Loamy", "Alluvial", "Mountain"],
+      "yield": 6.0,
+      "rain": 500.0,
+      "temp": 18.0,
+      "water": "Medium",
+      "image": "/images/crops/peas.webp"
+    },
+    {
+      "name": "Potato",
+      "hi": "आलू",
+      "group": "Vegetable",
+      "seasons": ["Rabi", "Zaid"],
+      "soils": ["Loamy", "Alluvial", "Mountain"],
+      "yield": 24.0,
+      "rain": 650.0,
+      "temp": 19.0,
+      "water": "Medium",
+      "image": "/images/crops/potato.webp"
+    },
+    {
+      "name": "Tomato",
+      "hi": "टमाटर",
+      "group": "Vegetable",
+      "seasons": ["Kharif", "Rabi", "Zaid"],
+      "soils": ["Loamy", "Alluvial", "Red"],
+      "yield": 28.0,
+      "rain": 650.0,
+      "temp": 23.0,
+      "water": "Medium",
+      "image": "/images/crops/tomato.webp"
+    }
+  ],
+  "soils": [
+    {
+      "id": "Alluvial",
+      "hi": "जलोढ़ मिट्टी",
+      "texture": "Silt to loam",
+      "strength": "Fertile and versatile",
+      "focus": "Rice, wheat, sugarcane, vegetables"
+    },
+    {
+      "id": "Black",
+      "hi": "काली मिट्टी",
+      "texture": "Clay-rich",
+      "strength": "High moisture retention",
+      "focus": "Cotton, soybean, sorghum, pulses"
+    },
+    {
+      "id": "Red",
+      "hi": "लाल मिट्टी",
+      "texture": "Sandy to loamy",
+      "strength": "Well drained",
+      "focus": "Millets, groundnut, pulses, horticulture"
+    },
+    {
+      "id": "Laterite",
+      "hi": "लैटेराइट मिट्टी",
+      "texture": "Porous and acidic",
+      "strength": "Suited to high-rainfall crops with management",
+      "focus": "Tea, coffee, rubber, cashew"
+    },
+    {
+      "id": "Sandy",
+      "hi": "रेतीली मिट्टी",
+      "texture": "Coarse and free draining",
+      "strength": "Easy root growth",
+      "focus": "Groundnut, watermelon, millet, coconut"
+    },
+    {
+      "id": "Loamy",
+      "hi": "दोमट मिट्टी",
+      "texture": "Balanced sand-silt-clay",
+      "strength": "Balanced drainage and nutrients",
+      "focus": "Maize, vegetables, pulses, fruit"
+    },
+    {
+      "id": "Clay",
+      "hi": "चिकनी मिट्टी",
+      "texture": "Fine and dense",
+      "strength": "Strong water retention",
+      "focus": "Rice, jute, selected cereals"
+    },
+    {
+      "id": "Mountain",
+      "hi": "पर्वतीय मिट्टी",
+      "texture": "Shallow to forest loam",
+      "strength": "Cool-climate potential",
+      "focus": "Apple, tea, barley, potato, spices"
+    },
+    {
+      "id": "Desert",
+      "hi": "मरुस्थलीय मिट्टी",
+      "texture": "Arid and sandy",
+      "strength": "Drought-tolerant systems",
+      "focus": "Pearl millet, barley, mustard, pulses"
+    },
+    {
+      "id": "Saline",
+      "hi": "लवणीय मिट्टी",
+      "texture": "Salt affected",
+      "strength": "Requires reclamation and tolerant varieties",
+      "focus": "Selected barley, mustard, cotton"
+    },
+    {
+      "id": "Peaty",
+      "hi": "पीटयुक्त मिट्टी",
+      "texture": "Organic and moisture rich",
+      "strength": "High organic matter",
+      "focus": "Rice, coconut, selected vegetables"
+    }
+  ],
+  "rotation": [
+    {
+      "prev": "Rice",
+      "next": "Chickpea",
+      "season": "Rabi",
+      "soil": "Alluvial",
+      "score": 92,
+      "reason": "Legume rotation supports nitrogen recovery after a cereal crop."
+    },
+    {
+      "prev": "Rice",
+      "next": "Mustard",
+      "season": "Rabi",
+      "soil": "Alluvial",
+      "score": 86,
+      "reason": "Lower water demand and a different nutrient profile diversify the cycle."
+    },
+    {
+      "prev": "Wheat",
+      "next": "Groundnut",
+      "season": "Kharif",
+      "soil": "Loamy",
+      "score": 91,
+      "reason": "A legume break can improve soil nitrogen and reduce cereal disease pressure."
+    },
+    {
+      "prev": "Wheat",
+      "next": "Soybean",
+      "season": "Kharif",
+      "soil": "Black",
+      "score": 88,
+      "reason": "Soybean provides a nitrogen-fixing break before the next cereal season."
+    },
+    {
+      "prev": "Maize",
+      "next": "Chickpea",
+      "season": "Rabi",
+      "soil": "Loamy",
+      "score": 90,
+      "reason": "Deep and shallow rooting patterns complement each other."
+    },
+    {
+      "prev": "Maize",
+      "next": "Mustard",
+      "season": "Rabi",
+      "soil": "Alluvial",
+      "score": 82,
+      "reason": "Diversifies nutrient demand and seasonal water use."
+    },
+    {
+      "prev": "Cotton",
+      "next": "Chickpea",
+      "season": "Rabi",
+      "soil": "Black",
+      "score": 89,
+      "reason": "Short-duration pulse rotation can support soil structure."
+    },
+    {
+      "prev": "Cotton",
+      "next": "Wheat",
+      "season": "Rabi",
+      "soil": "Alluvial",
+      "score": 78,
+      "reason": "A cereal follow-up is practical where irrigation is available."
+    },
+    {
+      "prev": "Sugarcane",
+      "next": "Groundnut",
+      "season": "Kharif",
+      "soil": "Loamy",
+      "score": 87,
+      "reason": "A legume break reduces continuous heavy-feeder pressure."
+    },
+    {
+      "prev": "Sugarcane",
+      "next": "Chickpea",
+      "season": "Rabi",
+      "soil": "Alluvial",
+      "score": 84,
+      "reason": "Pulse rotation can lower input intensity after sugarcane."
+    },
+    {
+      "prev": "Groundnut",
+      "next": "Wheat",
+      "season": "Rabi",
+      "soil": "Loamy",
+      "score": 90,
+      "reason": "Wheat benefits from residual nitrogen left by the legume."
+    },
+    {
+      "prev": "Soybean",
+      "next": "Wheat",
+      "season": "Rabi",
+      "soil": "Black",
+      "score": 94,
+      "reason": "A widely used legume-to-cereal rotation with complementary nutrient demand."
+    },
+    {
+      "prev": "Mustard",
+      "next": "Rice",
+      "season": "Kharif",
+      "soil": "Alluvial",
+      "score": 83,
+      "reason": "Seasonal shift supports a diversified oilseed-cereal sequence."
+    },
+    {
+      "prev": "Chickpea",
+      "next": "Maize",
+      "season": "Kharif",
+      "soil": "Loamy",
+      "score": 88,
+      "reason": "Maize can use residual nitrogen from the pulse crop."
+    },
+    {
+      "prev": "Potato",
+      "next": "Maize",
+      "season": "Kharif",
+      "soil": "Alluvial",
+      "score": 81,
+      "reason": "Changes rooting depth and lowers repeated tuber-crop disease pressure."
+    }
+  ],
+  "states": {
+    "Andaman & Nicobar Islands": {
+      "crops": ["Rice", "Coconut", "Arecanut", "Banana", "Black Pepper", "Pineapple"],
+      "soils": ["Laterite", "Sandy", "Alluvial"],
+      "rain": 3050.0,
+      "temp": 27.0,
+      "zone": "Humid island"
+    },
+    "Andhra Pradesh": {
+      "crops": ["Rice", "Maize", "Groundnut", "Cotton", "Sugarcane", "Chilli", "Tobacco"],
+      "soils": ["Red", "Black", "Alluvial"],
+      "rain": 940.0,
+      "temp": 28.0,
+      "zone": "Coastal & semi-arid"
+    },
+    "Arunachal Pradesh": {
+      "crops": ["Rice", "Maize", "Finger Millet", "Orange", "Ginger", "Potato"],
+      "soils": ["Mountain", "Red", "Loamy"],
+      "rain": 2780.0,
+      "temp": 19.0,
+      "zone": "Eastern Himalayan"
+    },
+    "Assam": {
+      "crops": ["Rice", "Tea", "Jute", "Mustard", "Potato", "Sugarcane"],
+      "soils": ["Alluvial", "Loamy", "Clay"],
+      "rain": 2250.0,
+      "temp": 25.0,
+      "zone": "Brahmaputra valley"
+    },
+    "Bihar": {
+      "crops": ["Rice", "Wheat", "Maize", "Sugarcane", "Lentil", "Potato"],
+      "soils": ["Alluvial", "Loamy", "Clay"],
+      "rain": 1180.0,
+      "temp": 26.0,
+      "zone": "Middle Gangetic plain"
+    },
+    "Chandigarh": {
+      "crops": ["Wheat", "Rice", "Maize", "Mustard", "Potato", "Peas"],
+      "soils": ["Alluvial", "Loamy", "Sandy"],
+      "rain": 1060.0,
+      "temp": 24.0,
+      "zone": "Trans-Gangetic urban fringe"
+    },
+    "Chhattisgarh": {
+      "crops": ["Rice", "Maize", "Chickpea", "Soybean", "Pigeon Pea", "Groundnut"],
+      "soils": ["Red", "Laterite", "Loamy"],
+      "rain": 1290.0,
+      "temp": 26.5,
+      "zone": "Eastern plateau"
+    },
+    "Dadra & Nagar Haveli and Daman & Diu": {
+      "crops": ["Rice", "Finger Millet", "Groundnut", "Mango", "Banana", "Sugarcane"],
+      "soils": ["Black", "Laterite", "Alluvial"],
+      "rain": 1960.0,
+      "temp": 27.0,
+      "zone": "Western coastal"
+    },
+    "Delhi": {
+      "crops": ["Wheat", "Mustard", "Pearl Millet", "Tomato", "Peas", "Maize"],
+      "soils": ["Alluvial", "Loamy", "Sandy"],
+      "rain": 760.0,
+      "temp": 25.5,
+      "zone": "Trans-Gangetic urban fringe"
+    },
+    "Goa": {
+      "crops": ["Rice", "Coconut", "Cashew", "Arecanut", "Banana", "Mango"],
+      "soils": ["Laterite", "Sandy", "Alluvial"],
+      "rain": 3000.0,
+      "temp": 27.0,
+      "zone": "West coast"
+    },
+    "Gujarat": {
+      "crops": ["Cotton", "Groundnut", "Wheat", "Pearl Millet", "Sugarcane", "Mustard"],
+      "soils": ["Black", "Alluvial", "Saline"],
+      "rain": 800.0,
+      "temp": 27.5,
+      "zone": "Western dry & coastal"
+    },
+    "Haryana": {
+      "crops": ["Wheat", "Rice", "Mustard", "Cotton", "Sugarcane", "Pearl Millet"],
+      "soils": ["Alluvial", "Loamy", "Sandy"],
+      "rain": 620.0,
+      "temp": 25.0,
+      "zone": "Trans-Gangetic plain"
+    },
+    "Himachal Pradesh": {
+      "crops": ["Apple", "Maize", "Wheat", "Potato", "Ginger", "Peas"],
+      "soils": ["Mountain", "Loamy", "Sandy"],
+      "rain": 1250.0,
+      "temp": 16.0,
+      "zone": "Western Himalayan"
+    },
+    "Jammu & Kashmir": {
+      "crops": ["Apple", "Rice", "Wheat", "Maize", "Saffron", "Mustard"],
+      "soils": ["Mountain", "Loamy", "Alluvial"],
+      "rain": 1010.0,
+      "temp": 13.5,
+      "zone": "Western Himalayan valleys"
+    },
+    "Jharkhand": {
+      "crops": ["Rice", "Maize", "Pigeon Pea", "Mustard", "Potato", "Finger Millet"],
+      "soils": ["Red", "Laterite", "Loamy"],
+      "rain": 1340.0,
+      "temp": 24.5,
+      "zone": "Chota Nagpur plateau"
+    },
+    "Karnataka": {
+      "crops": ["Finger Millet", "Coffee", "Sugarcane", "Maize", "Groundnut", "Cotton", "Arecanut"],
+      "soils": ["Black", "Red", "Laterite"],
+      "rain": 1240.0,
+      "temp": 24.0,
+      "zone": "Deccan plateau & coast"
+    },
+    "Kerala": {
+      "crops": ["Coconut", "Rubber", "Banana", "Rice", "Black Pepper", "Cardamom", "Coffee"],
+      "soils": ["Laterite", "Alluvial", "Peaty"],
+      "rain": 2920.0,
+      "temp": 27.0,
+      "zone": "Humid west coast"
+    },
+    "Ladakh": {
+      "crops": ["Barley", "Wheat", "Peas", "Apple", "Potato", "Mustard"],
+      "soils": ["Mountain", "Sandy", "Loamy"],
+      "rain": 110.0,
+      "temp": 7.0,
+      "zone": "Cold arid Himalayan"
+    },
+    "Lakshadweep": {
+      "crops": ["Coconut", "Banana", "Tapioca", "Cucumber", "Watermelon", "Arecanut"],
+      "soils": ["Sandy", "Saline", "Peaty"],
+      "rain": 1610.0,
+      "temp": 28.0,
+      "zone": "Humid coral island"
+    },
+    "Madhya Pradesh": {
+      "crops": ["Wheat", "Soybean", "Chickpea", "Mustard", "Maize", "Cotton"],
+      "soils": ["Black", "Red", "Alluvial"],
+      "rain": 1160.0,
+      "temp": 25.5,
+      "zone": "Central plateau"
+    },
+    "Maharashtra": {
+      "crops": ["Cotton", "Soybean", "Sugarcane", "Sorghum", "Onion", "Orange"],
+      "soils": ["Black", "Laterite", "Red"],
+      "rain": 1120.0,
+      "temp": 26.0,
+      "zone": "Western plateau & coast"
+    },
+    "Manipur": {
+      "crops": ["Rice", "Maize", "Pineapple", "Ginger", "Potato", "Black Gram"],
+      "soils": ["Mountain", "Red", "Loamy"],
+      "rain": 1470.0,
+      "temp": 21.0,
+      "zone": "North-eastern hills"
+    },
+    "Meghalaya": {
+      "crops": ["Rice", "Maize", "Potato", "Pineapple", "Ginger", "Turmeric"],
+      "soils": ["Laterite", "Mountain", "Loamy"],
+      "rain": 2810.0,
+      "temp": 18.0,
+      "zone": "North-eastern hills"
+    },
+    "Mizoram": {
+      "crops": ["Rice", "Maize", "Ginger", "Turmeric", "Orange", "Banana"],
+      "soils": ["Red", "Laterite", "Mountain"],
+      "rain": 2160.0,
+      "temp": 21.5,
+      "zone": "North-eastern hills"
+    },
+    "Nagaland": {
+      "crops": ["Rice", "Maize", "Finger Millet", "Potato", "Ginger", "Pineapple"],
+      "soils": ["Mountain", "Red", "Loamy"],
+      "rain": 1800.0,
+      "temp": 20.5,
+      "zone": "North-eastern hills"
+    },
+    "Odisha": {
+      "crops": ["Rice", "Groundnut", "Green Gram", "Black Gram", "Jute", "Sugarcane"],
+      "soils": ["Red", "Laterite", "Alluvial"],
+      "rain": 1450.0,
+      "temp": 27.0,
+      "zone": "Eastern coastal plain"
+    },
+    "Puducherry": {
+      "crops": ["Rice", "Sugarcane", "Groundnut", "Coconut", "Banana", "Cotton"],
+      "soils": ["Alluvial", "Red", "Sandy"],
+      "rain": 1250.0,
+      "temp": 28.0,
+      "zone": "Southern coastal"
+    },
+    "Punjab": {
+      "crops": ["Wheat", "Rice", "Cotton", "Maize", "Sugarcane", "Potato"],
+      "soils": ["Alluvial", "Loamy", "Sandy"],
+      "rain": 650.0,
+      "temp": 24.5,
+      "zone": "Trans-Gangetic plain"
+    },
+    "Rajasthan": {
+      "crops": ["Wheat", "Pearl Millet", "Mustard", "Chickpea", "Barley", "Cotton"],
+      "soils": ["Desert", "Sandy", "Alluvial"],
+      "rain": 570.0,
+      "temp": 27.0,
+      "zone": "Western arid"
+    },
+    "Sikkim": {
+      "crops": ["Maize", "Rice", "Cardamom", "Ginger", "Potato", "Orange"],
+      "soils": ["Mountain", "Loamy", "Red"],
+      "rain": 2730.0,
+      "temp": 15.5,
+      "zone": "Eastern Himalayan"
+    },
+    "Tamil Nadu": {
+      "crops": ["Rice", "Sugarcane", "Cotton", "Groundnut", "Banana", "Coconut"],
+      "soils": ["Red", "Black", "Alluvial"],
+      "rain": 950.0,
+      "temp": 28.0,
+      "zone": "Southern plateau & coast"
+    },
+    "Telangana": {
+      "crops": ["Rice", "Cotton", "Maize", "Pigeon Pea", "Chilli", "Groundnut"],
+      "soils": ["Black", "Red", "Loamy"],
+      "rain": 910.0,
+      "temp": 27.0,
+      "zone": "Deccan plateau"
+    },
+    "Tripura": {
+      "crops": ["Rice", "Rubber", "Tea", "Pineapple", "Potato", "Jute"],
+      "soils": ["Red", "Laterite", "Alluvial"],
+      "rain": 2200.0,
+      "temp": 25.0,
+      "zone": "North-eastern hills"
+    },
+    "Uttar Pradesh": {
+      "crops": ["Wheat", "Rice", "Sugarcane", "Potato", "Mustard", "Peas"],
+      "soils": ["Alluvial", "Loamy", "Clay"],
+      "rain": 990.0,
+      "temp": 25.5,
+      "zone": "Upper & middle Gangetic plain"
+    },
+    "Uttarakhand": {
+      "crops": ["Rice", "Wheat", "Finger Millet", "Apple", "Potato", "Sugarcane"],
+      "soils": ["Mountain", "Alluvial", "Loamy"],
+      "rain": 1550.0,
+      "temp": 19.0,
+      "zone": "Western Himalayan & Terai"
+    },
+    "West Bengal": {
+      "crops": ["Rice", "Jute", "Potato", "Tea", "Mustard", "Pineapple"],
+      "soils": ["Alluvial", "Clay", "Mountain"],
+      "rain": 1750.0,
+      "temp": 26.0,
+      "zone": "Lower Gangetic plain & hills"
+    }
+  }
+}

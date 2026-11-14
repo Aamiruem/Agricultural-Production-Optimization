@@ -1,0 +1,238 @@
+{
+  "chosen_k": 10,
+  "k_scores": {
+    "4": {
+      "inertia": 8105.863754921271,
+      "silhouette": 0.25526916389002857
+    },
+    "5": {
+      "inertia": 6856.2117284408105,
+      "silhouette": 0.2924747941597334
+    },
+    "6": {
+      "inertia": 6045.3346593381675,
+      "silhouette": 0.30441349397614315
+    },
+    "7": {
+      "inertia": 5248.625716446024,
+      "silhouette": 0.3332518760723474
+    },
+    "8": {
+      "inertia": 4842.083075442204,
+      "silhouette": 0.3265725788326684
+    },
+    "9": {
+      "inertia": 4472.479144098597,
+      "silhouette": 0.3320847349098888
+    },
+    "10": {
+      "inertia": 4110.154304892943,
+      "silhouette": 0.34877213369511195
+    },
+    "11": {
+      "inertia": 3845.1823886277416,
+      "silhouette": 0.346844942045414
+    },
+    "12": {
+      "inertia": 3652.1240074223338,
+      "silhouette": 0.3486570228082154
+    },
+    "13": {
+      "inertia": 3399.407364511272,
+      "silhouette": 0.34325129939148075
+    },
+    "14": {
+      "inertia": 3244.1036640805123,
+      "silhouette": 0.34602906682050655
+    },
+    "15": {
+      "inertia": 3042.363730133964,
+      "silhouette": 0.3420034482829129
+    }
+  },
+  "pca_explained_variance": [
+    0.276,
+    0.185
+  ],
+  "agreement_kmeans_vs_agglomerative_ARI": 0.8500936075675094,
+  "dbscan_clusters": 3,
+  "dbscan_noise_points": 9,
+  "zones": [
+    {
+      "cluster": 0,
+      "size": 79,
+      "top_crops": {
+        "papaya": 0.73,
+        "orange": 0.23,
+        "pigeonpeas": 0.04
+      },
+      "profile": {
+        "N": 44.1,
+        "P": 50.1,
+        "K": 39.6,
+        "temperature": 36.8,
+        "humidity": 90.7,
+        "ph": 6.8,
+        "rainfall": 144.1
+      }
+    },
+    {
+      "cluster": 1,
+      "size": 335,
+      "top_crops": {
+        "banana": 0.3,
+        "cotton": 0.3,
+        "maize": 0.3
+      },
+      "profile": {
+        "N": 98.4,
+        "P": 56.7,
+        "K": 30.5,
+        "temperature": 24.7,
+        "humidity": 74.1,
+        "ph": 6.4,
+        "rainfall": 93.0
+      }
+    },
+    {
+      "cluster": 2,
+      "size": 200,
+      "top_crops": {
+        "grapes": 0.5,
+        "apple": 0.5
+      },
+      "profile": {
+        "N": 22.0,
+        "P": 133.4,
+        "K": 200.0,
+        "temperature": 23.2,
+        "humidity": 87.1,
+        "ph": 6.0,
+        "rainfall": 91.1
+      }
+    },
+    {
+      "cluster": 3,
+      "size": 283,
+      "top_crops": {
+        "pomegranate": 0.35,
+        "coconut": 0.35,
+        "orange": 0.28
+      },
+      "profile": {
+        "N": 19.9,
+        "P": 17.6,
+        "K": 28.3,
+        "temperature": 23.4,
+        "humidity": 92.4,
+        "ph": 6.4,
+        "rainfall": 132.5
+      }
+    },
+    {
+      "cluster": 4,
+      "size": 390,
+      "top_crops": {
+        "blackgram": 0.26,
+        "mungbean": 0.26,
+        "lentil": 0.25
+      },
+      "profile": {
+        "N": 26.6,
+        "P": 58.0,
+        "K": 21.0,
+        "temperature": 28.0,
+        "humidity": 69.0,
+        "ph": 7.1,
+        "rainfall": 57.1
+      }
+    },
+    {
+      "cluster": 5,
+      "size": 200,
+      "top_crops": {
+        "watermelon": 0.5,
+        "muskmelon": 0.5
+      },
+      "profile": {
+        "N": 99.9,
+        "P": 17.4,
+        "K": 50.2,
+        "temperature": 27.1,
+        "humidity": 88.8,
+        "ph": 6.4,
+        "rainfall": 37.7
+      }
+    },
+    {
+      "cluster": 6,
+      "size": 141,
+      "top_crops": {
+        "kidneybeans": 0.71,
+        "pigeonpeas": 0.23,
+        "chickpea": 0.04
+      },
+      "profile": {
+        "N": 20.4,
+        "P": 67.9,
+        "K": 22.2,
+        "temperature": 20.2,
+        "humidity": 28.6,
+        "ph": 5.7,
+        "rainfall": 115.7
+      }
+    },
+    {
+      "cluster": 7,
+      "size": 291,
+      "top_crops": {
+        "rice": 0.34,
+        "jute": 0.34,
+        "coffee": 0.25
+      },
+      "profile": {
+        "N": 82.0,
+        "P": 43.2,
+        "K": 37.9,
+        "temperature": 24.7,
+        "humidity": 76.3,
+        "ph": 6.6,
+        "rainfall": 196.3
+      }
+    },
+    {
+      "cluster": 8,
+      "size": 186,
+      "top_crops": {
+        "mango": 0.48,
+        "pigeonpeas": 0.3,
+        "mothbeans": 0.23
+      },
+      "profile": {
+        "N": 20.4,
+        "P": 43.6,
+        "K": 24.8,
+        "temperature": 30.6,
+        "humidity": 49.6,
+        "ph": 5.5,
+        "rainfall": 99.4
+      }
+    },
+    {
+      "cluster": 9,
+      "size": 95,
+      "top_crops": {
+        "chickpea": 1.0
+      },
+      "profile": {
+        "N": 40.4,
+        "P": 68.0,
+        "K": 79.8,
+        "temperature": 18.9,
+        "humidity": 16.9,
+        "ph": 7.4,
+        "rainfall": 79.9
+      }
+    }
+  ]
+}

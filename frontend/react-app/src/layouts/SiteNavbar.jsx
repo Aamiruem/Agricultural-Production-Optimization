@@ -1,79 +1,172 @@
-import { LogOut, Moon, Shield, Sun } from "lucide-react";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { Link, NavLink } from "react-router";
+import { useMemo, useState } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
+import { Link } from "react-router";
 
 import logo from "@/assets/logo.svg";
+import { GlobalSearch } from "@/components/common/GlobalSearch";
+import { MIcon } from "@/components/common/MIcon";
+import { useSignOut } from "@/hooks/useSignOut";
 import { useTheme } from "@/hooks/useTheme";
-import { useAuthStore, useSession } from "@/store/authStore";
+import { useT } from "@/i18n/useT";
+import { seasonalNotifications } from "@/lib/notifications";
+import { useSession } from "@/store/authStore";
 
-const NAV = [
-  { to: "/recommend", label: "Crop advisor" },
-  { to: "/fertilizer", label: "Fertilizer" },
-  { to: "/crops", label: "Crops" },
-  { to: "/planner", label: "Planner" },
-  { to: "/farms", label: "Farms" },
-  { to: "/assistant", label: "Assistant" },
-  { to: "/insights", label: "Insights" },
-];
+const READ_KEY = "agri-notifications-read";
 
-export function SiteNavbar() {
+/** Google-style top app bar: search pill, actions, and tabs for the primary links. */
+export function SiteNavbar({ onMenuClick, sidebarOpen }) {
   const { mode, toggle } = useTheme();
+  const { t, lang, setLang } = useT();
   const { user, isAdmin } = useSession();
-  const logout = useAuthStore((s) => s.logout);
-  const [expanded, setExpanded] = useState(false);
-  const close = () => setExpanded(false);
+  const logout = useSignOut();
+  const initials = (user?.full_name || user?.email || "U")
+    .split(/\s+/)
+    .map((x) => x[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const notifications = useMemo(() => seasonalNotifications(new Date().getMonth(), lang), [lang]);
+  const [read, setRead] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(READ_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  });
+  const unread = notifications.filter((n) => !read.includes(n.id)).length;
+  const markAllRead = () => {
+    const ids = notifications.map((n) => n.id);
+    setRead(ids);
+    try {
+      localStorage.setItem(READ_KEY, JSON.stringify(ids));
+    } catch {
+      /* storage unavailable */
+    }
+  };
 
   return (
-    <Navbar expand="lg" sticky="top" className="navbar-agri border-bottom" expanded={expanded} onToggle={setExpanded}>
-      <Container>
-        <Navbar.Brand as={Link} to="/" onClick={close} className="d-flex align-items-center gap-2 fw-semibold">
-          <img src={logo} alt="" width="24" height="24" className="text-primary" style={{ color: "var(--bs-primary)" }} />
-          AgriOptima
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="main-nav" />
-        <Navbar.Collapse id="main-nav">
-          <Nav as="nav" aria-label="Main" className="me-auto gap-lg-1">
-            {NAV.map((item) => (
-              <Nav.Link key={item.to} as={NavLink} to={item.to} onClick={close} className="px-lg-2">
-                {item.label}
-              </Nav.Link>
-            ))}
-            {isAdmin && (
-              <Nav.Link as={NavLink} to="/admin" onClick={close} className="px-lg-2 d-flex align-items-center gap-1">
-                <Shield size={14} aria-hidden /> Admin
-              </Nav.Link>
-            )}
-          </Nav>
-          <div className="d-flex align-items-center gap-2">
-            {user ? (
-              <>
-                <span className="small text-body-secondary text-truncate" style={{ maxWidth: "10rem" }} title={user.email}>
-                  {user.full_name}
-                </span>
-                <Button variant="link" className="text-body p-1" onClick={logout} aria-label="Sign out">
-                  <LogOut size={18} />
-                </Button>
-              </>
-            ) : (
-              <Button as={Link} to="/login" variant="outline-primary" size="sm" onClick={close}>
-                Sign in
-              </Button>
-            )}
-            <Button
-              variant="link"
-              className="text-body p-1"
-              onClick={toggle}
-              aria-label={mode === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+    <header className="app-bar">
+      <div className={`app-bar-row${searchOpen ? " search-mode" : ""}`}>
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={onMenuClick}
+          aria-label={sidebarOpen ? t("nav.closeMenu") : t("nav.openMenu")}
+          aria-expanded={sidebarOpen}
+          aria-controls="app-sidebar"
+        >
+          <MIcon name="menu" />
+        </button>
+        <Link to="/dashboard" className="brand-link" aria-label="AgriSmart dashboard">
+          <img src={logo} alt="" width="40" height="40" className="brand-mark" />
+          <span className="brand-wordmark">
+            <span>
+              <b>Agri</b>
+              <b>Smart</b>
+            </span>
+            <small>{t("brand.tagline")}</small>
+          </span>
+        </Link>
+
+        <div className="app-bar-search">
+          <GlobalSearch autoFocus={searchOpen} onDone={() => setSearchOpen(false)} />
+        </div>
+
+        <div className="nav-actions">
+          <button
+            type="button"
+            className="icon-btn search-toggle"
+            onClick={() => setSearchOpen((o) => !o)}
+            aria-label={t("common.search")}
+          >
+            <MIcon name={searchOpen ? "close" : "search"} />
+          </button>
+          <Dropdown align="end">
+            <Dropdown.Toggle
+              as="button"
+              type="button"
+              className="icon-btn no-caret"
+              aria-label={`${t("nav.notifications")} (${unread})`}
             >
-              {mode === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            </Button>
-          </div>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+              <MIcon name="notifications" />
+              {unread > 0 && <span className="notif-dot">{unread}</span>}
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="g-menu notif-menu">
+              <div className="g-menu-head">
+                <b>{t("nav.notifications")}</b>
+                {unread > 0 && (
+                  <button type="button" className="g-text-btn" onClick={markAllRead}>
+                    {lang === "hi" ? "सभी पढ़ा" : "Mark all read"}
+                  </button>
+                )}
+              </div>
+              {notifications.map(({ id, icon, color, title, body, to }) => (
+                <Dropdown.Item as={Link} to={to} key={id} className={`notif-item${read.includes(id) ? "" : " unread"}`}>
+                  <span className="icon-badge sm" style={{ "--c": color }}>
+                    <MIcon name={icon} size={18} fill />
+                  </span>
+                  <span>
+                    <b>{title}</b>
+                    <small>{body}</small>
+                  </span>
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+
+          <label className="lang-switch" title={t("nav.language")}>
+            <MIcon name="translate" size={20} />
+            <select aria-label={t("nav.language")} value={lang} onChange={(e) => setLang(e.target.value)}>
+              <option value="en">EN</option>
+              <option value="hi">हिं</option>
+            </select>
+          </label>
+
+          <button
+            type="button"
+            className="icon-btn theme-btn"
+            onClick={toggle}
+            aria-label={t("nav.theme")}
+            title={t("nav.theme")}
+          >
+            <MIcon name={mode === "dark" ? "light_mode" : "dark_mode"} />
+          </button>
+
+          <Dropdown align="end">
+            <Dropdown.Toggle as="button" type="button" className="avatar-btn no-caret" aria-label={t("nav.profile")}>
+              <span className="avatar">{initials}</span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="g-menu profile-menu">
+              <div className="profile-head">
+                <span className="avatar lg">{initials}</span>
+                <b>
+                  {lang === "hi" ? "नमस्ते" : "Hi"}, {user?.full_name?.split(" ")[0] || "Farmer"}!
+                </b>
+                <small>{user?.email}</small>
+              </div>
+              <Dropdown.Item as={Link} to="/settings">
+                <MIcon name="account_circle" size={20} /> {t("side.settings")}
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to="/farms">
+                <MIcon name="agriculture" size={20} /> {t("nav.myFarms")}
+              </Dropdown.Item>
+              {isAdmin && (
+                <Dropdown.Item as={Link} to="/admin">
+                  <MIcon name="admin_panel_settings" size={20} /> {t("nav.admin")}
+                </Dropdown.Item>
+              )}
+              <Dropdown.Item as={Link} to="/">
+                <MIcon name="home" size={20} /> {t("side.publicSite")}
+              </Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Item onClick={logout}>
+                <MIcon name="logout" size={20} /> {t("nav.signOut")}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      </div>
+    </header>
   );
 }

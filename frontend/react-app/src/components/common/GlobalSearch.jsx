@@ -1,0 +1,142 @@
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router";
+
+import { useT } from "@/i18n/useT";
+import { buildSearchIndex, loadAgriData, searchIndex } from "@/lib/search";
+
+import { MIcon } from "./MIcon";
+
+export function GlobalSearch({ autoFocus = false, onDone }) {
+  const { t, lang } = useT();
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const [active, setActive] = useState(0);
+  const [open, setOpen] = useState(false);
+  const inputRef = useRef(null);
+  const listId = useId();
+  const [agri, setAgri] = useState(null);
+  // Crop/state data loads on first use of the box, not with every page.
+  const ensureData = () => {
+    if (!agri) loadAgriData().then(setAgri);
+  };
+  const index = useMemo(() => buildSearchIndex(t, lang, agri), [t, lang, agri]);
+  const results = useMemo(() => searchIndex(index, query), [index, query]);
+
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
+  // "/" focuses search, like Google apps.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const go = (item) => {
+    if (!item) return;
+    navigate(item.to);
+    setQuery("");
+    setOpen(false);
+    onDone?.();
+    inputRef.current?.blur();
+  };
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((a) => Math.min(a + 1, results.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((a) => Math.max(a - 1, 0));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      go(results[active]);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+      onDone?.();
+    }
+  };
+  const placeholder = lang === "hi" ? "फसल, राज्य या टूल खोजें" : "Search crops, states and tools";
+  const showList = open && query.trim().length > 0;
+
+  return (
+    <div className={`g-search${showList ? " is-open" : ""}`} role="search">
+      <MIcon name="search" size={22} className="g-search-icon" />
+      <input
+        ref={inputRef}
+        type="search"
+        value={query}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        role="combobox"
+        aria-expanded={showList}
+        aria-controls={listId}
+        aria-autocomplete="list"
+        aria-activedescendant={showList && results[active] ? `${listId}-${results[active].id}` : undefined}
+        onChange={(e) => {
+          ensureData();
+          setQuery(e.target.value);
+          setActive(0);
+          setOpen(true);
+        }}
+        onFocus={() => {
+          ensureData();
+          setOpen(true);
+        }}
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        onKeyDown={onKeyDown}
+      />
+      {query && (
+        <button
+          type="button"
+          className="g-search-clear"
+          aria-label="Clear search"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => {
+            setQuery("");
+            inputRef.current?.focus();
+          }}
+        >
+          <MIcon name="close" size={20} />
+        </button>
+      )}
+      {!query && (
+        <kbd className="g-search-kbd" aria-hidden="true">
+          /
+        </kbd>
+      )}
+      {showList && (
+        <ul id={listId} role="listbox" className="g-search-list">
+          {results.length === 0 && (
+            <li className="g-search-empty">{lang === "hi" ? "कोई परिणाम नहीं" : "No results"}</li>
+          )}
+          {results.map((r, i) => (
+            <li
+              key={r.id}
+              id={`${listId}-${r.id}`}
+              role="option"
+              aria-selected={i === active}
+              className={i === active ? "on" : ""}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => go(r)}
+              onMouseEnter={() => setActive(i)}
+            >
+              <span className="g-search-lead" style={{ "--c": r.color || "#15803d" }}>
+                {r.emoji ? <span className="emoji">{r.emoji}</span> : <MIcon name={r.icon} size={20} fill />}
+              </span>
+              <span className="g-search-text">
+                <b>{r.label}</b>
+                <small>{r.sub}</small>
+              </span>
+              <MIcon name="arrow_forward" size={18} className="g-search-go" />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}

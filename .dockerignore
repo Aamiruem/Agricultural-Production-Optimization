@@ -1,5 +1,4 @@
 **/node_modules
-**/.next
 **/.venv
 **/__pycache__
 **/*.pyc
@@ -9,8 +8,7 @@
 **/test-results
 **/playwright-report
 .git
-ml/mlruns
-ml/mlflow.db
-ml/datasets/*.csv
+AIML/mlruns
+AIML/*.db
 backend/*.db
 backend/*.db-*

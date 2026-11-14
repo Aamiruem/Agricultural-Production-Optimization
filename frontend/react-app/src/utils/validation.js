@@ -48,11 +48,18 @@ export const registerSchema = z.object({
     .refine((v) => /[a-z]/i.test(v) && /\d/.test(v), "Mix letters and numbers"),
 });
 
-export const farmSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(80),
-  district: z.string().trim().max(60).optional(),
-  state: z.string().trim().max(60).optional(),
-});
+export const farmSchema = z
+  .object({
+    name: z.string().trim().min(2, "Name must be at least 2 characters").max(80),
+    state: z.string().trim().max(60).optional(),
+    district: z.string().trim().max(60).optional(),
+    districtOther: z.string().trim().max(60).optional(),
+    village: z.string().trim().max(80).optional(),
+  })
+  .refine((v) => v.district !== "__other" || (v.districtOther?.length ?? 0) >= 2, {
+    message: "Type the district name",
+    path: ["districtOther"],
+  });
 
 const optionalNum = (label, max) =>
   z.union([z.nan(), z.number().min(0, `${label} must be ≥ 0`).max(max, `${label} must be ≤ ${max}`)]).optional();
@@ -62,3 +69,23 @@ export const farmFieldSchema = plannerFieldSchema.extend({
   P: optionalNum("P", 200),
   K: optionalNum("K", 250),
 });
+
+const newPassword = z
+  .string()
+  .min(8, "Use at least 8 characters")
+  .max(128)
+  .refine((v) => /[a-z]/i.test(v) && /\d/.test(v), "Mix letters and numbers");
+
+export const forgotSchema = z.object({ email: z.email("Enter a valid email") });
+
+export const resetSchema = z
+  .object({ password: newPassword, confirm: z.string() })
+  .refine((v) => v.password === v.confirm, { message: "Passwords do not match", path: ["confirm"] });
+
+export const changePasswordSchema = z
+  .object({
+    current_password: z.string().min(1, "Enter your current password"),
+    new_password: newPassword,
+    confirm: z.string(),
+  })
+  .refine((v) => v.new_password === v.confirm, { message: "Passwords do not match", path: ["confirm"] });

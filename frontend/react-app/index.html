@@ -2,11 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- Per-route title, description, canonical, Open Graph, robots and JSON-LD are written
+         into a static HTML file for every URL at build time (see seoPages() in vite.config.js)
+         and kept in sync on client navigation by src/hooks/useDocumentTitle.js. -->
+    <title>AgriSmart – Smart Agriculture &amp; AI Farming Solutions for India</title>
+    <meta
+      name="description"
+      content="Smart agriculture made practical: learn production systems, modern farm machines and AI crop yield prediction, and use free crop, soil and weather tools."
+    />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <!--seo:verification-->
+    <link rel="canonical" href="%VITE_SITE_URL%/" />
+    <meta name="author" content="Aamir Hussain Azad" />
+    <meta name="theme-color" content="#fbfaf5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1512" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content="AgriSmart" />
+    <meta name="apple-mobile-web-app-title" content="AgriSmart" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Crop and fertilizer recommendations, farm management and an AI farm assistant for Indian agriculture." />
-    <meta name="theme-color" content="#2e7d32" />
-    <title>AgriOptima</title>
+    <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <!--seo:preload-->
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AgriSmart" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content="AgriSmart – Smart Agriculture &amp; AI Farming Solutions for India" />
+    <meta
+      property="og:description"
+      content="Smart agriculture made practical: learn production systems, modern farm machines and AI crop yield prediction, and use free crop, soil and weather tools."
+    />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og/home.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AgriSmart – Smart Agriculture &amp; AI Farming Solutions for India" />
+    <meta
+      name="twitter:description"
+      content="Smart agriculture made practical: learn production systems, modern farm machines and AI crop yield prediction, and use free crop, soil and weather tools."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og/home.jpg" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Text fonts load without blocking first paint (font-display: swap); icons stay blocking to avoid ligature flashes. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+    /></noscript>
+    <!-- Material Symbols (subset to the icons in src/lib/icons.js, injected at build) -->
+    <link href="%ICON_FONT_URL%" rel="stylesheet" />
+
+    <!-- Structured data (schema.org JSON-LD), filled per page at build time -->
+    <script type="application/ld+json" id="ld-page">
+      {}
+    </script>
     <script>
       // Apply the saved/system colour mode before first paint (no flash).
       (function () {
@@ -14,12 +82,17 @@
           var saved = localStorage.getItem("agri-theme");
           var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
           document.documentElement.setAttribute("data-bs-theme", dark ? "dark" : "light");
+          var lang = localStorage.getItem("agri-lang");
+          if (lang) document.documentElement.lang = lang;
         } catch (e) {}
       })();
     </script>
   </head>
   <body>
-    <noscript>AgriOptima needs JavaScript enabled.</noscript>
+    <noscript
+      ><!--seo:noscript-->AgriSmart needs JavaScript for its interactive tools. AgriSmart covers agricultural production
+      systems, smart farm machines, AI in agriculture, crops and food, farmer health and nutrition.</noscript
+    >
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

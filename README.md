@@ -1,89 +1,151 @@
 # Agricultural-Production-Optimization
 Indian crop fertilizer growth
 
-**AgriOptima** — a full-stack, AI-powered farm platform: crop recommendations from a
-trained ML model, fertilizer planning, farm & field management, an AI assistant
-(Claude + RAG + LangGraph), batch jobs, real-time updates and AWS deployment.
+**AgriSmart** — a full-stack, AI-powered farm platform: crop recommendations from a
+trained ML model with per-prediction SHAP explanations, yield forecasting, fertilizer
+planning, farm & field management, an AI assistant (Claude + RAG + LangGraph), an
+MCP tool server, an operations dashboard, batch jobs, real-time updates, a
+load-balancing gateway and AWS deployment.
 
 ```mermaid
 flowchart LR
-  B[Browser<br/>Next.js · React · TypeScript] -->|REST · SSE · WebSocket| N[Nginx / AWS ALB]
-  N -->|/| W[web<br/>Next.js SSR]
-  N -->|/api| A[api<br/>Python · FastAPI]
-  N -->|/farm-api · /socket.io| F[farm-service<br/>Node · Express]
-  A --> PG[(PostgreSQL<br/>SQLAlchemy · Alembic)]
-  A --> R[(Redis)] --> C[worker<br/>Celery]
-  A --> Q[(Qdrant<br/>vectors)]
+  B[Browser<br/>React app · Dashboard] -->|REST · SSE · WebSocket| G[Gateway<br/>Nginx load balancer<br/>AWS ALB in the cloud]
+  C[MCP clients<br/>Claude Code / Desktop] -->|streamable HTTP| G
+  G -->|/api · least-conn| A[api × N<br/>FastAPI + AIML]
+  G -->|/farm-api · /socket.io sticky| F[farm-service × N<br/>Express]
+  G -->|/mcp · stateless| M[mcp × N<br/>AIML MCP server]
+  G -->|/ :8080 · :8090| W[React app · Dashboard]
+  A --> PG[(PostgreSQL)]
+  A --> R[(Redis)] --> C2[worker<br/>Celery]
   A -->|Claude API| L[LLM]
-  A --> M[[ML model<br/>scikit-learn · XGBoost]]
-  F --> MG[(MongoDB<br/>Mongoose)]
-  F -->|presigned PUT| S3[(AWS S3 + CloudFront)]
-  F -->|fertilizer plan| A
-  T[ml/ training<br/>PyTorch · MLflow · Optuna · SHAP] --> M
+  A --> ML[[AIML models<br/>Random Forest · XGBoost · TreeSHAP]]
+  M --> ML
+  F --> MG[(MongoDB)]
+  F -->|Socket.IO adapter| R
+  F -->|fertilizer plan · retries| A
+  A -.->|health probes| F & M
 ```
 
 ## Structure
 
 | Folder | What it is | Stack |
 |---|---|---|
-| [frontend/web](frontend/web) | Web app | Next.js 16, React 19, TypeScript, Tailwind, Sass, shadcn/ui, Material UI, Redux Toolkit, Zustand, Context API, TanStack Query, Axios, React Hook Form, Zod, Framer Motion, Socket.IO client, Vitest, Jest, Playwright |
-| [backend](backend) | ML / AI API | Python, FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL/SQLite, JWT + OAuth2 password flow, RBAC, WebSockets, SSE, Celery + Redis, Anthropic SDK (Claude), LangGraph, Qdrant, pytest |
-| [services/farm-service](services/farm-service) | Farm management API | Node.js, Express 5, MongoDB + Mongoose (aggregations, `$lookup`, transactions), Zod, JWT, Socket.IO, AWS S3 (SDK v3), helmet, rate limiting, pino, node:test + supertest |
-| [ml](ml) | ML pipeline | pandas, scikit-learn, XGBoost, PyTorch, MLflow (tracking + model registry), Optuna, SHAP, matplotlib, pytest |
-| [infra](infra) | DevOps | Docker, Docker Compose, Nginx, Terraform (AWS: VPC, ECS Fargate, ALB, RDS, ElastiCache, S3, CloudFront, Secrets Manager, ECR, IAM OIDC) |
-| [.github/workflows](.github/workflows) | CI/CD | GitHub Actions: test every service, build images, deploy to AWS |
+| [Dashboard](Dashboard) | **Operations console**: AI Studio (live recommendations + SHAP), yield analytics, models, farms, assistant, MCP tools, live system health and a load probe | React 19, Vite, Tailwind CSS v4, TanStack Query, React Router, Recharts, Google Sans, Material Symbols |
+| [frontend/react-app](frontend/react-app) | Public web app in plain **JavaScript (JSX)** | React 19, Vite, React Router, Bootstrap 5 + Sass, Redux Toolkit, Zustand, TanStack Query, Axios, Framer Motion, Socket.IO client, Vitest, Playwright |
+| [backend/python-fastapi](backend/python-fastapi) | AI/ML API | FastAPI, Pydantic, SQLAlchemy, Alembic, PostgreSQL/SQLite, JWT + RBAC, WebSockets, SSE, Celery + Redis, Anthropic SDK, LangGraph, Qdrant, load shedding, prediction caches, Prometheus metrics |
+| [backend/node-express](backend/node-express) | Farm management API | Express 5, MongoDB + Mongoose, Zod, JWT, Socket.IO (+ Redis adapter), AWS S3, helmet, rate limiting, pino |
+| [AIML](AIML) | Models, explainability, RAG, agents and the **MCP server** | pandas, scikit-learn, XGBoost, LightGBM, CatBoost, PyTorch, SHAP, Optuna, MLflow, MCP |
+| [infra](infra) | DevOps | Nginx gateway (load balancer), Docker Compose, Terraform (AWS: VPC, ECS Fargate, ALB, RDS, ElastiCache, S3, CloudFront) |
 | [docs](docs) | Documentation | [architecture](docs/architecture.md) · [AWS deployment](docs/deploy-aws.md) · [syllabus coverage](docs/syllabus-coverage.md) |
 
-## Run locally (no Docker)
+## How the pieces connect
 
-Needs Python 3.12+, Node 20+, and MongoDB on `localhost:27017` (PostgreSQL optional: SQLite is the default).
+| From → to | How |
+|---|---|
+| Browser → every service | One origin: the gateway (Docker) or the Vite dev proxy (local) routes `/api`, `/farm-api`, `/socket.io`, `/mcp` |
+| FastAPI → AIML | Imports the `AIML` package: crop & yield model bundles, TreeSHAP attribution (`AIML/advanced_ml/attribution.py`), agent tools |
+| MCP server → AIML | The same `AIML.agentic_ai.tools` functions, exposed as MCP tools |
+| Express → FastAPI | Fertilizer plans via `callAgriApi` with retries + `Retry-After` handling |
+| FastAPI → Express / MCP | Health probes for `GET /api/system/status` (the dashboard's service map) |
+| Auth | FastAPI issues JWTs; Express and the dashboard use the same token |
 
-```bash
-# 1. ML model (once): download the dataset, train and compare models
-cd backend && python -m venv .venv && .venv\Scripts\activate    # macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt -r ../ml/requirements.txt
-cd .. && python -m ml.data.download_dataset && python -m ml.train
+## Quick start — everything with one command
 
-# 2. FastAPI (port 8000, docs at http://localhost:8000/docs)
-cd backend && uvicorn app.main:app --reload
+Python 3.12+ and Node 20+. Run these from the repository root:
 
-# 3. Node farm-service (port 4000)
-cd services/farm-service && npm install && npm run dev
+| Command | What it does |
+|---|---|
+| `npm run setup` | Creates `backend/.venv` and installs **every** Python and Node dependency (first time only) |
+| `python main.py` (or `npm run dev`) | Starts FastAPI + AIML, the MCP server, Express, the React app and the Dashboard together — any OS; **Ctrl+C stops everything** |
+| `python main.py api dashboard` | Starts only the services you name (`python main.py --list` shows them) |
+| `python -m AIML` (or `npm run aiml`) | Shows each AI/ML technology, its trained model and which page uses it; also `train` · `serve` · `mcp` |
+| `npm run docker` | The whole load-balanced stack in Docker (any OS) |
+| `npm test` | Every test suite: FastAPI, AIML, Express, React app, Dashboard |
+| `npm run lint` · `npm run format` | ESLint everywhere · Prettier (JS/CSS) + Ruff (Python) |
 
-# 4. Web app (port 3000)
-cd frontend/web && npm install && npm run dev
+| Service (`python main.py`) | URL |
+|---|---|
+| Operations dashboard | http://localhost:5180 |
+| React web app | http://localhost:5175 |
+| FastAPI docs (2 workers) | http://localhost:8000/docs |
+| MCP server (2 workers) | http://localhost:8100/mcp |
+| Express health | http://localhost:4100/health |
+
+MongoDB on `127.0.0.1:27017` is optional — without it everything runs and the farm
+pages report the database as unavailable. Logs go to `.devlogs/`.
+
+Crop photos live once, in `frontend/react-app/public/images`; the Dashboard shows
+them through its dev proxy and the gateway (`/images/*`), so there is no second copy.
+
+Set `ANTHROPIC_API_KEY` in `backend/python-fastapi/.env` for Claude-backed assistant
+answers; without it the assistant uses the local knowledge base and models.
+
+## Run everything with Docker (load-balanced)
+
+```powershell
+docker compose up --build
 ```
 
-Open http://localhost:3000 and create an account (the first account becomes **admin**).
-Set `ANTHROPIC_API_KEY` in `backend/.env` to turn on the Claude-powered assistant;
-without it the assistant answers from the knowledge base only. See each folder's
-`.env.example` for all settings.
+| | |
+|---|---|
+| React web app | http://localhost:8080 |
+| Operations dashboard | http://localhost:8090 |
+| FastAPI docs | http://localhost:8080/docs |
+| MCP endpoint | http://localhost:8080/mcp |
 
-> Port 4000 already taken? Run the farm-service with `PORT=4100` and set
-> `NEXT_PUBLIC_FARM_API_URL=http://localhost:4100/api` for the web app.
+Compose runs PostgreSQL, Redis, MongoDB, a one-shot Alembic `migrate` job, **3 API
+replicas** (2 workers each), a Celery worker, **2 MCP replicas**, **2 farm-service
+replicas** and the two frontends, all behind the Nginx gateway. Scale any tier
+live — the gateway re-resolves replicas every 10 s:
 
-## Run everything with Docker
-
-```bash
-cp .env.example .env          # set JWT_SECRET (32+ chars); optionally ANTHROPIC_API_KEY
-docker compose --profile train run --rm trainer   # train the model, logged to MLflow
-docker compose up --build     # http://localhost   ·   MLflow UI: http://localhost:5000
+```powershell
+docker compose up -d --scale api=5 --scale mcp=3 --scale farm-service=3
 ```
 
-Compose runs PostgreSQL, MongoDB (replica set), Redis, Qdrant, MLflow, the API,
-a Celery worker, the farm-service, the web app and Nginx.
+Set `JWT_SECRET` in `.env` to a random 32+ character value before exposing the
+stack beyond your computer.
+
+## Staying up under heavy load
+
+| Layer | Mechanism |
+|---|---|
+| Gateway ([infra/nginx](infra/nginx)) | Least-connections balancing, passive health checks (a failing replica is skipped for 10 s), failover to another replica on connect errors/timeouts, per-IP rate limits (429), upstream keep-alive, micro-cache of read-only API responses served **stale** while replicas restart, JSON `503 + Retry-After` when nothing is healthy, sticky Socket.IO |
+| FastAPI | Per-worker concurrency cap: excess requests get an immediate `503 + Retry-After` instead of queueing into timeouts ([resilience.py](backend/python-fastapi/app/core/resilience.py)); TTL + LRU prediction caches; models served single-threaded so throughput scales with workers (measured 65 → 25 ms per prediction, 15 → 26 req/s at 25 concurrent); background warm-up so cold workers never block requests; GZip; multi-worker uvicorn |
+| MCP server | Stateless streamable HTTP — no sessions, so any replica answers any call |
+| Express | Socket.IO Redis adapter for cross-replica events; retries to FastAPI honouring `Retry-After` |
+| Dashboard | Retries with backoff + jitter, request timeouts, per-service circuit breakers, per-page error boundaries |
+| Observability | `GET /api/system/status`, `/api/system/metrics`, Prometheus `GET /api/metrics`; every response carries `X-Served-By` |
+
+The dashboard's **System health → Load probe** fires concurrent requests and shows
+which replica answered each one.
+
+## MCP server
+
+```bash
+python -m AIML.agentic_ai.mcp_server                                   # stdio (desktop clients)
+python -m AIML.agentic_ai.mcp_server --transport http --port 8100      # stateless HTTP
+claude mcp add --transport http agrismart http://localhost:8100/mcp
+```
+
+Tools: `recommend_crop`, `explain_crop` (TreeSHAP), `predict_yield`,
+`fertilizer_plan`, `weather_forecast`, `search_knowledge`; resources:
+`knowledge://{name}`.
 
 ## Tests
 
+`npm test` at the repository root runs all of these and prints a summary.
+
 | Where | Command | What |
 |---|---|---|
-| backend | `pytest` | 35 API tests: auth/JWT/RBAC, SQL history & joins, Celery jobs, WebSocket, model serving, RAG, LangGraph agent loop (fake Claude client) |
-| ml | `pytest ml/tests` | data validation, every model learns, PyTorch MLP |
-| farm-service | `npm test` | 11 integration tests on real MongoDB: ownership, Zod, aggregations, transactions, Socket.IO, S3 presigning, Python service call |
-| frontend/web | `npm test` · `npm run test:jest` · `npm run test:e2e` | Vitest (components, stores, SSE parser) · Jest (validation, utils) · Playwright (6 browser flows) |
+| backend/python-fastapi | `pytest` | 44 API tests: auth/JWT/RBAC, history, Celery jobs, WebSocket, model serving, RAG, agent loop, SHAP explanations, caching, load shedding, system status, warm-up |
+| repository root | `pytest AIML/tests` | Algorithms, models, RAG, Hadoop, CV, agents, MCP tools over stdio and stateless HTTP, SHAP additivity |
+| backend/node-express | `npm test` | Integration tests on real MongoDB (skipped without it) + DB-down behaviour |
+| Dashboard | `npm test` | API client resilience (retry, Retry-After, circuit breaker), SSE parsing, every route renders with services down, icon subset, palette/CSS sync |
+| frontend/react-app | `npm test` · `npm run test:e2e` | Vitest (navigation, regional disease data, formulas, search, stores) + Playwright |
 
-CI runs all of them on every push, including the backend against real PostgreSQL
-and the full ML training run.
+CI ([ci.yml](.github/workflows/ci.yml)) runs all of them, applies the migrations to
+PostgreSQL, smoke-tests the MCP server over HTTP, validates the Compose file and
+checks the gateway config with `nginx -t`.
 
 ## Deploy to AWS
 

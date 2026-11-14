@@ -26,12 +26,20 @@ export default function AdminPage() {
       <PageHeader title="Admin" description="Users and their activity, and the machine-learning model being served." />
 
       <section className="mb-5" aria-labelledby="model-admin">
-        <h2 id="model-admin" className="h5">Served model</h2>
+        <h2 id="model-admin" className="h5">
+          Served model
+        </h2>
         <p className="small text-body-secondary">
-          After retraining (<code>python -m ml.train</code>), reload the model without restarting the API.
+          After retraining (<code>python -m AIML.machine_learning.crop_classifier</code>), reload the model without
+          restarting the API.
         </p>
-        <Button variant="outline-primary" size="sm" onClick={() => reload.mutate()} disabled={reload.isPending}
-                className="d-inline-flex align-items-center gap-1">
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => reload.mutate()}
+          disabled={reload.isPending}
+          className="d-inline-flex align-items-center gap-1"
+        >
           {reload.isPending ? <Spinner size="sm" /> : <RefreshCw size={14} />} Reload model
         </Button>
         <ErrorAlert error={reload.error} className="mt-2" />
@@ -43,21 +51,32 @@ export default function AdminPage() {
       </section>
 
       <section aria-labelledby="users-admin">
-        <h2 id="users-admin" className="h5">Users</h2>
+        <h2 id="users-admin" className="h5">
+          Users
+        </h2>
         {users.isLoading && <Loader />}
         <ErrorAlert error={users.error} />
         {users.data && (
           <>
             <p className="small text-body-secondary">{users.data.total_predictions} predictions in total.</p>
             <Table responsive hover size="sm" className="align-middle">
-              <thead><tr><th>Email</th><th>Role</th><th className="text-end">Predictions</th><th>Last prediction</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th className="text-end">Predictions</th>
+                  <th>Last prediction</th>
+                </tr>
+              </thead>
               <tbody>
                 {users.data.users.map((u) => (
                   <tr key={u.id}>
                     <td>{u.email}</td>
                     <td className="text-capitalize">{u.role}</td>
                     <td className="text-end tabular">{u.predictions}</td>
-                    <td className="text-body-secondary">{u.last_prediction_at ? formatDateTime(u.last_prediction_at) : "—"}</td>
+                    <td className="text-body-secondary">
+                      {u.last_prediction_at ? formatDateTime(u.last_prediction_at) : "—"}
+                    </td>
                   </tr>
                 ))}
               </tbody>

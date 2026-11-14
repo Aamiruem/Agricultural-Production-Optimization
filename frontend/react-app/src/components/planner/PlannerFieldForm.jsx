@@ -28,30 +28,55 @@ export function PlannerFieldForm() {
   return (
     <Card>
       <Card.Body>
-        <Card.Title as="h2" className="h5">Add a field</Card.Title>
-        <p className="small text-body-secondary">Saved in this browser — no account needed.</p>
+        <Card.Title as="h2" className="h5">
+          Add a field
+        </Card.Title>
+        <p className="small text-body-secondary">Saved privately in this browser.</p>
         <form noValidate aria-label="Add field" onSubmit={handleSubmit(onSubmit)} className="d-grid gap-3">
           <Form.Group controlId="pl-name">
             <Form.Label className="small fw-medium mb-1">Field name</Form.Label>
-            <Form.Control size="sm" placeholder="e.g. North plot" isInvalid={Boolean(errors.name)} {...register("name")} />
-            <Form.Control.Feedback type="invalid" role="alert">{errors.name?.message}</Form.Control.Feedback>
+            <Form.Control
+              size="sm"
+              placeholder="e.g. North plot"
+              isInvalid={Boolean(errors.name)}
+              {...register("name")}
+            />
+            <Form.Control.Feedback type="invalid" role="alert">
+              {errors.name?.message}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="pl-crop">
             <Form.Label className="small fw-medium mb-1">Crop</Form.Label>
             <Form.Select size="sm" isInvalid={Boolean(errors.crop)} {...register("crop")}>
               <option value="">Choose a crop…</option>
-              {CROP_NAMES.map((c) => <option key={c} value={c}>{formatCropName(c)}</option>)}
+              {CROP_NAMES.map((c) => (
+                <option key={c} value={c}>
+                  {formatCropName(c)}
+                </option>
+              ))}
             </Form.Select>
-            <Form.Control.Feedback type="invalid" role="alert">{errors.crop?.message}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid" role="alert">
+              {errors.crop?.message}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="pl-season">
             <Form.Label className="small fw-medium mb-1">Season</Form.Label>
             <Form.Select size="sm" {...register("season")}>
-              {SEASONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+              {SEASONS.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
             </Form.Select>
           </Form.Group>
-          <NumberField id="pl-area" label="Area" unit="ha" step={0.1}
-                       registration={register("areaHa", { valueAsNumber: true })} error={errors.areaHa} />
+          <NumberField
+            id="pl-area"
+            label="Area"
+            unit="ha"
+            step={0.1}
+            registration={register("areaHa", { valueAsNumber: true })}
+            error={errors.areaHa}
+          />
           <Button type="submit" className="d-flex align-items-center justify-content-center gap-1">
             <Plus size={16} /> Add field
           </Button>

@@ -52,16 +52,27 @@ export function MyHistory() {
           <Table responsive hover size="sm" className="align-middle">
             <caption className="visually-hidden">Saved recommendations</caption>
             <thead>
-              <tr><th>When</th><th>N-P-K</th><th>pH</th><th>Rain</th><th>Top crop</th><th>Source</th></tr>
+              <tr>
+                <th>When</th>
+                <th>N-P-K</th>
+                <th>pH</th>
+                <th>Rain</th>
+                <th>Top crop</th>
+                <th>Source</th>
+              </tr>
             </thead>
             <tbody>
               {recent.data.items.map((p) => (
                 <tr key={p.id}>
                   <td className="text-nowrap text-body-secondary">{formatDateTime(p.created_at)}</td>
-                  <td className="tabular">{p.N}-{p.P}-{p.K}</td>
+                  <td className="tabular">
+                    {p.N}-{p.P}-{p.K}
+                  </td>
                   <td className="tabular">{p.ph}</td>
                   <td className="tabular">{p.rainfall} mm</td>
-                  <td>{formatCropName(p.top_crop)} ({formatPercent(p.confidence)})</td>
+                  <td>
+                    {formatCropName(p.top_crop)} ({formatPercent(p.confidence)})
+                  </td>
                   <td className="text-body-secondary">{p.source}</td>
                 </tr>
               ))}
@@ -72,8 +83,17 @@ export function MyHistory() {
               Showing {page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}
             </span>
             <div className="d-flex gap-2">
-              <Button size="sm" variant="outline-secondary" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>Previous</Button>
-              <Button size="sm" variant="outline-secondary" disabled={(page + 1) * PAGE >= total} onClick={() => setPage((p) => p + 1)}>Next</Button>
+              <Button size="sm" variant="outline-secondary" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
+                Previous
+              </Button>
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                disabled={(page + 1) * PAGE >= total}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                Next
+              </Button>
             </div>
           </div>
         </div>

@@ -1,0 +1,15 @@
+**/node_modules
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.env
+**/.env.*
+!**/.env.example
+**/test-results
+**/playwright-report
+.git
+ml/mlruns
+ml/mlflow.db
+ml/datasets/*.csv
+backend/*.db
+backend/*.db-*

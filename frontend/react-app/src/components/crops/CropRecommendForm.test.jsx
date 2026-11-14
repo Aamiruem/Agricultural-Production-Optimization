@@ -38,7 +38,13 @@ describe("<CropRecommendForm />", () => {
     expect(await screen.findByRole("link", { name: /rice/i })).toHaveAttribute("href", "/crops/rice");
     expect(screen.getByText("ML model")).toBeInTheDocument();
     expect(vi.mocked(recommendCrop).mock.calls[0][0]).toEqual({
-      N: 85, P: 45, K: 40, temperature: 23.5, humidity: 82, ph: 6.5, rainfall: 230,
+      N: 85,
+      P: 45,
+      K: 40,
+      temperature: 23.5,
+      humidity: 82,
+      ph: 6.5,
+      rainfall: 230,
     });
     expect(useHistoryStore.getState().entries).toHaveLength(1);
   });

@@ -1,0 +1,464 @@
+{
+  "ai/market-prices": {
+    "title": "Market Hyderabad.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Market_Hyderabad.jpg",
+    "author": "Iijjccoo at Dutch Wikipedia",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "ai/plant-disease": {
+    "title": "Sweet potato plant with leaf miner damage.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Sweet_potato_plant_with_leaf_miner_damage.jpg",
+    "author": "Phytorealism",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "ai/satellite-monitoring": {
+    "title": "Agricultural Fields Near Rome (50586672117).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Agricultural_Fields_Near_Rome_(50586672117).jpg",
+    "author": "SentinelHub",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "ai/soil-analysis": {
+    "title": "Soil fertility analysis 7 Samples for Zn Mn & Cu by AA.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Soil_fertility_analysis_7_Samples_for_Zn_Mn_%26_Cu_by_AA.jpg",
+    "author": "Alandmanson",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "ai/weather-forecasting": {
+    "title": "Logia Home Weather Station.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Logia_Home_Weather_Station.jpg",
+    "author": "Candeadly",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  "education/agri-economics": {
+    "title": "USAID Firms Project's Agriculture Marketing Reforms.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:USAID_Firms_Project%27s_Agriculture_Marketing_Reforms.jpg",
+    "author": "USAID Pakistan",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "education/crop-protection": {
+    "title": "SPRAYING PESTICIDES - NARA - 544246 (cropped).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:SPRAYING_PESTICIDES_-_NARA_-_544246_(cropped).jpg",
+    "author": "John Messina",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "education/farmers-in-field": {
+    "title": "Indian farmers.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Indian_farmers.jpg",
+    "author": "Ksd5",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "education/government-schemes": {
+    "title": "Baramati, Maharashtra, India. 10 Krishi Vigyan Kendra (agriculture promotion) bus.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Baramati,_Maharashtra,_India._10_Krishi_Vigyan_Kendra_(agriculture_promotion)_bus.jpg",
+    "author": "Fredericknoronha",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "education/modern-farming": {
+    "title": "Training to farmers on Co-composting, Devanahalli, Bengaluru.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Training_to_farmers_on_Co-composting,_Devanahalli,_Bengaluru.jpg",
+    "author": "CDD India",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "education/seed-selection": {
+    "title": "Ponni paddy seed.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Ponni_paddy_seed.JPG",
+    "author": "Vijayakumarblathur",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "education/sustainable-development": {
+    "title": "SOLAR POWER IRRIGATION RICE FARMING.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:SOLAR_POWER_IRRIGATION_RICE_FARMING.jpg",
+    "author": "SMMIMAGES",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/food-processing": {
+    "title": "Rice processing mill 102.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Rice_processing_mill_102.jpg",
+    "author": "Dokimazo99",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/food-storage": {
+    "title": "CWC Godown, Bamanheri operated by Food Corporation of India for stocking foodgrains.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:CWC_Godown,_Bamanheri_operated_by_Food_Corporation_of_India_for_stocking_foodgrains.jpg",
+    "author": "Prabhat1729",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/fresh-vegetables": {
+    "title": "Vegetables arranged at a roadside stall in India.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Vegetables_arranged_at_a_roadside_stall_in_India.jpg",
+    "author": "Madhu Kannan from Thrissur, India",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0"
+  },
+  "food/fruits": {
+    "title": "Fruit Stall in Barcelona Market.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Fruit_Stall_in_Barcelona_Market.jpg",
+    "author": "By en:User:Daderot.",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  "food/harvesting": {
+    "title": "Farmer manually harvesting rice in Raichur, Karnataka.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Farmer_manually_harvesting_rice_in_Raichur,_Karnataka.jpg",
+    "author": "Nanditha Gogate, WELL Labs",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/organic-food": {
+    "title": "Organic food at the street fair of Redenção, Porto Alegre- Brazil 1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Organic_food_at_the_street_fair_of_Reden%C3%A7%C3%A3o,_Porto_Alegre-_Brazil_1.jpg",
+    "author": "André Ganzarolli Martins",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/rice-field": {
+    "title": "Paddy Field Stubble Balamuri Coorg Feb24 A7C 09450.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Paddy_Field_Stubble_Balamuri_Coorg_Feb24_A7C_09450.jpg",
+    "author": "This Photo was taken by Timothy A. Gonsalves. Feel free to use my photos, but please mention me as the author. I would much appreciate if you send me an email tagooty@yahoo.com or write on my talk page, for my information. Please contact me before commercial use. Please do not upload an edited image here without consulting me. I would like to make corrections only at my own source to ensure that the changes improve the image and are preserved.Otherwise you may upload an edited image with a new name. Please use one of the templates derivative or extract.",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/silos": {
+    "title": "Adani Food Processing Plant Bandel.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Adani_Food_Processing_Plant_Bandel.jpg",
+    "author": "Babin Mew",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/supply-chain": {
+    "title": "Potato transportation to cold storage in India (2).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Potato_transportation_to_cold_storage_in_India_(2).jpg",
+    "author": "Suyash Dwivedi",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "food/wheat-field": {
+    "title": "Wheat field in Punjab -1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Wheat_field_in_Punjab_-1.jpg",
+    "author": "Sarbjit Bahga",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "health/awareness-campaign": {
+    "title": "Vaccination drive for COVID prevention in Bhopal, India 02.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Vaccination_drive_for_COVID_prevention_in_Bhopal,_India_02.jpg",
+    "author": "Suyash Dwivedi",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "health/clean-water": {
+    "title": "A child pumping water.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:A_child_pumping_water.jpg",
+    "author": "Aronrusewelt",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "health/community-health-worker": {
+    "title": "Community health worker gives a vaccination in Odisha state, India (8380317750).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Community_health_worker_gives_a_vaccination_in_Odisha_state,_India_(8380317750).jpg",
+    "author": "DFID - UK Department for International Development",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "health/doctor-consultation": {
+    "title": "Doctor examines patient with stethoscope (2).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Doctor_examines_patient_with_stethoscope_(2).jpg",
+    "author": "Unknown photographer",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "health/farm-safety": {
+    "title": "US Navy 050309-N-8796S-031 Chief Hospital Corpsman Alberto Redublo, left, helps Hospital Corpsman 2nd Class Richard Cabatit as he dons his personal protective equipment for spraying pesticides.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:US_Navy_050309-N-8796S-031_Chief_Hospital_Corpsman_Alberto_Redublo,_left,_helps_Hospital_Corpsman_2nd_Class_Richard_Cabatit_as_he_dons_his_personal_protective_equipment_for_spraying_pesticides.jpg",
+    "author": "U.S. Navy photo by Photographer's Mate 2nd Class Timothy Smith",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "health/first-aid": {
+    "title": "Erste Hilfe 003 2026 02 17.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Erste_Hilfe_003_2026_02_17.jpg",
+    "author": "Friedrich Haag",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "health/healthcare-clinic": {
+    "title": "Front View of Primary Health Centre Addakal Mahabubnagar Telanagana India.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Front_View_of_Primary_Health_Centre_Addakal_Mahabubnagar_Telanagana_India.jpg",
+    "author": "Kavali Chandrakanth KCK",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "health/rural-healthcare": {
+    "title": "Mobile Medical Unit Project.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Mobile_Medical_Unit_Project.jpg",
+    "author": "Ujv1010",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "machines/agricultural-drone": {
+    "title": "IRRI BBM rice drone demo 2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:IRRI_BBM_rice_drone_demo_2.jpg",
+    "author": "Christopher Hedreyd - PIA 4A CALABARZON",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "machines/agricultural-robot": {
+    "title": "XAG sprayer robot, Agritechnica 2023, Hanover (P1160327).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:XAG_sprayer_robot,_Agritechnica_2023,_Hanover_(P1160327).jpg",
+    "author": "MB-one",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "machines/combine-harvester": {
+    "title": "Combine in wheat field.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Combine_in_wheat_field.jpg",
+    "author": "Dan Kollmann",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "machines/crop-sensors": {
+    "title": "272 soilmoisture.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:272_soilmoisture.JPG",
+    "author": "Christianjhart1",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "machines/grain-processing": {
+    "title": "Rice mill in Laos.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Rice_mill_in_Laos.jpg",
+    "author": "Basile Morin",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "machines/greenhouse-automation": {
+    "title": "Hydroponic Greenhouse in Armenia 1.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Hydroponic_Greenhouse_in_Armenia_1.jpg",
+    "author": "Narek75",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "machines/seed-drill": {
+    "title": "John Deere Planter with Case IH Tractor.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:John_Deere_Planter_with_Case_IH_Tractor.JPG",
+    "author": "Kowloonese",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "machines/smart-irrigation": {
+    "title": "Center-pivot irrigation system - 2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Center-pivot_irrigation_system_-_2.jpg",
+    "author": "Killarnee",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "machines/smart-tractor": {
+    "title": "Tractor ploughing field 2.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Tractor_ploughing_field_2.jpg",
+    "author": "abhiriksh",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "machines/soil-testing-equipment": {
+    "title": "IRTC Laboratory Soil Test.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:IRTC_Laboratory_Soil_Test.jpg",
+    "author": "Forprajeesh",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "machines/spraying-machine": {
+    "title": "Crop sprayer, Oxpens Farm - geograph.org.uk - 4429399.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Crop_sprayer,_Oxpens_Farm_-_geograph.org.uk_-_4429399.jpg",
+    "author": "Derek Harper",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "machines/weeding-machine": {
+    "title": "Titan FT35 FarmWise3.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Titan_FT35_FarmWise3.jpg",
+    "author": "PaulineCant",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "nutrition/balanced-diet": {
+    "title": "Darjeeling, India, Indian Thali meal.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Darjeeling,_India,_Indian_Thali_meal.jpg",
+    "author": "Vyacheslav Argenberg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  "nutrition/cereals-grains": {
+    "title": "Cereal Seller 3.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Cereal_Seller_3.jpg",
+    "author": "Isaiah Maghanga",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "nutrition/dairy-products": {
+    "title": "DairyProductsGermany.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:DairyProductsGermany.jpg",
+    "author": "Alexschneider250",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "nutrition/fresh-vegetables": {
+    "title": "Vegetables-1212845.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Vegetables-1212845.jpg",
+    "author": "Lubos Houska",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "nutrition/healthy-fruits": {
+    "title": "DFC 2197 A colorful assortment of fresh fruits and vegetables - apples mango dragon fruit kiwis limes bananas and more - arranged on a wooden crate.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:DFC_2197_A_colorful_assortment_of_fresh_fruits_and_vegetables_-_apples_mango_dragon_fruit_kiwis_limes_bananas_and_more_-_arranged_on_a_wooden_crate.jpg",
+    "author": "PattayaPatrol",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "nutrition/nutritional-benefits": {
+    "title": "Nuts on Spice Bazaar in Istanbul 01.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Nuts_on_Spice_Bazaar_in_Istanbul_01.jpg",
+    "author": "Miomir Magdevski",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "nutrition/organic-food": {
+    "title": "Napa Farmers Market - April 2023 - Sarah Stierch.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Napa_Farmers_Market_-_April_2023_-_Sarah_Stierch.jpg",
+    "author": "Missvain",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0"
+  },
+  "nutrition/pulses-legumes": {
+    "title": "Pulses Red Chillies Ooty Market Nilgiris Aug25 A7CR 07122.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Pulses_Red_Chillies_Ooty_Market_Nilgiris_Aug25_A7CR_07122.jpg",
+    "author": "Timothy A. Gonsalves",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/commercial-farming": {
+    "title": "Sugarcane harvest Piracicaba 05 2009 5783.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Sugarcane_harvest_Piracicaba_05_2009_5783.JPG",
+    "author": "Mariordo Mario Roberto Duran Ortiz",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  "systems/crop-production-systems": {
+    "title": "Women at work, Gujarat (cropped).jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Women_at_work,_Gujarat_(cropped).jpg",
+    "author": "Bernard Gagnon",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "systems/crop-rotation": {
+    "title": "Plodozmian.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Plodozmian.jpg",
+    "author": "Lesław Zimny",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "systems/extensive-farming": {
+    "title": "Grazing cattle on a pasture in eastern New Mexico.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Grazing_cattle_on_a_pasture_in_eastern_New_Mexico.jpg",
+    "author": "Quintin Soloviev",
+    "license": "CC0",
+    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "systems/fertilizer-management": {
+    "title": "Spreading the natural fertilizer - geograph.org.uk - 4871235.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Spreading_the_natural_fertilizer_-_geograph.org.uk_-_4871235.jpg",
+    "author": "Hywel Williams",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "systems/integrated-farming": {
+    "title": "Duck farming Candaba4.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Duck_farming_Candaba4.jpg",
+    "author": "Unknown author",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/intensive-farming": {
+    "title": "Polyhouse cultivation,village Dhaar,district Solan, Himachal Pradesh.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Polyhouse_cultivation,village_Dhaar,district_Solan,_Himachal_Pradesh.jpg",
+    "author": "Harvinder Chandigarh",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/intercropping": {
+    "title": "Intercropping coconut n Tagetes erecta.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Intercropping_coconut_n_Tagetes_erecta.jpg",
+    "author": "Ezhuttukari",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  "systems/irrigation-systems": {
+    "title": "Button dripper.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Button_dripper.JPG",
+    "author": "Borisshin",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/mixed-farming": {
+    "title": "Bullock ploughing sowing groundnut blackeyed peas Raichur Karnataka India.jp.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Bullock_ploughing_sowing_groundnut_blackeyed_peas_Raichur_Karnataka_India.jp.jpg",
+    "author": "Nanditha Gogate, WELL Labs",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/organic-farming": {
+    "title": "Farming Gods Way.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Farming_Gods_Way.jpg",
+    "author": "Btwien",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/pest-disease-management": {
+    "title": "Yellow sticker trap.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Yellow_sticker_trap.jpg",
+    "author": "Wee Hong",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/precision-agriculture": {
+    "title": "20220831-OSEC-LSC-0224A.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:20220831-OSEC-LSC-0224A.jpg",
+    "author": "USDAgov",
+    "license": "Public domain",
+    "licenseUrl": ""
+  },
+  "systems/soil-management": {
+    "title": "Red soil of a ploughed field - geograph.org.uk - 6515863.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:Red_soil_of_a_ploughed_field_-_geograph.org.uk_-_6515863.jpg",
+    "author": "Trevor Littlewood",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0"
+  },
+  "systems/subsistence-farming": {
+    "title": "L'agriculture de subsistance en Casamance.jpg",
+    "page": "https://commons.wikimedia.org/wiki/File:L%27agriculture_de_subsistance_en_Casamance.jpg",
+    "author": "Geertivp",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  },
+  "systems/sustainable-agriculture": {
+    "title": "Sustainable Agriculture Practice, Rangunia, Chittagong 01.JPG",
+    "page": "https://commons.wikimedia.org/wiki/File:Sustainable_Agriculture_Practice,_Rangunia,_Chittagong_01.JPG",
+    "author": "Prabal Barua",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0"
+  }
+}

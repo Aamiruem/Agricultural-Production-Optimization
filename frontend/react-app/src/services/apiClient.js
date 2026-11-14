@@ -8,7 +8,7 @@ export const FARM_API_URL = import.meta.env.VITE_FARM_API_URL ?? "/farm-api";
 
 const SERVICE_NAMES = {
   [API_URL]: "the FastAPI backend (port 8000)",
-  [FARM_API_URL]: "the farm service (port 4000)",
+  [FARM_API_URL]: "the Express farm service (port 4100)",
 };
 
 function withAuth(instance) {
@@ -33,6 +33,32 @@ export const api = withAuth(axios.create({ baseURL: API_URL, timeout: 15000 }));
 
 /** Node / Express: farms, fields, activities, photos. */
 export const farmApi = withAuth(axios.create({ baseURL: FARM_API_URL, timeout: 15000 }));
+
+/**
+ * True when the API service itself is unreachable (no server, or a static host
+ * answering /api with the SPA shell) rather than rejecting the request.
+ */
+export function isApiUnavailable(error) {
+  if (error?.code === "API_HTML") return true;
+  if (!(error instanceof AxiosError)) return false;
+  return !error.response || [404, 405, 501, 502, 503, 504].includes(error.response.status);
+}
+
+/**
+ * Call the backend; if it is unavailable, run the bundled browser model instead.
+ * Results from the fallback carry `engine: "browser"` so the UI can label them.
+ */
+export async function withFallback(remote, local) {
+  try {
+    const data = await remote();
+    if (typeof data === "string") throw Object.assign(new Error("API returned HTML"), { code: "API_HTML" });
+    return data;
+  } catch (error) {
+    if (!isApiUnavailable(error)) throw error;
+    const data = await local();
+    return Array.isArray(data) || typeof data !== "object" ? data : { engine: "browser", ...data };
+  }
+}
 
 /** Turn any Axios / FastAPI / Express error into a readable message. */
 export function getErrorMessage(error) {

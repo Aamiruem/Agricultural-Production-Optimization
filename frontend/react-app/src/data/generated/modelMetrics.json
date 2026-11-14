@@ -1,0 +1,22 @@
+{
+  "yield": {
+    "r2_log": 0.9026,
+    "rmse_log": 0.4602,
+    "median_ape": 0.1574,
+    "within_25pct": 0.6596,
+    "test_rows": 5244,
+    "split": "train < 2015 <= test"
+  },
+  "recommend": {
+    "test_accuracy": 0.9955,
+    "test_rows": 440,
+    "model": "Gaussian Naive Bayes"
+  },
+  "server_yield": {
+    "model": "xgboost",
+    "rmse_log": 0.27563619817694274,
+    "mae_t_ha": 1.3143299442540144,
+    "r2_log": 0.899890913107607,
+    "median_ape": 0.19182390117188958
+  }
+}

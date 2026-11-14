@@ -37,14 +37,30 @@ export function FertilizerForm() {
       <Col lg={6}>
         <Card>
           <Card.Body>
-            <Card.Title as="h2" className="h5">Field details</Card.Title>
+            <Card.Title as="h2" className="h5">
+              Field details
+            </Card.Title>
             <p className="small text-body-secondary">Pick a crop and enter the soil N-P-K from your soil test.</p>
-            <form noValidate aria-label="Fertilizer calculator" onSubmit={handleSubmit((v) => mutation.mutate(v))} className="d-grid gap-3">
+            <form
+              noValidate
+              aria-label="Fertilizer calculator"
+              onSubmit={handleSubmit((v) => mutation.mutate(v))}
+              className="d-grid gap-3"
+            >
               <Form.Group controlId="fert-crop">
                 <Form.Label className="small fw-medium mb-1">Crop</Form.Label>
-                <Form.Select size="sm" isInvalid={Boolean(errors.crop)} disabled={crops.isLoading || crops.isError} {...register("crop")}>
+                <Form.Select
+                  size="sm"
+                  isInvalid={Boolean(errors.crop)}
+                  disabled={crops.isLoading || crops.isError}
+                  {...register("crop")}
+                >
                   <option value="">Choose a crop…</option>
-                  {(crops.data ?? []).map((c) => <option key={c.name} value={c.name}>{formatCropName(c.name)}</option>)}
+                  {(crops.data ?? []).map((c) => (
+                    <option key={c.name} value={c.name}>
+                      {formatCropName(c.name)}
+                    </option>
+                  ))}
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.crop?.message}</Form.Control.Feedback>
                 {crops.isError && <div className="small text-danger mt-1">{getErrorMessage(crops.error)}</div>}
@@ -53,8 +69,13 @@ export function FertilizerForm() {
               <Row xs={3} className="g-2">
                 {Object.entries(NUTRIENTS).map(([key, label]) => (
                   <Col key={key}>
-                    <NumberField id={`fert-${key}`} label={label} unit="kg/ha"
-                                 registration={register(key, { valueAsNumber: true })} error={errors[key]} />
+                    <NumberField
+                      id={`fert-${key}`}
+                      label={label}
+                      unit="kg/ha"
+                      registration={register(key, { valueAsNumber: true })}
+                      error={errors[key]}
+                    />
                   </Col>
                 ))}
               </Row>
@@ -64,9 +85,17 @@ export function FertilizerForm() {
                 control={control}
                 render={({ field }) => (
                   <Form.Group controlId="fert-area">
-                    <Form.Label className="small fw-medium mb-0">Field area: <span className="tabular">{field.value} ha</span></Form.Label>
-                    <Form.Range min={0.5} max={50} step={0.5} value={field.value}
-                                onChange={(e) => field.onChange(Number(e.target.value))} onBlur={field.onBlur} />
+                    <Form.Label className="small fw-medium mb-0">
+                      Field area: <span className="tabular">{field.value} ha</span>
+                    </Form.Label>
+                    <Form.Range
+                      min={0.5}
+                      max={50}
+                      step={0.5}
+                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onBlur={field.onBlur}
+                    />
                   </Form.Group>
                 )}
               />
@@ -84,7 +113,11 @@ export function FertilizerForm() {
       <Col lg={6} aria-live="polite">
         <ErrorAlert error={mutation.error} />
         {mutation.data && <FertilizerResult result={mutation.data} />}
-        {mutation.isIdle && <EmptyState className="h-100 d-grid align-items-center">Nutrient gaps and fertilizer doses will appear here.</EmptyState>}
+        {mutation.isIdle && (
+          <EmptyState className="h-100 d-grid align-items-center">
+            Nutrient gaps and fertilizer doses will appear here.
+          </EmptyState>
+        )}
       </Col>
     </Row>
   );

@@ -1,25 +1,40 @@
-import { api } from "./apiClient";
+import { CROP_PROFILES } from "@/data/cropProfiles";
+import { fertilizerLocal, recommendLocal } from "@/lib/agriModels";
+
+import { api, withFallback } from "./apiClient";
 
 // Crops & recommendations (FastAPI + the trained ML model)
 
-export async function fetchCrops(season) {
-  const { data } = await api.get("/crops", { params: season ? { season } : undefined });
-  return data;
+export function fetchCrops(season) {
+  return withFallback(
+    async () => (await api.get("/crops", { params: season ? { season } : undefined })).data,
+    () => Object.values(CROP_PROFILES).filter((c) => !season || c.season === season),
+  );
 }
 
-export async function fetchCrop(name) {
-  const { data } = await api.get(`/crops/${encodeURIComponent(name)}`);
-  return data;
+export function fetchCrop(name) {
+  return withFallback(
+    async () => (await api.get(`/crops/${encodeURIComponent(name)}`)).data,
+    () => {
+      const crop = CROP_PROFILES[name.toLowerCase()];
+      if (!crop) throw new Error(`Unknown crop: ${name}`);
+      return crop;
+    },
+  );
 }
 
-export async function recommendCrop(soil) {
-  const { data } = await api.post("/recommend/crop", soil);
-  return data;
+export function recommendCrop(soil) {
+  return withFallback(
+    async () => (await api.post("/recommend/crop", soil)).data,
+    () => recommendLocal(soil),
+  );
 }
 
-export async function recommendFertilizer(request) {
-  const { data } = await api.post("/recommend/fertilizer", request);
-  return data;
+export function recommendFertilizer(request) {
+  return withFallback(
+    async () => (await api.post("/recommend/fertilizer", request)).data,
+    () => fertilizerLocal(request),
+  );
 }
 
 // Saved history & background jobs (signed-in users)

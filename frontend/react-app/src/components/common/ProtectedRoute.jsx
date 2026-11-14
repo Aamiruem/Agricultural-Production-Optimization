@@ -6,6 +6,9 @@ import { useSession } from "@/store/authStore";
 export function ProtectedRoute() {
   const { user } = useSession();
   const location = useLocation();
-  if (!user) return <Navigate to={`/login?next=${encodeURIComponent(location.pathname)}`} replace />;
+  if (!user)
+    return (
+      <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`} replace />
+    );
   return <Outlet />;
 }
