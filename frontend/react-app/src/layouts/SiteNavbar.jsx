@@ -5,10 +5,11 @@ import { Link } from "react-router";
 import logo from "@/assets/logo.svg";
 import { GlobalSearch } from "@/components/common/GlobalSearch";
 import { MIcon } from "@/components/common/MIcon";
+import { useSignOut } from "@/hooks/useSignOut";
 import { useTheme } from "@/hooks/useTheme";
 import { useT } from "@/i18n/useT";
 import { seasonalNotifications } from "@/lib/notifications";
-import { useAuthStore, useSession } from "@/store/authStore";
+import { useSession } from "@/store/authStore";
 
 const READ_KEY = "agri-notifications-read";
 
@@ -17,7 +18,7 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
   const { mode, toggle } = useTheme();
   const { t, lang, setLang } = useT();
   const { user, isAdmin } = useSession();
-  const logout = useAuthStore((st) => st.logout);
+  const logout = useSignOut();
   const initials = (user?.full_name || user?.email || "U")
     .split(/\s+/)
     .map((x) => x[0])

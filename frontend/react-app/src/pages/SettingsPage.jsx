@@ -1,14 +1,14 @@
 import "@/styles/public.scss";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { CheckCircle2, KeyRound, LogOut, Palette, Trash2, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 
 import { PageHeader } from "@/components/common/PageHeader";
 import { clearLastAnalysis, loadLastAnalysis } from "@/features/local/lastAnalysis";
+import { useSignOut } from "@/hooks/useSignOut";
 import { useTheme } from "@/hooks/useTheme";
 import { useT } from "@/i18n/useT";
 import { getErrorMessage } from "@/services/apiClient";
@@ -188,9 +188,7 @@ function PreferencesCard() {
 
 /** Account settings: profile, password, preferences and sign out. */
 export default function SettingsPage() {
-  const logout = useAuthStore((s) => s.logout);
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const signOut = useSignOut();
   return (
     <div className="settings-page">
       <PageHeader
@@ -211,15 +209,7 @@ export default function SettingsPage() {
             Sign out removes your session from this browser. Sessions also end automatically when the access token
             expires.
           </p>
-          <button
-            type="button"
-            className="btn-x btn-x--secondary"
-            onClick={() => {
-              logout();
-              queryClient.clear();
-              navigate("/", { replace: true });
-            }}
-          >
+          <button type="button" className="btn-x btn-x--secondary" onClick={signOut}>
             <LogOut size={16} aria-hidden="true" /> Sign out
           </button>
         </section>
