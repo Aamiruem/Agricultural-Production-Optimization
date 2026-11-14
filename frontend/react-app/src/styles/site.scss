@@ -117,25 +117,25 @@ h3,
     }
   }
   &--whatsapp {
-    background: #128c7e;
+    background: #0e7a6e;
     color: #fff;
     &:hover {
-      background: #0e7a6e;
+      background: #0b6157;
       color: #fff;
       box-shadow: 0 10px 24px rgb(18 140 126 / 0.3);
     }
   }
   &--whatsapp-outline {
-    border-color: #128c7e;
+    border-color: #0e7a6e;
     background: transparent;
     color: #0e7a6e;
   }
 }
 .lp-btn--whatsapp {
-  background: #128c7e;
+  background: #0e7a6e;
   color: #fff;
   &:hover {
-    background: #0e7a6e;
+    background: #0b6157;
     color: #fff;
   }
 }
@@ -167,12 +167,12 @@ h3,
   margin-left: 0.35rem;
   padding: 0.45rem 1rem;
   border-radius: 999px;
-  background: #128c7e;
+  background: #0e7a6e;
   color: #fff;
   font-weight: 600;
   white-space: nowrap;
   &:hover {
-    background: #0e7a6e;
+    background: #0b6157;
     color: #fff;
   }
 }
@@ -2159,10 +2159,10 @@ p.machine-function {
     word-break: break-word;
   }
   &--whatsapp {
-    background: #128c7e;
-    border-color: #128c7e;
+    background: #0e7a6e;
+    border-color: #0e7a6e;
     &:hover {
-      background: #0e7a6e;
+      background: #0b6157;
     }
   }
 }
@@ -2495,4 +2495,17 @@ p.machine-function {
     transition: none !important;
     transform: none !important;
   }
+}
+
+// Route loading placeholder and lazy chart placeholder (reserve space: no layout shift).
+.route-fallback {
+  display: grid;
+  place-items: start center;
+  min-height: 100vh;
+  padding-top: 20vh;
+}
+.preview-frame--loading {
+  min-height: 300px;
+  border-radius: var(--ag-radius);
+  background: var(--ag-cream);
 }

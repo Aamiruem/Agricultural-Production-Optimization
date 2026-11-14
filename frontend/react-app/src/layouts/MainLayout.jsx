@@ -107,7 +107,14 @@ export function MainLayout() {
           <main id="main">
             <div className={isHome ? "home-shell" : "page-shell"}>
               <ErrorBoundary key={pathname}>
-                <Suspense fallback={<Loader label="Loading page" />}>
+                <Suspense
+                  fallback={
+                    // Viewport-tall so the footer does not jump when the page chunk arrives (CLS).
+                    <div className="route-fallback">
+                      <Loader label="Loading page" />
+                    </div>
+                  }
+                >
                   <Outlet />
                 </Suspense>
               </ErrorBoundary>

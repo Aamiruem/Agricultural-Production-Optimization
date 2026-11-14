@@ -1,18 +1,18 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, MessageCircle } from "lucide-react";
+import { lazy, Suspense } from "react";
 import { Link } from "react-router";
-import { Area, AreaChart, Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 import { MIcon } from "@/components/common/MIcon";
 import { SitePhoto } from "@/components/site/SiteKit";
-import analytics from "@/data/generated/analytics.json";
 import metrics from "@/data/generated/modelMetrics.json";
 import { CROPS, SEASONS, STATES, STATE_BY_NAME } from "@/data/indiaAgri";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useWeather, weatherLabel } from "@/hooks/useWeather";
 import { useT } from "@/i18n/useT";
 import { OWNER, whatsappLink } from "@/data/site";
-import { useChartColors } from "@/lib/chartTheme";
+
+const HomePreviewCharts = lazy(() => import("@/components/home/HomePreviewCharts"));
 
 const WA_TEXT = "Hello Aamir, I visited AgriSmart and would like to know more.";
 
@@ -204,9 +204,6 @@ export default function HomePage() {
     viewport: { once: true, margin: "-40px" },
     transition: { duration: 0.5, delay },
   });
-  const c = useChartColors();
-  const punjab = analytics.states.Punjab.years.map(([year, area, production]) => ({ year, production, area }));
-  const pie = analytics.states.Punjab.top.slice(0, 4).map(([name, value]) => ({ name, value }));
   const delhi = STATE_BY_NAME.Delhi;
   const w = useWeather(delhi);
 
@@ -400,60 +397,9 @@ export default function HomePage() {
       {/* Live data preview */}
       <section className="lp-section" aria-labelledby="preview-title">
         <SectionHead title={t("home.previewTitle")} lead={t("home.previewLead")} />
-        <div className="preview-frame">
-          <div className="g-card span-8">
-            <div className="card-head2">
-              <div>
-                <h3>Punjab · {hi ? "उत्पादन" : "production"} (t)</h3>
-                <p>1997–2020</p>
-              </div>
-            </div>
-            <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={punjab} margin={{ top: 5, right: 5, left: 5, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="pv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={c.primary} stopOpacity={0.5} />
-                    <stop offset="100%" stopColor={c.primary} stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <Area type="monotone" dataKey="production" stroke={c.primary} strokeWidth={2} fill="url(#pv)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="g-card span-4">
-            <div className="card-head2">
-              <div>
-                <h3>{hi ? "फसल वितरण" : "Crop distribution"}</h3>
-                <p>{hi ? "क्षेत्रफल" : "by area"}</p>
-              </div>
-            </div>
-            <ResponsiveContainer width="100%" height={150}>
-              <PieChart>
-                <Pie
-                  data={pie}
-                  dataKey="value"
-                  innerRadius={42}
-                  outerRadius={64}
-                  paddingAngle={1.5}
-                  stroke={c.surface}
-                  strokeWidth={2}
-                >
-                  {pie.map((p, i) => (
-                    <Cell key={p.name} fill={c.series[i]} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-            <ul className="legend-list compact">
-              {pie.map((p, i) => (
-                <li key={p.name}>
-                  <i style={{ background: c.series[i] }} />
-                  {p.name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+        <Suspense fallback={<div className="preview-frame preview-frame--loading" aria-hidden="true" />}>
+          <HomePreviewCharts />
+        </Suspense>
         <div className="text-center mt-4">
           <Link to="/dashboard" className="lp-btn lp-btn--dark">
             {t("home.ctaSecondary")} <ArrowRight size={18} />

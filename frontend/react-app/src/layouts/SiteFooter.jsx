@@ -94,7 +94,7 @@ export function SiteFooter() {
     <footer className="agri-footer">
       <div className="agri-footer-top">
         <div className="agri-footer-brand">
-          <Link to="/" className="agri-footer-logo" aria-label="AgriSmart home">
+          <Link to="/" className="agri-footer-logo">
             <img src={logo} alt="" width="48" height="48" />
             <span>
               <b>AgriSmart</b>

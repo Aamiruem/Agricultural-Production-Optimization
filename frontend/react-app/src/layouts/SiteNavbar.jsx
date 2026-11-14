@@ -151,6 +151,7 @@ export function SiteNavbar({ onMenuClick, sidebarOpen }) {
             target="_blank"
             rel="noopener noreferrer"
             className="btn nav-whatsapp"
+            aria-label="Chat on WhatsApp"
           >
             <MessageCircle size={18} aria-hidden="true" />
             <span>WhatsApp</span>
