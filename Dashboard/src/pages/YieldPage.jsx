@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 
 import { ChartCard, ColumnChart, TrendChart } from "@/components/charts/Charts.jsx";
 import { Button, Card, ErrorState, Icon, Select, Skeleton, TextField } from "@/components/ui/primitives.jsx";
+import { CropPhoto } from "@/components/ui/CropPhoto.jsx";
 import { StatTile } from "@/components/ui/StatTile.jsx";
 import { fmtNumber } from "@/lib/format.js";
 import { useCoverage, useTrend, useYieldPredict } from "@/lib/queries.js";
@@ -116,7 +117,8 @@ export default function YieldPage() {
         {predict.error && <div className="mt-4"><ErrorState error={predict.error} compact /></div>}
         {predict.data && (
           <div className="mt-5 grid grid-cols-1 gap-4 border-t border-outline pt-5 md:grid-cols-[auto_1fr] md:items-center">
-            <div className="flex gap-6">
+            <div className="flex items-center gap-6">
+              <CropPhoto crop={activeCrop} size={64} />
               <div>
                 <p className="text-xs text-ink-2">Expected yield</p>
                 <p className="text-[28px] font-medium tabular-nums text-ink">{predict.data.yield_t_ha.toFixed(2)}<span className="text-sm font-normal text-ink-2"> t/ha</span></p>

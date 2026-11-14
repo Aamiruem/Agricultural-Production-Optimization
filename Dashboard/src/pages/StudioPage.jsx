@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { BarList, DivergingBars } from "@/components/charts/Charts.jsx";
 import { cx } from "@/lib/cx.js";
+import { CropPhoto } from "@/components/ui/CropPhoto.jsx";
 import { Card, Chip, Code, ErrorState, Icon, RangeField, Segmented, Select, Skeleton, TextField } from "@/components/ui/primitives.jsx";
 import { useDebounced } from "@/hooks/useSamples.js";
 import { useLiveRecommend } from "@/hooks/useLiveRecommend.js";
@@ -188,7 +189,7 @@ export default function StudioPage() {
         {!live.result ? <Skeleton className="h-28 w-full" /> : (
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="grid size-12 place-items-center rounded-2xl bg-good-soft text-good"><Icon name="grass" size={28} /></span>
+              <CropPhoto crop={top[0]?.crop} size={56} />
               <div>
                 <p className="text-[22px] font-medium text-ink">{titleCase(top[0]?.crop)}</p>
                 <p className="text-[13px] text-ink-2">{fmtPct(top[0]?.confidence)} confidence · {titleCase(top[0]?.season)} · {titleCase(top[0]?.category)}</p>

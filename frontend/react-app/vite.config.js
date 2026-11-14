@@ -4,8 +4,13 @@ import { defineConfig, loadEnv } from "vite";
 
 import { iconFontUrl } from "./src/lib/icons.js";
 
+// Browser support: every evergreen browser plus the last ~4 years of Safari/iOS,
+// Samsung Internet and Android WebView (ES2020 + CSS lowered for these engines).
+const BROWSER_TARGETS = ["es2020", "chrome87", "edge88", "firefox78", "safari14", "ios14"];
+
 // Public routes listed in sitemap.xml (SEO).
 const SITEMAP_ROUTES = [
+  ["/learn", "0.8", "monthly"],
   ["/", "1.0", "weekly"], ["/dashboard", "0.9", "daily"], ["/data-dashboard", "0.9", "monthly"], ["/crop-recommendation", "0.9", "monthly"], ["/yield-prediction", "0.9", "monthly"],
   ["/soil-analysis", "0.8", "monthly"], ["/weather", "0.8", "hourly"], ["/fertilizer", "0.8", "monthly"], ["/irrigation-optimization", "0.8", "monthly"],
   ["/disease-detection", "0.8", "monthly"], ["/reports", "0.7", "monthly"], ["/crops", "0.8", "monthly"], ["/states", "0.8", "monthly"],
@@ -72,13 +77,16 @@ export default defineConfig(({ mode }) => {
     },
     preview: { port: 4173 },
     build: {
+      target: BROWSER_TARGETS,
+      cssTarget: BROWSER_TARGETS,
       rollupOptions: {
         output: {
           // Split large vendor libraries into their own cacheable chunks.
           manualChunks(id) {
             if (!id.includes("node_modules")) return undefined;
             if (/react-bootstrap|@restart|bootstrap/.test(id)) return "bootstrap";
-            if (/@tanstack|axios|socket\.io|engine\.io/.test(id)) return "data";
+            if (/socket\.io|engine\.io/.test(id)) return "realtime"; // farms page only, not every page
+            if (/@tanstack|axios/.test(id)) return "data";
             if (/react-markdown|micromark|mdast|hast|unified|remark/.test(id)) return "markdown";
             if (/recharts|d3-|victory-vendor/.test(id)) return "charts";
             return undefined;

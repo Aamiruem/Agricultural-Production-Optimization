@@ -2,7 +2,7 @@ import { Component, lazy, Suspense } from "react";
 import { Link, Route, Routes, useLocation } from "react-router";
 
 import { Shell } from "@/components/layout/Shell.jsx";
-import { Button, EmptyState, ErrorState, Skeleton } from "@/ components/ui/primitives.jsx";
+import { Button, EmptyState, ErrorState, Skeleton } from "@/components/ui/primitives.jsx";
 
 const OverviewPage = lazy(() => import("@/pages/OverviewPage.jsx"));
 const StudioPage = lazy(() => import("@/pages/StudioPage.jsx"));

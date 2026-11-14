@@ -77,3 +77,25 @@ describe("helpers", () => {
     expect(mcpResultValue({ structuredContent: { crop: "rice", area_ha: 2 } })).toEqual({ crop: "rice", area_ha: 2 });
   });
 });
+
+describe("shared crop photos", async () => {
+  const { cropPhotoUrl } = await import("./cropPhotos.js");
+  it("maps model, dataset and UI names onto the React app's photos", () => {
+    expect(cropPhotoUrl("rice")).toBe("/images/crops/rice.webp");
+    expect(cropPhotoUrl("mungbean")).toBe("/images/crops/green-gram.webp");
+    expect(cropPhotoUrl("Arhar/Tur")).toBe("/images/crops/pigeon-pea.webp");
+    expect(cropPhotoUrl("Moong(Green Gram)")).toBe("/images/crops/green-gram.webp");
+    expect(cropPhotoUrl("Pearl Millet")).toBe("/images/crops/pearl-millet.webp");
+    expect(cropPhotoUrl("grapes")).toBeNull(); // no photo -> icon fallback
+  });
+  it("every mapped photo exists in the React app", async () => {
+    const { existsSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const dir = join(__dirname, "..", "..", "..", "frontend", "react-app", "public");
+    for (const name of ["rice", "mungbean", "Arhar/Tur", "Bajra", "Jowar", "Ragi", "Soyabean", "Cotton(lint)", "Dry chillies", "Gram"]) {
+      const url = cropPhotoUrl(name);
+      expect(url, name).not.toBeNull();
+      expect(existsSync(join(dir, url)), url).toBe(true);
+    }
+  });
+});
