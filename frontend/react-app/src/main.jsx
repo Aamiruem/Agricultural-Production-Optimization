@@ -20,15 +20,9 @@ const queryClient = new QueryClient({
 });
 const store = makeStore();
 
-// Google Search Console verification and Google Analytics are configured with
-// VITE_GOOGLE_SITE_VERIFICATION and VITE_GA_MEASUREMENT_ID (Vercel project env vars).
-const searchVerification = import.meta.env.VITE_GOOGLE_SITE_VERIFICATION;
-if (searchVerification) {
-  const verificationMeta = document.createElement("meta");
-  verificationMeta.name = "google-site-verification";
-  verificationMeta.content = searchVerification;
-  document.head.appendChild(verificationMeta);
-}
+// Google Analytics is configured with VITE_GA_MEASUREMENT_ID (Vercel project env var).
+// The Search Console verification meta tag is written into the static HTML at build time
+// from VITE_GOOGLE_SITE_VERIFICATION (see vite.config.js), because Google reads raw HTML.
 initAnalytics();
 
 createRoot(document.getElementById("root")).render(

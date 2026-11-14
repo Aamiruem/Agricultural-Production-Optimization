@@ -1,4 +1,4 @@
-# AgriOptima — React app (JavaScript / JSX)
+# AgriSmart — React app (JavaScript / JSX)
 
 A single-page React app written in plain JavaScript (JSX), built with Vite. It
 talks to the **FastAPI** ML/AI service and the **Node/Express** farm service
@@ -57,18 +57,49 @@ src/
 
 ## Pages
 
+There is **no login, registration or account page**: every page is public.
+
+**Information hub** (content in `src/data/content/`, pages in `src/pages/site/`)
+
+| Route | Page |
+|---|---|
+| `/` | Home: hero, section overview, tools, results, FAQ |
+| `/about`, `/developer` | Mission, vision, values; developer profile |
+| `/agricultural-production-systems` (+ 16 topic pages `/:slug`) | Production systems: definition, importance, process, pros, cons |
+| `/smart-agricultural-machines` | 12 machines with function, features, applications, benefits |
+| `/ai-in-agriculture` | 12 AI/ML solutions and the ML workflow |
+| `/crops-and-food` | Kharif/Rabi/Zaid, crop categories, supply chain, post-harvest, food security |
+| `/farmer-health` | Rural healthcare, first aid, heat stress, pesticide safety, mental wellness (with medical disclaimer) |
+| `/food-and-nutrition` | Eight food groups: nutrients, benefits, farm source, storage |
+| `/farmer-education` | 10 lessons plus government schemes checked against official portals |
+| `/services`, `/projects` | Services (with availability) and verified portfolio projects |
+| `/contact` | WhatsApp, call, email, form that opens WhatsApp/email (no fake "sent") |
+| `/app` | Web-app landing page and install (PWA) instructions |
+| `/privacy-policy`, `/disclaimer`, `/image-credits` | Legal pages and photo licences |
+
+**Tools** (unchanged behaviour)
+
 | Route | Page | Talks to |
 |---|---|---|
-| `/` | Home | — |
-| `/recommend` | Crop advisor + live what-if | FastAPI `POST /recommend/crop` (trained ML model), `WS /ws/recommend` |
+| `/crop-recommendation` | Crop advisor + live what-if | FastAPI `POST /recommend/crop`, browser fallback model |
 | `/fertilizer` | Fertilizer calculator | FastAPI `/crops`, `/recommend/fertilizer` |
 | `/crops`, `/crops/:name` | Crop library | FastAPI `/crops` |
 | `/planner` | Offline planner | Redux + localStorage |
-| `/farms` *(signed in)* | Farms, fields, activities, photos | Node `/farm-api/*`, Socket.IO, S3; fertilizer plan via Node → FastAPI |
-| `/assistant` | AI farm assistant | FastAPI `POST /assistant/chat` (Server-Sent Events) |
-| `/insights` | Model comparison, history, CSV batch jobs | FastAPI `/ml/model`, `/predictions`, `/jobs/batch-csv` |
-| `/admin` *(admin role)* | Users report, model hot-reload | FastAPI `/admin/users`, `/ml/reload` |
-| `/login`, `/register` | Auth (JWT, OAuth2 password flow) | FastAPI `/auth/*` |
+| `/farms` | Farms, fields, activities (saved on the device) | Node `/farm-api/*` when available |
+| `/assistant` | AI farm assistant | FastAPI `POST /assistant/chat` (SSE) |
+| `/insights` | Model comparison | FastAPI `/ml/model` |
+
+## SEO
+
+- `src/seo/routes.js` is the single registry of every URL: title, description, breadcrumb parent, Open Graph image, hero image, schema type and `noindex`.
+- `src/seo/structuredData.js` builds JSON-LD (Organization, WebSite, Person, WebPage, BreadcrumbList, Article, WebApplication). No ratings or reviews.
+- At build time `seoPages()` in `vite.config.js` writes `dist/<route>.html` for every route with its own head, plus `404.html`, `sitemap.xml` (with image entries) and `robots.txt`. Vercel serves them with `cleanUrls`; unknown URLs return a real 404.
+- `useDocumentTitle` keeps the same tags in sync during client-side navigation.
+- Set `VITE_SITE_URL` (canonical origin) and optionally `VITE_GOOGLE_SITE_VERIFICATION` / `VITE_GA_MEASUREMENT_ID` in Vercel.
+- Photos: `python scripts/fetch_commons_images.py` (licensed Wikimedia Commons images, credits in `src/data/generated/imageCredits.json`); share images: `python scripts/build_og_images.py`.
+- `src/seo/seo.test.js` checks unique titles/descriptions, that every route is registered, redirect parity with `vercel.json`, images and credits.
+
+See `docs/seo-strategy.md` at the repo root for the audit, keyword map, Search Console guide and 90-day plan.
 
 ## Technologies used
 

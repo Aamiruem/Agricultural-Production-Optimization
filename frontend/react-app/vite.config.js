@@ -12,6 +12,18 @@ import { structuredData } from "./src/seo/structuredData.js";
 // Samsung Internet and Android WebView (ES2020 + CSS lowered for these engines).
 const BROWSER_TARGETS = ["es2020", "chrome87", "edge88", "firefox78", "safari14", "ios14"];
 
+/** Writes the Google Search Console verification meta tag into the HTML (if configured). */
+function siteVerification(token) {
+  return {
+    name: "agrismart-site-verification",
+    transformIndexHtml: (html) =>
+      html.replace(
+        "<!--seo:verification-->",
+        token ? `<meta name="google-site-verification" content="${token.replace(/"/g, "")}" />` : "",
+      ),
+  };
+}
+
 /** Injects the Material Symbols URL, subset to the icons the app declares. */
 function iconFont() {
   return { name: "agrismart-icon-font", transformIndexHtml: (html) => html.replace("%ICON_FONT_URL%", iconFontUrl()) };
@@ -195,7 +207,7 @@ export default defineConfig(({ mode }) => {
   const farmTarget = env.FARM_PROXY_TARGET || "http://localhost:4100";
 
   return {
-    plugins: [react(), iconFont(), seoPages(siteUrl)],
+    plugins: [react(), iconFont(), siteVerification(env.VITE_GOOGLE_SITE_VERIFICATION), seoPages(siteUrl)],
     resolve: {
       alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
     },
