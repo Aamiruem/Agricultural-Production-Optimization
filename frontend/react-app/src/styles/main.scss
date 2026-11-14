@@ -231,8 +231,8 @@ a { color: var(--md-primary); transition: color 0.15s; &:hover { color: var(--md
   &.is-closed { flex-basis: 0; width: 0; padding: 0; overflow: hidden; }
 }
 .side-nav-group + .side-nav-group { margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--md-outline-variant); }
-.side-nav-group-label { padding: 0.9rem 1rem 0.45rem; color: var(--md-on-surface-variant); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.02em; }
-.side-nav-link { --c: #188038; display: flex; align-items: center; gap: 0.85rem; height: 48px; padding: 0 1rem; border-radius: 100px; color: var(--md-on-surface-variant); font-size: 0.92rem; font-weight: 500; white-space: nowrap; transition: background 0.15s, color 0.15s;
+.side-nav-group-label { margin: 0; padding: 0.85rem 1rem 0.4rem; color: var(--md-on-surface-variant); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.side-nav-link { --c: #188038; display: flex; align-items: center; gap: 0.85rem; height: 44px; padding: 0 1rem; border-radius: 100px; color: var(--md-on-surface-variant); font-size: 0.92rem; font-weight: 500; white-space: nowrap; transition: background 0.15s, color 0.15s;
   .side-icon { color: var(--c); }
   &:hover { background: var(--md-state-hover); color: var(--md-on-surface); }
   &.active { background: var(--md-primary-container); color: var(--md-on-primary-container); font-weight: 700; }
@@ -240,6 +240,9 @@ a { color: var(--md-primary); transition: color 0.15s; &:hover { color: var(--md
 [data-bs-theme="dark"] .side-nav-link .side-icon { color: color-mix(in srgb, var(--c) 60%, #fff); }
 .side-nav-help { display: grid; gap: 0.35rem; margin: 1rem 0.25rem 0.25rem; padding: 1rem; border-radius: 16px; background: var(--md-surface-container); color: var(--md-on-surface);
   > .msi { color: #1a73e8; } b { font-weight: 500; } small { color: var(--md-on-surface-variant); font-size: 0.78rem; line-height: 1.5; } .btn { justify-self: start; }
+}
+.side-nav-secondary { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin: 0.75rem 0 0; padding: 0 1rem 0.5rem; list-style: none; font-size: 0.8rem;
+  a { color: var(--md-on-surface-variant); &:hover, &.active { color: var(--md-primary); text-decoration: underline; } }
 }
 .sidebar-backdrop { display: none; }
 .bottom-nav { display: none; }

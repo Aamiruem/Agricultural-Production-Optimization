@@ -1,39 +1,53 @@
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router";
 
 import { MIcon } from "@/components/common/MIcon";
 import { useT } from "@/i18n/useT";
 
-import { NAV_GROUPS } from "./navigation";
+import { NAV_GROUPS, SECONDARY_LINKS } from "./navigation";
 
-/** Material 3 navigation drawer: pill active indicator, colourful icons. */
+const MOBILE_QUERY = "(max-width: 991.98px)";
+
+function DrawerLink({ to, label, icon, color, onNavigate }) {
+  return (
+    <NavLink to={to} onClick={onNavigate} className={({ isActive }) => `side-nav-link${isActive ? " active" : ""}`} style={{ "--c": color }}>
+      <MIcon name={icon} size={22} fill className="side-icon" />
+      <span>{label}</span>
+    </NavLink>
+  );
+}
+
+/** Material 3 navigation drawer: sections by farming stage, pill active indicator. */
 export function SideNav({ open, onClose }) {
   const { t } = useT();
   const closeOnMobile = () => {
-    if (window.matchMedia("(max-width: 991.98px)").matches) onClose();
+    if (window.matchMedia(MOBILE_QUERY).matches) onClose();
   };
+
   return (
     <>
       <button className={`sidebar-backdrop${open ? " is-active" : ""}`} aria-label={t("nav.closeMenu")} onClick={onClose} tabIndex={open ? 0 : -1} />
       <aside id="app-sidebar" className={`side-nav${open ? " is-open" : " is-closed"}`} aria-label="Main navigation" aria-hidden={!open} inert={!open}>
         <nav className="side-nav-groups">
           {NAV_GROUPS.map((group) => (
-            <div key={group.label} className="side-nav-group">
-              <div className="side-nav-group-label">{t(group.label)}</div>
+            <section key={group.id} className="side-nav-group" aria-labelledby={`nav-${group.id}`}>
+              <h2 id={`nav-${group.id}`} className="side-nav-group-label">{t(group.label)}</h2>
               {group.links.map(({ to, key, icon, color }) => (
-                <NavLink key={to} to={to} onClick={closeOnMobile} className={({ isActive }) => `side-nav-link${isActive ? " active" : ""}`} style={{ "--c": color }}>
-                  <MIcon name={icon} size={22} fill className="side-icon" />
-                  <span>{t(key)}</span>
-                </NavLink>
+                <DrawerLink key={to} to={to} label={t(key)} icon={icon} color={color} onNavigate={closeOnMobile} />
               ))}
-            </div>
+            </section>
           ))}
         </nav>
+
         <div className="side-nav-help">
           <MIcon name="support_agent" size={26} fill />
           <b>{t("side.helpTitle")}</b>
           <small>{t("side.helpText")}</small>
-          <Link to="/assistant" className="btn btn-tonal btn-sm mt-1" onClick={closeOnMobile}><MIcon name="auto_awesome" size={18} /> {t("side.assistant")}</Link>
         </div>
+        <ul className="side-nav-secondary">
+          {SECONDARY_LINKS.map(({ to, key }) => (
+            <li key={to}><NavLink to={to} onClick={closeOnMobile}>{t(key)}</NavLink></li>
+          ))}
+        </ul>
       </aside>
     </>
   );

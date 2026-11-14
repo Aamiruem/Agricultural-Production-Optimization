@@ -1,20 +1,31 @@
-"""FastAPI application: AI/ML service of AgriOptima."""
+"""FastAPI application: AI/ML service of AgriSmart.
+
+Start it from backend/python-fastapi (recommended):
+    uvicorn app.main:app --reload
+or from anywhere, including inside this folder:
+    python main.py
+"""
 import sys
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
+# Make `app` (backend/python-fastapi) and `AIML` (repository root) importable however
+# the server is launched — e.g. `python main.py` from inside app/ would otherwise fail
+# with "No module named 'app'".
+_SERVICE_DIR = Path(__file__).resolve().parents[1]
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+for _path in (_SERVICE_DIR, _REPO_ROOT):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
 
-from app.core.config import REPO_ROOT, get_settings
-
-# The AIML package (models, SHAP attribution, MCP tools) lives at the repository root.
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
+from fastapi import FastAPI  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.middleware.gzip import GZipMiddleware  # noqa: E402
 
 from app.api.routes import (  # noqa: E402
     assistant, auth, crops, health, history, ml, realtime, system, yield_analytics, yield_prediction,
 )
+from app.core.config import get_settings  # noqa: E402
 from app.core.logging import RequestLogMiddleware, configure_logging  # noqa: E402
 from app.core.resilience import LoadShedMiddleware  # noqa: E402
 from app.db import models  # noqa: E402,F401  (register tables on Base.metadata)
@@ -61,3 +72,11 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+
+if __name__ == "__main__":  # `python main.py` / `python app/main.py`
+    import os
+
+    import uvicorn
+
+    uvicorn.run("app.main:app", host=os.getenv("HOST", "127.0.0.1"), port=int(os.getenv("PORT", "8000")))

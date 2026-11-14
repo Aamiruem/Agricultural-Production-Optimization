@@ -5,12 +5,12 @@ These summaries are historical context; they are not current-season forecasts.
 """
 import csv
 from functools import lru_cache
-from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
 
+from AIML.config import YIELD_DATA_PATH as DATA_PATH
+
 router = APIRouter(tags=["yield analytics"])
-DATA_PATH = Path(__file__).resolve().parents[5] / "AIML" / "datasets" / "crop_yield.csv"
 
 
 @lru_cache(maxsize=1)

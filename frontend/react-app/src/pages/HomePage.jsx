@@ -16,9 +16,9 @@ import { useChartColors } from "@/lib/chartTheme";
 import { G } from "@/lib/icons";
 
 const SOLUTIONS = [
-  { to: "/crop-recommendation", icon: "potted_plant", color: G.green, key: "side.recommend", en: "Best crop for your N-P-K, pH, temperature, humidity and rainfall.", hi: "आपकी मिट्टी और जलवायु के लिए सर्वोत्तम फसल।" },
+  { to: "/crop-recommendation", icon: "potted_plant", color: G.green, key: "side.cropAdvisor", en: "Best crop for your N-P-K, pH, temperature, humidity and rainfall.", hi: "आपकी मिट्टी और जलवायु के लिए सर्वोत्तम फसल।" },
   { to: "/yield-prediction", icon: "trending_up", color: G.blue, key: "side.yield", en: "Predict t/ha and total production with historical ranges.", hi: "ऐतिहासिक सीमा सहित उपज और कुल उत्पादन का अनुमान।" },
-  { to: "/soil-analysis", icon: "science", color: G.brown, key: "side.soil", en: "Soil Health Card scoring with radar charts and fixes.", hi: "रडार चार्ट और सुधार सहित मृदा स्वास्थ्य स्कोर।" },
+  { to: "/soil-analysis", icon: "science", color: G.brown, key: "side.soilHealth", en: "Soil Health Card scoring with radar charts and fixes.", hi: "रडार चार्ट और सुधार सहित मृदा स्वास्थ्य स्कोर।" },
   { to: "/disease-detection", icon: "pest_control", color: G.red, key: "side.disease", en: "Leaf-photo screening plus a symptom matcher.", hi: "पत्ती की फ़ोटो जाँच और लक्षण मिलान।" },
   { to: "/fertilizer", icon: "compost", color: G.orange, key: "side.fertilizer", en: "DAP, Urea and MOP doses for your exact nutrient gap.", hi: "पोषक तत्व की कमी के अनुसार DAP, यूरिया, MOP।" },
   { to: "/irrigation-optimization", icon: "water_drop", color: G.cyan, key: "side.irrigation", en: "FAO-56 water budget from live evapotranspiration.", hi: "लाइव वाष्पोत्सर्जन से FAO-56 जल बजट।" },
@@ -28,7 +28,7 @@ const FEATURES = [
   { to: "/dashboard", icon: "space_dashboard", color: G.blue, key: "side.dashboard" },
   { to: "/weather", icon: "partly_cloudy_day", color: G.yellow, key: "side.weather" },
   { to: "/reports", icon: "monitoring", color: G.purple, key: "side.reports" },
-  { to: "/states", icon: "map", color: G.teal, key: "side.states" },
+  { to: "/states", icon: "map", color: G.teal, key: "side.stateGuide" },
 ];
 
 const FAQ = [

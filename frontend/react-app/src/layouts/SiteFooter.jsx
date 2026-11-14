@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import logo from "@/assets/logo.svg";
 import { useT } from "@/i18n/useT";
 
-import { NAV_GROUPS, TOP_LINKS } from "./navigation";
+import { FOOTER_TOOLS, TOP_LINKS } from "./navigation";
 
 const SOCIAL = [
   { mark: "f", label: "Facebook", color: "#1877f2" },
@@ -16,7 +16,6 @@ const SOCIAL = [
 
 export function SiteFooter() {
   const { t } = useT();
-  const tools = NAV_GROUPS[1].links;
   return (
     <footer className="site-footer">
       <div className="footer-grid">
@@ -32,11 +31,11 @@ export function SiteFooter() {
         </div>
         <div>
           <h3>{t("footer.nav")}</h3>
-          <ul>{TOP_LINKS.map((l) => <li key={l.to}><Link to={l.to}>{t(l.key)}</Link></li>)}<li><Link to="/crops">{t("side.crops")}</Link></li><li><Link to="/states">{t("side.states")}</Link></li></ul>
+          <ul>{TOP_LINKS.map((l) => <li key={l.to}><Link to={l.to}>{t(l.key)}</Link></li>)}<li><Link to="/crops">{t("side.cropLibrary")}</Link></li><li><Link to="/states">{t("side.stateGuide")}</Link></li></ul>
         </div>
         <div>
           <h3>{t("footer.solutions")}</h3>
-          <ul>{tools.map((l) => <li key={l.to}><Link to={l.to}>{t(l.key)}</Link></li>)}</ul>
+          <ul>{FOOTER_TOOLS.map((l) => <li key={l.to}><Link to={l.to}>{t(l.key)}</Link></li>)}</ul>
         </div>
         <div>
           <h3>{t("footer.contact")}</h3>

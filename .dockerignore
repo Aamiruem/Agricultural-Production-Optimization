@@ -11,6 +11,5 @@
 .git
 AIML/mlruns
 AIML/*.db
-AIML/datasets/*.csv
 backend/*.db
 backend/*.db-*

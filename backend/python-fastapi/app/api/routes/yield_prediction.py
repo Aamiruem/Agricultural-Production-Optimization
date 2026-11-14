@@ -1,15 +1,8 @@
 """Yield predictions served by the trained AIML regression bundle."""
-from pathlib import Path
-import sys
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from app.core.cache import get_cache, rounded_key
-
-REPO_ROOT = Path(__file__).resolve().parents[5]
-if str(REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT))
 
 router = APIRouter(tags=["yield prediction"])
 
